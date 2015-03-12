@@ -13,7 +13,6 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -22,7 +21,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			//'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -35,15 +34,15 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(''),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('index','view','create','update','admin','delete'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array(''),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -72,13 +71,16 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$model=new <?php echo $this->modelClass; ?>;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['<?php echo $this->modelClass; ?>']))
 		{
 			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
+			if($model->save()){
+                                Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Created Successfully!!!');
+				//$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
+                                $this->redirect(array('index'));
+                        }
 		}
 
 		$this->render('create',array(
@@ -96,13 +98,16 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['<?php echo $this->modelClass; ?>']))
 		{
 			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
+			if($model->save()){
+                                Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Updated Successfully!!!');
+//				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
+                                $this->redirect(array('index'));
+                        }
 		}
 
 		$this->render('update',array(
@@ -120,8 +125,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		if(!isset($_GET['ajax'])){
+                    Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Deleted Successfully!!!');
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+                }
 	}
 
 	/**
@@ -129,9 +136,13 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('<?php echo $this->modelClass; ?>');
+        $model=new <?php echo $this->modelClass; ?>('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['<?php echo $this->modelClass; ?>']))
+			$model->attributes=$_GET['<?php echo $this->modelClass; ?>'];
+
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model,
 		));
 	}
 

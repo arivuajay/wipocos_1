@@ -37,6 +37,7 @@ return array(
         ),
         'booster' => array(
             'class' => 'application.extensions.yiibooster.components.Booster',
+            'yiiCss' => false
         ),
         //
         'user' => array(

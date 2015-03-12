@@ -7,7 +7,7 @@
  * @property integer $Master_Module_ID
  * @property string $Module_Code
  * @property string $Description
- * @property integer $Active
+ * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -33,10 +33,10 @@ class MasterModule extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Module_Code, Active, Created_Date', 'required'),
-			array('Active', 'numerical', 'integerOnly'=>true),
+			array('Module_Code, Created_Date', 'required'),
 			array('Module_Code', 'length', 'max'=>45),
 			array('Description', 'length', 'max'=>100),
+			array('Active', 'length', 'max'=>1),
 			array('Rowversion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -93,7 +93,7 @@ class MasterModule extends CActiveRecord
 		$criteria->compare('Master_Module_ID',$this->Master_Module_ID);
 		$criteria->compare('Module_Code',$this->Module_Code,true);
 		$criteria->compare('Description',$this->Description,true);
-		$criteria->compare('Active',$this->Active);
+		$criteria->compare('Active',$this->Active,true);
 		$criteria->compare('Created_Date',$this->Created_Date,true);
 		$criteria->compare('Rowversion',$this->Rowversion,true);
 
@@ -112,4 +112,12 @@ class MasterModule extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        public function dataProvider() {
+            return new CActiveDataProvider($this, array(
+                'pagination' => array(
+                    'pageSize' => PAGE_SIZE,
+                )
+            ));
+        }
 }

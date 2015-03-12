@@ -4,91 +4,99 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
-
-<?php $form=$this->beginWidget('CActiveForm', array(
+<div class="row">
+    <div class="col-lg-12 col-xs-12">
+        <div class="box box-primary">
+            <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'auth-resources-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
+        'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
+	'enableAjaxValidation'=>true,
 )); ?>
+            <div class="box-body">
+                                    <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_User_ID',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_User_ID',array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Master_User_ID'); ?>
+                        </div>
+                    </div>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Role_ID',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Role_ID',array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Master_Role_ID'); ?>
+                        </div>
+                    </div>
 
-	<?php echo $form->errorSummary($model); ?>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Module_ID',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Module_ID',array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Master_Module_ID'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_User_ID'); ?>
-		<?php echo $form->textField($model,'Master_User_ID'); ?>
-		<?php echo $form->error($model,'Master_User_ID'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Screen_ID',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Screen_ID',array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Master_Screen_ID'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Role_ID'); ?>
-		<?php echo $form->textField($model,'Master_Role_ID'); ?>
-		<?php echo $form->error($model,'Master_Role_ID'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Task_ADD',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Task_ADD',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+                        <?php echo $form->error($model,'Master_Task_ADD'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Module_ID'); ?>
-		<?php echo $form->textField($model,'Master_Module_ID'); ?>
-		<?php echo $form->error($model,'Master_Module_ID'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Task_SEE',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Task_SEE',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+                        <?php echo $form->error($model,'Master_Task_SEE'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Screen_ID'); ?>
-		<?php echo $form->textField($model,'Master_Screen_ID'); ?>
-		<?php echo $form->error($model,'Master_Screen_ID'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Task_UPT',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Task_UPT',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+                        <?php echo $form->error($model,'Master_Task_UPT'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Task_ADD'); ?>
-		<?php echo $form->textField($model,'Master_Task_ADD',array('size'=>1,'maxlength'=>1)); ?>
-		<?php echo $form->error($model,'Master_Task_ADD'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Master_Task_DEL',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->textField($model,'Master_Task_DEL',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+                        <?php echo $form->error($model,'Master_Task_DEL'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Task_SEE'); ?>
-		<?php echo $form->textField($model,'Master_Task_SEE',array('size'=>1,'maxlength'=>1)); ?>
-		<?php echo $form->error($model,'Master_Task_SEE'); ?>
-	</div>
+                                        <div class="form-group">
+                        <?php echo $form->labelEx($model,'Active',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-5">
+                        <?php echo $form->checkBox($model,'Active',array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Active'); ?>
+                        </div>
+                    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Task_UPT'); ?>
-		<?php echo $form->textField($model,'Master_Task_UPT',array('size'=>1,'maxlength'=>1)); ?>
-		<?php echo $form->error($model,'Master_Task_UPT'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'Master_Task_DEL'); ?>
-		<?php echo $form->textField($model,'Master_Task_DEL',array('size'=>1,'maxlength'=>1)); ?>
-		<?php echo $form->error($model,'Master_Task_DEL'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'Active'); ?>
-		<?php echo $form->textField($model,'Active'); ?>
-		<?php echo $form->error($model,'Active'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'Created_Date'); ?>
-		<?php echo $form->textField($model,'Created_Date'); ?>
-		<?php echo $form->error($model,'Created_Date'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'Rowversion'); ?>
-		<?php echo $form->textField($model,'Rowversion'); ?>
-		<?php echo $form->error($model,'Rowversion'); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
-
-</div><!-- form -->
+                                </div><!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    <div class="col-sm-0 col-sm-offset-2">
+                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                    </div>
+                </div>
+            </div>
+            <?php $this->endWidget(); ?>
+        </div>
+    </div><!-- ./col -->
+</div>

@@ -2,17 +2,13 @@
 /* @var $this AuthresourcesController */
 /* @var $model AuthResources */
 
+$this->title='Create Auth Resources';
 $this->breadcrumbs=array(
 	'Auth Resources'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List AuthResources', 'url'=>array('index')),
-	array('label'=>'Manage AuthResources', 'url'=>array('admin')),
+	$this->title,
 );
 ?>
 
-<h1>Create AuthResources</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<div class="user-create">
+    <?php $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

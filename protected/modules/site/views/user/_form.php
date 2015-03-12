@@ -6,6 +6,9 @@
                 'id' => 'profile-form',
                 'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
                 'enableAjaxValidation' => true,
+                'clientOptions'=>array(
+                    'validateOnSubmit'=>true,
+                )
             ));
             ?>
             <div class="box-body">

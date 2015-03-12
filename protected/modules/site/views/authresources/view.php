@@ -2,24 +2,22 @@
 /* @var $this AuthresourcesController */
 /* @var $model AuthResources */
 
+$this->title='View #'.$model->Master_Resource_ID;
 $this->breadcrumbs=array(
 	'Auth Resources'=>array('index'),
-	$model->Master_Resource_ID,
-);
-
-$this->menu=array(
-	array('label'=>'List AuthResources', 'url'=>array('index')),
-	array('label'=>'Create AuthResources', 'url'=>array('create')),
-	array('label'=>'Update AuthResources', 'url'=>array('update', 'id'=>$model->Master_Resource_ID)),
-	array('label'=>'Delete AuthResources', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Master_Resource_ID),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage AuthResources', 'url'=>array('admin')),
+	'View '.'AuthResources',
 );
 ?>
 
-<h1>View AuthResources #<?php echo $model->Master_Resource_ID; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
+<div class="user-view">
+    <p>
+        <?php echo CHtml::link('Update', array('update', 'id' =>  $model->Master_Resource_ID ), array('class' => 'btn btn-primary')); ?>
+        <?php echo CHtml::link('Delete', array('delete', 'id' =>  $model->Master_Resource_ID ), array('confirm' => 'Are you sure you want to delete this item?', 'class' => 'btn btn-danger'));
+        ?>
+    </p>
+    <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
+        'htmlOptions' => array('class'=>'table table-striped table-bordered'),
 	'attributes'=>array(
 		'Master_Resource_ID',
 		'Master_User_ID',
@@ -35,3 +33,7 @@ $this->menu=array(
 		'Rowversion',
 	),
 )); ?>
+</div>
+
+
+

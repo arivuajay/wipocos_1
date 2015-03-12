@@ -10,40 +10,44 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
-
-<?php echo "<?php \$form=\$this->beginWidget('CActiveForm', array(
-	'id'=>'".$this->class2id($this->modelClass)."-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
+<div class="row">
+    <div class="col-lg-12 col-xs-12">
+        <div class="box box-primary">
+            <?php echo "<?php \$form=\$this->beginWidget('CActiveForm', array(
+	'id'=>'" . $this->class2id($this->modelClass) . "-form',
+        'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
+	'enableAjaxValidation'=>true,
 )); ?>\n"; ?>
+            <div class="box-body">
+                <?php
+                $restrict = $this->giiGenerateHiddenFields();
+                foreach ($this->tableSchema->columns as $column) {
+                    if ($column->autoIncrement || in_array($column->name, $restrict))
+                        continue;
+                    ?>
+                    <div class="form-group">
+                        <?php echo "<?php echo " . $this->generateActiveLabel($this->modelClass, $column) . "; ?>\n"; ?>
+                        <div class="col-sm-5">
+                        <?php echo "<?php echo " . $this->generateActiveField($this->modelClass, $column) . "; ?>\n"; ?>
+                        <?php echo "<?php echo \$form->error(\$model,'{$column->name}'); ?>\n"; ?>
+                        </div>
+                    </div>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
-	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
-
-<?php
-foreach($this->tableSchema->columns as $column)
-{
-	if($column->autoIncrement)
-		continue;
-?>
-	<div class="row">
-		<?php echo "<?php echo ".$this->generateActiveLabel($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo ".$this->generateActiveField($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo \$form->error(\$model,'{$column->name}'); ?>\n"; ?>
-	</div>
-
-<?php
-}
-?>
-	<div class="row buttons">
-		<?php echo "<?php echo CHtml::submitButton(\$model->isNewRecord ? 'Create' : 'Save'); ?>\n"; ?>
-	</div>
-
-<?php echo "<?php \$this->endWidget(); ?>\n"; ?>
-
-</div><!-- form -->
+                    <?php
+                }
+                ?>
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    <div class="col-sm-0 col-sm-offset-2">
+                        <?php echo "<?php echo CHtml::submitButton(\$model->isNewRecord ? 'Create' : 'Save', array('class' => \$model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>\n"; ?>
+                    </div>
+                </div>
+            </div>
+            <?php echo "<?php \$this->endWidget(); ?>\n"; ?>
+        </div>
+    </div><!-- ./col -->
+</div>

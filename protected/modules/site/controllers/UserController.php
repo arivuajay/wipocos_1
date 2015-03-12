@@ -50,7 +50,7 @@ class UserController extends Controller {
             $model->attributes = $_POST['User'];
             if ($model->validate()):
                 $password = Myclass::getRandomString(9);
-                $this->password_hash = Myclass::encrypt($password);
+                $model->password_hash = Myclass::encrypt($password);
 
                 $model->save(false);
                 if (!empty($model->email)):
@@ -127,6 +127,7 @@ class UserController extends Controller {
         if (isset($_GET['User'])) {
             $search = true;
             $searchModel->attributes = $_GET['User'];
+            $searchModel->search();
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));
@@ -151,7 +152,7 @@ class UserController extends Controller {
      * @param User $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-form') {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'user-form' || $_POST['ajax'] === 'profile-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

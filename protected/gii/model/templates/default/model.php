@@ -160,4 +160,12 @@ foreach($columns as $name=>$column)
 	{
 		return parent::model($className);
 	}
+        
+        public function dataProvider() {
+            return new CActiveDataProvider($this, array(
+                'pagination' => array(
+                    'pageSize' => PAGE_SIZE,
+                )
+            ));
+        }
 }

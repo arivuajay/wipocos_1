@@ -57,4 +57,5 @@ class Myclass extends CController {
             unset(Yii::app()->request->cookies['wipo_admin_username']);
         }
     }
+    
 }

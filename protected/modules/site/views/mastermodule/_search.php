@@ -13,32 +13,32 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'Master_Module_ID'); ?>
-		<?php echo $form->textField($model,'Master_Module_ID'); ?>
+		<?php echo $form->textField($model,'Master_Module_ID',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'Module_Code'); ?>
-		<?php echo $form->textField($model,'Module_Code',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->textField($model,'Module_Code',array('class'=>'form-control','size'=>45,'maxlength'=>45)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'Description'); ?>
-		<?php echo $form->textField($model,'Description',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->textField($model,'Description',array('class'=>'form-control','size'=>60,'maxlength'=>100)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'Active'); ?>
-		<?php echo $form->textField($model,'Active'); ?>
+		<?php echo $form->checkBox($model,'Active',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'Created_Date'); ?>
-		<?php echo $form->textField($model,'Created_Date'); ?>
+		<?php echo $form->textField($model,'Created_Date',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'Rowversion'); ?>
-		<?php echo $form->textField($model,'Rowversion'); ?>
+		<?php echo $form->textField($model,'Rowversion',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row buttons">

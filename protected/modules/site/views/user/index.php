@@ -49,7 +49,7 @@ $this->breadcrumbs = array(
                         <?php $roles = CHtml::listData(MasterRole::model()->findAll(), 'Master_Role_ID', 'Description') ?>
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'role') ?>
-                            <?php echo $form->dropDownList($searchModel, 'role', $names, array('prompt' => '', 'class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'role', $roles, array('prompt' => '', 'class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'role') ?>
                         </div>
                     </div>
@@ -122,7 +122,7 @@ $this->breadcrumbs = array(
                             'options' => array(
                                 'title' => 'Privilages',
                             ),
-                            'url' => 'CHtml::normalizeUrl(array("/site/auth-resources/user/uid".rawurlencode($data->id)))',
+                            'url' => 'CHtml::normalizeUrl(array("/site/authresources/user/uid/".rawurlencode($data->id)))',
                         ),
                     ),
                 )
@@ -194,7 +194,7 @@ $this->breadcrumbs = array(
                         'options' => array(
                             'title' => 'Privilages',
                         ),
-                        'url' => 'CHtml::normalizeUrl(array("/site/auth-resources/user/uid".rawurlencode($data->id)))',
+                        'url' => 'CHtml::normalizeUrl(array("/site/authresources/user/uid/".rawurlencode($data->id)))',
                     ),
                 ),
             )

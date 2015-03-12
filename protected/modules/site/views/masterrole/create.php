@@ -2,17 +2,13 @@
 /* @var $this MasterroleController */
 /* @var $model MasterRole */
 
+$this->title='Create Master Roles';
 $this->breadcrumbs=array(
 	'Master Roles'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List MasterRole', 'url'=>array('index')),
-	array('label'=>'Manage MasterRole', 'url'=>array('admin')),
+	$this->title,
 );
 ?>
 
-<h1>Create MasterRole</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<div class="user-create">
+    <?php $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

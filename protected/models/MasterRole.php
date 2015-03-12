@@ -16,104 +16,109 @@
  * @property AuthResources[] $authResources
  * @property User[] $users
  */
-class MasterRole extends CActiveRecord
-{
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{master_role}}';
-	}
+class MasterRole extends CActiveRecord {
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('Role_Code, Created_Date', 'required'),
-			array('Active', 'numerical', 'integerOnly'=>true),
-			array('Role_Code', 'length', 'max'=>45),
-			array('Description', 'length', 'max'=>100),
-			array('is_Admin', 'length', 'max'=>1),
-			array('Rowversion', 'safe'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('Master_Role_ID, Role_Code, Description, is_Admin, Active, Created_Date, Rowversion', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{master_role}}';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'authResources' => array(self::HAS_MANY, 'AuthResources', 'Master_Role_ID'),
-			'users' => array(self::HAS_MANY, 'User', 'role'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('Role_Code, Description', 'required'),
+            array('Role_Code', 'length', 'max' => 45),
+            array('Description', 'length', 'max' => 100),
+            array('is_Admin, Active', 'length', 'max' => 1),
+            array('Rowversion', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('Master_Role_ID, Role_Code, Description, is_Admin, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'Master_Role_ID' => 'Master Role',
-			'Role_Code' => 'Role Code',
-			'Description' => 'Description',
-			'is_Admin' => 'Is Admin',
-			'Active' => 'Active',
-			'Created_Date' => 'Created Date',
-			'Rowversion' => 'Rowversion',
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'authResources' => array(self::HAS_MANY, 'AuthResources', 'Master_Role_ID'),
+            'users' => array(self::HAS_MANY, 'User', 'role'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'Master_Role_ID' => 'Master Role',
+            'Role_Code' => 'Role Code',
+            'Description' => 'Description',
+            'is_Admin' => 'Is Admin',
+            'Active' => 'Active',
+            'Created_Date' => 'Created Date',
+            'Rowversion' => 'Rowversion',
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria->compare('Master_Role_ID',$this->Master_Role_ID);
-		$criteria->compare('Role_Code',$this->Role_Code,true);
-		$criteria->compare('Description',$this->Description,true);
-		$criteria->compare('is_Admin',$this->is_Admin,true);
-		$criteria->compare('Active',$this->Active);
-		$criteria->compare('Created_Date',$this->Created_Date,true);
-		$criteria->compare('Rowversion',$this->Rowversion,true);
+        $criteria = new CDbCriteria;
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        $criteria->compare('Master_Role_ID', $this->Master_Role_ID);
+        $criteria->compare('Role_Code', $this->Role_Code, true);
+        $criteria->compare('Description', $this->Description, true);
+        $criteria->compare('is_Admin', $this->is_Admin, true);
+        $criteria->compare('Active', $this->Active);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return MasterRole the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
+    }
+
+    public function dataProvider() {
+        return new CActiveDataProvider($this, array(
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return MasterRole the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
 }

@@ -6,7 +6,6 @@ class MastermoduleController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -15,7 +14,7 @@ class MastermoduleController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			//'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -28,15 +27,15 @@ class MastermoduleController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(''),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('index','view','create','update','admin','delete'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array(''),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -65,13 +64,16 @@ class MastermoduleController extends Controller
 		$model=new MasterModule;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['MasterModule']))
 		{
 			$model->attributes=$_POST['MasterModule'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->Master_Module_ID));
+			if($model->save()){
+                                Yii::app()->user->setFlash('success', 'MasterModule Created Successfully!!!');
+				//$this->redirect(array('view','id'=>$model->Master_Module_ID));
+                                $this->redirect(array('index'));
+                        }
 		}
 
 		$this->render('create',array(
@@ -89,13 +91,16 @@ class MastermoduleController extends Controller
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['MasterModule']))
 		{
 			$model->attributes=$_POST['MasterModule'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->Master_Module_ID));
+			if($model->save()){
+                                Yii::app()->user->setFlash('success', 'MasterModule Updated Successfully!!!');
+//				$this->redirect(array('view','id'=>$model->Master_Module_ID));
+                                $this->redirect(array('index'));
+                        }
 		}
 
 		$this->render('update',array(
@@ -113,8 +118,10 @@ class MastermoduleController extends Controller
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		if(!isset($_GET['ajax'])){
+                    Yii::app()->user->setFlash('success', 'MasterModule Deleted Successfully!!!');
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+                }
 	}
 
 	/**
@@ -122,9 +129,13 @@ class MastermoduleController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('MasterModule');
+        $model=new MasterModule('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['MasterModule']))
+			$model->attributes=$_GET['MasterModule'];
+
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model,
 		));
 	}
 
