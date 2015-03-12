@@ -43,15 +43,32 @@ class UserController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new User;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $model = new User('create');
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            if ($model->validate()):
+                $password = Myclass::getRandomString(9);
+                $this->password_hash = Myclass::encrypt($password);
+
+                $model->save(false);
+                if (!empty($model->email)):
+                    $mail = new Sendmail();
+                    $nextstep_url = Yii::app()->createAbsoluteUrl('/site/default/login');
+                    $subject = "Registraion Mail From - " . SITENAME;
+                    $trans_array = array(
+                        "{NAME}" => $model->name,
+                        "{USERNAME}" => $model->username,
+                        "{PASSWORD}" => $password,
+                        "{NEXTSTEPURL}" => $nextstep_url,
+                    );
+                    $message = $mail->getMessage('registration', $trans_array);
+                    $mail->send($model->email, $subject, $message);
+                    Yii::app()->user->setFlash('success', 'User Created Successfully!!!');
+                    $this->redirect(array('index'));
+                endif;
+            endif;
         }
 
         $this->render('create', array(
@@ -66,14 +83,18 @@ class UserController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->setScenario('update');
 
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $this->performAjaxValidation($model);
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            if ($model->validate()) {
+                $model->save(false);
+                Yii::app()->user->setFlash('success', 'User Updated Successfully!!!');
+                $this->redirect(array('index'));
+            }
         }
 
         $this->render('update', array(
@@ -97,38 +118,18 @@ class UserController extends Controller {
     /**
      * Lists all models.
      */
-    protected function columns() {
-        return array(
-            'username:text',
-            'name:text',
-            'email:email',
-            'role:text',
-            'status:text'
-        );
-    }
-
     public function actionIndex() {
         $search = false;
-        if (isset($_REQUEST['UserSearch'])) {
-            foreach ($_REQUEST['UserSearch'] as $key => $value) {
-                if ($value != '') {
-                    $search = true;
-                    break;
-                }
-            }
-        }
 
-        $searchModel = new User();
-        $model = new User('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['User'])){
+        $model = new User();
+        $searchModel = new User('search');
+        $searchModel->unsetAttributes();  // clear any default values
+        if (isset($_GET['User'])) {
             $search = true;
-            $model->attributes = $_GET['User'];
+            $searchModel->attributes = $_GET['User'];
         }
 
-        $model = User::model()->findAll();
-
-        $this->render('index', compact('searchModel','search', 'model'));
+        $this->render('index', compact('searchModel', 'search', 'model'));
     }
 
     /**

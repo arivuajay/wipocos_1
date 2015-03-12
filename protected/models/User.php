@@ -113,11 +113,18 @@ class User extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
         ));
     }
 
     public function dataProvider() {
-        return new CActiveDataProvider($this);
+        return new CActiveDataProvider($this, array(
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
     }
 
     /**
@@ -131,11 +138,10 @@ class User extends CActiveRecord {
     }
 
     protected function afterValidate() {
-        if($this->scenario == 'update' && !empty($this->confirm_password)){
+        if ($this->scenario == 'update' && !empty($this->confirm_password)) {
             $this->password_hash = Myclass::encrypt($this->confirm_password);
         }
 
         return parent::afterValidate();
     }
-
 }

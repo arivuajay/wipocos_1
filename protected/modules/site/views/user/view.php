@@ -1,35 +1,39 @@
 <?php
-/* @var $this UserController */
-/* @var $model User */
-
-$this->breadcrumbs=array(
-	'Users'=>array('index'),
-	$model->name,
-);
-
-$this->menu=array(
-	array('label'=>'List User', 'url'=>array('index')),
-	array('label'=>'Create User', 'url'=>array('create')),
-	array('label'=>'Update User', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete User', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage User', 'url'=>array('admin')),
+$this->title = 'View User #'.$model->name;
+$this->breadcrumbs = array(
+    'Users' => array('index'),
+    'View User',
 );
 ?>
 
-<h1>View User #<?php echo $model->id; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'username',
-		'name',
-		'password_hash',
-		'password_reset_token',
-		'email',
-		'role',
-		'status',
-		'created_at',
-		'updated_at',
-	),
-)); ?>
+<div class="user-view">
+    <p>
+        <?= CHtml::link('Update', array('update', 'id' => $model->id), array('class' => 'btn btn-primary')); ?>
+        <?= CHtml::link('Delete', array('delete', 'id' => $model->id), array('confirm' => 'Are you sure you want to delete this item?', 'class' => 'btn btn-danger'));
+        ?>
+    </p>
+    <?php
+    $this->widget('zii.widgets.CDetailView', array(
+        'data' => $model,
+        'htmlOptions' => array('class'=>'table table-striped table-bordered'),
+        'attributes' => array(
+            'id',
+            'username',
+            'name',
+            array(
+                'label' => $model->getAttributeLabel('email'),
+                'type'  => 'html',
+                'value' => CHtml::link($model->email,"maito:{$model->email}")
+            ),
+            array(
+                'label' => $model->getAttributeLabel('role'),
+                'value' => $model->roleMdl->Description,
+            ),
+            array(
+                'label' => $model->getAttributeLabel('status'),
+                'value' => $model->status == '1' ? 'Active' : 'In-Active'
+            ),
+        ),
+    ));
+    ?>
+</div>

@@ -15,6 +15,8 @@ $app = Yii::createWebApplication($config);
 
 defined('SITEURL') ||
     @define('SITEURL', Yii::app()->createAbsoluteUrl("/"));
+defined('SITENAME') ||
+    @define('SITENAME', Yii::app()->name);
 
 defined('DS') ||
     @define('DS', DIRECTORY_SEPARATOR);

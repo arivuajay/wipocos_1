@@ -12,14 +12,14 @@ return array(
     'SMTPPASS' => 'ninja12345',
     'SMTPAUTH' => true, // Auth : true or false
     'SMTPSECURE' => 'ssl', // Secure :tls or ssl
-    'NOREPLYMAIL' => 'noreply@express2help.com',
-    'SITENAME' => 'Express2Help',
+    'NOREPLYMAIL' => 'noreply@wipocos.com',
     'JS_SHORT_DATE_FORMAT' => 'yy-mm-dd',
     'PHP_SHORT_DATE_FORMAT' => 'Y-m-d',
 
     //Product Settings
     'JOURNAL_IMG_PATH' => 'uploads/journal/',
-    'COPYRIGHT' => '&copy; 2014 Express2Help.',
-    'EMAILHEADERIMAGE' => '/themes/site/css/frontend/img/logos/header-logo.png',
+    'EMAILHEADERIMAGE' => '/themes/adminlte/img/header-logo.png',
+
+    'PAGE_SIZE' => '10',
 );
 
