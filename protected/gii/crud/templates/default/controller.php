@@ -136,14 +136,18 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionIndex()
 	{
-        $model=new <?php echo $this->modelClass; ?>('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['<?php echo $this->modelClass; ?>']))
-			$model->attributes=$_GET['<?php echo $this->modelClass; ?>'];
+            $search = false;
 
-		$this->render('index',array(
-			'model'=>$model,
-		));
+            $model = new <?php echo $this->modelClass; ?>();
+            $searchModel = new <?php echo $this->modelClass; ?>('search');
+            $searchModel->unsetAttributes();  // clear any default values
+            if (isset($_GET['<?php echo $this->modelClass; ?>'])) {
+                $search = true;
+                $searchModel->attributes = $_GET['<?php echo $this->modelClass; ?>'];
+                $searchModel->search();
+            }
+
+            $this->render('index', compact('searchModel', 'search', 'model'));
 	}
 
 	/**

@@ -58,4 +58,22 @@ class Myclass extends CController {
         }
     }
     
+    public static function getDocumentStatus($key = NULL) {
+        $status = array(
+            'N' => 'Declared work', 
+            'I' => 'International File', 
+            'U' => 'Undeclared National Work', 
+            'V' => 'Warsaw Rule', 
+            'W' => 'Foreign Work', 
+            'Q' => 'Unidentified Work', 
+            'X' => 'Non-Identified Work', 
+            'Y' => 'Worldwide Non Documented Work', 
+        );
+        
+        if(isset($key) && $key != NULL)
+            return $status[$key];
+        
+        return $status;
+    }
+    
 }

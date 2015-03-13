@@ -129,14 +129,18 @@ class MastercountryController extends Controller
 	 */
 	public function actionIndex()
 	{
-        $model=new MasterCountry('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['MasterCountry']))
-			$model->attributes=$_GET['MasterCountry'];
+            $search = false;
 
-		$this->render('index',array(
-			'model'=>$model,
-		));
+            $model = new MasterCountry();
+            $searchModel = new MasterCountry('search');
+            $searchModel->unsetAttributes();  // clear any default values
+            if (isset($_GET['MasterCountry'])) {
+                $search = true;
+                $searchModel->attributes = $_GET['MasterCountry'];
+                $searchModel->search();
+            }
+
+            $this->render('index', compact('searchModel', 'search', 'model'));
 	}
 
 	/**

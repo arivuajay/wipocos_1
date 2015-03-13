@@ -3,6 +3,7 @@
 class CrudCode extends CCodeModel {
 
     public $model;
+    public $searchModel;
     public $controller;
     public $baseControllerClass = 'Controller';
     private $_modelClass;
@@ -170,8 +171,12 @@ class CrudCode extends CCodeModel {
         }
     }
 
-    public function generateActiveLabel($modelClass, $column) {
-        return "\$form->labelEx(\$model,'{$column->name}',  array('class' => 'col-sm-2 control-label'))";
+    public function generateActiveLabel($modelClass, $column, $width = 'col-sm-2') {
+        return "\$form->labelEx(\$model,'{$column->name}',  array('class' => '{$width} control-label'))";
+    }
+
+    public function generatesearchActiveLabel($modelClass, $column, $width = 'col-sm-2') {
+        return "\$form->labelEx(\$searchModel,'{$column->name}',  array('class' => '{$width} control-label'))";
     }
 
     public function generateActiveField($modelClass, $column) {
@@ -196,6 +201,30 @@ class CrudCode extends CCodeModel {
         }
     }
 
+    public function generateSearchActiveField($modelClass, $column) {
+        $activeFields = $this->giiGenerateActiveInActiveFields();
+        if ($column->type === 'boolean')
+            return "\$form->checkBox(\$searchModel,'{$column->name}',array('class'=>'form-control'))";
+        elseif (stripos($column->dbType, 'text') !== false)
+            return "\$form->textArea(\$searchModel,'{$column->name}',array('class'=>'form-control','rows'=>6, 'cols'=>50))";
+        elseif (in_array($column->name, $activeFields))
+            return "\$form->dropDownList(\$searchModel, '{$column->name}', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));";
+        else {
+            if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name))
+                $inputField = 'passwordField';
+            else
+                $inputField = 'textField';
+
+            if ($column->type !== 'string' || $column->size === null)
+                return "\$form->{$inputField}(\$searchModel,'{$column->name}',array('class'=>'form-control'))";
+            else {
+                if (($size = $maxLength = $column->size) > 60)
+                    $size = 60;
+                return "\$form->{$inputField}(\$searchModel,'{$column->name}',array('class'=>'form-control','size'=>$size,'maxlength'=>$maxLength))";
+            }
+        }
+    }
+
     public function guessNameColumn($columns) {
         foreach ($columns as $column) {
             if (!strcasecmp($column->name, 'name'))
@@ -213,6 +242,10 @@ class CrudCode extends CCodeModel {
     }
 
     public function giiGenerateEnumFields() {
+        return array('Active', 'is_Admin');
+    }
+
+    public function giiGenerateActiveInActiveFields() {
         return array('Active', 'is_Admin');
     }
 

@@ -137,6 +137,9 @@ foreach($columns as $name=>$column)
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+                        'pagination' => array(
+                            'pageSize' => PAGE_SIZE,
+                        )
 		));
 	}
 

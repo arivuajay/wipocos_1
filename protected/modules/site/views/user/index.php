@@ -31,10 +31,11 @@ $this->breadcrumbs = array(
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
-                        <?php $names = CHtml::listData(User::model()->findAll(array('order' => 'name')), 'name', 'name') ?>
+                        <?php // $names = CHtml::listData(User::model()->findAll(array('order' => 'name')), 'name', 'name') ?>
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'name') ?>
-                            <?php echo $form->dropDownList($searchModel, 'name', $names, array('prompt' => '', 'class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'name', array('autofocus', 'class' => 'form-control')); ?>
+                            <?php // echo $form->dropDownList($searchModel, 'name', $names, array('prompt' => '', 'class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'name') ?>
                         </div>
                     </div>

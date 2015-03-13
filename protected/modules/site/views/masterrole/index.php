@@ -96,8 +96,6 @@ $this->breadcrumbs = array(
                     echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
                 },
             ),
-            'Created_Date',
-            'Rowversion',
             array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',
@@ -154,8 +152,6 @@ $this->breadcrumbs = array(
                     echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
                 },
             ),
-            'Created_Date',
-            'Rowversion',
             array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',
