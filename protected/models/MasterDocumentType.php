@@ -7,10 +7,13 @@
  * @property integer $Master_Doc_Type_Id
  * @property string $Doc_Type_Name
  * @property string $Doc_Type_Comment
- * @property string $Doc_Type_Status
+ * @property integer $Doc_Type_Status_Id
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property MasterDocumentStatus $docTypeStatus
  */
 class MasterDocumentType extends CActiveRecord
 {
@@ -30,14 +33,15 @@ class MasterDocumentType extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Doc_Type_Name, Doc_Type_Comment, Doc_Type_Status', 'required'),
+			array('Doc_Type_Name, Doc_Type_Comment, Doc_Type_Status_Id', 'required'),
+			array('Doc_Type_Status_Id', 'numerical', 'integerOnly'=>true),
 			array('Doc_Type_Name', 'length', 'max'=>90),
 			array('Doc_Type_Comment', 'length', 'max'=>255),
-			array('Doc_Type_Status, Active', 'length', 'max'=>1),
+			array('Active', 'length', 'max'=>1),
 			array('Created_Date, Rowversion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Master_Doc_Type_Id, Doc_Type_Name, Doc_Type_Comment, Doc_Type_Status, Active, Created_Date, Rowversion', 'safe', 'on'=>'search'),
+			array('Master_Doc_Type_Id, Doc_Type_Name, Doc_Type_Comment, Doc_Type_Status_Id, Active, Created_Date, Rowversion', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,6 +53,7 @@ class MasterDocumentType extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'docTypeStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Doc_Type_Status_Id'),
 		);
 	}
 
@@ -59,9 +64,9 @@ class MasterDocumentType extends CActiveRecord
 	{
 		return array(
 			'Master_Doc_Type_Id' => 'Master Doc Type',
-			'Doc_Type_Name' => 'Doc Type Name',
-			'Doc_Type_Comment' => 'Doc Type Comment',
-			'Doc_Type_Status' => 'Doc Type Status',
+			'Doc_Type_Name' => 'Document Type Name',
+			'Doc_Type_Comment' => 'Document Type Comment',
+			'Doc_Type_Status_Id' => 'Document Type Status',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',
@@ -89,7 +94,7 @@ class MasterDocumentType extends CActiveRecord
 		$criteria->compare('Master_Doc_Type_Id',$this->Master_Doc_Type_Id);
 		$criteria->compare('Doc_Type_Name',$this->Doc_Type_Name,true);
 		$criteria->compare('Doc_Type_Comment',$this->Doc_Type_Comment,true);
-		$criteria->compare('Doc_Type_Status',$this->Doc_Type_Status,true);
+		$criteria->compare('Doc_Type_Status_Id',$this->Doc_Type_Status_Id);
 		$criteria->compare('Active',$this->Active,true);
 		$criteria->compare('Created_Date',$this->Created_Date,true);
 		$criteria->compare('Rowversion',$this->Rowversion,true);

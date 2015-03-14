@@ -48,7 +48,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Master_Doc_Type_Id',
 		'Doc_Type_Name',
 		'Doc_Type_Comment',
-		'Doc_Type_Status',
+		'Doc_Type_Status_Id',
 		'Active',
 		'Created_Date',
 		/*

@@ -58,8 +58,8 @@ class MasterPaymentMethod extends CActiveRecord
 	{
 		return array(
 			'Master_Paymode_Id' => 'Master Paymode',
-			'Paymode_Name' => 'Paymode Name',
-			'Paymode_Comment' => 'Paymode Comment',
+			'Paymode_Name' => 'Payment Method Name',
+			'Paymode_Comment' => 'Payment Method Comment',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',

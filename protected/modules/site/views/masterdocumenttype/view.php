@@ -22,7 +22,7 @@ $this->breadcrumbs=array(
 		'Master_Doc_Type_Id',
 		'Doc_Type_Name',
 		'Doc_Type_Comment',
-		'Doc_Type_Status',
+		'Doc_Type_Status_Id',
 		'Active',
 		'Created_Date',
 		'Rowversion',

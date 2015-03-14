@@ -56,7 +56,7 @@ class MasterInternalPosition extends CActiveRecord
 	{
 		return array(
 			'Master_Int_Post_Id' => 'Master Int Post',
-			'Int_Post_Name' => 'Int Post Name',
+			'Int_Post_Name' => 'International Position',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',

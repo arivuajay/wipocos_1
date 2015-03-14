@@ -57,8 +57,8 @@ class MasterDocument extends CActiveRecord
 	{
 		return array(
 			'Master_Doc_Id' => 'Master Doc',
-			'Doc_Name' => 'Doc Name',
-			'Doc_Comment' => 'Doc Comment',
+			'Doc_Name' => 'Document Name',
+			'Doc_Comment' => 'Document Comment',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',

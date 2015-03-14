@@ -27,8 +27,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Doc_Type_Status'); ?>
-		<?php echo $form->textField($model,'Doc_Type_Status',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+		<?php echo $form->label($model,'Doc_Type_Status_Id'); ?>
+		<?php echo $form->textField($model,'Doc_Type_Status_Id',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

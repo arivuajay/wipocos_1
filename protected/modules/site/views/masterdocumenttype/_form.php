@@ -33,11 +33,11 @@
                     </div>
 
                     <div class="form-group">
-                        <?php $status = Myclass::getDocumentStatus();?>
-                        <?php echo $form->labelEx($model,'Doc_Type_Status',  array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-5">
-                        <?php echo $form->dropDownList($model,'Doc_Type_Status',$status, array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
-                        <?php echo $form->error($model,'Doc_Type_Status'); ?>
+                        <?php echo $form->labelEx($model,'Doc_Type_Status_Id',  array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-2">
+                        <?php $sts = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(), 'Master_Document_Sts_Id', 'Document_Sts_Code')?>
+                        <?php echo $form->dropDownList($model,'Doc_Type_Status_Id', $sts, array('class'=>'form-control')); ?>
+                        <?php echo $form->error($model,'Doc_Type_Status_Id'); ?>
                         </div>
                     </div>
 

@@ -58,8 +58,8 @@ class MasterEventType extends CActiveRecord
 	{
 		return array(
 			'Master_Evt_Type_Id' => 'Master Evt Type',
-			'Evt_Type_Name' => 'Evt Type Name',
-			'Evt_Type_Comment' => 'Evt Type Comment',
+			'Evt_Type_Name' => 'Event Type Name',
+			'Evt_Type_Comment' => 'Event Type Comment',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',

@@ -17,8 +17,8 @@
 	<?php echo CHtml::encode($data->Doc_Type_Comment); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Doc_Type_Status')); ?>:</b>
-	<?php echo CHtml::encode($data->Doc_Type_Status); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Doc_Type_Status_Id')); ?>:</b>
+	<?php echo CHtml::encode($data->Doc_Type_Status_Id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Active')); ?>:</b>

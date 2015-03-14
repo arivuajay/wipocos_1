@@ -56,7 +56,7 @@ class MasterLanguage extends CActiveRecord
 	{
 		return array(
 			'Master_Lang_Id' => 'Master Lang',
-			'Lang_Name' => 'Lang Name',
+			'Lang_Name' => 'Language Name',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',
