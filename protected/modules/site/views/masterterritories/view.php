@@ -21,7 +21,11 @@ $this->breadcrumbs=array(
 	'attributes'=>array(
 		'Master_Territory_Id',
 		'Territory_Name',
-		'Active',
+		array(
+                    'label' => MasterTerritories::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

@@ -23,7 +23,11 @@ $this->breadcrumbs=array(
 		'Country_Name',
 		'Country_Two_Code',
 		'Country_Three_Code',
-		'Active',
+		array(
+                    'label' => MasterCountry::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

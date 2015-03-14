@@ -22,7 +22,11 @@ $this->breadcrumbs=array(
 		'Master_Module_ID',
 		'Module_Code',
 		'Description',
-		'Active',
+		array(
+                    'label' => MasterModule::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

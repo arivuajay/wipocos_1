@@ -25,7 +25,11 @@ $this->menu=array(
 		'Module_ID',
 		'Screen_code',
 		'Description',
-		'Active',
+		array(
+                    'label' => MasterScreen::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

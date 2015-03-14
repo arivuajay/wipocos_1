@@ -22,7 +22,11 @@ $this->breadcrumbs=array(
 		'Master_Paymode_Id',
 		'Paymode_Name',
 		'Paymode_Comment',
-		'Active',
+		array(
+                    'label' => MasterPaymentMethod::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

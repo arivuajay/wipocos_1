@@ -22,7 +22,11 @@ $this->breadcrumbs=array(
 		'Master_Evt_Type_Id',
 		'Evt_Type_Name',
 		'Evt_Type_Comment',
-		'Active',
+		array(
+                    'label' => MasterEventType::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

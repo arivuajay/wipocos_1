@@ -80,7 +80,14 @@ $this->breadcrumbs=array(
             ),
 		'Doc_Type_Name',
 		'Doc_Type_Comment',
-		'Doc_Type_Status_Id',
+		array(
+                'name' => 'Doc_Type_Status_Id',
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->docTypeStatus->Document_Sts_Name;
+                }
+                ),
 		array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -127,7 +134,14 @@ $this->breadcrumbs=array(
             ),
 		'Doc_Type_Name',
 		'Doc_Type_Comment',
-		'Doc_Type_Status_Id',
+		array(
+                'name' => MasterDocumentType::model()->getAttributeLabel('Doc_Type_Status_Id'),
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->docTypeStatus->Document_Sts_Name;
+                }
+                ),
 		array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),

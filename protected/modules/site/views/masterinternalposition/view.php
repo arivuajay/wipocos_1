@@ -21,7 +21,11 @@ $this->breadcrumbs=array(
 	'attributes'=>array(
 		'Master_Int_Post_Id',
 		'Int_Post_Name',
-		'Active',
+		array(
+                    'label' => MasterInternalPosition::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

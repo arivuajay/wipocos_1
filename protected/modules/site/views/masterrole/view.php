@@ -22,8 +22,16 @@ $this->breadcrumbs=array(
 		'Master_Role_ID',
 		'Role_Code',
 		'Description',
-		'is_Admin',
-		'Active',
+		array(
+                    'label' => MasterRole::model()->getAttributeLabel('is_Admin'),
+                    'type' => 'raw',
+                    'value' => ($model->is_Admin == 1) ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i title="No" class="fa fa-circle text-red"></i>'
+                ),
+		array(
+                    'label' => MasterRole::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

@@ -21,7 +21,11 @@ $this->breadcrumbs=array(
 	'attributes'=>array(
 		'Master_Mgd_Rights_Id',
 		'Mgd_Rights_Name',
-		'Active',
+		array(
+                    'label' => MasterManagedRights::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),

@@ -22,7 +22,11 @@ $this->breadcrumbs=array(
 		'Master_Doc_Id',
 		'Doc_Name',
 		'Doc_Comment',
-		'Active',
+		array(
+                    'label' => MasterDocument::model()->getAttributeLabel('Active'),
+                    'type' => 'raw',
+                    'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                ),
 		'Created_Date',
 		'Rowversion',
 	),
