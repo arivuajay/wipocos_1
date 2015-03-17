@@ -215,6 +215,7 @@ DROP TABLE IF EXISTS `wipo_author_pseudonym`;
 
 CREATE TABLE `wipo_author_pseudonym` (
   `Auth_Pseudo_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Auth_Acc_id` int(11) NOT NULL,
   `Auth_Pseudo_Type_Id` int(11) NOT NULL,
   `Auth_Pseudo_Name` varchar(50) NOT NULL,
   `Active` enum('0','1') NOT NULL DEFAULT '1',
@@ -222,6 +223,8 @@ CREATE TABLE `wipo_author_pseudonym` (
   `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`Auth_Pseudo_Id`),
   KEY `FK_wipo_author_pseudonym_pseodo_type` (`Auth_Pseudo_Type_Id`),
+  KEY `FK_wipo_author_pseudonym_author_account` (`Auth_Acc_id`),
+  CONSTRAINT `FK_wipo_author_pseudonym_author_account` FOREIGN KEY (`Auth_Acc_id`) REFERENCES `wipo_author_account` (`Auth_Acc_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_wipo_author_pseudonym_pseodo_type` FOREIGN KEY (`Auth_Pseudo_Type_Id`) REFERENCES `wipo_master_pseudonym_types` (`Pseudo_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
