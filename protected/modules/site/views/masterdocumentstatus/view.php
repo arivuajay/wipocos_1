@@ -4,7 +4,7 @@
 
 $this->title='View #'.$model->Master_Document_Sts_Id;
 $this->breadcrumbs=array(
-	'Master Document Statuses'=>array('index'),
+	'Master Document Status'=>array('index'),
 	'View '.'MasterDocumentStatus',
 );
 ?>

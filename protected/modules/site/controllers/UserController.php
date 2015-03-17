@@ -115,8 +115,10 @@ class UserController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', 'User Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
     }
 
     /**
@@ -174,7 +176,7 @@ class UserController extends Controller {
             if (empty($user)) {
                 Yii::app()->user->setFlash('danger', 'This Email Address Not Exists!!!');
                 $this->refresh();
-            }else{
+            } else {
                 $reset_link = Myclass::getRandomString(25);
                 $user->setAttribute('password_reset_token', $reset_link);
                 $user->setAttribute('updated_at', strtotime(date('Y-m-d H:i:s')));
@@ -205,7 +207,7 @@ class UserController extends Controller {
 
         $this->render('forgot', array('model' => $model));
     }
-    
+
     public function actionReset($str, $id) {
         $this->layout = '//layouts/login';
         if (!Yii::app()->user->isGuest)
@@ -219,9 +221,9 @@ class UserController extends Controller {
             $start = strtotime(date('Y-m-d H:i:s', $model->updated_at));
             $end = strtotime(date('Y-m-d H:i:s'));
             $seconds = $end - $start;
-            $days    = floor($seconds / 86400);
-            $hours   = floor(($seconds - ($days * 86400)) / 3600);
-            $minutes = floor(($seconds - ($days * 86400) - ($hours * 3600))/60);
+            $days = floor($seconds / 86400);
+            $hours = floor(($seconds - ($days * 86400)) / 3600);
+            $minutes = floor(($seconds - ($days * 86400) - ($hours * 3600)) / 60);
 
             if ($minutes > 5) {
                 Yii::app()->user->setFlash('danger', "This Reset Link Expired. Please Try again.");

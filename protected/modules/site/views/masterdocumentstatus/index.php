@@ -2,9 +2,9 @@
 /* @var $this MasterdocumentstatusController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title='Master Document Statuses';
+$this->title='Master Document Status';
 $this->breadcrumbs=array(
-	'Master Document Statuses',
+	'Master Document Status',
 );
 ?>
 <div class="col-lg-12 col-md-12">
@@ -147,7 +147,7 @@ $this->breadcrumbs=array(
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Master Document Statuses</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Master Document Status</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

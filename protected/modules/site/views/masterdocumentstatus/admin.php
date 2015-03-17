@@ -3,7 +3,7 @@
 /* @var $model MasterDocumentStatus */
 
 $this->breadcrumbs=array(
-	'Master Document Statuses'=>array('index'),
+	'Master Document Status'=>array('index'),
 	'Manage',
 );
 
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Master Document Statuses</h1>
+<h1>Manage Master Document Status</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>

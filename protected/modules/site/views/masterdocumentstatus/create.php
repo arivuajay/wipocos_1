@@ -2,9 +2,9 @@
 /* @var $this MasterdocumentstatusController */
 /* @var $model MasterDocumentStatus */
 
-$this->title='Create Master Document Statuses';
+$this->title='Create Master Document Status';
 $this->breadcrumbs=array(
-	'Master Document Statuses'=>array('index'),
+	'Master Document Status'=>array('index'),
 	$this->title,
 );
 ?>

@@ -17,7 +17,7 @@
 )); ?>
             <div class="box-body">
                                     <div class="form-group">
-                        <?php echo $form->labelEx($model,'Document_Sts_Code',  array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model,'Document_Sts_Code',  array('class' => 'col-sm-3 control-label')); ?>
                         <div class="col-sm-5">
                         <?php echo $form->textField($model,'Document_Sts_Code',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
                         <?php echo $form->error($model,'Document_Sts_Code'); ?>
@@ -25,7 +25,7 @@
                     </div>
 
                                         <div class="form-group">
-                        <?php echo $form->labelEx($model,'Document_Sts_Name',  array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model,'Document_Sts_Name',  array('class' => 'col-sm-3 control-label')); ?>
                         <div class="col-sm-5">
                         <?php echo $form->textField($model,'Document_Sts_Name',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
                         <?php echo $form->error($model,'Document_Sts_Name'); ?>
@@ -33,7 +33,7 @@
                     </div>
 
                                         <div class="form-group">
-                        <?php echo $form->labelEx($model,'Document_Sts_Comment',  array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model,'Document_Sts_Comment',  array('class' => 'col-sm-3 control-label')); ?>
                         <div class="col-sm-5">
                         <?php echo $form->textArea($model,'Document_Sts_Comment',array('class'=>'form-control','rows'=>6, 'cols'=>50)); ?>
                         <?php echo $form->error($model,'Document_Sts_Comment'); ?>
@@ -41,7 +41,7 @@
                     </div>
 
                                         <div class="form-group">
-                        <?php echo $form->labelEx($model,'Active',  array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model,'Active',  array('class' => 'col-sm-3 control-label')); ?>
                         <div class="col-sm-5">
                         <?php echo $form->checkBox($model,'Active',array('class'=>'form-control')); ?>
                         <?php echo $form->error($model,'Active'); ?>
