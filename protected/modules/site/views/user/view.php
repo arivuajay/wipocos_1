@@ -22,8 +22,8 @@ $this->breadcrumbs = array(
             'name',
             array(
                 'label' => $model->getAttributeLabel('email'),
-                'type'  => 'html',
-                'value' => CHtml::link($model->email,"maito:{$model->email}")
+                'type'  => 'raw',
+                'value' => CHtml::link($model->email,"mailto:{$model->email}")
             ),
             array(
                 'label' => $model->getAttributeLabel('role'),
