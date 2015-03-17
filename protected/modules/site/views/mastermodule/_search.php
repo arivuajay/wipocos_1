@@ -33,7 +33,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'Created_Date'); ?>
-		<?php echo $form->textField($model,'Created_Date',array('class'=>'form-control')); ?>
+		<?php echo $form->textField($model,array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

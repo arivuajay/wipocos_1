@@ -29,8 +29,6 @@ $this->breadcrumbs=array(
 		'Master_Task_UPT',
 		'Master_Task_DEL',
 		'Active',
-		'Created_Date',
-		'Rowversion',
 	),
 )); ?>
 </div>

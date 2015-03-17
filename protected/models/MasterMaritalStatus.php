@@ -56,7 +56,7 @@ class MasterMaritalStatus extends CActiveRecord
 	{
 		return array(
 			'Master_Marital_State_Id' => 'Master Marital State',
-			'Marital_State' => 'Marital State',
+			'Marital_State' => 'Marital Status',
 			'Active' => 'Active',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',
