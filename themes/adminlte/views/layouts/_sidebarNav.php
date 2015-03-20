@@ -85,6 +85,9 @@
                         array('label' => '<i class="fa fa-suitcase"></i> <span>Works Category</span>', 'url' => array('/site/masterworkscategory/index')),
                     ),
                 ),
+                array('label' => '<i class="fa fa-th"></i> <span>Organization</span>', 'url' => array('/site/organization/index')),
+                array('label' => '<i class="fa fa-th"></i> <span>Share Definition</span>', 'url' => array('/site/sharedefinitionperrole/index')),
+                array('label' => '<i class="fa fa-th"></i> <span>Number Assignment</span>', 'url' => array('/site/numberassignment/index')),
             ),
             'htmlOptions' => array('class' => 'sidebar-menu')
         ));
