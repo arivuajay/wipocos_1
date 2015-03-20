@@ -1,29 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "{{master_profession}}".
+ * This is the model class for table "{{number_assignment}}".
  *
- * The followings are the available columns in table '{{master_profession}}':
- * @property integer $Master_Profession_Id
- * @property string $Profession_Name
+ * The followings are the available columns in table '{{number_assignment}}':
+ * @property integer $Num_Assgn_Id
+ * @property integer $Num_Assgn_System_Id
+ * @property integer $Num_Assgn_Series_From
+ * @property integer $Num_Assgn_Series_To
+ * @property string $Num_Assgn_List
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  */
-class MasterProfession extends CActiveRecord {
+class NumberAssignment extends CActiveRecord {
+    
+    public $series_list;
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_profession}}';
-    }
-
-    public function scopes() {
-        $alias = $this->getTableAlias(false, false);
-        return array(
-            'isActive' => array('condition' => "$alias.Active = '1'"),
-        );
+        return '{{number_assignment}}';
     }
 
     /**
@@ -33,13 +31,15 @@ class MasterProfession extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Profession_Name', 'required'),
-            array('Profession_Name', 'length', 'max' => 45),
+            array('Num_Assgn_System_Id, Num_Assgn_Series_From, Num_Assgn_Series_To', 'required'),
+            array('Num_Assgn_Series_From, Num_Assgn_Series_To', 'numerical', 'integerOnly' => true),
+            array('Num_Assgn_System_Id', 'length', 'max' => 100),
+            array('Num_Assgn_List', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Profession_Id, Profession_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Num_Assgn_Id, Num_Assgn_System_Id, Num_Assgn_Series_From, Num_Assgn_Series_To, Num_Assgn_List, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -58,8 +58,11 @@ class MasterProfession extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Profession_Id' => 'Master Profession',
-            'Profession_Name' => 'Profession Name',
+            'Num_Assgn_Id' => 'Num Assgn',
+            'Num_Assgn_System_Id' => 'Num Assgn System',
+            'Num_Assgn_Series_From' => 'Num Assgn Series From',
+            'Num_Assgn_Series_To' => 'Num Assgn Series To',
+            'Num_Assgn_List' => 'Num Assgn List',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -83,8 +86,11 @@ class MasterProfession extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Profession_Id', $this->Master_Profession_Id);
-        $criteria->compare('Profession_Name', $this->Profession_Name, true);
+        $criteria->compare('Num_Assgn_Id', $this->Num_Assgn_Id);
+        $criteria->compare('Num_Assgn_System_Id', $this->Num_Assgn_System_Id);
+        $criteria->compare('Num_Assgn_Series_From', $this->Num_Assgn_Series_From);
+        $criteria->compare('Num_Assgn_Series_To', $this->Num_Assgn_Series_To);
+        $criteria->compare('Num_Assgn_List', $this->Num_Assgn_List, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -101,7 +107,7 @@ class MasterProfession extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterProfession the static model class
+     * @return NumberAssignment the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

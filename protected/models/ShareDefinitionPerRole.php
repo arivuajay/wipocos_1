@@ -1,29 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "{{master_profession}}".
+ * This is the model class for table "{{share_definition_per_role}}".
  *
- * The followings are the available columns in table '{{master_profession}}':
- * @property integer $Master_Profession_Id
- * @property string $Profession_Name
+ * The followings are the available columns in table '{{share_definition_per_role}}':
+ * @property integer $Shr_Def_Id
+ * @property integer $Shr_Def_Role
+ * @property integer $Shr_Def_Equ_remn
+ * @property integer $Shr_Def_Blank_Tape_remn
+ * @property integer $Shr_Def_Neigh_Rgts
+ * @property integer $Shr_Def_Excl_Rgts
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property MasterRole $shrDefRole
  */
-class MasterProfession extends CActiveRecord {
+class ShareDefinitionPerRole extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_profession}}';
-    }
-
-    public function scopes() {
-        $alias = $this->getTableAlias(false, false);
-        return array(
-            'isActive' => array('condition' => "$alias.Active = '1'"),
-        );
+        return '{{share_definition_per_role}}';
     }
 
     /**
@@ -33,13 +33,13 @@ class MasterProfession extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Profession_Name', 'required'),
-            array('Profession_Name', 'length', 'max' => 45),
+            array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'required'),
+            array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'numerical', 'integerOnly' => true),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Profession_Id, Profession_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Shr_Def_Id, Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,6 +50,7 @@ class MasterProfession extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'shrDefRole' => array(self::BELONGS_TO, 'MasterRole', 'Shr_Def_Role'),
         );
     }
 
@@ -58,8 +59,12 @@ class MasterProfession extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Profession_Id' => 'Master Profession',
-            'Profession_Name' => 'Profession Name',
+            'Shr_Def_Id' => 'Shr Def',
+            'Shr_Def_Role' => 'Role',
+            'Shr_Def_Equ_remn' => 'Equitable remuneration',
+            'Shr_Def_Blank_Tape_remn' => 'Neighboring rights',
+            'Shr_Def_Neigh_Rgts' => 'Blank tape levy ',
+            'Shr_Def_Excl_Rgts' => 'Exclusive rights',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -83,8 +88,12 @@ class MasterProfession extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Profession_Id', $this->Master_Profession_Id);
-        $criteria->compare('Profession_Name', $this->Profession_Name, true);
+        $criteria->compare('Shr_Def_Id', $this->Shr_Def_Id);
+        $criteria->compare('Shr_Def_Role', $this->Shr_Def_Role);
+        $criteria->compare('Shr_Def_Equ_remn', $this->Shr_Def_Equ_remn);
+        $criteria->compare('Shr_Def_Blank_Tape_remn', $this->Shr_Def_Blank_Tape_remn);
+        $criteria->compare('Shr_Def_Neigh_Rgts', $this->Shr_Def_Neigh_Rgts);
+        $criteria->compare('Shr_Def_Excl_Rgts', $this->Shr_Def_Excl_Rgts);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -101,7 +110,7 @@ class MasterProfession extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterProfession the static model class
+     * @return ShareDefinitionPerRole the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

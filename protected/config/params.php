@@ -25,7 +25,7 @@ return array(
     'PHP_SHORT_DATE_FORMAT' => 'Y-m-d',
 
     //Product Settings
-    'JOURNAL_IMG_PATH' => 'uploads/journal/',
+    'UPLOAD_DIR' => 'uploads',
     'EMAILHEADERIMAGE' => '/themes/adminlte/img/header-logo.png',
 
     'PAGE_SIZE' => '10',
