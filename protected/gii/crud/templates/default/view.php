@@ -18,7 +18,10 @@ echo "\$this->breadcrumbs=array(
 );\n";
 ?>
 ?>
-
+<?php 
+$restrict = $this->giiGenerateHiddenFields();
+$activeFields = $this->giiGenerateActiveInActiveFields();
+?>
 <div class="user-view">
     <p>
         <?php echo "<?php"; ?> echo CHtml::link('Update', array('update', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>), array('class' => 'btn btn-primary')); ?>
@@ -31,7 +34,17 @@ echo "\$this->breadcrumbs=array(
 	'attributes'=>array(
 <?php
 foreach($this->tableSchema->columns as $column)
-    echo "\t\t'".$column->name."',\n";
+    if(in_array($column->name, $activeFields)):
+            $green = '<i class="fa fa-circle text-green"></i>';
+            $red = '<i class="fa fa-circle text-red"></i>';
+            echo "\t\tarray(
+                'name' => 'Active',
+                'type' => 'raw',
+                'value' => \$model->{$column->name} == 1 ? '{$green}' : '{$red}'
+            ),\n";
+    elseif (!in_array($column->name, $restrict)):
+        echo "\t\t'".$column->name."',\n";
+    endif;
 ?>
 	),
 )); ?>

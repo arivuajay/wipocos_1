@@ -78,7 +78,6 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
 			if($model->save()){
                                 Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Created Successfully!!!');
-				//$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
                                 $this->redirect(array('index'));
                         }
 		}
@@ -105,7 +104,6 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
 			if($model->save()){
                                 Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Updated Successfully!!!');
-//				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
                                 $this->redirect(array('index'));
                         }
 		}
