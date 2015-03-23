@@ -88,6 +88,21 @@
                 array('label' => '<i class="fa fa-th"></i> <span>Organization</span>', 'url' => array('/site/organization/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Share Definition</span>', 'url' => array('/site/sharedefinitionperrole/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Number Assignment</span>', 'url' => array('/site/numberassignment/index')),
+                array('label' => '<i class="fa fa-th"></i> <span>Screens</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                    'itemOptions' => array('class' => 'treeview'),
+                    'submenuOptions' => array('class' => 'treeview-menu'),
+                    'items' => array(
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 1</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_1.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 2</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_2.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 3</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_3.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 4</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_4.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 5</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_5.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 6</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_6.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 7</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_7.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 8</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_8.jpg') )),
+                        array('label' => '<i class="fa fa-newspaper-o"></i> <span>Screen 9</span>', 'url' => array('/site/default/screens','path'=> base64_encode('/Auth_Performer_Screens/screen_9.jpg') )),
+                       ),
+                ),
             ),
             'htmlOptions' => array('class' => 'sidebar-menu')
         ));
