@@ -24,7 +24,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -122,11 +122,17 @@ class DefaultController extends Controller {
 
     public function actionError() {
         if ($error = Yii::app()->errorHandler->error) {
-            $name = Yii::app()->errorHandler->error['code'].' Error';
+            $name = Yii::app()->errorHandler->error['code'] . ' Error';
             if (Yii::app()->request->isAjaxRequest)
                 echo $error['message'];
             else
                 $this->render('error', compact('error', 'name'));
+        }
+    }
+
+    public function actionScreens($path) {
+        if ($path) {
+            $this->render('screens', compact('path'));
         }
     }
 
