@@ -21,7 +21,10 @@ $this->breadcrumbs=array(
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
 	'attributes'=>array(
 		'Society_Id',
-		'Society_Abbr_Id',
+		array(
+                    'name' => 'Society_Abbr_Id',
+                    'value' => $model->socOrg->Org_Abbrevation
+                ),
 		array(
                     'name' => 'Society_Logo_File',
                     'type' => 'raw',
