@@ -25,95 +25,97 @@ $this->breadcrumbs = array(
                         'action' => array('/site/organization/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-
-                    $countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
-                    $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
-                    $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master_Region_Id', 'Region_Name');
-                    $professions = CHtml::listData(MasterProfession::model()->isActive()->findAll(), 'Master_Profession_Id', 'Profession_Name');
-                    $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
-                    $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(), 'Master_Paymode_Id', 'Paymode_Name');
-                    $documents = CHtml::listData(MasterDocument::model()->isActive()->findAll(), 'Master_Doc_Id', 'Doc_Name');
-                    $document_types = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(), 'Master_Doc_Type_Id', 'Doc_Type_Name');
+                    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
+                    $nationalities = CHtml::listData(MasterNationality::model()->findAll(), 'Master_Nation_Id', 'Nation_Name');
                     ?>
 
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Abbr_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Org_Abbr_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                            <?php echo $form->error($searchModel, 'Org_Abbr_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Code', array('class' => 'form-control', 'size' => 25, 'maxlength' => 25)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Code'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Org_Abbrevation', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Abbrevation', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Abbrevation'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Org_Nation_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Org_Nation_Id', $nationalities, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Org_Nation_Id'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Org_Country_Id', array('class' => ' control-label')); ?>
                             <?php echo $form->dropDownList($searchModel, 'Org_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Org_Country_Id'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Territory_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Territory_Id', $territories, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Territory_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Currency', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Currency', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Currency'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Region_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Region_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Society_Type_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Society_Type_Id', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Society_Type_Id'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Profession_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Profession_Id', $professions, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Profession_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Telephone', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Telephone', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Telephone'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Role_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Role_Id', $roles, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Role_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Email', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Email', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Email'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Payment_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Payment_Id', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Payment_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Website', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Website', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Website'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Doc_Type_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Doc_Type_Id', $document_types, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Doc_Type_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Bank_Account', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Org_Bank_Account', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->error($searchModel, 'Org_Bank_Account'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Doc_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Org_Doc_Id', $documents, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Org_Doc_Id'); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
                             <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
                             ; ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
+<?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-                    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -127,57 +129,53 @@ $this->breadcrumbs = array(
         <div class="row">
             <?php
             $gridColumns = array(
-            array(
-            'class' => 'IndexColumn',
-            'header' => '',
-            ),
-            'Org_Abbr_Id',
-            array(
-            'name' => 'Active',
-            'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-            'type' => 'raw',
-            'value' => function($data) {
-            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+                array(
+                    'class' => 'IndexColumn',
+                    'header' => '',
+                ),
+                'Org_Code',
+                'Org_Abbrevation',
+                array(
+                    'name' => 'Org_Nation_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo isset($data->orgNation->Nation_Name) ? $data->orgNation->Nation_Name : '';
             },
-            ),
-            array(
-                'name' => 'Org_Country_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                  'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
-              },
-            ),
-            array(
-                'name' => 'Org_Territory_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-//              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->orgTerritory->Territory_Name) ? $data->orgTerritory->Territory_Name : '';
-              },
-            ),
-            array(
-                'name' => 'Org_Region_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-//              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->orgRegion->Region_Name) ? $data->orgRegion->Region_Name : '';
-              },
-            ),
-              array(
-              'name' => 'Active',
-              'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
-              'value' => function($data) {
-              echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-              },
-              ),
-            array(
-            'header' => 'Actions',
-            'class' => 'booster.widgets.TbButtonColumn',
-            'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-            'template' => '{view}{update}{delete}',
-            )
+                ),
+                array(
+                    'name' => 'Org_Country_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
+            },
+                ),
+                array(
+                    'name' => 'Active',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
+                ),
+                'Org_Currency',
+                'Org_Society_Type_Id',
+                /*
+                  'Org_Address',
+                  'Org_Telephone',
+                  'Org_Email',
+                  'Org_Fax',
+                  'Org_Website',
+                  'Org_Bank_Account',
+                  'Org_Related_Rights',
+                 */
+                array(
+                    'header' => 'Actions',
+                    'class' => 'booster.widgets.TbButtonColumn',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                    'template' => '{view}{update}{delete}',
+                )
             );
 
             $this->widget('booster.widgets.TbExtendedGridView', array(
@@ -196,7 +194,7 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Organization', array('/site/organization/create'), array('class' => 'btn btn-success pull-right')); ?>
+<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Organization', array('/site/organization/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -208,39 +206,43 @@ $this->breadcrumbs = array(
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
-            'Org_Abbr_Id',
+            'Org_Code',
+            'Org_Abbrevation',
+            array(
+                'name' => 'Org_Nation_Id',
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                //              'type' => 'raw',
+                'value' => function($data) {
+            echo isset($data->orgNation->Nation_Name) ? $data->orgNation->Nation_Name : '';
+        },
+            ),
             array(
                 'name' => 'Org_Country_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-//              'type' => 'raw',
+                //              'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
-              },
+            echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
+        },
             ),
+            'Org_Currency',
+            'Org_Society_Type_Id',
             array(
-                'name' => 'Org_Territory_Id',
+                'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-//              'type' => 'raw',
+                'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->orgTerritory->Territory_Name) ? $data->orgTerritory->Territory_Name : '';
-              },
+            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
             ),
-            array(
-                'name' => 'Org_Region_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->orgRegion->Region_Name) ? $data->orgRegion->Region_Name : '';
-              },
-            ),
-              array(
-              'name' => 'Active',
-              'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
-              'value' => function($data) {
-              echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-              },
-              ),
+            /*
+              'Org_Address',
+              'Org_Telephone',
+              'Org_Email',
+              'Org_Fax',
+              'Org_Website',
+              'Org_Bank_Account',
+              'Org_Related_Rights',
+             */
             array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',

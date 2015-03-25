@@ -56,20 +56,16 @@ class OrganizationController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new Organization('create');
+        $model = new Organization;
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Organization'])) {
             $model->attributes = $_POST['Organization'];
-            $model->setAttribute('Org_Logo_File', isset($_FILES['Organization']['Org_Logo_File']) ? $_FILES['Organization']['Org_Logo_File'] : '');
-            if ($model->validate()) {
-                $model->setUploadDirectory(UPLOAD_DIR);
-                $model->uploadFile();
-                if ($model->save()) {
-                    Yii::app()->user->setFlash('success', 'Organization Created Successfully!!!');
-                    $this->redirect(array('index'));
-                }
+            if ($model->save()) {
+                Yii::app()->user->setFlash('success', 'Organization Created Successfully!!!');
+                $this->redirect(array('index'));
             }
         }
 
@@ -85,21 +81,15 @@ class OrganizationController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $model->setScenario('update');
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Organization'])) {
             $model->attributes = $_POST['Organization'];
-            $model->setAttribute('Org_Logo_File', isset($_FILES['Organization']['Org_Logo_File']) ? $_FILES['Organization']['Org_Logo_File'] : '');
-            if ($model->validate()) {
-                $model->setUploadDirectory(UPLOAD_DIR);
-                $model->uploadFile();
-                if ($model->save()) {
-                    Yii::app()->user->setFlash('success', 'Organization Updated Successfully!!!');
-                    $this->redirect(array('index'));
-                }
+            if ($model->save()) {
+                Yii::app()->user->setFlash('success', 'Organization Updated Successfully!!!');
+                $this->redirect(array('index'));
             }
         }
 
@@ -114,9 +104,7 @@ class OrganizationController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $model = $this->loadModel($id);
-        $model->setUploadDirectory(UPLOAD_DIR);
-        $model->delete();
+        $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {

@@ -5,49 +5,38 @@
  *
  * The followings are the available columns in table '{{organization}}':
  * @property integer $Org_Id
- * @property string $Org_Abbr_Id
- * @property string $Org_Logo_File
- * @property string $Org_Mailing_Address
+ * @property string $Org_Code
+ * @property string $Org_Abbrevation
+ * @property integer $Org_Nation_Id
  * @property integer $Org_Country_Id
- * @property integer $Org_Territory_Id
- * @property integer $Org_Region_Id
- * @property integer $Org_Profession_Id
- * @property integer $Org_Role_Id
- * @property string $Org_Hirearchy_Id
- * @property integer $Org_Payment_Id
- * @property string $Org_Type_Id
- * @property string $Org_Factor_Id
- * @property integer $Org_Doc_Type_Id
- * @property integer $Org_Doc_Id
- * @property integer $Org_Duration
- * @property integer $Org_CopyRight
- * @property integer $Org_RelatedRights
  * @property string $Org_Currency
- * @property string $Org_Rate
- * @property string $Org_Main_Performer_Id
- * @property string $Org_Producer_Id
- * @property string $Active
- * @property string $Created_Date
- * @property string $Rowversion
+ * @property string $Org_Society_Type_Id
+ * @property string $Org_Address
+ * @property string $Org_Telephone
+ * @property string $Org_Email
+ * @property string $Org_Fax
+ * @property string $Org_Website
+ * @property string $Org_Bank_Account
+ * @property integer $Org_Related_Rights
  *
  * The followings are the available model relations:
- * @property MasterCountry $orgCountry
- * @property MasterDocument $orgDoc
- * @property MasterDocumentStatus $orgDocType
- * @property MasterPaymentMethod $orgPayment
- * @property MasterProfession $orgProfession
- * @property MasterRegion $orgRegion
- * @property MasterRole $orgRole
- * @property MasterTerritories $orgTerritory
+ * @property MasterCountry $socCountry
+ * @property MasterNationality $orgNation
  */
 class Organization extends CActiveRecord {
-    const LOGO_SIZE = 1;
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
         return '{{organization}}';
+    }
+
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
     }
 
     /**
@@ -57,23 +46,23 @@ class Organization extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Org_Abbr_Id, Org_Mailing_Address', 'required'),
-            array('Org_Country_Id, Org_Territory_Id, Org_Region_Id, Org_Profession_Id, Org_Role_Id, Org_Payment_Id, Org_Doc_Type_Id, Org_Doc_Id, Org_Duration, Org_CopyRight, Org_RelatedRights', 'numerical', 'integerOnly' => true),
-            array('Org_Abbr_Id, Org_Main_Performer_Id, Org_Producer_Id', 'length', 'max' => 100),
-            array('Org_Logo_File', 'length', 'max' => 255),
-            array('Org_Hirearchy_Id, Org_Type_Id, Org_Factor_Id, Org_Currency', 'length', 'max' => 50),
-            array('Org_Rate', 'length', 'max' => 10),
+            array('Org_Code, Org_Abbrevation', 'required'),
+            array('Org_Code', 'unique'),
+            array('Org_Email', 'email'),
+            array('Org_Website', 'url'),
+            array('Org_Nation_Id, Org_Country_Id, Org_Related_Rights', 'numerical', 'integerOnly' => true),
+            array('Org_Code', 'length', 'max' => 25),
+            array('Org_Abbrevation, Org_Bank_Account', 'length', 'max' => 100),
+            array('Org_Currency, Org_Society_Type_Id, Org_Telephone, Org_Email, Org_Fax, Org_Website', 'length', 'max' => 50),
+            array('Org_Address', 'safe'),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
-            array('Org_Logo_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::LOGO_SIZE, 'tooLarge'=>'File should be smaller than '.self::LOGO_SIZE.'MB'),
-            array('Org_Logo_File', 'file', 'allowEmpty' => false, 'types' => 'jpg, png, gif, jpeg', 'on' => 'create'),
-            array('Org_Logo_File', 'file', 'allowEmpty' => true, 'types' => 'jpg, png, gif, jpeg', 'on' => 'update'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Org_Id, Org_Abbr_Id, Org_Logo_File, Org_Mailing_Address, Org_Country_Id, Org_Territory_Id, Org_Region_Id, Org_Profession_Id, Org_Role_Id, Org_Hirearchy_Id, Org_Payment_Id, Org_Type_Id, Org_Factor_Id, Org_Doc_Type_Id, Org_Doc_Id, Org_Duration, Org_CopyRight, Org_RelatedRights, Org_Currency, Org_Rate, Org_Main_Performer_Id, Org_Producer_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Org_Id, Org_Code, Org_Abbrevation, Org_Nation_Id, Org_Country_Id, Org_Currency, Org_Society_Type_Id, Org_Address, Org_Telephone, Org_Email, Org_Fax, Org_Website, Org_Bank_Account, Org_Related_Rights, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
-    
+
     /**
      * @return array relational rules.
      */
@@ -82,13 +71,7 @@ class Organization extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'orgCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Org_Country_Id'),
-            'orgDoc' => array(self::BELONGS_TO, 'MasterDocument', 'Org_Doc_Id'),
-            'orgDocType' => array(self::BELONGS_TO, 'MasterDocumentType', 'Org_Doc_Type_Id'),
-            'orgPayment' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Org_Payment_Id'),
-            'orgProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Org_Profession_Id'),
-            'orgRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Org_Region_Id'),
-            'orgRole' => array(self::BELONGS_TO, 'MasterRole', 'Org_Role_Id'),
-            'orgTerritory' => array(self::BELONGS_TO, 'MasterTerritories', 'Org_Territory_Id'),
+            'orgNation' => array(self::BELONGS_TO, 'MasterNationality', 'Org_Nation_Id'),
         );
     }
 
@@ -98,27 +81,19 @@ class Organization extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Org_Id' => 'Org',
-            'Org_Abbr_Id' => 'Organization Name',
-            'Org_Logo_File' => 'Logo',
-            'Org_Mailing_Address' => 'Mailing Address',
+            'Org_Code' => 'Code',
+            'Org_Abbrevation' => 'Abbrevation',
+            'Org_Nation_Id' => 'Nation',
             'Org_Country_Id' => 'Country',
-            'Org_Territory_Id' => 'Territory',
-            'Org_Region_Id' => 'Region',
-            'Org_Profession_Id' => 'Profession',
-            'Org_Role_Id' => 'Role',
-            'Org_Hirearchy_Id' => 'Hirearchy',
-            'Org_Payment_Id' => 'Payment Method',
-            'Org_Type_Id' => 'Type',
-            'Org_Factor_Id' => 'Factor',
-            'Org_Doc_Type_Id' => 'Document Type',
-            'Org_Doc_Id' => 'Document',
-            'Org_Duration' => 'Duration',
-            'Org_CopyRight' => 'Copy Right',
-            'Org_RelatedRights' => 'Related Rights',
             'Org_Currency' => 'Currency',
-            'Org_Rate' => 'Rate',
-            'Org_Main_Performer_Id' => 'Main Performer',
-            'Org_Producer_Id' => 'Producer',
+            'Org_Society_Type_Id' => 'Society Type',
+            'Org_Address' => 'Address',
+            'Org_Telephone' => 'Telephone',
+            'Org_Email' => 'Email',
+            'Org_Fax' => 'Fax',
+            'Org_Website' => 'Website',
+            'Org_Bank_Account' => 'Bank Account',
+            'Org_Related_Rights' => 'Related Rights',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -143,27 +118,19 @@ class Organization extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('Org_Id', $this->Org_Id);
-        $criteria->compare('Org_Abbr_Id', $this->Org_Abbr_Id, true);
-        $criteria->compare('Org_Logo_File', $this->Org_Logo_File, true);
-        $criteria->compare('Org_Mailing_Address', $this->Org_Mailing_Address, true);
+        $criteria->compare('Org_Code', $this->Org_Code, true);
+        $criteria->compare('Org_Abbrevation', $this->Org_Abbrevation, true);
+        $criteria->compare('Org_Nation_Id', $this->Org_Nation_Id);
         $criteria->compare('Org_Country_Id', $this->Org_Country_Id);
-        $criteria->compare('Org_Territory_Id', $this->Org_Territory_Id);
-        $criteria->compare('Org_Region_Id', $this->Org_Region_Id);
-        $criteria->compare('Org_Profession_Id', $this->Org_Profession_Id);
-        $criteria->compare('Org_Role_Id', $this->Org_Role_Id);
-        $criteria->compare('Org_Hirearchy_Id', $this->Org_Hirearchy_Id, true);
-        $criteria->compare('Org_Payment_Id', $this->Org_Payment_Id);
-        $criteria->compare('Org_Type_Id', $this->Org_Type_Id, true);
-        $criteria->compare('Org_Factor_Id', $this->Org_Factor_Id, true);
-        $criteria->compare('Org_Doc_Type_Id', $this->Org_Doc_Type_Id);
-        $criteria->compare('Org_Doc_Id', $this->Org_Doc_Id);
-        $criteria->compare('Org_Duration', $this->Org_Duration);
-        $criteria->compare('Org_CopyRight', $this->Org_CopyRight);
-        $criteria->compare('Org_RelatedRights', $this->Org_RelatedRights);
         $criteria->compare('Org_Currency', $this->Org_Currency, true);
-        $criteria->compare('Org_Rate', $this->Org_Rate, true);
-        $criteria->compare('Org_Main_Performer_Id', $this->Org_Main_Performer_Id, true);
-        $criteria->compare('Org_Producer_Id', $this->Org_Producer_Id, true);
+        $criteria->compare('Org_Society_Type_Id', $this->Org_Society_Type_Id, true);
+        $criteria->compare('Org_Address', $this->Org_Address, true);
+        $criteria->compare('Org_Telephone', $this->Org_Telephone, true);
+        $criteria->compare('Org_Email', $this->Org_Email, true);
+        $criteria->compare('Org_Fax', $this->Org_Fax, true);
+        $criteria->compare('Org_Website', $this->Org_Website, true);
+        $criteria->compare('Org_Bank_Account', $this->Org_Bank_Account, true);
+        $criteria->compare('Org_Related_Rights', $this->Org_Related_Rights);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -192,15 +159,6 @@ class Organization extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
-    }
-
-    public function behaviors() {
-        return array(
-            'NUploadFile' => array(
-                'class' => 'ext.nuploadfile.NUploadFile',
-                'fileField' => 'Org_Logo_File',
-            )
-        );
     }
 
 }
