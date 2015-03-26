@@ -54,8 +54,8 @@
 	<?php echo CHtml::encode($data->Society_Type_Id); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Society_Factor_Id')); ?>:</b>
-	<?php echo CHtml::encode($data->Society_Factor_Id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Society_Factor')); ?>:</b>
+	<?php echo CHtml::encode($data->Society_Factor); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Society_Doc_Type_Id')); ?>:</b>

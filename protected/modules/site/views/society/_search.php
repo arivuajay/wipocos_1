@@ -72,8 +72,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Society_Factor_Id'); ?>
-		<?php echo $form->textField($model,'Society_Factor_Id',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->label($model,'Society_Factor'); ?>
+		<?php echo $form->textField($model,'Society_Factor',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
 	</div>
 
 	<div class="row">

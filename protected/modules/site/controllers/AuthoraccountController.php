@@ -66,13 +66,14 @@ class AuthoraccountController extends Controller {
             $model->attributes = $_POST['AuthorAccount'];
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect('update/id/'.$model->Auth_Acc_Id);
             }
         }
 
         $this->render('create', array(
             'model' => $model,
             'address_model' => $address_model,
+            'tab' => 1
         ));
     }
 
@@ -81,23 +82,76 @@ class AuthoraccountController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id, $tab = 1) {
         $model = $this->loadModel($id);
+        $address_exists = AuthorAccountAddress::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $address_model = empty($address_exists) ? new AuthorAccountAddress :  $address_exists;
+
+        $payment_exists = AuthorPaymentMethod::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $payment_model = empty($payment_exists) ? new AuthorPaymentMethod :  $payment_exists;
+
+        $psedonym_exists = AuthorPseudonym::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? new AuthorPseudonym :  $psedonym_exists;
+
+        $death_exists = AuthorDeathInheritance::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $death_model = empty($death_exists) ? new AuthorDeathInheritance :  $death_exists;
+
+        $managed_exists = AuthorManageRights::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $managed_model = empty($managed_exists) ? new AuthorManageRights :  $managed_exists;
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(array($model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model));
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect(array('authoraccount/update/id/'.$model->Auth_Acc_Id.'/tab/1'));
+            }
+        }elseif (isset($_POST['AuthorAccountAddress'])) {
+            $address_model->attributes = $_POST['AuthorAccountAddress'];
+            $address_model->Auth_Unknown_Address = $_POST['AuthorAccountAddress']['Auth_Unknown_Address'] == 0 ? 'N' : 'Y';
+                    
+            if ($address_model->save()) {
+                Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
+                $this->redirect(array('authoraccount/update/id/'.$address_model->Auth_Acc_Id.'/tab/2'));
+            }
+        }elseif (isset($_POST['AuthorPaymentMethod'])) {
+            $payment_model->attributes = $_POST['AuthorPaymentMethod'];
+                    
+            if ($payment_model->save()) {
+                Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
+                $this->redirect(array('authoraccount/update/id/'.$payment_model->Auth_Acc_Id.'/tab/3'));
+            }
+        }elseif (isset($_POST['AuthorPseudonym'])) {
+            $psedonym_model->attributes = $_POST['AuthorPseudonym'];
+                    
+            if ($psedonym_model->save()) {
+                Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
+                $this->redirect(array('authoraccount/update/id/'.$psedonym_model->Auth_Acc_Id.'/tab/5'));
+            }
+        }elseif (isset($_POST['AuthorManageRights'])) {
+            $managed_model->attributes = $_POST['AuthorManageRights'];
+//            $managed_model->setAttribute('Auth_Rel_File', isset($_FILES['AuthorManageRights']['Auth_Mnge_File']) ? $_FILES['AuthorManageRights']['Auth_Mnge_File'] : '');
+                    
+            if($managed_model->validate()){
+//                $managed_model->setUploadDirectory(UPLOAD_DIR);
+//                $managed_model->uploadFile();
+                if ($managed_model->save()) {
+                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                    $this->redirect(array('authoraccount/update/id/'.$managed_model->Auth_Acc_Id.'/tab/6'));
+                }
+            }
+        }elseif (isset($_POST['AuthorDeathInheritance'])) {
+            $death_model->attributes = $_POST['AuthorDeathInheritance'];
+                    
+            if ($death_model->save()) {
+                Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
+                $this->redirect(array('authoraccount/update/id/'.$death_model->Auth_Acc_Id.'/tab/7'));
             }
         }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        $this->render('update', compact('tab','model','address_model','payment_model','psedonym_model','death_model','managed_model'));
     }
 
     /**
@@ -166,7 +220,14 @@ class AuthoraccountController extends Controller {
      * @param AuthorAccount $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'author-account-form') {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form' 
+                || $_POST['ajax'] === 'author-account-address-form'
+                || $_POST['ajax'] === 'author-payment-method-form'
+                || $_POST['ajax'] === 'author-pseudonym-form'
+                || $_POST['ajax'] === 'author-death-inheritance-form'
+                || $_POST['ajax'] === 'author-related-rights-form'
+                || $_POST['ajax'] === 'author-managed-rights-form'
+                )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

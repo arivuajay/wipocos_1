@@ -14,6 +14,7 @@
         ),
         'enableAjaxValidation' => true,
     ));
+    echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
     ?>
     <div class="col-lg-5 col-xs-5">
         <div class="box-body">
@@ -72,7 +73,7 @@
 
         <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Unknown_Address', array('class' => '')); ?><br />
-<?php echo $form->checkBox($model, 'Auth_Unknown_Address', array('class' => 'form-control')); ?>
+<?php echo $form->checkBox($model, 'Auth_Unknown_Address', array('class' => 'form-control', 'checked' => $model->Auth_Unknown_Address == 'Y' ? true : false)); ?>
 <?php echo $form->error($model, 'Auth_Unknown_Address'); ?>
         </div>
 

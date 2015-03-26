@@ -21,6 +21,7 @@ $this->breadcrumbs=array(
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
 	'attributes'=>array(
 		'Society_Id',
+		'Society_Code',
 		array(
                     'name' => 'Society_Abbr_Id',
                     'value' => $model->socOrg->Org_Abbrevation
@@ -57,7 +58,7 @@ $this->breadcrumbs=array(
                     'value' => $model->socPayment->Paymode_Name
                 ),
 		'Society_Type_Id',
-		'Society_Factor_Id',
+		'Society_Factor',
 		array(
                     'name' => 'Society_Doc_Type_Id',
                     'value' => $model->socDocType->Doc_Type_Name

@@ -38,6 +38,13 @@ $this->breadcrumbs = array(
 
                     <div class="col-lg-3 col-md-3">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Society_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Society_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->error($searchModel, 'Society_Code'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Society_Abbr_Id', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Society_Abbr_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
                             <?php echo $form->error($searchModel, 'Society_Abbr_Id'); ?>
@@ -131,6 +138,7 @@ $this->breadcrumbs = array(
             'class' => 'IndexColumn',
             'header' => '',
             ),
+            'Society_Code',
             array(
                 'name' => 'Society_Abbr_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -207,6 +215,7 @@ $this->breadcrumbs = array(
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
+            'Society_Code',
             array(
                 'name' => 'Society_Abbr_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),

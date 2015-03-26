@@ -21,10 +21,22 @@ $this->breadcrumbs=array(
 		'Org_Id',
 		'Org_Code',
 		'Org_Abbrevation',
-		'Org_Nation_Id',
-		'Org_Country_Id',
-		'Org_Currency',
-		'Org_Society_Type_Id',
+		array(
+                    'name' => 'Org_Nation_Id',
+                    'value' => isset($model->orgNation->Nation_Name) ? $model->orgNation->Nation_Name : ''
+                ),
+		array(
+                    'name' => 'Org_Country_Id',
+                    'value' => isset($model->orgCountry->Country_Name) ? $model->orgCountry->Country_Name : ''
+                ),
+		array(
+                    'name' => 'Org_Currency_Id',
+                    'value' => isset($model->orgCurrency->Currency_Name) ? $model->orgCurrency->Currency_Name : ''
+                ),
+		array(
+                    'name' => 'Org_Society_Type_Id',
+                    'value' => isset($model->Org_Society_Type_Id) ? Myclass::getSocialType($model->Org_Society_Type_Id) : ''
+                ),
 		'Org_Address',
 		'Org_Telephone',
 		'Org_Email',

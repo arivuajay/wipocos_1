@@ -58,7 +58,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Society_Hirearchy_Id',
 		'Society_Payment_Id',
 		'Society_Type_Id',
-		'Society_Factor_Id',
+		'Society_Factor',
 		'Society_Doc_Type_Id',
 		'Society_Doc_Id',
 		'Society_Duration',

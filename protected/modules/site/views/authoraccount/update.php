@@ -2,7 +2,7 @@
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
 
-$this->title='Update Author Accounts: '. $model->Auth_Acc_Id;
+$this->title='Update Author: '. $model->Auth_Acc_Id;
 $this->breadcrumbs=array(
 	'Author Accounts'=>array('index'),
 	'Update Author Accounts',
@@ -10,4 +10,7 @@ $this->breadcrumbs=array(
 ?>
 
 <div class="user-create">
-    <?php $this->renderPartial('_form', array('model'=>$model)); ?></div>
+<?php 
+    $this->renderPartial('_form', compact('tab','model','address_model','payment_model','psedonym_model','death_model','managed_model'));
+?>
+</div>

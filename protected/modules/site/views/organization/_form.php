@@ -51,17 +51,19 @@
                     </div>
 
                                         <div class="form-group">
-                        <?php echo $form->labelEx($model,'Org_Currency',  array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model,'Org_Currency_Id',  array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">
-                        <?php echo $form->textField($model,'Org_Currency',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
-                        <?php echo $form->error($model,'Org_Currency'); ?>
+                        <?php $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name') ?>
+                        <?php echo $form->dropDownList($model,'Org_Currency_Id',$currencies,array('class'=>'form-control','prompt' => '')); ?>
+                        <?php echo $form->error($model,'Org_Currency_Id'); ?>
                         </div>
                     </div>
 
                                         <div class="form-group">
                         <?php echo $form->labelEx($model,'Org_Society_Type_Id',  array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">
-                        <?php echo $form->textField($model,'Org_Society_Type_Id',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                        <?php $social_types = Myclass::getSocialType();?>
+                        <?php echo $form->dropDownList($model,'Org_Society_Type_Id',$social_types,array('class'=>'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model,'Org_Society_Type_Id'); ?>
                         </div>
                     </div>

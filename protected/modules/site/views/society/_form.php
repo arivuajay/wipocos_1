@@ -22,10 +22,17 @@ $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
         ),
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
 )); ?>
             <div class="col-lg-5 col-xs-5">
                 <div class="box-body">
+                <div class="form-group">
+                        <?php echo $form->labelEx($model,'Society_Code',  array('class' => '')); ?>
+                        
+                        <?php echo $form->textField($model,'Society_Code',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                        <?php echo $form->error($model,'Society_Code'); ?>
+                    </div>
+                    
                                     <div class="form-group">
                         <?php echo $form->labelEx($model,'Society_Abbr_Id',  array('class' => '')); ?>
                         
@@ -125,10 +132,10 @@ $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org
                     </div>
                 
                                                         <div class="form-group">
-                        <?php echo $form->labelEx($model,'Society_Factor_Id',  array('class' => '')); ?>
+                        <?php echo $form->labelEx($model,'Society_Factor',  array('class' => '')); ?>
                         
-                        <?php echo $form->textField($model,'Society_Factor_Id',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
-                        <?php echo $form->error($model,'Society_Factor_Id'); ?>
+                        <?php echo $form->textField($model,'Society_Factor',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                        <?php echo $form->error($model,'Society_Factor'); ?>
                     </div>
 
                                         <div class="form-group">

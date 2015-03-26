@@ -22,13 +22,13 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
         <!-- Custom Tabs -->
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a href="#tab_2" data-toggle="tab">Address</a></li>
-                <li><a href="#tab_3" data-toggle="tab">Payment</a></li>
-                <li><a href="#tab_4" data-toggle="tab">Biography</a></li>
-                <li><a href="#tab_5" data-toggle="tab">Pseudonyms, Stage Names & Cross Reference</a></li>
-                <li><a href="#tab_6" data-toggle="tab">Managed Rights</a></li>
-                <li><a href="#tab_7" data-toggle="tab">Death Inheritance</a></li>
+                <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Address</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Pseudonyms</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Managed Rights</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Death Inheritance</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -47,16 +47,16 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                         <div class="col-lg-5 col-xs-5">
                             <div class="box-body">
                                 <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_First_Name', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Auth_First_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                                    <?php echo $form->error($model, 'Auth_First_Name'); ?>
+                                </div>
+
+                                <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Sur_Name', array('class' => '')); ?>
 
                                     <?php echo $form->textField($model, 'Auth_Sur_Name', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
                                     <?php echo $form->error($model, 'Auth_Sur_Name'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_First_Name', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_First_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                                    <?php echo $form->error($model, 'Auth_First_Name'); ?>
                                 </div>
 
                                 <div class="form-group">
@@ -67,7 +67,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                                 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Date_Of_Birth', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_Date_Of_Birth', array('class' => 'form-control', 'id' => 'dob')); ?>
+                                    <?php echo $form->textField($model, 'Auth_Date_Of_Birth', array('class' => 'form-control date', 'value' => isset($model->Auth_Date_Of_Birth) ? date('Y-m-d', strtotime($model->Auth_Date_Of_Birth)) : '')); ?>
                                     <?php echo $form->error($model, 'Auth_Date_Of_Birth'); ?>
                                 </div>
 
@@ -165,7 +165,22 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                     </div>
                 </div>
                 <div class="tab-pane" id="tab_2">
-                    <?php $this->renderPartial('/authoraccountaddress/_form', array('model' => $address_model));?>
+                    <?php if(!$model->isNewRecord){$this->renderPartial('_address_form', array('model' => $address_model, 'author_model' => $model));}?>
+                </div>
+                <div class="tab-pane" id="tab_3">
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_payment_form', array('model' => $payment_model, 'author_model' => $model));}?>
+                </div>
+                <div class="tab-pane" id="tab_4">
+                    <?php // $this->renderPartial('_payment_form', array('model' => $payment_model, 'author_model' => $model));?>
+                </div>
+                <div class="tab-pane" id="tab_5">
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_pseudonym_form', array('model' => $psedonym_model, 'author_model' => $model));}?>
+                </div>
+                <div class="tab-pane" id="tab_6">
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_managed_rights_form', array('model' => $managed_model, 'author_model' => $model, 'regions' => $regions));}?>
+                </div>
+                <div class="tab-pane" id="tab_7">
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_death_form', array('model' => $death_model, 'author_model' => $model));}?>
                 </div>
             </div>
         </div>
@@ -178,7 +193,8 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
 $js = <<< EOD
     $(document).ready(function(){
         $('#AuthorAccount_Auth_Gender').find("br").remove();
-        $('#dob').datepicker();
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        $("#a_tab_{$tab}").trigger('click');
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

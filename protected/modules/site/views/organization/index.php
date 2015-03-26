@@ -27,6 +27,7 @@ $this->breadcrumbs = array(
                     ));
                     $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
                     $nationalities = CHtml::listData(MasterNationality::model()->findAll(), 'Master_Nation_Id', 'Nation_Name');
+                    $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name');
                     ?>
 
                     <div class="col-lg-4 col-md-4">
@@ -59,9 +60,9 @@ $this->breadcrumbs = array(
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Org_Currency', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Org_Currency', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
-                            <?php echo $form->error($searchModel, 'Org_Currency'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Org_Currency_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Org_Currency_Id', $currencies, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Org_Currency_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -152,6 +153,15 @@ $this->breadcrumbs = array(
             },
                 ),
                 array(
+                    'name' => 'Org_Currency_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
+            }
+                    ),
+                'Org_Society_Type_Id',
+                array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
@@ -159,8 +169,6 @@ $this->breadcrumbs = array(
                 echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
             },
                 ),
-                'Org_Currency',
-                'Org_Society_Type_Id',
                 /*
                   'Org_Address',
                   'Org_Telephone',
@@ -224,7 +232,14 @@ $this->breadcrumbs = array(
             echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
         },
             ),
-            'Org_Currency',
+                array(
+                    'name' => 'Org_Currency_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
+            },
+            ),
             'Org_Society_Type_Id',
             array(
                 'name' => 'Active',
@@ -232,8 +247,8 @@ $this->breadcrumbs = array(
                 'type' => 'raw',
                 'value' => function($data) {
             echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
+        }
+                ),
             /*
               'Org_Address',
               'Org_Telephone',
