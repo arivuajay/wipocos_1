@@ -1,24 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{master_managed_rights}}".
+ * This is the model class for table "{{master_currency}}".
  *
- * The followings are the available columns in table '{{master_managed_rights}}':
- * @property integer $Master_Mgd_Rights_Id
- * @property string $Mgd_Rights_Name
+ * The followings are the available columns in table '{{master_currency}}':
+ * @property integer $Master_Crncy_Id
+ * @property string $Currency_Code
+ * @property string $Currency_Name
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property Organization[] $organizations
  */
-class MasterManagedRights extends CActiveRecord {
+class MasterCurrency extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_managed_rights}}';
+        return '{{master_currency}}';
     }
-
+    
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         return array(
@@ -33,13 +37,14 @@ class MasterManagedRights extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Mgd_Rights_Name', 'required'),
-            array('Mgd_Rights_Name', 'length', 'max' => 90),
+            array('Currency_Name', 'required'),
+            array('Currency_Code', 'length', 'max' => 10),
+            array('Currency_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Mgd_Rights_Id, Mgd_Rights_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Crncy_Id, Currency_Code, Currency_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,6 +55,7 @@ class MasterManagedRights extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'organizations' => array(self::HAS_MANY, 'Organization', 'Org_Currency_Id'),
         );
     }
 
@@ -58,8 +64,9 @@ class MasterManagedRights extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Mgd_Rights_Id' => 'Master Mgd Rights',
-            'Mgd_Rights_Name' => 'Mgd Rights Name',
+            'Master_Crncy_Id' => 'Master Crncy',
+            'Currency_Code' => 'Currency Code',
+            'Currency_Name' => 'Currency Name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -83,8 +90,9 @@ class MasterManagedRights extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Mgd_Rights_Id', $this->Master_Mgd_Rights_Id);
-        $criteria->compare('Mgd_Rights_Name', $this->Mgd_Rights_Name, true);
+        $criteria->compare('Master_Crncy_Id', $this->Master_Crncy_Id);
+        $criteria->compare('Currency_Code', $this->Currency_Code, true);
+        $criteria->compare('Currency_Name', $this->Currency_Name, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -101,7 +109,7 @@ class MasterManagedRights extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterManagedRights the static model class
+     * @return MasterCurrency the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

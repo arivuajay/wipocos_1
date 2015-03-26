@@ -9,7 +9,7 @@
  * @property string $Org_Abbrevation
  * @property integer $Org_Nation_Id
  * @property integer $Org_Country_Id
- * @property string $Org_Currency
+ * @property string $Org_Currency_Id
  * @property string $Org_Society_Type_Id
  * @property string $Org_Address
  * @property string $Org_Telephone
@@ -50,16 +50,16 @@ class Organization extends CActiveRecord {
             array('Org_Code', 'unique'),
             array('Org_Email', 'email'),
             array('Org_Website', 'url'),
-            array('Org_Nation_Id, Org_Country_Id, Org_Related_Rights', 'numerical', 'integerOnly' => true),
+            array('Org_Currency_Id, Org_Nation_Id, Org_Country_Id, Org_Related_Rights', 'numerical', 'integerOnly' => true),
             array('Org_Code', 'length', 'max' => 25),
             array('Org_Abbrevation, Org_Bank_Account', 'length', 'max' => 100),
-            array('Org_Currency, Org_Society_Type_Id, Org_Telephone, Org_Email, Org_Fax, Org_Website', 'length', 'max' => 50),
+            array('Org_Society_Type_Id, Org_Telephone, Org_Email, Org_Fax, Org_Website', 'length', 'max' => 50),
             array('Org_Address', 'safe'),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Org_Id, Org_Code, Org_Abbrevation, Org_Nation_Id, Org_Country_Id, Org_Currency, Org_Society_Type_Id, Org_Address, Org_Telephone, Org_Email, Org_Fax, Org_Website, Org_Bank_Account, Org_Related_Rights, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Org_Id, Org_Code, Org_Abbrevation, Org_Nation_Id, Org_Country_Id, Org_Currency_Id, Org_Society_Type_Id, Org_Address, Org_Telephone, Org_Email, Org_Fax, Org_Website, Org_Bank_Account, Org_Related_Rights, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,6 +71,7 @@ class Organization extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'orgCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Org_Country_Id'),
+            'orgCurrency' => array(self::BELONGS_TO, 'MasterCurrency', 'Org_Currency_Id'),
             'orgNation' => array(self::BELONGS_TO, 'MasterNationality', 'Org_Nation_Id'),
         );
     }
@@ -85,7 +86,7 @@ class Organization extends CActiveRecord {
             'Org_Abbrevation' => 'Abbrevation',
             'Org_Nation_Id' => 'Nation',
             'Org_Country_Id' => 'Country',
-            'Org_Currency' => 'Currency',
+            'Org_Currency_Id' => 'Currency',
             'Org_Society_Type_Id' => 'Society Type',
             'Org_Address' => 'Address',
             'Org_Telephone' => 'Telephone',
@@ -122,7 +123,7 @@ class Organization extends CActiveRecord {
         $criteria->compare('Org_Abbrevation', $this->Org_Abbrevation, true);
         $criteria->compare('Org_Nation_Id', $this->Org_Nation_Id);
         $criteria->compare('Org_Country_Id', $this->Org_Country_Id);
-        $criteria->compare('Org_Currency', $this->Org_Currency, true);
+        $criteria->compare('Org_Currency_Id', $this->Org_Currency_Id, true);
         $criteria->compare('Org_Society_Type_Id', $this->Org_Society_Type_Id, true);
         $criteria->compare('Org_Address', $this->Org_Address, true);
         $criteria->compare('Org_Telephone', $this->Org_Telephone, true);
