@@ -76,4 +76,18 @@ class Myclass extends CController {
         return $status;
     }
     
+    public static function getSocialType($key = NULL) {
+        $types = array(
+            'Author' => 'Author',
+            'Performer' => 'Performer',
+            'Producer' => 'Producer',
+            'Multiple' => 'Multiple',
+        );
+        
+        if(isset($key) && $key != NULL)
+            return $types[$key];
+        
+        return $types;
+    }
+    
 }
