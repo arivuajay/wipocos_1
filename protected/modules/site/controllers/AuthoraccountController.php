@@ -99,8 +99,11 @@ class AuthoraccountController extends Controller {
         $managed_exists = AuthorManageRights::model()->findByAttributes(array('Auth_Acc_Id' => $id));
         $managed_model = empty($managed_exists) ? new AuthorManageRights :  $managed_exists;
 
+        $biograph_exists = AuthorBiography::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? new AuthorBiography :  $biograph_exists;
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model));
+        $this->performAjaxValidation(array($model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model, $biograph_model));
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
@@ -122,6 +125,15 @@ class AuthoraccountController extends Controller {
             if ($payment_model->save()) {
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/'.$payment_model->Auth_Acc_Id.'/tab/3'));
+            }
+        }elseif (isset($_POST['AuthorBiography'])) {
+            $biograph_model->attributes = $_POST['AuthorBiography'];
+            $ids = isset($_POST['group_ids']) ? implode(',', $_POST['group_ids']) : '';
+            $biograph_model->Auth_Biogrph_Aff_Groups_Ids = $ids;
+
+            if ($biograph_model->save()) {
+                Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
+                $this->redirect(array('authoraccount/update/id/'.$death_model->Auth_Acc_Id.'/tab/4'));
             }
         }elseif (isset($_POST['AuthorPseudonym'])) {
             $psedonym_model->attributes = $_POST['AuthorPseudonym'];
@@ -151,7 +163,7 @@ class AuthoraccountController extends Controller {
             }
         }
 
-        $this->render('update', compact('tab','model','address_model','payment_model','psedonym_model','death_model','managed_model'));
+        $this->render('update', compact('tab','model','address_model','payment_model','psedonym_model','death_model','managed_model','biograph_model'));
     }
 
     /**
@@ -227,6 +239,7 @@ class AuthoraccountController extends Controller {
                 || $_POST['ajax'] === 'author-death-inheritance-form'
                 || $_POST['ajax'] === 'author-related-rights-form'
                 || $_POST['ajax'] === 'author-managed-rights-form'
+                || $_POST['ajax'] === 'author-biography-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

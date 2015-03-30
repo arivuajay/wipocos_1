@@ -1,24 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "{{master_legal_form}}".
+ * This is the model class for table "{{master_international_number}}".
  *
- * The followings are the available columns in table '{{master_legal_form}}':
- * @property integer $Master_Legal_Form_Id
- * @property string $Legal_Form_Name
+ * The followings are the available columns in table '{{master_international_number}}':
+ * @property integer $Master_International_Id
+ * @property string $International_Number_Type
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  */
-class MasterLegalForm extends CActiveRecord {
+class MasterInternationalNumber extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_legal_form}}';
+        return '{{master_international_number}}';
     }
-    
+
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         return array(
@@ -33,13 +33,13 @@ class MasterLegalForm extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Legal_Form_Name', 'required'),
-            array('Legal_Form_Name', 'length', 'max' => 90),
+            array('International_Number_Type', 'required'),
+            array('International_Number_Type', 'length', 'max' => 100),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Legal_Form_Id, Legal_Form_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_International_Id, International_Number_Type, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -58,8 +58,8 @@ class MasterLegalForm extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Legal_Form_Id' => 'Master Legal Form',
-            'Legal_Form_Name' => 'Legal Form Name',
+            'Master_International_Id' => 'Master International',
+            'International_Number_Type' => 'Type',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -83,8 +83,8 @@ class MasterLegalForm extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Legal_Form_Id', $this->Master_Legal_Form_Id);
-        $criteria->compare('Legal_Form_Name', $this->Legal_Form_Name, true);
+        $criteria->compare('Master_International_Id', $this->Master_International_Id);
+        $criteria->compare('International_Number_Type', $this->International_Number_Type, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -101,7 +101,7 @@ class MasterLegalForm extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterLegalForm the static model class
+     * @return MasterInternationalNumber the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

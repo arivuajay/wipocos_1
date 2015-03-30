@@ -34,38 +34,44 @@ $this->breadcrumbs=array(
 		'Society_Mailing_Address',
 		array(
                     'name' => 'Society_Country_Id',
-                    'value' => $model->socCountry->Country_Name
+                    'value' => isset($model->socCountry->Country_Name) ? $model->socCountry->Country_Name : 'Not Set'
                 ),
 		array(
                     'name' => 'Society_Territory_Id',
-                    'value' => $model->socTerritory->Territory_Name
+                    'value' => isset($model->socTerritory->Territory_Name) ? $model->socTerritory->Territory_Name : 'Not Set'
                 ),
 		array(
                     'name' => 'Society_Region_Id',
-                    'value' => $model->socRegion->Region_Name
+                    'value' => isset($model->socRegion->Region_Name) ? $model->socRegion->Region_Name : 'Not Set'
                 ),
 		array(
                     'name' => 'Society_Profession_Id',
-                    'value' => $model->socProfession->Profession_Name
+                    'value' => isset($model->socProfession->Profession_Name) ? $model->socProfession->Profession_Name : 'Not Set'
                 ),
 		array(
                     'name' => 'Society_Role_Id',
-                    'value' => $model->socRole->Description
+                    'value' => isset($model->socRole->Description) ? $model->socRole->Description : 'Not Set'
                 ),
-		'Society_Hirearchy_Id',
+		array(
+                    'name' => 'Society_Hirearchy_Id',
+                    'value' => isset($model->socHirearchy->Hierarchy_Name) ? $model->socHirearchy->Hierarchy_Name : 'Not Set'
+                ),
 		array(
                     'name' => 'Society_Payment_Id',
-                    'value' => $model->socPayment->Paymode_Name
+                    'value' => isset($model->socPayment->Paymode_Name) ? $model->socPayment->Paymode_Name : 'Not Set'
                 ),
-		'Society_Type_Id',
+		array(
+                    'name' => 'Society_Type_Id',
+                    'value' => isset($model->socType->Type_Name) ? $model->socType->Type_Name : 'Not Set'
+                ),
 		'Society_Factor',
 		array(
                     'name' => 'Society_Doc_Type_Id',
-                    'value' => $model->socDocType->Doc_Type_Name
+                    'value' => isset($model->socDocType->Doc_Type_Name) ? $model->socDocType->Doc_Type_Name : 'Not Set'
                 ),
 		array(
                     'name' => 'Society_Doc_Id',
-                    'value' => $model->socDoc->Doc_Name
+                    'value' => isset($model->socDoc->Doc_Name) ? $model->socDoc->Doc_Name : 'Not Set'
                 ),
 		'Society_Duration',
 		'Society_CopyRight',

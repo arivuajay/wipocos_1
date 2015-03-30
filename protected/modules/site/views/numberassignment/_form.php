@@ -98,7 +98,6 @@
 $js = <<< EOD
     $(document).ready(function(){
         $('input:radio').on('ifClicked', function(event){
-            console.log($(this).val());
             if($(this).val() == 'S'){
                 $(".series_div").show();
                 $(".list_div").hide();

@@ -11,6 +11,8 @@ $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll
 $documents = CHtml::listData(MasterDocument::model()->isActive()->findAll(), 'Master_Doc_Id', 'Doc_Name');
 $document_types = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(), 'Master_Doc_Type_Id', 'Doc_Type_Name');
 $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
+$hierarchy = CHtml::listData(MasterHierarchy::model()->isActive()->findAll(), 'Master_Hierarchy_Id', 'Hierarchy_Name');
+$types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
 ?>
 
 <div class="row">
@@ -99,7 +101,7 @@ $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org
                                         <div class="form-group">
                         <?php echo $form->labelEx($model,'Society_Hirearchy_Id',  array('class' => '')); ?>
                         
-                        <?php echo $form->textField($model,'Society_Hirearchy_Id',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                        <?php echo $form->dropDownList($model,'Society_Hirearchy_Id', $hierarchy, array('class'=>'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model,'Society_Hirearchy_Id'); ?>
                     </div>
 
@@ -127,7 +129,7 @@ $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org
                 <div class="form-group">
                         <?php echo $form->labelEx($model,'Society_Type_Id',  array('class' => '')); ?>
                         
-                        <?php echo $form->textField($model,'Society_Type_Id',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                        <?php echo $form->dropDownList($model,'Society_Type_Id',$types,array('class'=>'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model,'Society_Type_Id'); ?>
                     </div>
                 

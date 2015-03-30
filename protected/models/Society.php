@@ -99,6 +99,8 @@ class Society extends CActiveRecord {
             'socRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Society_Region_Id'),
             'socRole' => array(self::BELONGS_TO, 'MasterRole', 'Society_Role_Id'),
             'socTerritory' => array(self::BELONGS_TO, 'MasterTerritories', 'Society_Territory_Id'),
+            'socType' => array(self::BELONGS_TO, 'MasterType', 'Society_Type_Id'),
+            'socHirearchy' => array(self::BELONGS_TO, 'MasterHierarchy', 'Society_Hirearchy_Id'),
         );
     }
 

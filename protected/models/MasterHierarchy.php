@@ -1,24 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "{{master_legal_form}}".
+ * This is the model class for table "{{master_hierarchy}}".
  *
- * The followings are the available columns in table '{{master_legal_form}}':
- * @property integer $Master_Legal_Form_Id
- * @property string $Legal_Form_Name
+ * The followings are the available columns in table '{{master_hierarchy}}':
+ * @property integer $Master_Hierarchy_Id
+ * @property string $Hierarchy_Name
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property Society[] $societies
  */
-class MasterLegalForm extends CActiveRecord {
+class MasterHierarchy extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_legal_form}}';
+        return '{{master_hierarchy}}';
     }
-    
+
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         return array(
@@ -33,13 +36,13 @@ class MasterLegalForm extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Legal_Form_Name', 'required'),
-            array('Legal_Form_Name', 'length', 'max' => 90),
+            array('Hierarchy_Name', 'required'),
+            array('Hierarchy_Name', 'length', 'max' => 100),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Legal_Form_Id, Legal_Form_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Hierarchy_Id, Hierarchy_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,6 +53,7 @@ class MasterLegalForm extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Hirearchy_Id'),
         );
     }
 
@@ -58,8 +62,8 @@ class MasterLegalForm extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Legal_Form_Id' => 'Master Legal Form',
-            'Legal_Form_Name' => 'Legal Form Name',
+            'Master_Hierarchy_Id' => 'Master Hierarchy',
+            'Hierarchy_Name' => 'Hierarchy Name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -83,8 +87,8 @@ class MasterLegalForm extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Legal_Form_Id', $this->Master_Legal_Form_Id);
-        $criteria->compare('Legal_Form_Name', $this->Legal_Form_Name, true);
+        $criteria->compare('Master_Hierarchy_Id', $this->Master_Hierarchy_Id);
+        $criteria->compare('Hierarchy_Name', $this->Hierarchy_Name, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -101,7 +105,7 @@ class MasterLegalForm extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterLegalForm the static model class
+     * @return MasterHierarchy the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

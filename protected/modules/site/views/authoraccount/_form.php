@@ -171,7 +171,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                     <?php if(!$model->isNewRecord){ $this->renderPartial('_payment_form', array('model' => $payment_model, 'author_model' => $model));}?>
                 </div>
                 <div class="tab-pane" id="tab_4">
-                    <?php // $this->renderPartial('_payment_form', array('model' => $payment_model, 'author_model' => $model));?>
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_biography_form', array('model' => $biograph_model, 'author_model' => $model));}?>
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php if(!$model->isNewRecord){ $this->renderPartial('_pseudonym_form', array('model' => $psedonym_model, 'author_model' => $model));}?>
