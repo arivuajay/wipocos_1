@@ -89,6 +89,7 @@
                         array('label' => '<i class="fa fa-bullseye"></i> <span>International Number</span>', 'url' => array('/site/masterinternationalnumber/index')),
                     ),
                 ),
+                array('label' => '<i class="fa fa-th"></i> <span>Group</span>', 'url' => array('/site/group/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Author</span>', 'url' => array('/site/authoraccount/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Society</span>', 'url' => array('/site/society/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Organization</span>', 'url' => array('/site/organization/index')),
