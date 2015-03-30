@@ -86,6 +86,7 @@
                         array('label' => '<i class="fa fa-suitcase"></i> <span>Works Category</span>', 'url' => array('/site/masterworkscategory/index')),
                         array('label' => '<i class="fa fa-list"></i> <span>Types</span>', 'url' => array('/site/mastertype/index')),
                         array('label' => '<i class="fa fa-tree"></i> <span>Heirarchy</span>', 'url' => array('/site/masterhierarchy/index')),
+                        array('label' => '<i class="fa fa-bullseye"></i> <span>International Number</span>', 'url' => array('/site/masterinternationalnumber/index')),
                     ),
                 ),
                 array('label' => '<i class="fa fa-th"></i> <span>Author</span>', 'url' => array('/site/authoraccount/index')),
