@@ -91,6 +91,7 @@
                 ),
                 array('label' => '<i class="fa fa-th"></i> <span>Group</span>', 'url' => array('/site/group/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Author</span>', 'url' => array('/site/authoraccount/index')),
+                array('label' => '<i class="fa fa-th"></i> <span>Performer</span>', 'url' => array('/site/performeraccount/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Society</span>', 'url' => array('/site/society/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Organization</span>', 'url' => array('/site/organization/index')),
                 array('label' => '<i class="fa fa-th"></i> <span>Share Definition</span>', 'url' => array('/site/sharedefinitionperrole/index')),

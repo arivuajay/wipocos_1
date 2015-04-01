@@ -46,9 +46,26 @@ class AuthoraccountController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
+        $model = $this->loadModel($id);
+        $address_exists = AuthorAccountAddress::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $address_model = empty($address_exists) ? array() :  $address_exists;
+
+        $payment_exists = AuthorPaymentMethod::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $payment_model = empty($payment_exists) ? array() :  $payment_exists;
+
+        $psedonym_exists = AuthorPseudonym::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? array() :  $psedonym_exists;
+
+        $death_exists = AuthorDeathInheritance::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $death_model = empty($death_exists) ? array() :  $death_exists;
+
+        $managed_exists = AuthorManageRights::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $managed_model = empty($managed_exists) ? array() :  $managed_exists;
+
+        $biograph_exists = AuthorBiography::model()->findByAttributes(array('Auth_Acc_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? array() :  $biograph_exists;
+        
+        $this->render('view', compact('model','address_model','payment_model','psedonym_model','death_model','managed_model','biograph_model'));
     }
 
     /**
@@ -133,7 +150,7 @@ class AuthoraccountController extends Controller {
 
             if ($biograph_model->save()) {
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/'.$death_model->Auth_Acc_Id.'/tab/4'));
+                $this->redirect(array('authoraccount/update/id/'.$biograph_model->Auth_Acc_Id.'/tab/4'));
             }
         }elseif (isset($_POST['AuthorPseudonym'])) {
             $psedonym_model->attributes = $_POST['AuthorPseudonym'];

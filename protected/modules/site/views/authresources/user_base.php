@@ -1,7 +1,7 @@
 <?php
 $this->title = 'User Privilage';
 $this->breadcrumbs = array(
-    'Users' => array('index'),
+    'Users' => array('/site/user/index'),
     $this->title
 );
 ?>
