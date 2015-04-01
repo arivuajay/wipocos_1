@@ -6,6 +6,12 @@ $this->title='Author Accounts';
 $this->breadcrumbs=array(
 	'Author Accounts',
 );
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
 <div class="col-lg-12 col-md-12">
     <div class="row">
@@ -25,18 +31,18 @@ $this->breadcrumbs=array(
         'htmlOptions' => array('role' => 'form')
 )); ?>
                     
-                                         <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Auth_Sur_Name',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Auth_Sur_Name',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
-                            <?php echo $form->error($searchModel,'Auth_Sur_Name'); ?>
-                        </div>
-                    </div>
                                         <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_First_Name',  array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel,'Auth_First_Name',array('class'=>'form-control','size'=>60,'maxlength'=>255)); ?>
                             <?php echo $form->error($searchModel,'Auth_First_Name'); ?>
+                        </div>
+                    </div>
+                                         <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel,'Auth_Sur_Name',  array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel,'Auth_Sur_Name',array('class'=>'form-control','size'=>50,'maxlength'=>50)); ?>
+                            <?php echo $form->error($searchModel,'Auth_Sur_Name'); ?>
                         </div>
                     </div>
                                         <div class="col-lg-4 col-md-4">
@@ -70,11 +76,11 @@ $this->breadcrumbs=array(
                                         <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_Date_Of_Birth',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Auth_Date_Of_Birth',array('class'=>'form-control')); ?>
+                            <?php echo $form->textField($searchModel,'Auth_Date_Of_Birth',array('class'=>'form-control date')); ?>
                             <?php echo $form->error($searchModel,'Auth_Date_Of_Birth'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+<!--                                        <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_Place_Of_Birth_Id',  array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel,'Auth_Place_Of_Birth_Id',array('class'=>'form-control')); ?>
@@ -87,7 +93,7 @@ $this->breadcrumbs=array(
                             <?php echo $form->textField($searchModel,'Auth_Birth_Country_Id',array('class'=>'form-control')); ?>
                             <?php echo $form->error($searchModel,'Auth_Birth_Country_Id'); ?>
                         </div>
-                    </div>
+                    </div>-->
                                         <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_Nationality_Id',  array('class' => ' control-label')); ?>
@@ -116,20 +122,29 @@ $this->breadcrumbs=array(
                             <?php echo $form->error($searchModel,'Auth_Marital_Status_Id'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+<!--                                        <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_Spouse_Name',  array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel,'Auth_Spouse_Name',array('class'=>'form-control','size'=>60,'maxlength'=>255)); ?>
                             <?php echo $form->error($searchModel,'Auth_Spouse_Name'); ?>
                         </div>
-                    </div>
+                    </div>-->
                                         <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Auth_Gender',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Auth_Gender',array('class'=>'form-control','size'=>1,'maxlength'=>1)); ?>
+                            <?php echo $form->dropDownList($searchModel,'Auth_Gender',Myclass::getGender(),array('class'=>'form-control','prompt'=>'')); ?>
                             <?php echo $form->error($searchModel,'Auth_Gender'); ?>
                         </div>
                     </div>
+
+                                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel,'Created_Date',  array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel,'Created_Date',array('class'=>'form-control date')); ?>
+                            <?php echo $form->error($searchModel,'Created_Date'); ?>
+                        </div>
+                    </div>
+
                                         <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel,'Active',  array('class' => ' control-label')); ?>
@@ -266,3 +281,12 @@ $this->breadcrumbs=array(
         ?>
     </div>
 </div>
+<?php 
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('index', $js);
+
+?>

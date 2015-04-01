@@ -117,7 +117,7 @@ class AuthorAccount extends CActiveRecord {
             'Auth_Spouse_Name' => 'Spouse Name',
             'Auth_Gender' => 'Gender',
             'Active' => 'Active',
-            'Created_Date' => 'Created Date',
+            'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
         );
     }
@@ -156,7 +156,7 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('Auth_Spouse_Name', $this->Auth_Spouse_Name, true);
         $criteria->compare('Auth_Gender', $this->Auth_Gender, true);
         $criteria->compare('Active', $this->Active, true);
-        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Date(Created_Date)', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         return new CActiveDataProvider($this, array(

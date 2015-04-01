@@ -61,7 +61,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Gender', array('class' => '')); ?><br />
-                                    <?php echo $form->radioButtonList($model, 'Auth_Gender', array('M' => 'Male', 'F' => 'Female'), array('class' => 'form-control')); ?>
+                                    <?php echo $form->radioButtonList($model, 'Auth_Gender', Myclass::getGender(), array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Auth_Gender'); ?>
                                 </div>
                                 

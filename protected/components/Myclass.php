@@ -90,4 +90,14 @@ class Myclass extends CController {
         return $types;
     }
     
+    public static function getGender($key = NULL){
+        $gender = array(
+            'M' => 'Male',
+            'F' => 'Female'
+        );
+        if(isset($key) && $key != NULL)
+            return $gender[$key];
+        
+        return $gender;
+    }
 }

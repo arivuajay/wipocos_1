@@ -26,3 +26,7 @@ and open the template in the editor.
 }
 
 .statusfield{ margin-top: 7px; }
+
+#search-form label .required{
+    display: none;
+}
