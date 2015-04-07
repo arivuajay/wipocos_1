@@ -6,6 +6,12 @@ $this->title = 'Performers';
 $this->breadcrumbs = array(
     'Performers',
 );
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
 <div class="col-lg-12 col-md-12">
     <div class="row">
@@ -96,6 +102,21 @@ $this->breadcrumbs = array(
                             <?php echo $form->labelEx($searchModel, 'Created_Date', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Created_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Created_Date'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'expiry_date', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'expiry_date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'expiry_date'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'hierarchy_level', array('class' => ' control-label')); ?>
+                            <?php $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(), 'Master_Int_Post_Id', 'Int_Post_Name');?>
+                            <?php echo $form->dropDownList($searchModel, 'hierarchy_level', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'hierarchy_level'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -270,3 +291,11 @@ $this->breadcrumbs = array(
         ?>
     </div>
 </div>
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('index', $js);
+?>

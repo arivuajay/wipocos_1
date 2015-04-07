@@ -40,6 +40,8 @@
  */
 class AuthorAccount extends CActiveRecord {
     
+    public $expiry_date;
+    public $hierarchy_level;
     /**
      * @return string the associated database table name
      */
@@ -77,7 +79,7 @@ class AuthorAccount extends CActiveRecord {
                 ), "message" => "This User already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Date_Of_Birth, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Date_Of_Birth, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level', 'safe', 'on' => 'search'),
         );
     }
     
@@ -99,13 +101,13 @@ class AuthorAccount extends CActiveRecord {
             'authLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Auth_Language_Id'),
             'authNationality' => array(self::BELONGS_TO, 'MasterNationality', 'Auth_Nationality_Id'),
             'authPlaceOfBirth' => array(self::BELONGS_TO, 'MasterRegion', 'Auth_Place_Of_Birth_Id'),
-            'authorAccountAddresses' => array(self::HAS_MANY, 'AuthorAccountAddress', 'Auth_Acc_Id'),
-            'authorBiographies' => array(self::HAS_MANY, 'AuthorBiography', 'Auth_Acc_Id'),
-            'authorDeathInheritances' => array(self::HAS_MANY, 'AuthorDeathInheritance', 'Auth_Acc_Id'),
-            'authorManageRights' => array(self::HAS_MANY, 'AuthorManageRights', 'Auth_Acc_Id'),
-            'authorPaymentMethods' => array(self::HAS_MANY, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
-            'authorPseudonyms' => array(self::HAS_MANY, 'AuthorPseudonym', 'Auth_Acc_id'),
-            'authorRelatedRights' => array(self::HAS_MANY, 'AuthorRelatedRights', 'Auth_Acc_Id'),
+            'authorAccountAddresses' => array(self::HAS_ONE, 'AuthorAccountAddress', 'Auth_Acc_Id'),
+            'authorBiographies' => array(self::HAS_ONE, 'AuthorBiography', 'Auth_Acc_Id'),
+            'authorDeathInheritances' => array(self::HAS_ONE, 'AuthorDeathInheritance', 'Auth_Acc_Id'),
+            'authorManageRights' => array(self::HAS_ONE, 'AuthorManageRights', 'Auth_Acc_Id'),
+            'authorPaymentMethods' => array(self::HAS_ONE, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
+            'authorPseudonyms' => array(self::HAS_ONE, 'AuthorPseudonym', 'Auth_Acc_id'),
+//            'authorRelatedRights' => array(self::HAS_ONE, 'AuthorRelatedRights', 'Auth_Acc_Id'),
         );
     }
 
@@ -133,6 +135,8 @@ class AuthorAccount extends CActiveRecord {
             'Active' => 'Active',
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
+            'expiry_date' => 'Expiry Date',
+            'hierarchy_level' => 'Hierarchy Level',
         );
     }
 
@@ -152,6 +156,7 @@ class AuthorAccount extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('authorManageRights');
 
         $criteria->compare('Auth_Acc_Id', $this->Auth_Acc_Id);
         $criteria->compare('Auth_Sur_Name', $this->Auth_Sur_Name, true);
@@ -172,6 +177,8 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Date(Created_Date)', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('authorManageRights.Auth_Mnge_Exit_Date', $this->expiry_date, true);
+        $criteria->compare('authorManageRights.Auth_Mnge_Internal_Position_Id', $this->hierarchy_level, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

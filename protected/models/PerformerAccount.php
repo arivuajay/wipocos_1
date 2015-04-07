@@ -40,6 +40,8 @@
  */
 class PerformerAccount extends CActiveRecord {
 
+    public $expiry_date;
+    public $hierarchy_level;
     /**
      * @return string the associated database table name
      */
@@ -77,7 +79,7 @@ class PerformerAccount extends CActiveRecord {
                 ), "message" => "This User already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi_Number, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Date_Of_Birth, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi_Number, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Date_Of_Birth, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level', 'safe', 'on' => 'search'),
         );
     }
     
@@ -99,13 +101,13 @@ class PerformerAccount extends CActiveRecord {
             'perfLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Perf_Language_Id'),
             'perfNationality' => array(self::BELONGS_TO, 'MasterNationality', 'Perf_Nationality_Id'),
             'perfPlaceOfBirth' => array(self::BELONGS_TO, 'MasterRegion', 'Perf_Place_Of_Birth_Id'),
-            'performerAccountAddresses' => array(self::HAS_MANY, 'PerformerAccountAddress', 'Perf_Acc_Id'),
-            'performerBiographies' => array(self::HAS_MANY, 'PerformerBiography', 'Perf_Acc_Id'),
-            'performerDeathInheritances' => array(self::HAS_MANY, 'PerformerDeathInheritance', 'Perf_Acc_Id'),
-            'performerManageRights' => array(self::HAS_MANY, 'PerformerManageRights', 'Perf_Acc_Id'),
-            'performerPaymentMethods' => array(self::HAS_MANY, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
-            'performerPseudonyms' => array(self::HAS_MANY, 'PerformerPseudonym', 'Perf_Acc_id'),
-            'performerRelatedRights' => array(self::HAS_MANY, 'PerformerRelatedRights', 'Perf_Acc_Id'),
+            'performerAccountAddresses' => array(self::HAS_ONE, 'PerformerAccountAddress', 'Perf_Acc_Id'),
+            'performerBiographies' => array(self::HAS_ONE, 'PerformerBiography', 'Perf_Acc_Id'),
+            'performerDeathInheritances' => array(self::HAS_ONE, 'PerformerDeathInheritance', 'Perf_Acc_Id'),
+//            'performerManageRights' => array(self::HAS_ONE, 'PerformerManageRights', 'Perf_Acc_Id'),
+            'performerPaymentMethods' => array(self::HAS_ONE, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
+            'performerPseudonyms' => array(self::HAS_ONE, 'PerformerPseudonym', 'Perf_Acc_id'),
+            'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
         );
     }
 
@@ -133,6 +135,8 @@ class PerformerAccount extends CActiveRecord {
             'Active' => 'Active',
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
+            'expiry_date' => 'Expiry Date',
+            'hierarchy_level' => 'Hierarchy Level',
         );
     }
 
@@ -152,7 +156,8 @@ class PerformerAccount extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-
+        $criteria->with = array('performerRelatedRights');
+        
         $criteria->compare('Perf_Acc_Id', $this->Perf_Acc_Id);
         $criteria->compare('Perf_Sur_Name', $this->Perf_Sur_Name, true);
         $criteria->compare('Perf_First_Name', $this->Perf_First_Name, true);
@@ -172,6 +177,8 @@ class PerformerAccount extends CActiveRecord {
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('performerRelatedRights.Perf_Rel_Exit_Date', $this->expiry_date, true);
+        $criteria->compare('performerRelatedRights.Perf_Rel_Internal_Position_Id', $this->hierarchy_level, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
