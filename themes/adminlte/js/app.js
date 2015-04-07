@@ -137,7 +137,26 @@ $(function() {
         radioClass: 'iradio_minimal'
     });
 
+    if($('ul.sidebar-menu li').hasClass("active")){
+        setHeight();
+    }
+        
+    $('ul.sidebar-menu li').click(function(e){
+        setHeight();
+    });
 });
+
+function setHeight(){
+    setTimeout(function(){
+        var right_height = $(".sidebar").outerHeight()+$(".header").outerHeight()+50;
+        if(right_height > 1000){
+            $(".right-side").height(right_height);
+        }else{
+            $(".right-side").height("auto");
+        }
+    }, 500);
+}
+
 function fix_sidebar() {
     //Make sure the body tag has the .fixed class
     if (!$("body").hasClass("fixed")) {

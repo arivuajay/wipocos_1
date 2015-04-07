@@ -34,7 +34,7 @@ class Group extends CActiveRecord {
     public function tableName() {
         return '{{group}}';
     }
-    
+
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         return array(
@@ -55,6 +55,7 @@ class Group extends CActiveRecord {
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
             array('Created_Date, Rowversion', 'safe'),
+            array('Group_Internal_Code', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Id, Group_Name, Group_Is_Author, Group_Is_Performer, Group_Internal_Code, Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Date, Group_Place, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -156,6 +157,14 @@ class Group extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    protected function afterSave() {
+        if($this->isNewRecord){
+            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'G'));
+            $gen_inter_model->Gen_Inter_Code += 1;
+            $gen_inter_model->save(false);
+        }
     }
 
 }

@@ -34,9 +34,17 @@
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Entry_Date', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Auth_Mnge_Entry_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Mnge_Entry_Date) ? $model->Auth_Mnge_Entry_Date : date('Y-m-d'))); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Entry_Date'); ?>
+            </div>
 
+            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Exit_Date', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Mnge_Exit_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Mnge_Exit_Date) ? $model->Auth_Mnge_Exit_Date : date('Y-m-d'))); ?>
+                <?php 
+                $exit_date = date('Y-m-d');
+                if(isset($model->Auth_Mnge_Exit_Date)){
+                    $exit_date = $model->Auth_Mnge_Exit_Date != "0000-00-00" ? $model->Auth_Mnge_Exit_Date : '';
+                }
+                ?>
+                <?php echo $form->textField($model, 'Auth_Mnge_Exit_Date', array('class' => 'form-control date', 'value' => $exit_date)); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Exit_Date'); ?>
             </div>
 
@@ -89,11 +97,11 @@
                 </div>-->
             <?php } ?>
 
-            <div class="form-group">
+<!--            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
-            </div>
+            </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Avl_Work_Cat_Id', array('class' => '')); ?>
@@ -127,7 +135,7 @@
     <div class="box-footer">
         <div class="form-group">
             <div class="col-lg-12">
-                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
     </div>

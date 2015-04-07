@@ -1,21 +1,21 @@
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'author-biography-form',
+        'id' => 'performer-biography-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
         ),
         'enableAjaxValidation' => true,
     ));
-    echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
-    $groups = Group::model()->findAll('Group_Is_Author = :author', array(':author' => '1'));
-    $group_ids = !$model->isNewRecord ? explode(',', $model->Auth_Biogrph_Aff_Groups_Ids) : array();
+    echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
+    $groups = Group::model()->findAll('Group_Is_Performer = :performer', array(':performer' => '1'));
+    $group_ids = !$model->isNewRecord ? explode(',', $model->Perf_Biogrph_Aff_Groups_Ids) : array();
     ?>
     <div class="box-body">
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Biogrph_Aff_Groups_Ids', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Perf_Biogrph_Aff_Groups_Ids', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
                 <table class="table table-bordered">
                     <tr>
@@ -36,10 +36,10 @@
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Perf_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textArea($model, 'Auth_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
-                <?php echo $form->error($model, 'Auth_Biogrph_Annotation'); ?>
+                <?php echo $form->textArea($model, 'Perf_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->error($model, 'Perf_Biogrph_Annotation'); ?>
             </div>
         </div>
 

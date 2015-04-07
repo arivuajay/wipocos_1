@@ -1,53 +1,53 @@
 <?php
-/* @var $this AuthorPaymentMethodController */
-/* @var $model AuthorPaymentMethod */
+/* @var $this PerformerPaymentMethodController */
+/* @var $model PerformerPaymentMethod */
 /* @var $form CActiveForm */
 ?>
 
 <div class="box box-primary">
             <?php
             $form = $this->beginWidget('CActiveForm', array(
-                'id' => 'author-payment-method-form',
+                'id' => 'performer-payment-method-form',
                 'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
                 'clientOptions' => array(
                     'validateOnSubmit' => true,
                 ),
                 'enableAjaxValidation' => true,
             ));
-            echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
+            echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
             ?>
             <div class="box-body">
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Pay_Method_id', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Pay_Method_id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(), 'Master_Paymode_Id', 'Paymode_Name'); ?>
-                        <?php echo $form->dropDownList($model, 'Auth_Pay_Method_id', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
-<?php echo $form->error($model, 'Auth_Pay_Method_id'); ?>
+                        <?php echo $form->dropDownList($model, 'Perf_Pay_Method_id', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
+<?php echo $form->error($model, 'Perf_Pay_Method_id'); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Bank_Account_1', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Bank_Account_1', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Auth_Bank_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-<?php echo $form->error($model, 'Auth_Bank_Account_1'); ?>
+                        <?php echo $form->textField($model, 'Perf_Bank_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+<?php echo $form->error($model, 'Perf_Bank_Account_1'); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Bank_Account_2', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Bank_Account_2', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Auth_Bank_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-<?php echo $form->error($model, 'Auth_Bank_Account_2'); ?>
+                        <?php echo $form->textField($model, 'Perf_Bank_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+<?php echo $form->error($model, 'Perf_Bank_Account_2'); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Bank_Account_3', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Bank_Account_3', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Auth_Bank_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-<?php echo $form->error($model, 'Auth_Bank_Account_3'); ?>
+                        <?php echo $form->textField($model, 'Perf_Bank_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+<?php echo $form->error($model, 'Perf_Bank_Account_3'); ?>
                     </div>
                 </div>
 

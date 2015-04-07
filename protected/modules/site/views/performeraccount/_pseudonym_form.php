@@ -1,36 +1,36 @@
 <?php
-/* @var $this AuthorPseudonymController */
-/* @var $model AuthorPseudonym */
+/* @var $this PerformerPseudonymController */
+/* @var $model PerformerPseudonym */
 /* @var $form CActiveForm */
 ?>
 <div class="box box-primary">
             <?php
             $form = $this->beginWidget('CActiveForm', array(
-                'id' => 'author-pseudonym-form',
+                'id' => 'performer-pseudonym-form',
                 'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
                 'clientOptions' => array(
                     'validateOnSubmit' => true,
                 ),
                 'enableAjaxValidation' => true,
             ));
-            echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
+            echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
             ?>
             <div class="box-body">
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Pseudo_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Pseudo_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php $psedonyms = CHtml::listData(MasterPseudonymTypes::model()->isActive()->findAll(), 'Pseudo_Id', 'Pseudo_Code');?>
-                        <?php echo $form->dropDownList($model, 'Auth_Pseudo_Type_Id', $psedonyms, array('class' => 'form-control', 'prompt' => '')); ?>
-<?php echo $form->error($model, 'Auth_Pseudo_Type_Id'); ?>
+                        <?php echo $form->dropDownList($model, 'Perf_Pseudo_Type_Id', $psedonyms, array('class' => 'form-control', 'prompt' => '')); ?>
+<?php echo $form->error($model, 'Perf_Pseudo_Type_Id'); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Auth_Pseudo_Name', array('class' => 'col-sm-2 control-label')); ?>
+                        <?php echo $form->labelEx($model, 'Perf_Pseudo_Name', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Auth_Pseudo_Name', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
-<?php echo $form->error($model, 'Auth_Pseudo_Name'); ?>
+                        <?php echo $form->textField($model, 'Perf_Pseudo_Name', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+<?php echo $form->error($model, 'Perf_Pseudo_Name'); ?>
                     </div>
                 </div>
 

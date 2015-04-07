@@ -39,7 +39,7 @@
  * @property AuthorRelatedRights[] $authorRelatedRights
  */
 class AuthorAccount extends CActiveRecord {
-
+    
     /**
      * @return string the associated database table name
      */
@@ -61,16 +61,30 @@ class AuthorAccount extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Date_Of_Birth, Auth_Place_Of_Birth_Id', 'required'),
+            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Date_Of_Birth', 'required'),
             array('Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
+            array('Auth_Sur_Name', 'nameUnique'),
+            array('Auth_Internal_Code', 'unique'),
+            array('Auth_First_Name', 'unique', 'criteria'=>array(
+            'condition' => '`Auth_Sur_Name`=:secondKey',
+                    'params' => array(
+                        ':secondKey' => $this->Auth_Sur_Name
+                    )
+                ), "message" => "This User already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Date_Of_Birth, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
+    }
+    
+    public function nameUnique($attribute,$params) {
+        if(strcasecmp($this->Auth_First_Name, $this->Auth_Sur_Name) == 0 ){
+            $this->addError($attribute, 'First name and Last cannot be equal.');
+        }
     }
 
     /**
@@ -185,4 +199,11 @@ class AuthorAccount extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if($this->isNewRecord){
+            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
+            $gen_inter_model->Gen_Inter_Code += 1;
+            $gen_inter_model->save(false);
+        }
+    }
 }

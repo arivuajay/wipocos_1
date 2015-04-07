@@ -4,8 +4,8 @@
 
 $this->title='Update Author: '. $model->Auth_Acc_Id;
 $this->breadcrumbs=array(
-	'Author Accounts'=>array('index'),
-	'Update Author Accounts',
+	'Authors'=>array('index'),
+	'Update Authors',
 );
 ?>
 

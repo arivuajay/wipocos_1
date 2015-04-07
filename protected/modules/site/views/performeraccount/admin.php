@@ -1,15 +1,15 @@
 <?php
-/* @var $this AuthoraccountController */
-/* @var $model AuthorAccount */
+/* @var $this PerformeraccountController */
+/* @var $model PerformerAccount */
 
 $this->breadcrumbs=array(
-	'Authors'=>array('index'),
+	'Performers'=>array('index'),
 	'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'List AuthorAccount', 'url'=>array('index')),
-	array('label'=>'Create AuthorAccount', 'url'=>array('create')),
+	array('label'=>'List PerformerAccount', 'url'=>array('index')),
+	array('label'=>'Create PerformerAccount', 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -18,7 +18,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#author-account-grid').yiiGridView('update', {
+	$('#performer-account-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Authors</h1>
+<h1>Manage Performers</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -41,27 +41,27 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'author-account-grid',
+	'id'=>'performer-account-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'Auth_Acc_Id',
-		'Auth_Sur_Name',
-		'Auth_First_Name',
-		'Auth_Internal_Code',
-		'Auth_Ipi_Number',
-		'Auth_Ipi_Base_Number',
+		'Perf_Acc_Id',
+		'Perf_Sur_Name',
+		'Perf_First_Name',
+		'Perf_Internal_Code',
+		'Perf_Ipi_Number',
+		'Perf_Ipi_Base_Number',
 		/*
-		'Auth_Ipn_Number',
-		'Auth_Date_Of_Birth',
-		'Auth_Place_Of_Birth_Id',
-		'Auth_Birth_Country_Id',
-		'Auth_Nationality_Id',
-		'Auth_Language_Id',
-		'Auth_Identity_Number',
-		'Auth_Marital_Status_Id',
-		'Auth_Spouse_Name',
-		'Auth_Gender',
+		'Perf_Ipn_Number',
+		'Perf_Date_Of_Birth',
+		'Perf_Place_Of_Birth_Id',
+		'Perf_Birth_Country_Id',
+		'Perf_Nationality_Id',
+		'Perf_Language_Id',
+		'Perf_Identity_Number',
+		'Perf_Marital_Status_Id',
+		'Perf_Spouse_Name',
+		'Perf_Gender',
 		'Active',
 		'Created_Date',
 		'Rowversion',

@@ -82,8 +82,8 @@ class AuthoraccountController extends Controller {
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
             if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully!!!');
-                $this->redirect('update/id/'.$model->Auth_Acc_Id);
+                Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
+                $this->redirect('update/id/'.$model->Auth_Acc_Id.'/tab/6');
             }
         }
 

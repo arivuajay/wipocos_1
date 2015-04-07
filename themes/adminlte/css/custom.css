@@ -30,3 +30,7 @@ and open the template in the editor.
 #search-form label .required{
     display: none;
 }
+
+.right-side{
+    overflow-y: hidden;
+}

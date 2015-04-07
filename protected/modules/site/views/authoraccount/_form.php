@@ -23,12 +23,12 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Address</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Payment</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Pseudonyms</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if(!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"';?>>Address</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if(!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"';?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if(!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"';?>>Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if(!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"';?>>Pseudonyms</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Managed Rights</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Death Inheritance</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if(!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"';?>>Death Inheritance</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -46,6 +46,20 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                         ?>
                         <div class="col-lg-5 col-xs-5">
                             <div class="box-body">
+                                <?php 
+                                if($model->isNewRecord){
+                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
+                                    $internal_code = $gen_int_code->Fullcode;
+                                }else{
+                                    $internal_code = $model->Auth_Internal_Code;
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Internal_Code', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Auth_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
+                                </div>
+                                
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_First_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Auth_First_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -71,11 +85,11 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                                     <?php echo $form->error($model, 'Auth_Date_Of_Birth'); ?>
                                 </div>
 
-                                <div class="form-group">
+<!--                                <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Place_Of_Birth_Id', array('class' => '')); ?>
                                     <?php echo $form->dropDownList($model, 'Auth_Place_Of_Birth_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                                     <?php echo $form->error($model, 'Auth_Place_Of_Birth_Id'); ?>
-                                </div>
+                                </div>-->
                                 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Marital_Status_Id', array('class' => '')); ?>
@@ -100,31 +114,6 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                         <div class="col-lg-1 col-xs-1"></div>
                         <div class="col-lg-5 col-xs-5">
                             <div class="box-body">
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Birth_Country_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Auth_Birth_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Auth_Birth_Country_Id'); ?>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Nationality_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Auth_Nationality_Id', $nationalities, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Auth_Nationality_Id'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Language_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Auth_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Auth_Language_Id'); ?>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                                    <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
-                                </div>
-
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Ipi_Number', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Auth_Ipi_Number', array('class' => 'form-control')); ?>
@@ -148,9 +137,25 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                                     <?php echo $form->textField($model, 'Auth_Identity_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                                     <?php echo $form->error($model, 'Auth_Identity_Number'); ?>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Birth_Country_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Auth_Birth_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->error($model, 'Auth_Birth_Country_Id'); ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Nationality_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Auth_Nationality_Id', $nationalities, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->error($model, 'Auth_Nationality_Id'); ?>
+                                </div>
 
-
-
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Language_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Auth_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->error($model, 'Auth_Language_Id'); ?>
+                                </div>
+                                
                             </div>
                         </div>
 

@@ -4,7 +4,7 @@
 
 $this->title='View #'.$model->Auth_Acc_Id;
 $this->breadcrumbs=array(
-	'Author Accounts'=>array('index'),
+	'Authors'=>array('index'),
 	'View '.'AuthorAccount',
 );
 ?>
