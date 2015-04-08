@@ -26,7 +26,7 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
                 'clientOptions' => array(
                     'validateOnSubmit' => true,
                 ),
-                'enableAjaxValidation' => true,
+                'enableAjaxValidation' => false,
             ));
             ?>
             <div class="col-lg-5 col-xs-5">

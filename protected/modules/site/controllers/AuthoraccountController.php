@@ -28,7 +28,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -99,7 +99,7 @@ class AuthoraccountController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1) {
+    public function actionUpdate($id, $tab = 1, $fileedit = NULL) {
         $model = $this->loadModel($id);
         $address_exists = AuthorAccountAddress::model()->findByAttributes(array('Auth_Acc_Id' => $id));
         $address_model = empty($address_exists) ? new AuthorAccountAddress :  $address_exists;
@@ -119,8 +119,16 @@ class AuthoraccountController extends Controller {
         $biograph_exists = AuthorBiography::model()->findByAttributes(array('Auth_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new AuthorBiography :  $biograph_exists;
 
+        $upload_model = new AuthorUpload('create');
+        if($fileedit != NULL){
+            $upload_exists = AuthorUpload::model()->findByPk($fileedit);
+            $upload_model = empty($upload_exists) ? new AuthorUpload('create') :  $upload_exists;
+        }
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model, $biograph_model));
+        $this->performAjaxValidation(array(
+            $model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model, 
+            $biograph_model));
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
@@ -161,11 +169,8 @@ class AuthoraccountController extends Controller {
             }
         }elseif (isset($_POST['AuthorManageRights'])) {
             $managed_model->attributes = $_POST['AuthorManageRights'];
-//            $managed_model->setAttribute('Auth_Rel_File', isset($_FILES['AuthorManageRights']['Auth_Mnge_File']) ? $_FILES['AuthorManageRights']['Auth_Mnge_File'] : '');
                     
             if($managed_model->validate()){
-//                $managed_model->setUploadDirectory(UPLOAD_DIR);
-//                $managed_model->uploadFile();
                 if ($managed_model->save()) {
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('authoraccount/update/id/'.$managed_model->Auth_Acc_Id.'/tab/6'));
@@ -178,9 +183,27 @@ class AuthoraccountController extends Controller {
                 Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/'.$death_model->Auth_Acc_Id.'/tab/7'));
             }
+        }elseif (isset($_POST['AuthorUpload'])) {
+            $upload_model->attributes = $_POST['AuthorUpload'];
+            $upload_model->setAttribute('Auth_Upl_File', isset($_FILES['AuthorUpload']['Auth_Upl_File']) ? $_FILES['AuthorManageRights']['Auth_Upl_File'] : '');
+                    
+            if ($upload_model->validate()) {
+                $upload_model->setUploadDirectory(UPLOAD_DIR);
+                $upload_model->uploadFile();
+                if ($upload_model->save()) {
+                    Yii::app()->user->setFlash('success', 'Document saved Successfully!!!');
+                    $this->redirect(array('authoraccount/update/id/'.$death_model->Auth_Acc_Id.'/tab/8'));
+                }
+            }else{
+                Yii::app()->user->setFlash('danger', 'Failed to upload document.!!!');
+                if($tab != '8')
+                    $this->redirect(array('authoraccount/update/id/'.$id.'/tab/8'));
+            }
         }
 
-        $this->render('update', compact('tab','model','address_model','payment_model','psedonym_model','death_model','managed_model','biograph_model'));
+        $this->render('update', compact(
+                'tab','model','address_model','payment_model','psedonym_model','death_model',
+                'managed_model','biograph_model','upload_model'));
     }
 
     /**
@@ -195,6 +218,22 @@ class AuthoraccountController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'AuthorAccount Deleted Successfully!!!');
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+    }
+
+    public function actionFiledelete($id) {
+        $model = AuthorUpload::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $auth_acc_id = $model->Auth_Acc_Id;
+        
+        $model->setUploadDirectory(UPLOAD_DIR);
+        $model->delete();
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', 'Uploaded file Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/authoraccount/update/id/'.$auth_acc_id.'/tab/8/fileedit/'.$id));
         }
     }
 
@@ -257,6 +296,7 @@ class AuthoraccountController extends Controller {
                 || $_POST['ajax'] === 'author-related-rights-form'
                 || $_POST['ajax'] === 'author-managed-rights-form'
                 || $_POST['ajax'] === 'author-biography-form'
+                || $_POST['ajax'] === 'author-upload-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

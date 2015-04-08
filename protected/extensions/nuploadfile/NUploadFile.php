@@ -34,7 +34,7 @@ class NUploadFile extends CActiveRecordBehavior {
 		$fileField = CUploadedFile::getInstance($this->owner, $this->fileField);
 		if($fileField instanceof CUploadedFile) {
 			//generate unique name for uploaded file
-			$newName = trim(md5(time().$fileField)).'.'.CFileHelper::getExtension($fileField->name);
+			$newName = trim(md5(time())).'.'.CFileHelper::getExtension($fileField->name);
 			$fileField->saveAs($path.$newName);
 			$this->owner->{$this->fileField} = $this->_getDirName() . $newName;
 			if(!$this->owner->isNewRecord)
