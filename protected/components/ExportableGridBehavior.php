@@ -8,22 +8,22 @@
  * Usage:
  * <pre>
  * //(Step 1) Add this behavior to the controller like
-	  public function behaviors() {
-		  return array(
-			'exportableGrid' => array(
-				'class' => 'application.components.ExportableGridBehavior',
-		  ));
-	  }
+  public function behaviors() {
+  return array(
+  'exportableGrid' => array(
+  'class' => 'application.components.ExportableGridBehavior',
+  ));
+  }
  * //(Step 2) On actionAdmin() , add this line before render('admin') method
-		if ($this->isExportRequest()) {
-            $this->exportCSV(array('EXPORT DATE ',date('Y-m-d')), null, false);
-            $this->exportCSV($model, array_keys($model->attributeLabels()), false, 3);
-            $this->exportCSV($model->search(), array('id', 'comment', 'date', 'user.name', 'user.id'));
-        }
+  if ($this->isExportRequest()) {
+  $this->exportCSV(array('EXPORT DATE ',date('Y-m-d')), null, false);
+  $this->exportCSV($model, array_keys($model->attributeLabels()), false, 3);
+  $this->exportCSV($model->search(), array('id', 'comment', 'date', 'user.name', 'user.id'));
+  }
  * //(Step 3) On the view that renders the grid, add the Export button like this
-		$this->renderExportGridButton($gridWidget,'Export Grid Results',array('class'=>'btn btn-info pull-right'));
+  $this->renderExportGridButton($gridWidget,'Export Grid Results',array('class'=>'btn btn-info pull-right'));
  * // (Optional) If you need to export a very large dataset, you need to add this before exportCSV()
-		set_time_limit(0);
+  set_time_limit(0);
  * </pre>
  * @version 2.0
  * @author Geronimo Oñativia / http://www.estudiokroma.com
@@ -31,14 +31,13 @@
  */
 class ExportableGridBehavior extends CBehavior {
 
-    public $buttonId = 'export-button';		//Id used on the export link
-    public $exportParam = 'exportCSV';		//Param to be appended on url to fire an export
-    public $csvDelimiter = ',';				//Columns delimiter
-    public $csvEnclosure = '"';				//Enclosure used on data when needed
-    public $filename = 'export.csv';		//Filename suggested to user when downloading
-	public $addUTF8BOM = true; 				//Adds \xEF\xBB\xBF to output
+    public $buttonId = 'export-button';  //Id used on the export link
+    public $exportParam = 'exportCSV';  //Param to be appended on url to fire an export
+    public $csvDelimiter = ',';    //Columns delimiter
+    public $csvEnclosure = '"';    //Enclosure used on data when needed
+    public $filename = 'export.csv';  //Filename suggested to user when downloading
+    public $addUTF8BOM = true;     //Adds \xEF\xBB\xBF to output
     private $headersSent = false;
-
 
     /**
      * @param mixed $data A Traversable of CModel or a CModel where data will be fetch from
@@ -124,22 +123,22 @@ class ExportableGridBehavior extends CBehavior {
     }
 
     public function renderExportGridButton($grid, $label = 'Export', $htmlOptions = array()) {
-        if(is_object($grid)){
+        if (is_object($grid)) {
             $grid_id = $grid->id;
-        }else{
+        } else {
             $grid_id = $grid;
         }
 
         if (!isset($htmlOptions['id'])) {
             $htmlOptions['id'] = $this->buttonId;
         }
-        return CHtml::link($label, 'javascript:void(0);', $htmlOptions);
-        Yii::app()->clientScript->registerScript('exportgrid'.$htmlOptions['id'], "$('#" . $htmlOptions['id'] . "').on('click',function() {
+        Yii::app()->clientScript->registerScript('exportgrid' . $htmlOptions['id'], "$('#" . $htmlOptions['id'] . "').on('click',function() {
     var downloadUrl=$('#" . $grid_id . "').yiiGridView('getUrl');
     downloadUrl+=((downloadUrl.indexOf('?')==-1)?'?':'&');
     downloadUrl+='{$this->exportParam}=1';
     window.open( downloadUrl ,'_blank');
 });");
+        return CHtml::link($label, 'javascript:void(0);', $htmlOptions);
     }
 
 }
