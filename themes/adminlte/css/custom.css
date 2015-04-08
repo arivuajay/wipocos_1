@@ -34,3 +34,7 @@ and open the template in the editor.
 .right-side{
     overflow-y: hidden;
 }
+
+.grid-view .panel-heading .summary {
+    float: left;
+}
