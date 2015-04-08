@@ -10,12 +10,12 @@
     ));
     echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
     $groups = Group::model()->findAll('Group_Is_Author = :author', array(':author' => '1'));
-    $group_ids = !$model->isNewRecord ? explode(',', $model->Auth_Biogrph_Aff_Groups_Ids) : array();
+    $group_ids = !$model->isNewRecord ? CHtml::listData($author_model->groupMembers,'Group_Member_Id','Group_Id') : array();
     ?>
     <div class="box-body">
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Biogrph_Aff_Groups_Ids', array('class' => 'col-sm-2 control-label')); ?>
+            <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
                 <table class="table table-bordered">
                     <tr>
@@ -53,7 +53,7 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
-<?php 
+<?php
 $js = <<< EOD
     $(document).ready(function() {
         $('#group_id').on('ifChecked', function(event){

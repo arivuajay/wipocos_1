@@ -10,27 +10,27 @@
     ));
     echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
     $groups = Group::model()->findAll('Group_Is_Performer = :performer', array(':performer' => '1'));
-    $group_ids = !$model->isNewRecord ? explode(',', $model->Perf_Biogrph_Aff_Groups_Ids) : array();
+    $group_ids = !$model->isNewRecord ? CHtml::listData($performer_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
     ?>
     <div class="box-body">
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Perf_Biogrph_Aff_Groups_Ids', array('class' => 'col-sm-2 control-label')); ?>
+            <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
                 <table class="table table-bordered">
                     <tr>
-                        <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id'))?></th>
+                        <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
                         <th>Group Name</th>
                         <th>Code</th>
                     </tr>
-                    <?php foreach ($groups as $key => $group) {?>
-                    <tr>
-                        <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : '';?>
-                        <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id?>]" value="<?php echo $group->Group_Id?>" <?php echo $checked?> /></td>
-                        <td><?php echo $group->Group_Name?></td>
-                        <td><?php echo $group->Group_Internal_Code?></td>
-                    </tr>
-                    <?php }?>
+                    <?php foreach ($groups as $key => $group) { ?>
+                        <tr>
+                            <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : ''; ?>
+                            <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id ?>]" value="<?php echo $group->Group_Id ?>" <?php echo $checked ?> /></td>
+                            <td><?php echo $group->Group_Name ?></td>
+                            <td><?php echo $group->Group_Internal_Code ?></td>
+                        </tr>
+                    <?php } ?>
                 </table>
             </div>
         </div>
@@ -53,7 +53,7 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
-<?php 
+<?php
 $js = <<< EOD
     $(document).ready(function() {
         $('#group_id').on('ifChecked', function(event){

@@ -1,24 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "{{group_member}}".
+ * This is the model class for table "{{group_members}}".
  *
- * The followings are the available columns in table '{{group_member}}':
+ * The followings are the available columns in table '{{group_members}}':
  * @property integer $Group_Member_Id
  * @property integer $Group_Id
- * @property string $Group_Member_Ids
- * @property string $Active
+ * @property string $Group_Member_Internal_Code
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property AuthorAccount $groupMemberInternalCode
+ * @property Group $group
  */
-class GroupMember extends CActiveRecord
+class GroupMembers extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{group_member}}';
+		return '{{group_members}}';
 	}
 
 	/**
@@ -29,14 +32,13 @@ class GroupMember extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Group_Id, Group_Member_Ids, Created_Date', 'required'),
+			array('Group_Id,Group_Member_Internal_Code', 'required'),
 			array('Group_Id', 'numerical', 'integerOnly'=>true),
-			array('Group_Member_Ids', 'length', 'max'=>1000),
-			array('Active', 'length', 'max'=>1),
+			array('Group_Member_Internal_Code', 'length', 'max'=>255),
 			array('Rowversion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Group_Member_Id, Group_Id, Group_Member_Ids, Active, Created_Date, Rowversion', 'safe', 'on'=>'search'),
+			array('Group_Member_Id, Group_Id, Group_Member_Internal_Code, Created_Date, Rowversion', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,6 +50,9 @@ class GroupMember extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'groupAuthors' => array(self::BELONGS_TO, 'AuthorAccount', 'Group_Member_Internal_Code'),
+			'groupPerformers' => array(self::BELONGS_TO, 'PerformerAccount', 'Group_Member_Internal_Code'),
+			'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
 		);
 	}
 
@@ -58,9 +63,8 @@ class GroupMember extends CActiveRecord
 	{
 		return array(
 			'Group_Member_Id' => 'Group Member',
-			'Group_Id' => 'Group',
-			'Group_Member_Ids' => 'Group Member Ids',
-			'Active' => 'Active',
+			'Group_Id' => 'Groups',
+			'Group_Member_Internal_Code' => 'Group Member Internal Code',
 			'Created_Date' => 'Created Date',
 			'Rowversion' => 'Rowversion',
 		);
@@ -86,8 +90,7 @@ class GroupMember extends CActiveRecord
 
 		$criteria->compare('Group_Member_Id',$this->Group_Member_Id);
 		$criteria->compare('Group_Id',$this->Group_Id);
-		$criteria->compare('Group_Member_Ids',$this->Group_Member_Ids,true);
-		$criteria->compare('Active',$this->Active,true);
+		$criteria->compare('Group_Member_Internal_Code',$this->Group_Member_Internal_Code,true);
 		$criteria->compare('Created_Date',$this->Created_Date,true);
 		$criteria->compare('Rowversion',$this->Rowversion,true);
 
@@ -103,13 +106,13 @@ class GroupMember extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return GroupMember the static model class
+	 * @return GroupMembers the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-        
+
         public function dataProvider() {
             return new CActiveDataProvider($this, array(
                 'pagination' => array(

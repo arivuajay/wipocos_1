@@ -6,8 +6,8 @@ $this->breadcrumbs = array(
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
-    
-    <?php 
+
+    <?php
     $author_count = AuthorAccount::model()->count();
     $author_reg_count = AuthorManageRights::model()->count();
     $performer_count = PerformerAccount::model()->count();
@@ -17,7 +17,7 @@ $this->breadcrumbs = array(
 
         <div class="small-box bg-red">
             <div class="inner">
-                <h3><?php echo $author_count?></h3>
+                <h3><?php echo $author_count ?></h3>
                 <p>Reg. Authors</p>
             </div>
             <div class="icon">
@@ -29,32 +29,11 @@ $this->breadcrumbs = array(
             </a>
         </div>
     </div>
-    
-    <div class="col-lg-3 col-xs-6">
-
-        <div class="small-box bg-aqua">
-            <div class="inner">
-                <?php 
-                
-                $uncompleted_profie_auth = ($author_count - $author_reg_count);
-                ?>
-                <h3><?php echo $uncompleted_profie_auth?></h3>
-                <p>Uncompleted Authors</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
-    
     <div class="col-lg-3 col-xs-6">
 
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3><?php echo $performer_count?></h3>
+                <h3><?php echo $performer_count ?></h3>
                 <p>Reg. Performers</p>
             </div>
             <div class="icon">
@@ -67,13 +46,30 @@ $this->breadcrumbs = array(
     </div>
     <div class="col-lg-3 col-xs-6">
 
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <?php
+                $uncompleted_profie_auth = ($author_count - $author_reg_count);
+                $uncompleted_profie_perf = ($performer_count - $performer_reg_count);
+                ?>
+                <h3><?php echo $uncompleted_profie_auth + $uncompleted_profie_perf ?></h3>
+                <p>Uncompleted Records</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" class="small-box-footer">
+                More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="col-lg-3 col-xs-6">
         <div class="small-box bg-green">
             <div class="inner">
-                <?php 
-                $uncompleted_profie = ($performer_count - $performer_reg_count);
-                ?>
-                <h3><?php echo $uncompleted_profie?></h3>
-                <p>Uncompleted Performers</p>
+                <h3>0</h3>
+                <p>Registered works</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -93,7 +89,7 @@ $this->breadcrumbs = array(
         <div class="box box-success">
             <div class="box-header">
                 <i class="fa fa-comments-o"></i>
-                <h3 class="box-title">Chat</h3>
+                <h3 class="box-title">Support Chat</h3>
                 <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
                     <div class="btn-group" data-toggle="btn-toggle" >
                         <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i></button>
@@ -157,8 +153,8 @@ $this->breadcrumbs = array(
 
 
 
-        
-        
+
+
     </section><!-- /.Left col -->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->
     <section class="col-lg-5 connectedSortable">
@@ -167,7 +163,7 @@ $this->breadcrumbs = array(
         <div class="box box-primary">
             <div class="box-header">
                 <i class="ion ion-clipboard"></i>
-                <h3 class="box-title">Board Meeting</h3>
+                <h3 class="box-title">Announcements</h3>
                 <div class="box-tools pull-right">
                     <ul class="pagination pagination-sm inline">
                         <li><a href="#">&laquo;</a></li>

@@ -38,7 +38,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                         $countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
                         $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
                         $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 'Master_Legal_Form_Id', 'Legal_Form_Name');
-                        
+
                         if(isset($type)){
                             if($type == 'author'){
                                 echo $form->hiddenField($model, 'Group_Is_Author', array('value' => '1'));
@@ -145,7 +145,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                 </div>
                 <div class="tab-pane" id="tab_2">
-                    <?php if(!$model->isNewRecord){ $this->renderPartial('_member_form', array('model' => $member_model, 'group_model' => $model));}?>
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_member_form', array('group_model' => $model));}?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php if(!$model->isNewRecord){ $this->renderPartial('_payment_form', array('model' => $payment_model, 'group_model' => $model));}?>

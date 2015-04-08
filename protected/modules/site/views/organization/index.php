@@ -130,10 +130,10 @@ $this->breadcrumbs = array(
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
                 'Org_Code',
                 'Org_Abbrevation',
                 array(
@@ -210,10 +210,10 @@ $this->breadcrumbs = array(
     <div class="row">
         <?php
         $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
+//            array(
+//                'class' => 'IndexColumn',
+//                'header' => '',
+//            ),
             'Org_Code',
             'Org_Abbrevation',
             array(

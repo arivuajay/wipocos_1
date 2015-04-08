@@ -61,7 +61,7 @@ $this->breadcrumbs=array(
 	),
 )); ?>
 </div>
-    
+
     <div class="user-view col-lg-6">
     <h4>Payment</h4>
     <?php
@@ -94,8 +94,8 @@ $this->breadcrumbs=array(
     }else{
         echo 'Pseudonyms Not Created';
     }?>
-    
-    
+
+
         <h4>Death Inheritance</h4>
     <?php
     if(!empty($death_model)){
@@ -115,11 +115,11 @@ $this->breadcrumbs=array(
     }else{
         echo 'Death Inheritance Not Created';
     }?>
-    
-    
+
+
 </div>
-    
-    
+
+
 </div>
 
 <div class="row">
@@ -163,7 +163,7 @@ $this->breadcrumbs=array(
         echo 'Address Not Created';
     }
 ?>
-</div>    
+</div>
 <div class="user-view col-lg-6">
     <h4>Managed Rights</h4>
     <?php
@@ -194,8 +194,8 @@ $this->breadcrumbs=array(
         echo 'Mmanaged Rights Not Created';
     }
 ?>
-    
-    
+
+
         <h4>Biography</h4>
     <?php
     if(!empty($biograph_model)){
@@ -205,15 +205,14 @@ $this->breadcrumbs=array(
     'attributes'=>array(
         'Auth_Biogrph_Id',
         'Auth_Acc_Id',
-        'Auth_Biogrph_Aff_Groups_Ids',
         'Auth_Biogrph_Annotation',
     ),
 ));
     }else{
         echo 'Biography Not Created';
     }?>
-    
-</div>    
+
+</div>
 </div>
 
 

@@ -21,7 +21,7 @@ class PerformeraccountController extends Controller {
             'download' => 'application.components.actions.download',
         );
     }
-    
+
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -122,7 +122,7 @@ class PerformeraccountController extends Controller {
             $upload_exists = PerformerUpload::model()->findByPk($fileedit);
             $upload_model = empty($upload_exists) ? new PerformerUpload('create') : $upload_exists;
         }
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
             $model, $address_model, $payment_model, $psedonym_model, $death_model, $related_model, $biograph_model));
@@ -150,10 +150,17 @@ class PerformeraccountController extends Controller {
             }
         } elseif (isset($_POST['PerformerBiography'])) {
             $biograph_model->attributes = $_POST['PerformerBiography'];
-            $ids = isset($_POST['group_ids']) ? implode(',', $_POST['group_ids']) : '';
-            $biograph_model->Perf_Biogrph_Aff_Groups_Ids = $ids;
 
             if ($biograph_model->save()) {
+                GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Perf_Internal_Code}'");
+                if(isset($_POST['group_ids']) && !empty($_POST['group_ids'])){
+                    foreach($_POST['group_ids'] as $gid):
+                        $group = new GroupMembers;
+                        $group->Group_Id = $gid;
+                        $group->Group_Member_Internal_Code = $model->Perf_Internal_Code;
+                        $group->save(false);
+                    endforeach;
+                }
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('performeraccount/update/id/' . $biograph_model->Perf_Acc_Id . '/tab/4'));
             }
@@ -261,7 +268,7 @@ class PerformeraccountController extends Controller {
             //Add to the csv a single model data with 3 empty rows after the data
 //            $this->exportCSV($model, array_keys($model->attributeLabels()), false, 3);
             //Add to the csv a lot of models from a CDataProvider
-            $this->exportCSV($model->search(), array('Perf_Acc_Id', 'Perf_First_Name', 'Perf_Sur_Name', 'Perf_Internal_Code'));
+            $this->exportCSV($model->search(), array('Perf_Internal_Code', 'Perf_First_Name', 'Perf_Sur_Name', 'Perf_Ipi_Number'));
         }
 
 
@@ -303,13 +310,13 @@ class PerformeraccountController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'performer-account-form' 
-                || $_POST['ajax'] === 'performer-account-address-form' 
-                || $_POST['ajax'] === 'performer-payment-method-form' 
-                || $_POST['ajax'] === 'performer-pseudonym-form' 
-                || $_POST['ajax'] === 'performer-death-inheritance-form' 
-                || $_POST['ajax'] === 'performer-related-rights-form' 
-                || $_POST['ajax'] === 'performer-managed-rights-form' 
+                $_POST['ajax'] === 'performer-account-form'
+                || $_POST['ajax'] === 'performer-account-address-form'
+                || $_POST['ajax'] === 'performer-payment-method-form'
+                || $_POST['ajax'] === 'performer-pseudonym-form'
+                || $_POST['ajax'] === 'performer-death-inheritance-form'
+                || $_POST['ajax'] === 'performer-related-rights-form'
+                || $_POST['ajax'] === 'performer-managed-rights-form'
                 || $_POST['ajax'] === 'performer-biography-form'
                 || $_POST['ajax'] === 'performer-upload-form'
                 )) {

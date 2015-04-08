@@ -111,6 +111,9 @@ class PerformerAccount extends CActiveRecord {
             'performerPseudonyms' => array(self::HAS_ONE, 'PerformerPseudonym', 'Perf_Acc_id'),
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
             'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Auth_Acc_id'),
+            'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
+                'foreignKey' => array('Group_Member_Internal_Code' => 'Perf_Internal_Code')
+            ),
         );
     }
 
@@ -139,7 +142,7 @@ class PerformerAccount extends CActiveRecord {
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
-            'hierarchy_level' => 'Hierarchy Level',
+            'hierarchy_level' => 'Member type',
         );
     }
 
@@ -225,7 +228,7 @@ class PerformerAccount extends CActiveRecord {
             $criteria->compare('Created_Date', $this->record_search, true, 'OR');
             $criteria->compare('Rowversion', $this->record_search, true, 'OR');
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(

@@ -6,7 +6,6 @@
  * The followings are the available columns in table '{{performer_biography}}':
  * @property integer $Perf_Biogrph_Id
  * @property integer $Perf_Acc_Id
- * @property string $Perf_Biogrph_Aff_Groups_Ids
  * @property string $Perf_Biogrph_Annotation
  * @property string $Active
  * @property string $Created_Date
@@ -33,12 +32,11 @@ class PerformerBiography extends CActiveRecord {
         return array(
             array('Perf_Acc_Id, Perf_Biogrph_Annotation', 'required'),
             array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
-            array('Perf_Biogrph_Aff_Groups_Ids', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
             array('Perf_Biogrph_Annotation, Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Perf_Biogrph_Id, Perf_Acc_Id, Perf_Biogrph_Aff_Groups_Ids, Perf_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Perf_Biogrph_Id, Perf_Acc_Id, Perf_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -60,7 +58,6 @@ class PerformerBiography extends CActiveRecord {
         return array(
             'Perf_Biogrph_Id' => 'Auth Biogrph',
             'Perf_Acc_Id' => 'Auth Acc',
-            'Perf_Biogrph_Aff_Groups_Ids' => 'Groups',
             'Perf_Biogrph_Annotation' => 'Annotation',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
@@ -87,7 +84,6 @@ class PerformerBiography extends CActiveRecord {
 
         $criteria->compare('Perf_Biogrph_Id', $this->Perf_Biogrph_Id);
         $criteria->compare('Perf_Acc_Id', $this->Perf_Acc_Id);
-        $criteria->compare('Perf_Biogrph_Aff_Groups_Ids', $this->Perf_Biogrph_Aff_Groups_Ids, true);
         $criteria->compare('Perf_Biogrph_Annotation', $this->Perf_Biogrph_Annotation, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);

@@ -110,7 +110,9 @@ class AuthorAccount extends CActiveRecord {
             'authorPaymentMethods' => array(self::HAS_ONE, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
             'authorPseudonyms' => array(self::HAS_ONE, 'AuthorPseudonym', 'Auth_Acc_id'),
             'authorUploads' => array(self::HAS_MANY, 'AuthorUpload', 'Auth_Acc_id'),
-//            'authorRelatedRights' => array(self::HAS_ONE, 'AuthorRelatedRights', 'Auth_Acc_Id'),
+            'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
+                'foreignKey' => array('Group_Member_Internal_Code' => 'Auth_Internal_Code')
+            ),
         );
     }
 
@@ -139,7 +141,7 @@ class AuthorAccount extends CActiveRecord {
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
-            'hierarchy_level' => 'Hierarchy Level',
+            'hierarchy_level' => 'Member type',
         );
     }
 
@@ -239,6 +241,23 @@ class AuthorAccount extends CActiveRecord {
             $gen_inter_model->Gen_Inter_Code += 1;
             $gen_inter_model->save(false);
         }
+    }
+
+    public function getAuthorsPseudoNames() {
+        $text = 'no title yet';
+
+        if (!empty($this->authorPseudonyms)) { // if this Author has any related Posts
+            var_dump($this->authorPseudonyms); exit;
+            $counter = 0;
+            foreach ($this->authorPseudonyms as $name) {
+                var_dump($name); exit;
+                if ($counter == 0)
+                    $text = $name->Auth_Pseudo_Name;
+                else
+                    $text .= ', ' . $name->Auth_Pseudo_Name;
+            }
+        }
+        return $text;
     }
 
 }

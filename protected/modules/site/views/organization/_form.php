@@ -16,10 +16,20 @@
 	'enableAjaxValidation'=>true,
 )); ?>
             <div class="box-body">
-                                    <div class="form-group">
+
+                    <div class="form-group">
                         <?php echo $form->labelEx($model,'Org_Code',  array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">
-                        <?php echo $form->textField($model,'Org_Code',array('class'=>'form-control','size'=>25,'maxlength'=>25)); ?>
+                            <?php
+                                if($model->isNewRecord){
+                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'O'));
+                                    $internal_code = $gen_int_code->Fullcode;
+                                }else{
+                                    $internal_code = $model->Perf_Internal_Code;
+                                }
+                                ?>
+
+                        <?php echo $form->textField($model,'Org_Code',array('class'=>'form-control','size'=>25,'maxlength'=>255, 'readonly' => true, 'value' => $internal_code)); ?>
                         <?php echo $form->error($model,'Org_Code'); ?>
                         </div>
                     </div>
@@ -123,7 +133,7 @@
                         <?php echo $form->error($model,'Org_Related_Rights'); ?>
                         </div>
                     </div>
-                
+
                 <div class="form-group">
                         <?php echo $form->labelEx($model,'Active',  array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">

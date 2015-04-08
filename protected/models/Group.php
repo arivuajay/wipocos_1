@@ -72,6 +72,7 @@ class Group extends CActiveRecord {
             'groupLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Group_Legal_Form_Id'),
             'groupCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Group_Country_Id'),
             'groupLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Group_Language_Id'),
+            'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Id'),
         );
     }
 

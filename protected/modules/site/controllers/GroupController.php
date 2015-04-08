@@ -80,7 +80,7 @@ class GroupController extends Controller {
      */
     public function actionUpdate($id, $tab = 1) {
         $model = $this->loadModel($id);
-        
+
         $payment_exists = GroupPaymentMethod::model()->findByAttributes(array('Group_Id' => $id));
         $payment_model = empty($payment_exists) ? new GroupPaymentMethod : $payment_exists;
 
@@ -89,16 +89,16 @@ class GroupController extends Controller {
 
         $psedonym_exists = GroupPseudonym::model()->findByAttributes(array('Group_Id' => $id));
         $psedonym_model = empty($psedonym_exists) ? new GroupPseudonym : $psedonym_exists;
-        
+
         $biograph_exists = GroupBiography::model()->findByAttributes(array('Group_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new GroupBiography : $biograph_exists;
 
         $address_exists = GroupRepresentative::model()->findByAttributes(array('Group_Id' => $id));
         $address_model = empty($address_exists) ? new GroupRepresentative : $address_exists;
-        
-        $member_exists = GroupMember::model()->findByAttributes(array('Group_Id' => $id));
-        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
-        
+
+//        $member_exists = GroupMember::model()->findByAttributes(array('Group_Id' => $id));
+//        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $payment_model, $managed_model, $biograph_model, $address_model, $psedonym_model));
 
@@ -108,15 +108,19 @@ class GroupController extends Controller {
                 Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
-        }elseif (isset($_POST['GroupMember'])) {
-            $member_model->attributes = $_POST['GroupMember'];
-            $ids = isset($_POST['user_ids']) ? implode(',', $_POST['user_ids']) : '';
-            $member_model->Group_Member_Ids = $ids;
+        }elseif (isset($_POST['GroupMembers'])) {
+            GroupMembers::model()->deleteAll("Group_Id = '{$model->Group_Id}'");
+                if(isset($_POST['user_ids']) && !empty($_POST['user_ids'])){
+                    foreach($_POST['user_ids'] as $uid):
+                        $group = new GroupMembers;
+                        $group->Group_Id = $model->Group_Id;
+                        $group->Group_Member_Internal_Code = $uid;
+                        $group->save(false);
+                    endforeach;
+                }
 
-            if ($member_model->save()) {
                 Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
-                $this->redirect(array('group/update/id/' . $member_model->Group_Id . '/tab/2'));
-            }
+                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/2'));
         } elseif (isset($_POST['GroupPaymentMethod'])) {
             $payment_model->attributes = $_POST['GroupPaymentMethod'];
 
@@ -156,7 +160,7 @@ class GroupController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model','member_model'));
+        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model'));
     }
 
     /**

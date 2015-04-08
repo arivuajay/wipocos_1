@@ -12,6 +12,8 @@ $cs_pos_end = CClientScript::POS_END;
 
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
@@ -132,16 +134,16 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
                             ;
                             ?>
-<?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-<?php $this->endWidget(); ?>
+                    <?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -155,14 +157,22 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
+                'Auth_Internal_Code',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
-                'Auth_Internal_Code',
-                'Auth_Identity_Number',
+                'Auth_Ipi_Number',
+//                'Auth_Identity_Number',
+                array(
+                    'header' => 'Pseudonym',
+                    'value' => function($data) {
+                                    if (!empty($data->authorPseudonyms))
+                                        echo $data->authorPseudonyms->Auth_Pseudo_Name;
+                                },
+                ),
                 array(
                     'name' => 'Created_Date',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -171,6 +181,15 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 echo date('Y-m-d', strtotime($data->Created_Date));
             },
                 ),
+                    array(
+                'name' => 'Expiry Date',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                                if(!empty($data->authorManageRights))
+                                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
+                            },
+            ),
                 array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
@@ -225,25 +244,26 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 <div class="col-lg-12 col-md-12">
     <div class="row">
         <?php
-        $form = $this->beginWidget('CActiveForm', array(
-            'id' => 'global-search-form',
-            'method' => 'get',
-            'action' => array('/site/authoraccount/index'),
-            'htmlOptions' => array('role' => 'form')
-        ));
+//        $form = $this->beginWidget('CActiveForm', array(
+//            'id' => 'global-search-form',
+//            'method' => 'get',
+//            'action' => array('/site/authoraccount/index'),
+//            'htmlOptions' => array('role' => 'form')
+//        ));
         ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
-                <?php echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
-<?php echo $form->error($model, 'record_search'); ?>
+                <input type="text" class="form-control" name="base_table_search" id="base_table_search" />
+                <?php // echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
+                <?php // echo $form->error($model, 'record_search'); ?>
             </div>
         </div>
-        <div class="col-lg-2 col-md-2">
-            <?php echo CHtml::submitButton('Go', array('class' => 'btn btn-primary btn-sm')); ?>&nbsp;&nbsp;
+        <!--        <div class="col-lg-2 col-md-2">
+        <?php echo CHtml::submitButton('Go', array('class' => 'btn btn-primary btn-sm')); ?>&nbsp;&nbsp;
         <?php echo CHtml::link('Clear', array('/site/authoraccount/index'), array('class' => 'btn btn-primary btn-sm')); ?>
-        </div>
+                </div>-->
         <?php
-        $this->endWidget();
+//        $this->endWidget();
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/authoraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
     </div>
@@ -253,25 +273,40 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
+//            array(
+//                'class' => 'IndexColumn',
+//                'header' => '',
+//            ),
+            'Auth_Internal_Code',
             'Auth_Sur_Name',
             'Auth_First_Name',
-//            'Auth_Internal_Code',
-//            'Auth_Ipi_Number',
+            'Auth_Ipi_Number',
 //            'Auth_Ipi_Base_Number',
 //            'Auth_Ipn_Number',
-            'Auth_Internal_Code',
-            'Auth_Identity_Number',
+            array(
+                'header' => 'Pseudonym',
+                'value' => function($data) {
+            if (!empty($data->authorPseudonyms))
+                echo $data->authorPseudonyms->Auth_Pseudo_Name;
+        },
+            ),
+//            'Auth_Identity_Number',
             array(
                 'name' => 'Created_Date',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
             echo date('Y-m-d', strtotime($data->Created_Date));
         },
+            ),
+            array(
+                'name' => 'Expiry Date',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                                if(!empty($data->authorManageRights))
+                                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
+                            },
             ),
             array(
                 'name' => 'Active',
@@ -300,14 +335,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             )
         );
 
-        $export_btn = $this->renderExportGridButton('author-base-grid','<i class="fa fa-file-excel-o"></i> Export',array('class'=>'btn btn-xs btn-danger  pull-right'));
+        $export_btn = $this->renderExportGridButton('author-base-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));
 
         $this->widget('booster.widgets.TbExtendedGridView', array(
             'id' => 'author-base-grid',
-            'type' => 'striped bordered',
+            'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;'.$export_btn.'</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Authors</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Authors</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

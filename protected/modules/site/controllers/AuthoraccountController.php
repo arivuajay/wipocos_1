@@ -168,10 +168,17 @@ class AuthoraccountController extends Controller {
             }
         } elseif (isset($_POST['AuthorBiography'])) {
             $biograph_model->attributes = $_POST['AuthorBiography'];
-            $ids = isset($_POST['group_ids']) ? implode(',', $_POST['group_ids']) : '';
-            $biograph_model->Auth_Biogrph_Aff_Groups_Ids = $ids;
 
             if ($biograph_model->save()) {
+                GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Auth_Internal_Code}'");
+                if(isset($_POST['group_ids']) && !empty($_POST['group_ids'])){
+                    foreach($_POST['group_ids'] as $gid):
+                        $group = new GroupMembers;
+                        $group->Group_Id = $gid;
+                        $group->Group_Member_Internal_Code = $model->Auth_Internal_Code;
+                        $group->save(false);
+                    endforeach;
+                }
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $biograph_model->Auth_Acc_Id . '/tab/4'));
             }
@@ -275,7 +282,7 @@ class AuthoraccountController extends Controller {
 
         if ($this->isExportRequest()) {
             $this->exportCSV(array('Authors Accounts:'), null, false);
-            $this->exportCSV($model->search(), array('Auth_Acc_Id', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Internal_Code'));
+            $this->exportCSV($model->search(), array('Auth_Internal_Code', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Ipi_Number'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));

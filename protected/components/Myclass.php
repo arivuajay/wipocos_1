@@ -57,39 +57,40 @@ class Myclass extends CController {
             unset(Yii::app()->request->cookies['wipo_admin_username']);
         }
     }
-    
+
     public static function getDocumentStatus($key = NULL) {
         $status = array(
-            'N' => 'Declared work', 
-            'I' => 'International File', 
-            'U' => 'Undeclared National Work', 
-            'V' => 'Warsaw Rule', 
-            'W' => 'Foreign Work', 
-            'Q' => 'Unidentified Work', 
-            'X' => 'Non-Identified Work', 
-            'Y' => 'Worldwide Non Documented Work', 
+            'N' => 'Declared work',
+            'I' => 'International File',
+            'U' => 'Undeclared National Work',
+            'V' => 'Warsaw Rule',
+            'W' => 'Foreign Work',
+            'Q' => 'Unidentified Work',
+            'X' => 'Non-Identified Work',
+            'Y' => 'Worldwide Non Documented Work',
         );
-        
+
         if(isset($key) && $key != NULL)
             return $status[$key];
-        
+
         return $status;
     }
-    
+
     public static function getSocialType($key = NULL) {
         $types = array(
             'Author' => 'Author',
             'Performer' => 'Performer',
             'Producer' => 'Producer',
             'Multiple' => 'Multiple',
+            'Copyright' => 'Copyright',
         );
-        
+
         if(isset($key) && $key != NULL)
             return $types[$key];
-        
+
         return $types;
     }
-    
+
     public static function getGender($key = NULL){
         $gender = array(
             'M' => 'Male',
@@ -97,7 +98,7 @@ class Myclass extends CController {
         );
         if(isset($key) && $key != NULL)
             return $gender[$key];
-        
+
         return $gender;
     }
 }

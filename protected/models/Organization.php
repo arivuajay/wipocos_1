@@ -162,4 +162,14 @@ class Organization extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'O'));
+            $gen_inter_model->Gen_Inter_Code += 1;
+            $gen_inter_model->Gen_Inter_Code = str_pad($gen_inter_model->Gen_Inter_Code, 3, "0", STR_PAD_LEFT);
+
+            $gen_inter_model->save(false);
+        }
+    }
+
 }
