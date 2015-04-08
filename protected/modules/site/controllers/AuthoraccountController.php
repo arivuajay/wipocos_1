@@ -22,6 +22,15 @@ class AuthoraccountController extends Controller {
         );
     }
 
+        public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Authors_".time().".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -252,10 +261,20 @@ class AuthoraccountController extends Controller {
         $model = new AuthorAccount();
         $searchModel = new AuthorAccount('search');
         $searchModel->unsetAttributes();  // clear any default values
-        if (isset($_GET['AuthorAccount'])) {
+
+         if (isset($_REQUEST['AuthorAccount']['record_search']) && !empty($_REQUEST['AuthorAccount']['record_search'])) {
+            $model->unsetAttributes();
+            $model->attributes = $_REQUEST['AuthorAccount'];
+            $model->search();
+        } else if (isset($_GET['AuthorAccount'])) {
             $search = true;
             $searchModel->attributes = $_GET['AuthorAccount'];
             $searchModel->search();
+        }
+
+        if ($this->isExportRequest()) {
+            $this->exportCSV(array('Authors Accounts:'), null, false);
+            $this->exportCSV($model->search(), array('Auth_Acc_Id', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Internal_Code'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));
