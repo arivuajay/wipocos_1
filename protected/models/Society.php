@@ -64,7 +64,7 @@ class Society extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Society_Abbr_Id, Society_Code, Society_Mailing_Address_Id, Society_Language_Id', 'required'),
+            array('Society_Abbr_Id, Society_Code, Society_Mailing_Address_Id, Society_Language_Id, Society_Logo_File', 'required'),
             array('Society_Rate, Society_Factor', 'numerical'),
             array('Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Payment_Id, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights', 'numerical', 'integerOnly' => true),
             array('Society_Abbr_Id, Society_Main_Performer_Id, Society_Producer_Id', 'length', 'max' => 100),

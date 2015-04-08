@@ -110,6 +110,7 @@ class PerformerAccount extends CActiveRecord {
             'performerPaymentMethods' => array(self::HAS_ONE, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
             'performerPseudonyms' => array(self::HAS_ONE, 'PerformerPseudonym', 'Perf_Acc_id'),
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
+            'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Auth_Acc_id'),
         );
     }
 

@@ -1,25 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "{{author_upload}}".
+ * This is the model class for table "{{group_biography}}".
  *
- * The followings are the available columns in table '{{author_upload}}':
- * @property integer $Auth_Upl_Id
- * @property integer $Auth_Acc_Id
- * @property string $Auth_Upl_Doc_Name
- * @property string $Auth_Upl_File
+ * The followings are the available columns in table '{{group_biography}}':
+ * @property integer $Group_Biogrph_Id
+ * @property integer $Group_Id
+ * @property string $Group_Biogrph_Annotation
+ * @property string $Active
+ * @property string $Created_Date
+ * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property AuthorAccount $authAcc
+ * @property Group $group
  */
-class AuthorUpload extends CActiveRecord {
-    const FILE_SIZE = 10;
+class GroupBiography extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{author_upload}}';
+        return '{{group_biography}}';
     }
 
     /**
@@ -29,16 +30,13 @@ class AuthorUpload extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Upl_Doc_Name, Auth_Upl_File', 'required'),
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
-            array('Auth_Upl_Doc_Name', 'length', 'max' => 255),
-            array('Auth_Upl_File', 'length', 'max' => 1000),
-            array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
-            array('Auth_Upl_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
-            array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
+            array('Group_Id, Group_Biogrph_Annotation', 'required'),
+            array('Group_Id', 'numerical', 'integerOnly' => true),
+            array('Active', 'length', 'max' => 1),
+            array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Upl_Id, Auth_Acc_Id, Auth_Upl_Doc_Name, Auth_Upl_File', 'safe', 'on' => 'search'),
+            array('Group_Biogrph_Id, Group_Id, Group_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -49,7 +47,7 @@ class AuthorUpload extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
         );
     }
 
@@ -58,10 +56,12 @@ class AuthorUpload extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Upl_Id' => 'Auth Upl',
-            'Auth_Acc_Id' => 'Auth Acc',
-            'Auth_Upl_Doc_Name' => 'Document Name',
-            'Auth_Upl_File' => 'File Upload',
+            'Group_Biogrph_Id' => 'Group Biogrph',
+            'Group_Id' => 'Group',
+            'Group_Biogrph_Annotation' => 'Annotations',
+            'Active' => 'Active',
+            'Created_Date' => 'Created Date',
+            'Rowversion' => 'Rowversion',
         );
     }
 
@@ -82,10 +82,12 @@ class AuthorUpload extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Auth_Upl_Id', $this->Auth_Upl_Id);
-        $criteria->compare('Auth_Acc_Id', $this->Auth_Acc_Id);
-        $criteria->compare('Auth_Upl_Doc_Name', $this->Auth_Upl_Doc_Name, true);
-        $criteria->compare('Auth_Upl_File', $this->Auth_Upl_File, true);
+        $criteria->compare('Group_Biogrph_Id', $this->Group_Biogrph_Id);
+        $criteria->compare('Group_Id', $this->Group_Id);
+        $criteria->compare('Group_Biogrph_Annotation', $this->Group_Biogrph_Annotation, true);
+        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -99,7 +101,7 @@ class AuthorUpload extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return AuthorUpload the static model class
+     * @return GroupBiography the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -111,15 +113,6 @@ class AuthorUpload extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
-    }
-    
-    public function behaviors() {
-        return array(
-            'NUploadFile' => array(
-                'class' => 'ext.nuploadfile.NUploadFile',
-                'fileField' => 'Auth_Upl_File',
-            )
-        );
     }
 
 }

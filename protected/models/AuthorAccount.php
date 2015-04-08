@@ -109,6 +109,7 @@ class AuthorAccount extends CActiveRecord {
             'authorManageRights' => array(self::HAS_ONE, 'AuthorManageRights', 'Auth_Acc_Id'),
             'authorPaymentMethods' => array(self::HAS_ONE, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
             'authorPseudonyms' => array(self::HAS_ONE, 'AuthorPseudonym', 'Auth_Acc_id'),
+            'authorUploads' => array(self::HAS_MANY, 'AuthorUpload', 'Auth_Acc_id'),
 //            'authorRelatedRights' => array(self::HAS_ONE, 'AuthorRelatedRights', 'Auth_Acc_Id'),
         );
     }

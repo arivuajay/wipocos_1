@@ -144,7 +144,7 @@ CREATE TABLE `wipo_author_biography` (
 
 /*Data for the table `wipo_author_biography` */
 
-insert  into `wipo_author_biography`(`Auth_Biogrph_Id`,`Auth_Acc_Id`,`Auth_Biogrph_Aff_Groups_Ids`,`Auth_Biogrph_Annotation`,`Active`,`Created_Date`,`Rowversion`) values (1,2,'1,3,4,5','test','1','2015-03-30 14:24:06','0000-00-00 00:00:00');
+insert  into `wipo_author_biography`(`Auth_Biogrph_Id`,`Auth_Acc_Id`,`Auth_Biogrph_Aff_Groups_Ids`,`Auth_Biogrph_Annotation`,`Active`,`Created_Date`,`Rowversion`) values (1,2,'1,3,4,5,14','test','1','2015-03-30 14:24:06','0000-00-00 00:00:00');
 
 /*Table structure for table `wipo_author_death_inheritance` */
 
@@ -310,11 +310,188 @@ CREATE TABLE `wipo_group` (
   CONSTRAINT `FK_wipo_group_country` FOREIGN KEY (`Group_Country_Id`) REFERENCES `wipo_master_country` (`Master_Country_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_wipo_group_language` FOREIGN KEY (`Group_Language_Id`) REFERENCES `wipo_master_language` (`Master_Lang_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_wipo_group_legal_form` FOREIGN KEY (`Group_Legal_Form_Id`) REFERENCES `wipo_master_legal_form` (`Master_Legal_Form_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 /*Data for the table `wipo_group` */
 
-insert  into `wipo_group`(`Group_Id`,`Group_Name`,`Group_Is_Author`,`Group_Is_Performer`,`Group_Internal_Code`,`Group_IPI_Name_Number`,`Group_IPN_Base_Number`,`Group_IPN_Number`,`Group_Date`,`Group_Place`,`Group_Country_Id`,`Group_Legal_Form_Id`,`Group_Language_Id`,`Active`,`Created_Date`,`Rowversion`) values (1,'Author Group','1','0','G1001',NULL,NULL,89758451,'2015-02-01','',2,1,1,'1','2015-03-30 12:30:53','0000-00-00 00:00:00'),(2,'Author Group 2','0','1','G1002',NULL,NULL,123312,'2015-03-03','',NULL,NULL,NULL,'1','2015-03-30 13:03:53','0000-00-00 00:00:00'),(3,'Author Group 3','1','1','G1003',NULL,NULL,23123,'2015-02-24','',NULL,NULL,NULL,'1','2015-03-30 14:01:04','0000-00-00 00:00:00'),(4,'Author Group 4','1','1','G1004',NULL,NULL,2312323,'2015-03-19','',NULL,NULL,NULL,'1','2015-03-30 14:01:17','0000-00-00 00:00:00'),(5,'Author Group 5','1','1','G1005',NULL,NULL,321123,'2010-02-10','',NULL,NULL,NULL,'1','2015-03-30 14:01:37','0000-00-00 00:00:00'),(6,'Test','0','0','G1006',NULL,NULL,123123,'2015-04-29','',NULL,NULL,NULL,'1','2015-04-07 15:50:29','0000-00-00 00:00:00'),(9,'Author Group 7','0','0','G1007',NULL,NULL,123123,'2015-04-29','',NULL,NULL,NULL,'1','2015-04-07 15:55:47','0000-00-00 00:00:00'),(11,'Author Group 8','0','0','G1008',NULL,NULL,123123,'2015-04-23','',NULL,NULL,NULL,'1','2015-04-07 16:01:02','0000-00-00 00:00:00'),(12,'Group 9','1','1','G1009',NULL,NULL,123312,'2015-04-22','',NULL,NULL,NULL,'1','2015-04-07 16:02:58','0000-00-00 00:00:00');
+insert  into `wipo_group`(`Group_Id`,`Group_Name`,`Group_Is_Author`,`Group_Is_Performer`,`Group_Internal_Code`,`Group_IPI_Name_Number`,`Group_IPN_Base_Number`,`Group_IPN_Number`,`Group_Date`,`Group_Place`,`Group_Country_Id`,`Group_Legal_Form_Id`,`Group_Language_Id`,`Active`,`Created_Date`,`Rowversion`) values (1,'Author Group','1','0','G1001',NULL,NULL,89758451,'2015-02-01','',2,1,1,'1','2015-03-30 12:30:53','0000-00-00 00:00:00'),(2,'Author Group 2','0','1','G1002',NULL,NULL,123312,'2015-03-03','',NULL,NULL,NULL,'1','2015-03-30 13:03:53','0000-00-00 00:00:00'),(3,'Author Group 3','1','1','G1003',NULL,NULL,23123,'2015-02-24','',NULL,NULL,NULL,'1','2015-03-30 14:01:04','0000-00-00 00:00:00'),(4,'Author Group 4','1','1','G1004',NULL,NULL,2312323,'2015-03-19','',NULL,NULL,NULL,'1','2015-03-30 14:01:17','0000-00-00 00:00:00'),(5,'Author Group 5','1','1','G1005',NULL,NULL,321123,'2010-02-10','',NULL,NULL,NULL,'1','2015-03-30 14:01:37','0000-00-00 00:00:00'),(6,'Test','0','0','G1006',NULL,NULL,123123,'2015-04-29','',NULL,NULL,NULL,'1','2015-04-07 15:50:29','0000-00-00 00:00:00'),(9,'Author Group 7','0','0','G1007',NULL,NULL,123123,'2015-04-29','',NULL,NULL,NULL,'1','2015-04-07 15:55:47','0000-00-00 00:00:00'),(11,'Author Group 8','0','0','G1008',NULL,NULL,123123,'2015-04-23','',NULL,NULL,NULL,'1','2015-04-07 16:01:02','0000-00-00 00:00:00'),(12,'Group 9','1','1','G1009',NULL,NULL,123312,'2015-04-22','',NULL,NULL,NULL,'1','2015-04-07 16:02:58','0000-00-00 00:00:00'),(14,'Author Group11','1','0','G1011',NULL,NULL,123312,'2015-03-31','',NULL,NULL,NULL,'1','2015-04-08 19:51:37','0000-00-00 00:00:00');
+
+/*Table structure for table `wipo_group_biography` */
+
+DROP TABLE IF EXISTS `wipo_group_biography`;
+
+CREATE TABLE `wipo_group_biography` (
+  `Group_Biogrph_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Biogrph_Annotation` text NOT NULL,
+  `Active` enum('0','1') NOT NULL DEFAULT '1',
+  `Created_Date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`Group_Biogrph_Id`),
+  KEY `FK_wipo_group_biography_account_id` (`Group_Id`),
+  CONSTRAINT `FK_wipo_group_biography_account_id` FOREIGN KEY (`Group_Id`) REFERENCES `wipo_group` (`Group_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_biography` */
+
+insert  into `wipo_group_biography`(`Group_Biogrph_Id`,`Group_Id`,`Group_Biogrph_Annotation`,`Active`,`Created_Date`,`Rowversion`) values (2,14,'Annotation','1','2015-04-08 20:01:07','0000-00-00 00:00:00');
+
+/*Table structure for table `wipo_group_manage_rights` */
+
+DROP TABLE IF EXISTS `wipo_group_manage_rights`;
+
+CREATE TABLE `wipo_group_manage_rights` (
+  `Group_Mnge_Rgt_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Mnge_Society_Id` int(11) NOT NULL,
+  `Group_Mnge_Entry_Date` date NOT NULL,
+  `Group_Mnge_Exit_Date` date DEFAULT NULL,
+  `Group_Mnge_Internal_Position_Id` int(11) NOT NULL,
+  `Group_Mnge_Entry_Date_2` date NOT NULL,
+  `Group_Mnge_Exit_Date_2` date DEFAULT NULL,
+  `Group_Mnge_Region_Id` int(11) DEFAULT NULL,
+  `Group_Mnge_Profession_Id` int(11) DEFAULT NULL,
+  `Group_Mnge_File` varchar(255) DEFAULT NULL,
+  `Group_Mnge_Duration` varchar(100) DEFAULT NULL,
+  `Group_Mnge_Avl_Work_Cat_Id` int(11) NOT NULL,
+  `Group_Mnge_Type_Rght_Id` int(11) NOT NULL,
+  `Group_Mnge_Managed_Rights_Id` int(11) NOT NULL,
+  `Group_Mnge_Territories_Id` int(11) NOT NULL,
+  PRIMARY KEY (`Group_Mnge_Rgt_Id`),
+  KEY `FK_wipo_group_manage_rights_account_id` (`Group_Id`),
+  KEY `FK_wipo_group_manage_rights_internal_position` (`Group_Mnge_Internal_Position_Id`),
+  KEY `FK_wipo_group_manage_rights_region` (`Group_Mnge_Region_Id`),
+  KEY `FK_wipo_group_manage_rights_profession` (`Group_Mnge_Profession_Id`),
+  KEY `FK_wipo_group_manage_rights_work_category` (`Group_Mnge_Avl_Work_Cat_Id`),
+  KEY `FK_wipo_group_manage_rights_type_of_rights` (`Group_Mnge_Type_Rght_Id`),
+  KEY `FK_wipo_group_manage_rights_managerd_rights` (`Group_Mnge_Managed_Rights_Id`),
+  KEY `FK_wipo_group_manage_rights_territories` (`Group_Mnge_Territories_Id`),
+  KEY `FK_wipo_group_manage_rights_society` (`Group_Mnge_Society_Id`),
+  CONSTRAINT `FK_wipo_group_manage_rights_account_id` FOREIGN KEY (`Group_Id`) REFERENCES `wipo_group` (`Group_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_internal_position` FOREIGN KEY (`Group_Mnge_Internal_Position_Id`) REFERENCES `wipo_master_internal_position` (`Master_Int_Post_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_managerd_rights` FOREIGN KEY (`Group_Mnge_Managed_Rights_Id`) REFERENCES `wipo_master_managed_rights` (`Master_Mgd_Rights_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_profession` FOREIGN KEY (`Group_Mnge_Profession_Id`) REFERENCES `wipo_master_profession` (`Master_Profession_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_region` FOREIGN KEY (`Group_Mnge_Region_Id`) REFERENCES `wipo_master_region` (`Master_Region_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_society` FOREIGN KEY (`Group_Mnge_Society_Id`) REFERENCES `wipo_society` (`Society_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_territories` FOREIGN KEY (`Group_Mnge_Territories_Id`) REFERENCES `wipo_master_territories` (`Master_Territory_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_type_of_rights` FOREIGN KEY (`Group_Mnge_Type_Rght_Id`) REFERENCES `wipo_master_type_rights` (`Master_Type_Rights_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_manage_rights_work_category` FOREIGN KEY (`Group_Mnge_Avl_Work_Cat_Id`) REFERENCES `wipo_master_works_category` (`Master_Work_Category_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_manage_rights` */
+
+insert  into `wipo_group_manage_rights`(`Group_Mnge_Rgt_Id`,`Group_Id`,`Group_Mnge_Society_Id`,`Group_Mnge_Entry_Date`,`Group_Mnge_Exit_Date`,`Group_Mnge_Internal_Position_Id`,`Group_Mnge_Entry_Date_2`,`Group_Mnge_Exit_Date_2`,`Group_Mnge_Region_Id`,`Group_Mnge_Profession_Id`,`Group_Mnge_File`,`Group_Mnge_Duration`,`Group_Mnge_Avl_Work_Cat_Id`,`Group_Mnge_Type_Rght_Id`,`Group_Mnge_Managed_Rights_Id`,`Group_Mnge_Territories_Id`) values (3,1,10,'2015-04-08','2015-04-08',1,'2015-04-08','2015-04-08',1,1,'',NULL,1,1,2,6);
+
+/*Table structure for table `wipo_group_member` */
+
+DROP TABLE IF EXISTS `wipo_group_member`;
+
+CREATE TABLE `wipo_group_member` (
+  `Group_Member_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Member_Ids` varchar(1000) NOT NULL,
+  `Active` enum('0','1') NOT NULL DEFAULT '1',
+  `Created_Date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`Group_Member_Id`),
+  KEY `FK_wipo_group_biography_account_id` (`Group_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_member` */
+
+insert  into `wipo_group_member`(`Group_Member_Id`,`Group_Id`,`Group_Member_Ids`,`Active`,`Created_Date`,`Rowversion`) values (2,14,'Annotation','1','2015-04-08 20:01:07','0000-00-00 00:00:00');
+
+/*Table structure for table `wipo_group_payment_method` */
+
+DROP TABLE IF EXISTS `wipo_group_payment_method`;
+
+CREATE TABLE `wipo_group_payment_method` (
+  `Group_Pay_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Pay_Method_id` int(11) NOT NULL,
+  `Group_Bank_Account_1` varchar(255) NOT NULL,
+  `Group_Bank_Account_2` varchar(255) NOT NULL,
+  `Group_Bank_Account_3` varchar(255) NOT NULL,
+  `Active` enum('0','1') NOT NULL DEFAULT '1',
+  `Created_Date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`Group_Pay_Id`),
+  KEY `FK_wipo_group_payment_method_account_id` (`Group_Id`),
+  KEY `FK_wipo_group_payment_method_payment_mode` (`Group_Pay_Method_id`),
+  CONSTRAINT `FK_wipo_group_payment_method_account_id` FOREIGN KEY (`Group_Id`) REFERENCES `wipo_group` (`Group_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_payment_method_payment_mode` FOREIGN KEY (`Group_Pay_Method_id`) REFERENCES `wipo_master_payment_method` (`Master_Paymode_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_payment_method` */
+
+insert  into `wipo_group_payment_method`(`Group_Pay_Id`,`Group_Id`,`Group_Pay_Method_id`,`Group_Bank_Account_1`,`Group_Bank_Account_2`,`Group_Bank_Account_3`,`Active`,`Created_Date`,`Rowversion`) values (2,1,1,'1232123','3212321323','1232123231231','1','2015-04-08 16:32:03','0000-00-00 00:00:00');
+
+/*Table structure for table `wipo_group_pseudonym` */
+
+DROP TABLE IF EXISTS `wipo_group_pseudonym`;
+
+CREATE TABLE `wipo_group_pseudonym` (
+  `Group_Pseudo_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Pseudo_Type_Id` int(11) NOT NULL,
+  `Group_Pseudo_Name` varchar(50) NOT NULL,
+  `Active` enum('0','1') NOT NULL DEFAULT '1',
+  `Created_Date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`Group_Pseudo_Id`),
+  KEY `FK_wipo_group_pseudonym_pseodo_type` (`Group_Pseudo_Type_Id`),
+  KEY `FK_wipo_group_pseudonym_group` (`Group_Id`),
+  CONSTRAINT `FK_wipo_group_pseudonym_group` FOREIGN KEY (`Group_Id`) REFERENCES `wipo_group` (`Group_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_pseudonym_pseodo_type` FOREIGN KEY (`Group_Pseudo_Type_Id`) REFERENCES `wipo_master_pseudonym_types` (`Pseudo_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_pseudonym` */
+
+insert  into `wipo_group_pseudonym`(`Group_Pseudo_Id`,`Group_Id`,`Group_Pseudo_Type_Id`,`Group_Pseudo_Name`,`Active`,`Created_Date`,`Rowversion`) values (2,1,2,'PP','1','2015-04-08 18:34:23','0000-00-00 00:00:00');
+
+/*Table structure for table `wipo_group_representative` */
+
+DROP TABLE IF EXISTS `wipo_group_representative`;
+
+CREATE TABLE `wipo_group_representative` (
+  `Group_Addr_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Group_Id` int(11) NOT NULL,
+  `Group_Rep_Name` varchar(100) NOT NULL,
+  `Group_Rep_Address_1` varchar(255) DEFAULT NULL,
+  `Group_Rep_Address_2` varchar(255) DEFAULT NULL,
+  `Group_Rep_Address_3` varchar(255) DEFAULT NULL,
+  `Group_Rep_Address_4` varchar(255) DEFAULT NULL,
+  `Group_Home_Address_1` varchar(255) NOT NULL,
+  `Group_Home_Address_2` varchar(255) DEFAULT NULL,
+  `Group_Home_Address_3` varchar(255) DEFAULT NULL,
+  `Group_Home_Address_4` varchar(255) DEFAULT NULL,
+  `Group_Home_Fax` varchar(25) DEFAULT NULL,
+  `Group_Home_Telephone` varchar(25) NOT NULL,
+  `Group_Home_Email` varchar(50) NOT NULL,
+  `Group_Home_Website` varchar(100) DEFAULT NULL,
+  `Group_Mailing_Address_1` varchar(255) NOT NULL,
+  `Group_Mailing_Address_2` varchar(255) DEFAULT NULL,
+  `Group_Mailing_Address_3` varchar(255) DEFAULT NULL,
+  `Group_Mailing_Address_4` varchar(255) DEFAULT NULL,
+  `Group_Mailing_Telephone` varchar(25) NOT NULL,
+  `Group_Mailing_Fax` varchar(25) DEFAULT NULL,
+  `Group_Mailing_Email` varchar(50) NOT NULL,
+  `Group_Mailing_Website` varchar(100) DEFAULT NULL,
+  `Group_Country_Id` int(11) DEFAULT NULL,
+  `Group_Unknown_Address` enum('Y','N') DEFAULT 'N',
+  `Active` enum('0','1') NOT NULL DEFAULT '1',
+  `Created_Date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Rowversion` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`Group_Addr_Id`),
+  KEY `FK_wipo_group_representative_account_id` (`Group_Id`),
+  KEY `FK_wipo_group_representative_country` (`Group_Country_Id`),
+  CONSTRAINT `FK_wipo_group_representative_account_id` FOREIGN KEY (`Group_Id`) REFERENCES `wipo_group` (`Group_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_wipo_group_representative_country` FOREIGN KEY (`Group_Country_Id`) REFERENCES `wipo_master_country` (`Master_Country_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_group_representative` */
+
+insert  into `wipo_group_representative`(`Group_Addr_Id`,`Group_Id`,`Group_Rep_Name`,`Group_Rep_Address_1`,`Group_Rep_Address_2`,`Group_Rep_Address_3`,`Group_Rep_Address_4`,`Group_Home_Address_1`,`Group_Home_Address_2`,`Group_Home_Address_3`,`Group_Home_Address_4`,`Group_Home_Fax`,`Group_Home_Telephone`,`Group_Home_Email`,`Group_Home_Website`,`Group_Mailing_Address_1`,`Group_Mailing_Address_2`,`Group_Mailing_Address_3`,`Group_Mailing_Address_4`,`Group_Mailing_Telephone`,`Group_Mailing_Fax`,`Group_Mailing_Email`,`Group_Mailing_Website`,`Group_Country_Id`,`Group_Unknown_Address`,`Active`,`Created_Date`,`Rowversion`) values (2,1,'Ron','','','','','1, Main street','','','','','96626166111','rom@gmail.com','','1, Main street','','','','342342123231','','ron@gmail.com','',2,'Y','1','2015-04-08 18:29:47','0000-00-00 00:00:00');
 
 /*Table structure for table `wipo_internalcode_generate` */
 
@@ -331,7 +508,7 @@ CREATE TABLE `wipo_internalcode_generate` (
 
 /*Data for the table `wipo_internalcode_generate` */
 
-insert  into `wipo_internalcode_generate`(`Gen_Inter_Code_Id`,`Gen_User_Type`,`Gen_Prefix`,`Gen_Inter_Code`,`Gen_Suffix`) values (1,'A','A',1006,NULL),(2,'P','P',1004,NULL),(3,'G','G',1010,NULL);
+insert  into `wipo_internalcode_generate`(`Gen_Inter_Code_Id`,`Gen_User_Type`,`Gen_Prefix`,`Gen_Inter_Code`,`Gen_Suffix`) values (1,'A','A',1006,NULL),(2,'P','P',1004,NULL),(3,'G','G',1012,NULL);
 
 /*Table structure for table `wipo_master_country` */
 
@@ -1051,6 +1228,24 @@ CREATE TABLE `wipo_performer_related_rights` (
 
 insert  into `wipo_performer_related_rights`(`Perf_Rel_Rgt_Id`,`Perf_Acc_Id`,`Perf_Rel_Society_Id`,`Perf_Rel_Entry_Date`,`Perf_Rel_Exit_Date`,`Perf_Rel_Internal_Position_Id`,`Perf_Rel_Entry_Date_2`,`Perf_Rel_Exit_Date_2`,`Perf_Rel_Region_Id`,`Perf_Rel_Profession_Id`,`Perf_Rel_File`,`Perf_Rel_Duration`,`Perf_Rel_Avl_Work_Cat_Id`,`Perf_Rel_Type_Rght_Id`,`Perf_Rel_Managed_Rights_Id`,`Perf_Rel_Territories_Id`) values (1,1,10,'2015-03-31','2015-04-30',1,'2015-03-31','2015-03-31',1,NULL,NULL,'',1,1,1,6),(2,3,10,'2015-04-07','2015-04-01',1,'2015-04-07','2015-04-07',NULL,NULL,NULL,NULL,1,1,1,6);
 
+/*Table structure for table `wipo_performer_upload` */
+
+DROP TABLE IF EXISTS `wipo_performer_upload`;
+
+CREATE TABLE `wipo_performer_upload` (
+  `Perf_Upl_Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Perf_Acc_Id` int(11) NOT NULL,
+  `Perf_Upl_Doc_Name` varchar(255) NOT NULL,
+  `Perf_Upl_File` varchar(1000) NOT NULL,
+  PRIMARY KEY (`Perf_Upl_Id`),
+  KEY `FK_wipo_performer_upload_auth` (`Perf_Acc_Id`),
+  CONSTRAINT `FK_wipo_performer_upload_auth` FOREIGN KEY (`Perf_Acc_Id`) REFERENCES `wipo_performer_account` (`Perf_Acc_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+
+/*Data for the table `wipo_performer_upload` */
+
+insert  into `wipo_performer_upload`(`Perf_Upl_Id`,`Perf_Acc_Id`,`Perf_Upl_Doc_Name`,`Perf_Upl_File`) values (9,1,'test 5','\\performerupload\\0c1165ada6b73a5f050436ffdc026c4e.jpg'),(10,1,'test','\\performerupload\\17bb30b1bcb4ab9548b8af97b82e0a89.jpg');
+
 /*Table structure for table `wipo_share_definition_per_role` */
 
 DROP TABLE IF EXISTS `wipo_share_definition_per_role`;
@@ -1131,7 +1326,7 @@ CREATE TABLE `wipo_society` (
   CONSTRAINT `FK_wipo_society_language` FOREIGN KEY (`Society_Language_Id`) REFERENCES `wipo_master_language` (`Master_Lang_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_wipo_society_mailing_address` FOREIGN KEY (`Society_Mailing_Address_Id`) REFERENCES `wipo_master_country` (`Master_Country_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_wipo_society_type` FOREIGN KEY (`Society_Type_Id`) REFERENCES `wipo_master_type` (`Master_Type_Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 /*Data for the table `wipo_society` */
 

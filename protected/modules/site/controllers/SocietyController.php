@@ -62,7 +62,7 @@ class SocietyController extends Controller {
 
         if (isset($_POST['Society'])) {
             $model->attributes = $_POST['Society'];
-            $model->setAttribute('Society_Logo_File', isset($_FILES['Society']['Society_Logo_File']) ? $_FILES['Society']['Society_Logo_File'] : '');
+            $model->setAttribute('Society_Logo_File', isset($_FILES['Society']['name']['Society_Logo_File']) ? $_FILES['Society']['name']['Society_Logo_File'] : '');
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
@@ -92,7 +92,9 @@ class SocietyController extends Controller {
 
         if (isset($_POST['Society'])) {
             $model->attributes = $_POST['Society'];
-            $model->setAttribute('Society_Logo_File', isset($_FILES['Society']['Society_Logo_File']) ? $_FILES['Society']['Society_Logo_File'] : '');
+            if($_FILES['Society']['name']['Society_Logo_File']){
+                $model->setAttribute('Society_Logo_File', $_FILES['Society']['name']['Society_Logo_File']);
+            }
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();

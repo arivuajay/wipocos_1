@@ -29,6 +29,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                 <li><a id="a_tab_5" href="#tab_5" <?php if(!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"';?>>Pseudonyms</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if(!$model->isNewRecord) echo 'data-toggle="tab"';?>>Related Rights</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if(!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"';?>>Death Inheritance</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if(!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"';?>>Upload Documents</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -187,6 +188,9 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                 </div>
                 <div class="tab-pane" id="tab_7">
                     <?php if(!$model->isNewRecord){ $this->renderPartial('_death_form', array('model' => $death_model, 'performer_model' => $model));}?>
+                </div>
+                <div class="tab-pane" id="tab_8">
+                    <?php if(!$model->isNewRecord){ $this->renderPartial('_upload_document_form', array('model' => $upload_model, 'performer_model' => $model));}?>
                 </div>
             </div>
         </div>

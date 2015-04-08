@@ -55,7 +55,7 @@ class GroupController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($type) {
         $model = new Group;
 
         // Uncomment the following line if AJAX validation is needed
@@ -69,9 +69,8 @@ class GroupController extends Controller {
             }
         }
 
-        $this->render('create', array(
-            'model' => $model,
-        ));
+        $tab = 1;
+        $this->render('create', compact('model','tab','type'));
     }
 
     /**
@@ -79,11 +78,29 @@ class GroupController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id, $tab = 1) {
         $model = $this->loadModel($id);
+        
+        $payment_exists = GroupPaymentMethod::model()->findByAttributes(array('Group_Id' => $id));
+        $payment_model = empty($payment_exists) ? new GroupPaymentMethod : $payment_exists;
 
+        $managed_exists = GroupManageRights::model()->findByAttributes(array('Group_Id' => $id));
+        $managed_model = empty($managed_exists) ? new GroupManageRights : $managed_exists;
+
+        $psedonym_exists = GroupPseudonym::model()->findByAttributes(array('Group_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? new GroupPseudonym : $psedonym_exists;
+        
+        $biograph_exists = GroupBiography::model()->findByAttributes(array('Group_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? new GroupBiography : $biograph_exists;
+
+        $address_exists = GroupRepresentative::model()->findByAttributes(array('Group_Id' => $id));
+        $address_model = empty($address_exists) ? new GroupRepresentative : $address_exists;
+        
+        $member_exists = GroupMember::model()->findByAttributes(array('Group_Id' => $id));
+        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
+        
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(array($model, $payment_model, $managed_model, $biograph_model, $address_model, $psedonym_model));
 
         if (isset($_POST['Group'])) {
             $model->attributes = $_POST['Group'];
@@ -91,11 +108,55 @@ class GroupController extends Controller {
                 Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
+        }elseif (isset($_POST['GroupMember'])) {
+            $member_model->attributes = $_POST['GroupMember'];
+            $ids = isset($_POST['user_ids']) ? implode(',', $_POST['user_ids']) : '';
+            $member_model->Group_Member_Ids = $ids;
+
+            if ($member_model->save()) {
+                Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
+                $this->redirect(array('group/update/id/' . $member_model->Group_Id . '/tab/2'));
+            }
+        } elseif (isset($_POST['GroupPaymentMethod'])) {
+            $payment_model->attributes = $_POST['GroupPaymentMethod'];
+
+            if ($payment_model->save()) {
+                Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
+                $this->redirect(array('group/update/id/' . $payment_model->Group_Id . '/tab/3'));
+            }
+        } elseif (isset($_POST['GroupBiography'])) {
+            $biograph_model->attributes = $_POST['GroupBiography'];
+            if ($biograph_model->save()) {
+                Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
+                $this->redirect(array('group/update/id/' . $biograph_model->Group_Id . '/tab/4'));
+            }
+        } elseif (isset($_POST['GroupPseudonym'])) {
+            $psedonym_model->attributes = $_POST['GroupPseudonym'];
+
+            if ($psedonym_model->save()) {
+                Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
+                $this->redirect(array('group/update/id/' . $psedonym_model->Group_Id . '/tab/5'));
+            }
+        } elseif (isset($_POST['GroupManageRights'])) {
+            $managed_model->attributes = $_POST['GroupManageRights'];
+
+            if ($managed_model->validate()) {
+                if ($managed_model->save()) {
+                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                    $this->redirect(array('group/update/id/' . $managed_model->Group_Id . '/tab/6'));
+                }
+            }
+        } elseif (isset($_POST['GroupRepresentative'])) {
+            $address_model->attributes = $_POST['GroupRepresentative'];
+            $address_model->Group_Unknown_Address = $_POST['GroupRepresentative']['Group_Unknown_Address'] == 0 ? 'N' : 'Y';
+
+            if ($address_model->save()) {
+                Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
+                $this->redirect(array('group/update/id/' . $address_model->Group_Id . '/tab/7'));
+            }
         }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model','member_model'));
     }
 
     /**
@@ -164,7 +225,14 @@ class GroupController extends Controller {
      * @param Group $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'group-form') {
+        if (isset($_POST['ajax']) && (
+                $_POST['ajax'] === 'group-form'
+                || $_POST['ajax'] === 'group-payment-method-form'
+                || $_POST['ajax'] === 'group-managed-rights-form'
+                || $_POST['ajax'] === 'group-account-address-form'
+                || $_POST['ajax'] === 'group-pseudonym-form'
+                || $_POST['ajax'] === 'group-biography-form'
+                )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

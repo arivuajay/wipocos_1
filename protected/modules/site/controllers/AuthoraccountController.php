@@ -22,11 +22,11 @@ class AuthoraccountController extends Controller {
         );
     }
 
-        public function behaviors() {
+    public function behaviors() {
         return array(
             'exportableGrid' => array(
                 'class' => 'application.components.ExportableGridBehavior',
-                'filename' => "Authors_".time().".csv",
+                'filename' => "Authors_" . time() . ".csv",
 //                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
         ));
     }
@@ -43,7 +43,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete','download'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -200,7 +200,9 @@ class AuthoraccountController extends Controller {
             }
         } elseif (isset($_POST['AuthorUpload'])) {
             $upload_model->attributes = $_POST['AuthorUpload'];
-            $upload_model->setAttribute('Auth_Upl_File', isset($_FILES['AuthorUpload']['Auth_Upl_File']) ? $_FILES['AuthorManageRights']['Auth_Upl_File'] : '');
+            if($fileedit == NULL){
+                $upload_model->setAttribute('Auth_Upl_File', isset($_FILES['AuthorUpload']['name']['Aut_Upl_File']) ? $_FILES['AuthorUpload']['name']['Aut_Upl_File'] : '');
+            }
 
             if ($upload_model->validate()) {
                 $upload_model->setUploadDirectory(UPLOAD_DIR);
@@ -251,7 +253,6 @@ class AuthoraccountController extends Controller {
         }
     }
 
-
     /**
      * Lists all models.
      */
@@ -262,7 +263,7 @@ class AuthoraccountController extends Controller {
         $searchModel = new AuthorAccount('search');
         $searchModel->unsetAttributes();  // clear any default values
 
-         if (isset($_REQUEST['AuthorAccount']['record_search']) && !empty($_REQUEST['AuthorAccount']['record_search'])) {
+        if (isset($_REQUEST['AuthorAccount']['record_search']) && !empty($_REQUEST['AuthorAccount']['record_search'])) {
             $model->unsetAttributes();
             $model->attributes = $_REQUEST['AuthorAccount'];
             $model->search();

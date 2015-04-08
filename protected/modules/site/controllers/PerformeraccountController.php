@@ -16,6 +16,12 @@ class PerformeraccountController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'download' => 'application.components.actions.download',
+        );
+    }
+    
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -37,7 +43,7 @@ class PerformeraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -91,7 +97,7 @@ class PerformeraccountController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1) {
+    public function actionUpdate($id, $tab = 1, $fileedit = NULL) {
         $model = $this->loadModel($id);
         $address_exists = PerformerAccountAddress::model()->findByAttributes(array('Perf_Acc_Id' => $id));
         $address_model = empty($address_exists) ? new PerformerAccountAddress : $address_exists;
@@ -111,8 +117,15 @@ class PerformeraccountController extends Controller {
         $biograph_exists = PerformerBiography::model()->findByAttributes(array('Perf_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new PerformerBiography : $biograph_exists;
 
+        $upload_model = new PerformerUpload('create');
+        if ($fileedit != NULL) {
+            $upload_exists = PerformerUpload::model()->findByPk($fileedit);
+            $upload_model = empty($upload_exists) ? new PerformerUpload('create') : $upload_exists;
+        }
+        
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $address_model, $payment_model, $psedonym_model, $death_model, $related_model, $biograph_model));
+        $this->performAjaxValidation(array(
+            $model, $address_model, $payment_model, $psedonym_model, $death_model, $related_model, $biograph_model));
 
         if (isset($_POST['PerformerAccount'])) {
             $model->attributes = $_POST['PerformerAccount'];
@@ -153,11 +166,8 @@ class PerformeraccountController extends Controller {
             }
         } elseif (isset($_POST['PerformerRelatedRights'])) {
             $related_model->attributes = $_POST['PerformerRelatedRights'];
-//            $related_model->setAttribute('Perf_Rel_File', isset($_FILES['PerformerRelatedRights']['Perf_Mnge_File']) ? $_FILES['PerformerRelatedRights']['Perf_Mnge_File'] : '');
 
             if ($related_model->validate()) {
-//                $related_model->setUploadDirectory(UPLOAD_DIR);
-//                $related_model->uploadFile();
                 if ($related_model->save()) {
                     Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
                     $this->redirect(array('performeraccount/update/id/' . $related_model->Perf_Acc_Id . '/tab/6'));
@@ -170,9 +180,28 @@ class PerformeraccountController extends Controller {
                 Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
                 $this->redirect(array('performeraccount/update/id/' . $death_model->Perf_Acc_Id . '/tab/7'));
             }
+        } elseif (isset($_POST['PerformerUpload'])) {
+            $upload_model->attributes = $_POST['PerformerUpload'];
+            if($fileedit == NULL){
+                $upload_model->setAttribute('Perf_Upl_File', isset($_FILES['PerformerUpload']['name']['Perf_Upl_File']) ? $_FILES['PerformerUpload']['name']['Perf_Upl_File'] : '');
+            }
+
+            if ($upload_model->validate()) {
+                $upload_model->setUploadDirectory(UPLOAD_DIR);
+                $upload_model->uploadFile();
+                if ($upload_model->save()) {
+                    Yii::app()->user->setFlash('success', 'Document saved Successfully!!!');
+                    $this->redirect(array('performeraccount/update/id/' . $death_model->Perf_Acc_Id . '/tab/8'));
+                }
+            } else {
+                Yii::app()->user->setFlash('danger', 'Failed to upload document.!!!');
+                if ($tab != '8')
+                    $this->redirect(array('performeraccount/update/id/' . $id . '/tab/8'));
+            }
         }
 
-        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model'));
+        $this->render('update', compact(
+                'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model', 'upload_model'));
     }
 
     /**
@@ -187,6 +216,22 @@ class PerformeraccountController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'PerformerAccount Deleted Successfully!!!');
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+    }
+
+    public function actionFiledelete($id) {
+        $model = PerformerUpload::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $perf_acc_id = $model->Perf_Acc_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        $model->delete();
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', 'Uploaded file Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/performeraccount/update/id/' . $perf_acc_id . '/tab/8/fileedit/' . $id));
         }
     }
 
@@ -257,7 +302,16 @@ class PerformeraccountController extends Controller {
      * @param PerformerAccount $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'performer-account-address-form' || $_POST['ajax'] === 'performer-payment-method-form' || $_POST['ajax'] === 'performer-pseudonym-form' || $_POST['ajax'] === 'performer-death-inheritance-form' || $_POST['ajax'] === 'performer-related-rights-form' || $_POST['ajax'] === 'performer-managed-rights-form' || $_POST['ajax'] === 'performer-biography-form'
+        if (isset($_POST['ajax']) && (
+                $_POST['ajax'] === 'performer-account-form' 
+                || $_POST['ajax'] === 'performer-account-address-form' 
+                || $_POST['ajax'] === 'performer-payment-method-form' 
+                || $_POST['ajax'] === 'performer-pseudonym-form' 
+                || $_POST['ajax'] === 'performer-death-inheritance-form' 
+                || $_POST['ajax'] === 'performer-related-rights-form' 
+                || $_POST['ajax'] === 'performer-managed-rights-form' 
+                || $_POST['ajax'] === 'performer-biography-form'
+                || $_POST['ajax'] === 'performer-upload-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
