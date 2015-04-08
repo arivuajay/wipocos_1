@@ -140,10 +140,22 @@ $(function() {
     if($('ul.sidebar-menu li').hasClass("active")){
         setHeight();
     }
-        
+
     $('ul.sidebar-menu li').click(function(e){
         setHeight();
     });
+
+    $('#advance-search-label a').on('click',function(e){
+        var _adv_block = $(this).closest('#advance-search-block');
+        if(_adv_block.find('#advance-search-form').is(':visible')){
+            $(this).html('<i class="fa fa-angle-right"></i> Show Advance Search');
+            _adv_block.find('#advance-search-form').fadeOut();
+        }else{
+            $(this).html('<i class="fa fa-angle-down"></i> Hide Advance Search');
+            _adv_block.find('#advance-search-form').fadeIn();
+        }
+    });
+
 });
 
 function setHeight(){

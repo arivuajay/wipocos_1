@@ -13,8 +13,11 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
-<div class="col-lg-12 col-md-12">
-    <div class="row">
+<div class="col-lg-12 col-md-12" id="advance-search-block">
+    <div class="row mb10" id="advance-search-label">
+        <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search','javascript:void(0);',array('class'=>'pull-right')); ?>
+    </div>
+    <div class="row" id="advance-search-form">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">

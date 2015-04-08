@@ -38,3 +38,6 @@ and open the template in the editor.
 .grid-view .panel-heading .summary {
     float: left;
 }
+#advance-search-block #advance-search-form{
+    display: none;
+}

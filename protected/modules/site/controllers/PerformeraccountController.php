@@ -210,7 +210,7 @@ class PerformeraccountController extends Controller {
         }
 
         if ($this->isExportRequest()) { //<==== [[ADD THIS BLOCK BEFORE RENDER]]
-            set_time_limit(0); //Uncomment to export lage datasets
+//            set_time_limit(0); //Uncomment to export lage datasets
             //Add to the csv a single line of text
             $this->exportCSV(array('Performers Accounts:'), null, false);
             //Add to the csv a single model data with 3 empty rows after the data
