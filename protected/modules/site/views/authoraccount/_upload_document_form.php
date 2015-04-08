@@ -64,7 +64,6 @@ if (!empty($uploaded_files)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th>Document Name</th>
-                        <th align="center">View</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -72,12 +71,16 @@ if (!empty($uploaded_files)) {
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
                             <td>
-                                <?php echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download','df'=> Myclass::refencryption($uploaded_file->getFilePath())), array('title' => 'Download')); ?>
-                                <?php echo CHtml::link('<i class="fa fa-eye"></i>', $uploaded_file->getFilePath(), array('target' => '_blank', 'title' => 'View')); ?>
-                            </td>
-                            <td>
-                                <?php echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $author_model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit')); ?>
-                                <?php echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")')); ?>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download','df'=> Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View')); 
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $author_model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")')); 
+                                ?>
                             </td>
                         </tr>
                     <?php } ?>
