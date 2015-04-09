@@ -1,7 +1,7 @@
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'group-biography-form',
+        'id' => 'group-member-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,

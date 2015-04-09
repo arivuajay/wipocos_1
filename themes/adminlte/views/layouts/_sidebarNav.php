@@ -68,11 +68,11 @@
                         array('label' => '<i class="fa fa-suitcase"></i> <span>Works Category</span>', 'url' => array('/site/masterworkscategory/index')),
                     ),
                 ),
-                array('label' => '<i class="fa fa-group"></i> <span>Group</span>', 'url' => array('/site/group/index')),
                 array('label' => '<i class="fa fa-briefcase"></i> <span>Documents</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
+                        array('label' => '<i class="fa fa-group"></i> <span>Group</span>', 'url' => array('/site/group/index')),
                         array('label' => '<i class="fa fa-book"></i> <span>Author</span>', 'url' => array('/site/authoraccount/index')),
                         array('label' => '<i class="fa fa-music"></i> <span>Performer</span>', 'url' => array('/site/performeraccount/index')),
                     ),

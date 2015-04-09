@@ -236,6 +236,7 @@ class GroupController extends Controller {
                 || $_POST['ajax'] === 'group-account-address-form'
                 || $_POST['ajax'] === 'group-pseudonym-form'
                 || $_POST['ajax'] === 'group-biography-form'
+                || $_POST['ajax'] === 'group-member-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
