@@ -29,7 +29,7 @@ class AuthorUpload extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Upl_Doc_Name, Auth_Upl_File', 'required'),
+            array('Auth_Acc_Id, Auth_Upl_Doc_Name', 'required'),
             array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Upl_Doc_Name', 'length', 'max' => 255),
             array('Auth_Upl_File', 'length', 'max' => 1000),
