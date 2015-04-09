@@ -21,8 +21,8 @@
 	<?php echo CHtml::encode($data->Auth_Internal_Code); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_Ipi_Number')); ?>:</b>
-	<?php echo CHtml::encode($data->Auth_Ipi_Number); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_Ipi')); ?>:</b>
+	<?php echo CHtml::encode($data->Auth_Ipi); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_Ipi_Base_Number')); ?>:</b>
@@ -34,8 +34,8 @@
 	<br />
 
 	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_Date_Of_Birth')); ?>:</b>
-	<?php echo CHtml::encode($data->Auth_Date_Of_Birth); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_DOB')); ?>:</b>
+	<?php echo CHtml::encode($data->Auth_DOB); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Auth_Place_Of_Birth_Id')); ?>:</b>

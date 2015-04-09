@@ -49,11 +49,11 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Perf_Sur_Name',
 		'Perf_First_Name',
 		'Perf_Internal_Code',
-		'Perf_Ipi_Number',
+		'Perf_Ipi',
 		'Perf_Ipi_Base_Number',
 		/*
 		'Perf_Ipn_Number',
-		'Perf_Date_Of_Birth',
+		'Perf_DOB',
 		'Perf_Place_Of_Birth_Id',
 		'Perf_Birth_Country_Id',
 		'Perf_Nationality_Id',

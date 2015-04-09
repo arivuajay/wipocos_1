@@ -8,10 +8,10 @@
  * @property string $Perf_Sur_Name
  * @property string $Perf_First_Name
  * @property string $Perf_Internal_Code
- * @property integer $Perf_Ipi_Number
+ * @property integer $Perf_Ipi
  * @property integer $Perf_Ipi_Base_Number
  * @property integer $Perf_Ipn_Number
- * @property string $Perf_Date_Of_Birth
+ * @property string $Perf_DOB
  * @property integer $Perf_Place_Of_Birth_Id
  * @property integer $Perf_Birth_Country_Id
  * @property integer $Perf_Nationality_Id
@@ -65,23 +65,18 @@ class PerformerAccount extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi_Number, Perf_Date_Of_Birth', 'required'),
-            array('Perf_Ipi_Number, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code', 'required'),
+            array('Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id', 'numerical', 'integerOnly' => true),
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
             array('Perf_Gender, Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion,record_search', 'safe'),
             array('Perf_Internal_Code', 'unique'),
             array('Perf_Sur_Name', 'nameUnique'),
-            array('Perf_First_Name', 'unique', 'criteria' => array(
-                    'condition' => '`Perf_Sur_Name`=:secondKey',
-                    'params' => array(
-                        ':secondKey' => $this->Perf_Sur_Name
-                    )
-                ), "message" => "This User already Exists"),
+            array('Perf_First_Name', 'UniqueAttributesValidator', 'with'=>'Perf_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi_Number, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Date_Of_Birth, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
+            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
         );
     }
 
@@ -110,7 +105,7 @@ class PerformerAccount extends CActiveRecord {
             'performerPaymentMethods' => array(self::HAS_ONE, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
             'performerPseudonyms' => array(self::HAS_ONE, 'PerformerPseudonym', 'Perf_Acc_id'),
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
-            'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Auth_Acc_id'),
+            'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Perf_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
                 'foreignKey' => array('Group_Member_Internal_Code' => 'Perf_Internal_Code')
             ),
@@ -122,14 +117,14 @@ class PerformerAccount extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Perf_Acc_Id' => 'Auth Acc',
+            'Perf_Acc_Id' => 'Id',
             'Perf_Sur_Name' => 'Last Name',
             'Perf_First_Name' => 'First Name',
             'Perf_Internal_Code' => 'Internal Code',
-            'Perf_Ipi_Number' => 'IPI Name Number',
+            'Perf_Ipi' => 'IPI Name Number',
             'Perf_Ipi_Base_Number' => 'IPI Base Number',
             'Perf_Ipn_Number' => 'IPN Number',
-            'Perf_Date_Of_Birth' => 'Date Of Birth',
+            'Perf_DOB' => 'Date Of Birth',
             'Perf_Place_Of_Birth_Id' => 'Place Of Birth',
             'Perf_Birth_Country_Id' => 'Birth Country',
             'Perf_Nationality_Id' => 'Nationality',
@@ -142,7 +137,7 @@ class PerformerAccount extends CActiveRecord {
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
-            'hierarchy_level' => 'Member type',
+            'hierarchy_level' => 'Internal Position',
         );
     }
 
@@ -168,10 +163,10 @@ class PerformerAccount extends CActiveRecord {
         $criteria->compare('Perf_Sur_Name', $this->Perf_Sur_Name, true);
         $criteria->compare('Perf_First_Name', $this->Perf_First_Name, true);
         $criteria->compare('Perf_Internal_Code', $this->Perf_Internal_Code, true);
-        $criteria->compare('Perf_Ipi_Number', $this->Perf_Ipi_Number);
+        $criteria->compare('Perf_Ipi', $this->Perf_Ipi);
         $criteria->compare('Perf_Ipi_Base_Number', $this->Perf_Ipi_Base_Number);
         $criteria->compare('Perf_Ipn_Number', $this->Perf_Ipn_Number);
-        $criteria->compare('Perf_Date_Of_Birth', $this->Perf_Date_Of_Birth, true);
+        $criteria->compare('Perf_DOB', $this->Perf_DOB, true);
         $criteria->compare('Perf_Place_Of_Birth_Id', $this->Perf_Place_Of_Birth_Id);
         $criteria->compare('Perf_Birth_Country_Id', $this->Perf_Birth_Country_Id);
         $criteria->compare('Perf_Nationality_Id', $this->Perf_Nationality_Id);
@@ -212,10 +207,10 @@ class PerformerAccount extends CActiveRecord {
             $criteria->compare('Perf_Sur_Name', $this->record_search, true, 'OR');
             $criteria->compare('Perf_First_Name', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Internal_Code', $this->record_search, true, 'OR');
-            $criteria->compare('Perf_Ipi_Number', $this->record_search, true, 'OR');
+            $criteria->compare('Perf_Ipi', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Ipi_Base_Number', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Ipn_Number', $this->record_search, true, 'OR');
-            $criteria->compare('Perf_Date_Of_Birth', $this->record_search, true, 'OR');
+            $criteria->compare('Perf_DOB', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Place_Of_Birth_Id', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Birth_Country_Id', $this->record_search, true, 'OR');
             $criteria->compare('Perf_Nationality_Id', $this->record_search, true, 'OR');
@@ -231,9 +226,10 @@ class PerformerAccount extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 

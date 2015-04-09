@@ -61,9 +61,26 @@ class PerformeraccountController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
+        $model = $this->loadModel($id);
+        $address_exists = PerformerAccountAddress::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $address_model = empty($address_exists) ? array() : $address_exists;
+
+        $payment_exists = PerformerPaymentMethod::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $payment_model = empty($payment_exists) ? array() : $payment_exists;
+
+        $psedonym_exists = PerformerPseudonym::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? array() : $psedonym_exists;
+
+        $death_exists = PerformerDeathInheritance::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $death_model = empty($death_exists) ? array() : $death_exists;
+
+        $related_exists = PerformerRelatedRights::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $related_model = empty($related_exists) ? array() : $related_exists;
+        
+        $biograph_exists = PerformerBiography::model()->findByAttributes(array('Perf_Acc_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
+
+        $this->render('view', compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model'));
     }
 
     /**
@@ -79,10 +96,15 @@ class PerformeraccountController extends Controller {
 
         if (isset($_POST['PerformerAccount'])) {
             $model->attributes = $_POST['PerformerAccount'];
+            $model->setAttribute('Perf_DOB', $_POST['PerformerAccount']['Perf_DOB']);
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'PerformerAccount Created Successfully. Please fill related rights!!!');
                 $this->redirect('update/id/' . $model->Perf_Acc_Id . '/tab/6');
             }
+        }else{
+            $model->Perf_Birth_Country_Id = 2;
+$model->Perf_Nationality_Id = 2;
+$model->Perf_Language_Id = 1;
         }
 
         $this->render('create', array(
@@ -129,6 +151,7 @@ class PerformeraccountController extends Controller {
 
         if (isset($_POST['PerformerAccount'])) {
             $model->attributes = $_POST['PerformerAccount'];
+            $model->setAttribute('Perf_DOB', $_POST['PerformerAccount']['Perf_DOB']);
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'PerformerAccount Updated Successfully!!!');
                 $this->redirect(array('performeraccount/update/id/' . $model->Perf_Acc_Id . '/tab/1'));
@@ -268,7 +291,7 @@ class PerformeraccountController extends Controller {
             //Add to the csv a single model data with 3 empty rows after the data
 //            $this->exportCSV($model, array_keys($model->attributeLabels()), false, 3);
             //Add to the csv a lot of models from a CDataProvider
-            $this->exportCSV($model->search(), array('Perf_Internal_Code', 'Perf_First_Name', 'Perf_Sur_Name', 'Perf_Ipi_Number'));
+            $this->exportCSV($model->search(), array('Perf_Internal_Code', 'Perf_First_Name', 'Perf_Sur_Name', 'Perf_Ipi'));
         }
 
 

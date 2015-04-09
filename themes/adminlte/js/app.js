@@ -163,7 +163,8 @@ $(function() {
             "bPaginate": false,
             "bLengthChange": false,
             "bSort": true,
-            "bInfo": false
+            "bInfo": false,
+            "iDisplayLength": 100,
         });
 
         $('#base_table_search').keyup(function(){

@@ -56,7 +56,7 @@ class AuthorBiography extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Biogrph_Id' => 'Auth Biogrph',
+            'Auth_Biogrph_Id' => 'Id',
             'Auth_Acc_Id' => 'Auth Acc',
             'Auth_Biogrph_Annotation' => 'Annotation',
             'Active' => 'Active',

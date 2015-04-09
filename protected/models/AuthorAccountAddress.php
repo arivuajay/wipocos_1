@@ -86,7 +86,7 @@ class AuthorAccountAddress extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'Auth_Addr_Id' => 'Auth Addr',
+			'Auth_Addr_Id' => 'Id',
 			'Auth_Acc_Id' => 'Auth Acc',
 			'Auth_Home_Address_1' => 'Home Address 1',
 			'Auth_Home_Address_2' => 'Home Address 2',

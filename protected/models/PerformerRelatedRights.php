@@ -48,7 +48,7 @@ class PerformerRelatedRights extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Entry_Date, Perf_Rel_Internal_Position_Id, Perf_Rel_Entry_Date_2, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Type_Rght_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id', 'required'),
+            array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Entry_Date, Perf_Rel_Internal_Position_Id, Perf_Rel_Entry_Date_2, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id', 'required'),
             array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Internal_Position_Id, Perf_Rel_Region_Id, Perf_Rel_Profession_Id, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Type_Rght_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id', 'numerical', 'integerOnly' => true),
             array('Perf_Rel_File', 'length', 'max' => 255),
             array('Perf_Rel_Duration', 'length', 'max' => 100),
@@ -93,10 +93,10 @@ class PerformerRelatedRights extends CActiveRecord {
             'Perf_Rel_Exit_Date_2' => 'Position End',
             'Perf_Rel_Region_Id' => 'Region',
             'Perf_Rel_Profession_Id' => 'Profession',
-            'Perf_Rel_File' => 'File',
+            'Perf_Rel_File' => 'Physical File Location',
             'Perf_Rel_Duration' => 'Duration',
             'Perf_Rel_Avl_Work_Cat_Id' => 'Work Category',
-            'Perf_Rel_Type_Rght_Id' => 'Type of Right',
+            'Perf_Rel_Type_Rght_Id' => 'RightHolder Type',
             'Perf_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Perf_Rel_Territories_Id' => 'Territories',
         );

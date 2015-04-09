@@ -80,6 +80,8 @@ class AuthoraccountController extends Controller {
         $biograph_exists = AuthorBiography::model()->findByAttributes(array('Auth_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
 
+
+
         $this->render('view', compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model'));
     }
 
@@ -90,16 +92,21 @@ class AuthoraccountController extends Controller {
     public function actionCreate() {
         $model = new AuthorAccount;
         $address_model = new AuthorAccountAddress;
-
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
+            $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
                 $this->redirect('update/id/' . $model->Auth_Acc_Id . '/tab/6');
             }
+        }else{
+            $model->Auth_Birth_Country_Id = 2;
+$model->Auth_Nationality_Id = 2;
+$model->Auth_Language_Id = 1;
+
         }
 
         $this->render('create', array(
@@ -147,7 +154,8 @@ class AuthoraccountController extends Controller {
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
-            if ($model->save()) {
+            $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
+             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/1'));
             }
@@ -282,7 +290,7 @@ class AuthoraccountController extends Controller {
 
         if ($this->isExportRequest()) {
             $this->exportCSV(array('Authors Accounts:'), null, false);
-            $this->exportCSV($model->search(), array('Auth_Internal_Code', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Ipi_Number'));
+            $this->exportCSV($model->search(), array('Auth_Internal_Code', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Ipi'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));

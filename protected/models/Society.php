@@ -7,7 +7,7 @@
  * @property integer $Society_Id
  * @property string $Society_Abbr_Id
  * @property string $Society_Logo_File
- * @property string $Society_Mailing_Address_Id
+ * @property string $Society_Mailing_Address
  * @property integer $Society_Country_Id
  * @property integer $Society_Territory_Id
  * @property integer $Society_Region_Id
@@ -22,7 +22,7 @@
  * @property integer $Society_Duration
  * @property integer $Society_CopyRight
  * @property integer $Society_RelatedRights
- * @property string $Society_Currency
+ * @property string $Society_Currency_Id
  * @property string $Society_Rate
  * @property string $Society_Main_Performer_Id
  * @property string $Society_Producer_Id
@@ -64,13 +64,14 @@ class Society extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Society_Abbr_Id, Society_Code, Society_Mailing_Address_Id, Society_Language_Id, Society_Logo_File', 'required'),
+            array('Society_Abbr_Id, Society_Code, Society_Mailing_Address, Society_Language_Id, Society_Logo_File', 'required'),
             array('Society_Rate, Society_Factor', 'numerical'),
             array('Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Payment_Id, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights', 'numerical', 'integerOnly' => true),
             array('Society_Abbr_Id, Society_Main_Performer_Id, Society_Producer_Id', 'length', 'max' => 100),
             array('Society_Logo_File', 'length', 'max' => 255),
+            array('Society_Subscription', 'length', 'max' => 100),
             array('Society_Code', 'length', 'max' => 50),
-            array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency', 'length', 'max' => 50),
+            array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency_Id', 'length', 'max' => 50),
             array('Society_Rate, Society_Factor', 'length', 'max' => 10),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
@@ -79,7 +80,7 @@ class Society extends CActiveRecord {
             array('Society_Logo_File', 'file', 'allowEmpty' => true, 'types' => 'jpg, png, gif, jpeg', 'on' => 'update'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Society_Id, Society_Code, Society_Abbr_Id, Society_Logo_File, Society_Language_Id, Society_Mailing_Address_Id, Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Hirearchy_Id, Society_Payment_Id, Society_Type_Id, Society_Factor, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights, Society_Currency, Society_Rate, Society_Main_Performer_Id, Society_Producer_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Society_Id, Society_Code, Society_Abbr_Id, Society_Logo_File, Society_Language_Id, Society_Mailing_Address, Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Hirearchy_Id, Society_Payment_Id, Society_Type_Id, Society_Factor, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights, Society_Currency_Id, Society_Rate, Society_Main_Performer_Id, Society_Producer_Id, Active, Created_Date, Rowversion, Society_Subscription', 'safe', 'on' => 'search'),
         );
     }
     
@@ -102,6 +103,7 @@ class Society extends CActiveRecord {
             'socType' => array(self::BELONGS_TO, 'MasterType', 'Society_Type_Id'),
             'socHirearchy' => array(self::BELONGS_TO, 'MasterHierarchy', 'Society_Hirearchy_Id'),
             'socLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Society_Language_Id'),
+            'socCurrency' => array(self::BELONGS_TO, 'MasterCurrency', 'Society_Currency_Id'),
         );
     }
 
@@ -115,28 +117,29 @@ class Society extends CActiveRecord {
             'Society_Abbr_Id' => 'Society Name',
             'Society_Logo_File' => 'Logo',
             'Society_Language_Id' => 'Work Language',
-            'Society_Mailing_Address_Id' => 'Mailing Address',
+            'Society_Mailing_Address' => 'Mailing Address',
             'Society_Country_Id' => 'Country',
             'Society_Territory_Id' => 'Territory',
             'Society_Region_Id' => 'Region',
             'Society_Profession_Id' => 'Profession',
-            'Society_Role_Id' => 'Role',
+            'Society_Role_Id' => 'Default Role',
             'Society_Hirearchy_Id' => 'Hirearchy',
             'Society_Payment_Id' => 'Payment Method',
-            'Society_Type_Id' => 'Type',
+            'Society_Type_Id' => 'Default Music Type',
             'Society_Factor' => 'Factor',
             'Society_Doc_Type_Id' => 'Documentation',
             'Society_Doc_Id' => 'Document',
             'Society_Duration' => 'Duration of Publishing Contract',
             'Society_CopyRight' => 'Copy Right',
             'Society_RelatedRights' => 'Related Rights',
-            'Society_Currency' => 'Currency',
+            'Society_Currency_Id' => 'Currency',
             'Society_Rate' => 'Rate',
             'Society_Main_Performer_Id' => 'Main Performer',
             'Society_Producer_Id' => 'Producer',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'Society_Subscription' => 'Subscription',
         );
     }
 
@@ -161,7 +164,7 @@ class Society extends CActiveRecord {
         $criteria->compare('Society_Id', $this->Society_Id);
         $criteria->compare('socOrg.Org_Abbrevation', $this->Society_Abbr_Id, true);
         $criteria->compare('Society_Logo_File', $this->Society_Logo_File, true);
-        $criteria->compare('Society_Mailing_Address_Id', $this->Society_Mailing_Address_Id, true);
+        $criteria->compare('Society_Mailing_Address', $this->Society_Mailing_Address, true);
         $criteria->compare('Society_Country_Id', $this->Society_Country_Id);
         $criteria->compare('Society_Territory_Id', $this->Society_Territory_Id);
         $criteria->compare('Society_Region_Id', $this->Society_Region_Id);
@@ -176,7 +179,7 @@ class Society extends CActiveRecord {
         $criteria->compare('Society_Duration', $this->Society_Duration);
         $criteria->compare('Society_CopyRight', $this->Society_CopyRight);
         $criteria->compare('Society_RelatedRights', $this->Society_RelatedRights);
-        $criteria->compare('Society_Currency', $this->Society_Currency, true);
+        $criteria->compare('Society_Currency_Id', $this->Society_Currency_Id, true);
         $criteria->compare('Society_Rate', $this->Society_Rate, true);
         $criteria->compare('Society_Main_Performer_Id', $this->Society_Main_Performer_Id, true);
         $criteria->compare('Society_Producer_Id', $this->Society_Producer_Id, true);

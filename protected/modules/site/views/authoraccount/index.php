@@ -61,9 +61,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Auth_Ipi_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Auth_Ipi_Number', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Auth_Ipi_Number'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Auth_Ipi', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Auth_Ipi', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Auth_Ipi'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -82,9 +82,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Auth_Date_Of_Birth', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Auth_Date_Of_Birth', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($searchModel, 'Auth_Date_Of_Birth'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Auth_DOB', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Auth_DOB', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Auth_DOB'); ?>
                         </div>
                     </div>
 
@@ -164,14 +164,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Auth_Internal_Code',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
-                'Auth_Ipi_Number',
+                'Auth_Ipi',
 //                'Auth_Identity_Number',
                 array(
                     'header' => 'Pseudonym',
                     'value' => function($data) {
-                                    if (!empty($data->authorPseudonyms))
-                                        echo $data->authorPseudonyms->Auth_Pseudo_Name;
-                                },
+                        if (!empty($data->authorPseudonyms))
+                            echo $data->authorPseudonyms->Auth_Pseudo_Name;
+                    },
                 ),
                 array(
                     'name' => 'Created_Date',
@@ -181,15 +181,15 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 echo date('Y-m-d', strtotime($data->Created_Date));
             },
                 ),
-                    array(
-                'name' => 'Expiry Date',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                                if(!empty($data->authorManageRights))
-                                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
-                            },
-            ),
+                array(
+                    'name' => 'Expiry Date',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                if (!empty($data->authorManageRights))
+                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
+            },
+                ),
                 array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
@@ -198,11 +198,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
             },
                 ),
-//                'Auth_Ipi_Number',
+//                'Auth_Ipi',
 //                'Auth_Ipi_Base_Number',
 //                'Auth_Ipn_Number',
                 /*
-                  'Auth_Date_Of_Birth',
+                  'Auth_DOB',
                   'Auth_Place_Of_Birth_Id',
                   'Auth_Birth_Country_Id',
                   'Auth_Nationality_Id',
@@ -253,7 +253,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
-                <input type="text" class="form-control" name="base_table_search" id="base_table_search" />
+                <label class="control-label">Search: </label>
+                <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
                 <?php // echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
                 <?php // echo $form->error($model, 'record_search'); ?>
             </div>
@@ -264,6 +265,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 </div>-->
         <?php
 //        $this->endWidget();
+        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/authoraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
     </div>
@@ -280,15 +282,15 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Auth_Internal_Code',
             'Auth_Sur_Name',
             'Auth_First_Name',
-            'Auth_Ipi_Number',
+            'Auth_Ipi',
 //            'Auth_Ipi_Base_Number',
 //            'Auth_Ipn_Number',
             array(
                 'header' => 'Pseudonym',
                 'value' => function($data) {
-            if (!empty($data->authorPseudonyms))
-                echo $data->authorPseudonyms->Auth_Pseudo_Name;
-        },
+                    if (!empty($data->authorPseudonyms))
+                        echo $data->authorPseudonyms->Auth_Pseudo_Name;
+                },
             ),
 //            'Auth_Identity_Number',
             array(
@@ -296,7 +298,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            echo date('Y-m-d', strtotime($data->Created_Date));
+
+            if ($data->authorManageRights)
+                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
         },
             ),
             array(
@@ -304,9 +308,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                                if(!empty($data->authorManageRights))
-                                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
-                            },
+            if (!empty($data->authorManageRights))
+                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
+        },
             ),
             array(
                 'name' => 'Active',
@@ -317,7 +321,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         },
             ),
             /*
-              'Auth_Date_Of_Birth',
+              'Auth_DOB',
               'Auth_Place_Of_Birth_Id',
               'Auth_Birth_Country_Id',
               'Auth_Nationality_Id',

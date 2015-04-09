@@ -83,7 +83,7 @@ class AuthorManageRights extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Mnge_Rgt_Id' => 'Auth Mnge Rgt',
+            'Auth_Mnge_Rgt_Id' => 'Id',
             'Auth_Acc_Id' => 'Auth Acc',
             'Auth_Mnge_Society_Id' => 'Society',
             'Auth_Mnge_Entry_Date' => 'Start of mandate',
@@ -93,10 +93,10 @@ class AuthorManageRights extends CActiveRecord {
             'Auth_Mnge_Exit_Date_2' => 'Position End',
             'Auth_Mnge_Region_Id' => 'Region',
             'Auth_Mnge_Profession_Id' => 'Profession',
-            'Auth_Mnge_File' => 'File',
+            'Auth_Mnge_File' => 'Physical File Location',
             'Auth_Mnge_Duration' => 'Duration',
             'Auth_Mnge_Avl_Work_Cat_Id' => 'Work Categroy',
-            'Auth_Mnge_Type_Rght_Id' => 'Type Rght',
+            'Auth_Mnge_Type_Rght_Id' => 'RightHolder Type',
             'Auth_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Auth_Mnge_Territories_Id' => 'Territories',
         );

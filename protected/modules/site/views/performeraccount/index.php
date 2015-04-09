@@ -62,9 +62,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Perf_Ipi_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Perf_Ipi_Number', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Perf_Ipi_Number'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Perf_Ipi', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Perf_Ipi', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Perf_Ipi'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -83,9 +83,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Perf_Date_Of_Birth', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Perf_Date_Of_Birth', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($searchModel, 'Perf_Date_Of_Birth'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Perf_DOB', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Perf_DOB', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Perf_DOB'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -161,7 +161,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Perf_Internal_Code',
                 'Perf_Sur_Name',
                 'Perf_First_Name',
-                'Perf_Ipi_Number',
+                'Perf_Ipi',
 //                'Perf_Identity_Number',
                 array(
                     'header' => 'Pseudonym',
@@ -195,11 +195,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
             },
                 ),
-//                'Perf_Ipi_Number',
+//                'Perf_Ipi',
 //                'Perf_Ipi_Base_Number',
 //                'Perf_Ipn_Number',
                 /*
-                  'Perf_Date_Of_Birth',
+                  'Perf_DOB',
                   'Perf_Place_Of_Birth_Id',
                   'Perf_Birth_Country_Id',
                   'Perf_Nationality_Id',
@@ -251,9 +251,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
-                <input type="text" class="form-control" name="base_table_search" id="base_table_search" />
-                <?php // echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
-                <?php // echo $form->error($model, 'record_search'); ?>
+                <label class="control-label">Search: </label>
+                <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
         <!--        <div class="col-lg-2 col-md-2">
@@ -262,6 +261,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 </div>-->
         <?php
 //        $this->endWidget();
+        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create','type'=>'performer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer', array('/site/performeraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
     </div>
@@ -278,7 +278,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Perf_Internal_Code',
             'Perf_Sur_Name',
             'Perf_First_Name',
-            'Perf_Ipi_Number',
+            'Perf_Ipi',
 //            'Perf_Identity_Number',
             array(
                     'header' => 'Pseudonym',
@@ -292,7 +292,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            echo date('Y-m-d', strtotime($data->Created_Date));
+                                    if ($data->performerRelatedRights)
+                echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date));
         },
             ),
             array(
@@ -312,11 +313,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
         },
             ),
-//            'Perf_Ipi_Number',
+//            'Perf_Ipi',
 //            'Perf_Ipi_Base_Number',
 //            'Perf_Ipn_Number',
             /*
-              'Perf_Date_Of_Birth',
+              'Perf_DOB',
               'Perf_Place_Of_Birth_Id',
               'Perf_Birth_Country_Id',
               'Perf_Nationality_Id',

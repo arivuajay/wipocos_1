@@ -14,6 +14,7 @@ $organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org
 $hierarchy = CHtml::listData(MasterHierarchy::model()->isActive()->findAll(), 'Master_Hierarchy_Id', 'Hierarchy_Name');
 $types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
 $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
+$currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name');
 ?>
 
 <div class="row">
@@ -68,10 +69,10 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
                     </div>
                     
                     <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Society_Mailing_Address_Id', array('class' => '')); ?>
+                        <?php echo $form->labelEx($model, 'Society_Mailing_Address', array('class' => '')); ?>
 
-                        <?php echo $form->dropDownList($model, 'Society_Mailing_Address_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
-                        <?php echo $form->error($model, 'Society_Mailing_Address_Id'); ?>
+                        <?php echo $form->textField($model, 'Society_Mailing_Address', array('class' => 'form-control', 'size' => 50, 'maxlength' => 500)); ?>
+                        <?php echo $form->error($model, 'Society_Mailing_Address'); ?>
                     </div>
 
                     <div class="form-group">
@@ -191,7 +192,7 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
                         <?php echo $form->error($model, 'Society_RelatedRights'); ?>
                     </div>
 
-                    <div class="form-group">
+<!--                    <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Main_Performer_Id', array('class' => '')); ?>
 
                         <?php echo $form->textField($model, 'Society_Main_Performer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
@@ -203,15 +204,20 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
 
                         <?php echo $form->textField($model, 'Society_Producer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
                         <?php echo $form->error($model, 'Society_Producer_Id'); ?>
+                    </div>-->
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Society_Currency_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Society_Currency_Id', $currencies, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Society_Currency_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Society_Subscription', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Society_Subscription', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                        <?php echo $form->error($model, 'Society_Subscription'); ?>
                     </div>
                     
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Society_Currency', array('class' => '')); ?>
-
-                        <?php echo $form->textField($model, 'Society_Currency', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo $form->error($model, 'Society_Currency'); ?>
-                    </div>
-
                 </div>
 
             </div>

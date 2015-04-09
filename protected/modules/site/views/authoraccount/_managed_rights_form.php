@@ -26,7 +26,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Society_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Society_Id'); ?>
             </div>
 
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Exit_Date', array('class' => '')); ?>
                 <?php 
-                $exit_date = date('Y-m-d');
+                $exit_date = '';
                 if(isset($model->Auth_Mnge_Exit_Date)){
                     $exit_date = $model->Auth_Mnge_Exit_Date != "0000-00-00" ? $model->Auth_Mnge_Exit_Date : '';
                 }
@@ -50,7 +50,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Internal_Position_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Internal_Position_Id', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Internal_Position_Id', $internal_positions, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Internal_Position_Id'); ?>
             </div>
 
@@ -68,7 +68,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Region_Id', $regions, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Region_Id'); ?>
             </div>
 
@@ -81,7 +81,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Profession_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Profession_Id', $professions, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Profession_Id', $professions, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Profession_Id'); ?>
             </div>
 
@@ -105,25 +105,25 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Avl_Work_Cat_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Avl_Work_Cat_Id', $work_categories, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Avl_Work_Cat_Id', $work_categories, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Avl_Work_Cat_Id'); ?>
             </div>
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Type_Rght_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Type_Rght_Id', $right_types, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Type_Rght_Id'); ?>
             </div>
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Managed_Rights_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Managed_Rights_Id'); ?>
             </div>
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Territories_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Territories_Id', $territories, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Territories_Id', $territories, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Territories_Id'); ?>
             </div>
 

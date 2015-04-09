@@ -81,9 +81,9 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                                 </div>
                                 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Date_Of_Birth', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_Date_Of_Birth', array('class' => 'form-control date', 'value' => isset($model->Auth_Date_Of_Birth) ? date('Y-m-d', strtotime($model->Auth_Date_Of_Birth)) : '')); ?>
-                                    <?php echo $form->error($model, 'Auth_Date_Of_Birth'); ?>
+                                    <?php echo $form->labelEx($model, 'Auth_DOB', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Auth_DOB', array('class' => 'form-control date', 'value' => (isset($model->Auth_DOB) && $model->Auth_DOB != '0000-00-00') ? date('Y-m-d', strtotime($model->Auth_DOB)) : '')); ?>
+                                    <?php echo $form->error($model, 'Auth_DOB'); ?>
                                 </div>
 
 <!--                                <div class="form-group">
@@ -116,9 +116,9 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                         <div class="col-lg-5 col-xs-5">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Ipi_Number', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_Ipi_Number', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Auth_Ipi_Number'); ?>
+                                    <?php echo $form->labelEx($model, 'Auth_Ipi', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Auth_Ipi', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Auth_Ipi'); ?>
                                 </div>
 
                                 <div class="form-group">
@@ -204,6 +204,13 @@ $js = <<< EOD
         $('#AuthorAccount_Auth_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
+        
+        $("#AuthorManageRights_Auth_Mnge_Entry_Date").on("change", function(){
+            $("#AuthorManageRights_Auth_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#AuthorManageRights_Auth_Mnge_Exit_Date").on("change", function(){
+            $("#AuthorManageRights_Auth_Mnge_Exit_Date_2").val($(this).val());
+        });
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

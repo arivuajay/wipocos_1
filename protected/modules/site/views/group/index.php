@@ -177,8 +177,8 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer', array('/site/group/create','type'=>'performer'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create','type'=>'performer'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 

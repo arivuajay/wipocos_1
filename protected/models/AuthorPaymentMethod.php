@@ -66,7 +66,7 @@ class AuthorPaymentMethod extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'Auth_Pay_Id' => 'Auth Pay',
+			'Auth_Pay_Id' => 'Id',
 			'Auth_Acc_Id' => 'Auth Acc',
 			'Auth_Pay_Method_id' => 'Payment Method',
 			'Auth_Bank_Account_1' => 'Bank Account 1',

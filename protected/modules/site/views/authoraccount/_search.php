@@ -32,8 +32,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Auth_Ipi_Number'); ?>
-		<?php echo $form->textField($model,'Auth_Ipi_Number',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Auth_Ipi'); ?>
+		<?php echo $form->textField($model,'Auth_Ipi',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">
@@ -47,8 +47,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Auth_Date_Of_Birth'); ?>
-		<?php echo $form->textField($model,'Auth_Date_Of_Birth',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Auth_DOB'); ?>
+		<?php echo $form->textField($model,'Auth_DOB',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

@@ -63,7 +63,7 @@ class AuthorDeathInheritance extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Death_Inhrt_Id' => 'Auth Death Inhrt',
+            'Auth_Death_Inhrt_Id' => 'Id',
             'Auth_Death_Inhrt_Firstname' => 'Firstname',
             'Auth_Death_Inhrt_Email' => 'Email',
             'Auth_Death_Inhrt_Phone' => 'Phone',

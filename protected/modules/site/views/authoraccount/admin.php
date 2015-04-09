@@ -49,11 +49,11 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Auth_Sur_Name',
 		'Auth_First_Name',
 		'Auth_Internal_Code',
-		'Auth_Ipi_Number',
+		'Auth_Ipi',
 		'Auth_Ipi_Base_Number',
 		/*
 		'Auth_Ipn_Number',
-		'Auth_Date_Of_Birth',
+		'Auth_DOB',
 		'Auth_Place_Of_Birth_Id',
 		'Auth_Birth_Country_Id',
 		'Auth_Nationality_Id',

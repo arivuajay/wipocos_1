@@ -21,8 +21,8 @@
 	<?php echo CHtml::encode($data->Perf_Internal_Code); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_Ipi_Number')); ?>:</b>
-	<?php echo CHtml::encode($data->Perf_Ipi_Number); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_Ipi')); ?>:</b>
+	<?php echo CHtml::encode($data->Perf_Ipi); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_Ipi_Base_Number')); ?>:</b>
@@ -34,8 +34,8 @@
 	<br />
 
 	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_Date_Of_Birth')); ?>:</b>
-	<?php echo CHtml::encode($data->Perf_Date_Of_Birth); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_DOB')); ?>:</b>
+	<?php echo CHtml::encode($data->Perf_DOB); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Perf_Place_Of_Birth_Id')); ?>:</b>

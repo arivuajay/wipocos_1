@@ -76,10 +76,14 @@ $this->breadcrumbs=array(
 		'Society_Duration',
 		'Society_CopyRight',
 		'Society_RelatedRights',
-		'Society_Currency',
+		array(
+                    'name' => 'Society_Currency_Id',
+                    'value' => isset($model->socCurrency->Currency_Name) ? $model->socCurrency->Currency_Name : 'Not Set'
+                ),
 		'Society_Rate',
 		'Society_Main_Performer_Id',
 		'Society_Producer_Id',
+		'Society_Subscription',
 		array(
                 'name' => 'Active',
                 'type' => 'raw',

@@ -8,10 +8,10 @@
  * @property string $Auth_Sur_Name
  * @property string $Auth_First_Name
  * @property string $Auth_Internal_Code
- * @property integer $Auth_Ipi_Number
+ * @property integer $Auth_Ipi
  * @property integer $Auth_Ipi_Base_Number
  * @property integer $Auth_Ipn_Number
- * @property string $Auth_Date_Of_Birth
+ * @property string $Auth_DOB
  * @property integer $Auth_Place_Of_Birth_Id
  * @property integer $Auth_Birth_Country_Id
  * @property integer $Auth_Nationality_Id
@@ -65,23 +65,18 @@ class AuthorAccount extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Date_Of_Birth', 'required'),
-            array('Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code', 'required'),
+            array('Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion,record_search', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
             array('Auth_Internal_Code', 'unique'),
-            array('Auth_First_Name', 'unique', 'criteria' => array(
-                    'condition' => '`Auth_Sur_Name`=:secondKey',
-                    'params' => array(
-                        ':secondKey' => $this->Auth_Sur_Name
-                    )
-                ), "message" => "This User already Exists"),
+            array('Auth_First_Name', 'UniqueAttributesValidator', 'with'=>'Auth_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi_Number, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Date_Of_Birth, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
         );
     }
 
@@ -121,14 +116,14 @@ class AuthorAccount extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Acc_Id' => 'Auth Acc',
+            'Auth_Acc_Id' => 'Id',
             'Auth_Sur_Name' => 'Last Name',
             'Auth_First_Name' => 'First Name',
             'Auth_Internal_Code' => 'Internal Code',
-            'Auth_Ipi_Number' => 'IPI Name Number',
+            'Auth_Ipi' => 'IPI Name Number',
             'Auth_Ipi_Base_Number' => 'IPI Base Number',
             'Auth_Ipn_Number' => 'IPN Number',
-            'Auth_Date_Of_Birth' => 'Date Of Birth',
+            'Auth_DOB' => 'Date Of Birth',
             'Auth_Place_Of_Birth_Id' => 'Place Of Birth',
             'Auth_Birth_Country_Id' => 'Birth Country',
             'Auth_Nationality_Id' => 'Nationality',
@@ -141,7 +136,7 @@ class AuthorAccount extends CActiveRecord {
             'Created_Date' => 'Date of Join',
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
-            'hierarchy_level' => 'Member type',
+            'hierarchy_level' => 'Internal Position',
         );
     }
 
@@ -167,10 +162,10 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('Auth_Sur_Name', $this->Auth_Sur_Name, true);
         $criteria->compare('Auth_First_Name', $this->Auth_First_Name, true);
         $criteria->compare('Auth_Internal_Code', $this->Auth_Internal_Code, true);
-        $criteria->compare('Auth_Ipi_Number', $this->Auth_Ipi_Number);
+        $criteria->compare('Auth_Ipi', $this->Auth_Ipi);
         $criteria->compare('Auth_Ipi_Base_Number', $this->Auth_Ipi_Base_Number);
         $criteria->compare('Auth_Ipn_Number', $this->Auth_Ipn_Number);
-        $criteria->compare('Auth_Date_Of_Birth', $this->Auth_Date_Of_Birth, true);
+        $criteria->compare('Auth_DOB', $this->Auth_DOB, true);
         $criteria->compare('Auth_Place_Of_Birth_Id', $this->Auth_Place_Of_Birth_Id);
         $criteria->compare('Auth_Birth_Country_Id', $this->Auth_Birth_Country_Id);
         $criteria->compare('Auth_Nationality_Id', $this->Auth_Nationality_Id);
@@ -210,10 +205,10 @@ class AuthorAccount extends CActiveRecord {
             $criteria->compare('Auth_Sur_Name', $this->record_search, true, 'OR');
             $criteria->compare('Auth_First_Name', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Internal_Code', $this->record_search, true, 'OR');
-            $criteria->compare('Auth_Ipi_Number', $this->record_search, true, 'OR');
+            $criteria->compare('Auth_Ipi', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Ipi_Base_Number', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Ipn_Number', $this->record_search, true, 'OR');
-            $criteria->compare('Auth_Date_Of_Birth', $this->record_search, true, 'OR');
+            $criteria->compare('Auth_DOB', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Place_Of_Birth_Id', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Birth_Country_Id', $this->record_search, true, 'OR');
             $criteria->compare('Auth_Nationality_Id', $this->record_search, true, 'OR');
@@ -229,9 +224,10 @@ class AuthorAccount extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 
@@ -247,10 +243,12 @@ class AuthorAccount extends CActiveRecord {
         $text = 'no title yet';
 
         if (!empty($this->authorPseudonyms)) { // if this Author has any related Posts
-            var_dump($this->authorPseudonyms); exit;
+            var_dump($this->authorPseudonyms);
+            exit;
             $counter = 0;
             foreach ($this->authorPseudonyms as $name) {
-                var_dump($name); exit;
+                var_dump($name);
+                exit;
                 if ($counter == 0)
                     $text = $name->Auth_Pseudo_Name;
                 else

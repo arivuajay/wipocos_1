@@ -32,8 +32,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Perf_Ipi_Number'); ?>
-		<?php echo $form->textField($model,'Perf_Ipi_Number',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Perf_Ipi'); ?>
+		<?php echo $form->textField($model,'Perf_Ipi',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">
@@ -47,8 +47,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Perf_Date_Of_Birth'); ?>
-		<?php echo $form->textField($model,'Perf_Date_Of_Birth',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Perf_DOB'); ?>
+		<?php echo $form->textField($model,'Perf_DOB',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

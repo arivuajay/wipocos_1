@@ -59,7 +59,7 @@ class MasterInternalPosition extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_Int_Post_Id' => 'Master Int Post',
-            'Int_Post_Name' => 'International Position',
+            'Int_Post_Name' => 'Internal Position',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

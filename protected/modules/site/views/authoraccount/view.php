@@ -26,10 +26,10 @@ $this->breadcrumbs=array(
 		'Auth_Sur_Name',
 		'Auth_First_Name',
 		'Auth_Internal_Code',
-		'Auth_Ipi_Number',
+		'Auth_Ipi',
 		'Auth_Ipi_Base_Number',
 		'Auth_Ipn_Number',
-		'Auth_Date_Of_Birth',
+		'Auth_DOB',
                 array(
                     'name' => 'Auth_Place_Of_Birth_Id',
                     'value' => isset($model->authPlaceOfBirth->Region_Name) ? $model->authPlaceOfBirth->Region_Name : 'Not Set'
@@ -70,7 +70,7 @@ $this->breadcrumbs=array(
     'data'=>$payment_model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
     'attributes'=>array(
-        'Auth_Pay_Method_id',
+//        'Auth_Pay_Method_id',
         'Auth_Bank_Account_1',
         'Auth_Bank_Account_2',
         'Auth_Bank_Account_3',
@@ -87,7 +87,11 @@ $this->breadcrumbs=array(
     'data'=>$psedonym_model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
     'attributes'=>array(
-        'Auth_Pseudo_Type_Id',
+//        'Auth_Pseudo_Type_Id',
+        array(
+            'name' => 'Auth_Pseudo_Type_Id',
+            'value' => isset($psedonym_model->authPseudoType->Pseudo_Code) ? $psedonym_model->authPseudoType->Pseudo_Code : 'Not Set'
+        ),
         'Auth_Pseudo_Name',
     ),
 ));
@@ -103,9 +107,11 @@ $this->breadcrumbs=array(
     'data'=>$death_model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
     'attributes'=>array(
-        'Auth_Death_Inhrt_Id',
-        'Auth_Acc_Id',
+//        'Auth_Death_Inhrt_Id',
+        'Auth_Death_Inhrt_Firstname',
         'Auth_Death_Inhrt_Surname',
+        'Auth_Death_Inhrt_Email',
+        'Auth_Death_Inhrt_Phone',
         'Auth_Death_Inhrt_Address_1',
         'Auth_Death_Inhrt_Address_2',
         'Auth_Death_Inhrt_Address_3',
@@ -151,7 +157,11 @@ $this->breadcrumbs=array(
         'Auth_Performer_Account_1',
         'Auth_Performer_Account_2',
         'Auth_Performer_Account_3',
-        'Auth_Unknown_Address',
+        array(
+            'name' => 'Auth_Unknown_Address',
+            'type' => 'raw',
+            'value' => $address_model->Auth_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+        ),
 //        array(
 //                'name' => 'Active',
 //                'type' => 'raw',
@@ -172,22 +182,42 @@ $this->breadcrumbs=array(
     'data'=>$managed_model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
     'attributes'=>array(
-        'Auth_Mnge_Rgt_Id',
-        'Auth_Acc_Id',
-        'Auth_Mnge_Society_Id',
+//        'Auth_Mnge_Rgt_Id',
+//        'Auth_Mnge_Society_Id',
         'Auth_Mnge_Entry_Date',
         'Auth_Mnge_Exit_Date',
-        'Auth_Mnge_Internal_Position_Id',
+        array(
+            'name' => 'Auth_Mnge_Internal_Position_Id',
+            'value' => isset($managed_model->authMngeInternalPosition->Int_Post_Name) ? $managed_model->authMngeInternalPosition->Int_Post_Name : 'Not Set'
+        ),
         'Auth_Mnge_Entry_Date_2',
         'Auth_Mnge_Exit_Date_2',
-        'Auth_Mnge_Region_Id',
-        'Auth_Mnge_Profession_Id',
+        array(
+            'name' => 'Auth_Mnge_Region_Id',
+            'value' => isset($managed_model->authMngeRegion->Region_Name) ? $managed_model->authMngeRegion->Region_Name : 'Not Set'
+        ),
+        array(
+            'name' => 'Auth_Mnge_Profession_Id',
+            'value' => isset($managed_model->authMngeProfession->Profession_Name) ? $managed_model->authMngeProfession->Profession_Name : 'Not Set'
+        ),
         'Auth_Mnge_File',
         'Auth_Mnge_Duration',
-        'Auth_Mnge_Avl_Work_Cat_Id',
-        'Auth_Mnge_Type_Rght_Id',
-        'Auth_Mnge_Managed_Rights_Id',
-        'Auth_Mnge_Territories_Id',
+        array(
+            'name' => 'Auth_Mnge_Avl_Work_Cat_Id',
+            'value' => isset($managed_model->authMngeAvlWorkCat->Work_Category_Name) ? $managed_model->authMngeAvlWorkCat->Work_Category_Name : 'Not Set'
+        ),
+        array(
+            'name' => 'Auth_Mnge_Type_Rght_Id',
+            'value' => isset($managed_model->authMngeTypeRght->Type_Rights_Name) ? $managed_model->authMngeTypeRght->Type_Rights_Name : 'Not Set'
+        ),
+        array(
+            'name' => 'Auth_Mnge_Managed_Rights_Id',
+            'value' => isset($managed_model->authMngeManagedRights->Mgd_Rights_Name) ? $managed_model->authMngeManagedRights->Mgd_Rights_Name : 'Not Set'
+        ),
+        array(
+            'name' => 'Auth_Mnge_Territories_Id',
+            'value' => isset($managed_model->authMngeTerritories->Territory_Name) ? $managed_model->authMngeTerritories->Territory_Name : 'Not Set'
+        ),
     ),
 ));
     }else{
@@ -200,11 +230,10 @@ $this->breadcrumbs=array(
     <?php
     if(!empty($biograph_model)){
     $this->widget('zii.widgets.CDetailView', array(
-    'data'=>$model,
+    'data'=>$biograph_model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
     'attributes'=>array(
-        'Auth_Biogrph_Id',
-        'Auth_Acc_Id',
+//        'Auth_Biogrph_Id',
         'Auth_Biogrph_Annotation',
     ),
 ));
@@ -214,8 +243,46 @@ $this->breadcrumbs=array(
 
 </div>
 </div>
-
-
-
-
-
+<div class="row">
+    <div class="user-view col-lg-12">
+<?php
+$uploaded_files = AuthorUpload::model()->findAll('Auth_Acc_Id = :acc_id', array(':acc_id' => $model->Auth_Acc_Id));
+if (!empty($uploaded_files)) {
+    ?>
+    <div class="">
+        <div class="box-header">
+            <h4 class="box-title">Uploaded Documents</h4>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-condensed">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Document Name</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
+                            <td>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download','df'=> Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View')); 
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")')); 
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+        </div>
+    </div>
+    <?php
+}?>
+        
+    </div>
+</div>
