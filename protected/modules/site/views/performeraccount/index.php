@@ -166,27 +166,28 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 array(
                     'header' => 'Pseudonym',
                     'value' => function($data) {
-                                    if (!empty($data->performerPseudonyms))
-                                        echo $data->performerPseudonyms->Perf_Pseudo_Name;
-                                },
+                if (!empty($data->performerPseudonyms))
+                    echo $data->performerPseudonyms->Perf_Pseudo_Name;
+            },
                 ),
                 array(
                     'name' => 'Created_Date',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                echo date('Y-m-d', strtotime($data->Created_Date));
+                if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date)) > 1970)
+                    echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date));
             },
                 ),
                 array(
-                'name' => 'Expiry Date',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                                if(!empty($data->performerRelatedRights))
-                                    echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
-                            },
-            ),
+                    'name' => 'Expiry Date',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date)) > 1970)
+                    echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
+            },
+                ),
                 array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
@@ -251,7 +252,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
-                <label class="control-label">Search: </label>
+                <label class="control-label">Spotlight Search: </label>
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
@@ -261,7 +262,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 </div>-->
         <?php
 //        $this->endWidget();
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create','type'=>'performer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
+        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer', array('/site/performeraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
     </div>
@@ -281,18 +282,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Perf_Ipi',
 //            'Perf_Identity_Number',
             array(
-                    'header' => 'Pseudonym',
-                    'value' => function($data) {
-                                    if (!empty($data->performerPseudonyms))
-                                        echo $data->performerPseudonyms->Perf_Pseudo_Name;
-                                },
-                ),
+                'header' => 'Pseudonym',
+                'value' => function($data) {
+            if (!empty($data->performerPseudonyms))
+                echo $data->performerPseudonyms->Perf_Pseudo_Name;
+        },
+            ),
             array(
                 'name' => 'Created_Date',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                                    if ($data->performerRelatedRights)
+            if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date)) > 1970)
                 echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date));
         },
             ),
@@ -301,9 +302,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                                if(!empty($data->performerRelatedRights))
-                                    echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
-                            },
+            if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date)) > 1970)
+                echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
+        },
             ),
             array(
                 'name' => 'Active',

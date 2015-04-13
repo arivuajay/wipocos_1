@@ -177,16 +177,17 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'name' => 'Created_Date',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
-                    'value' => function($data) {
-                echo date('Y-m-d', strtotime($data->Created_Date));
-            },
+                   'value' => function($data) {
+            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Entry_Date)) > 1970 )
+                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+        },
                 ),
                 array(
                     'name' => 'Expiry Date',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if (!empty($data->authorManageRights))
+                if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Exit_Date)) > 1970)
                     echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
             },
                 ),
@@ -253,7 +254,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
-                <label class="control-label">Search: </label>
+                <label class="control-label">Spotlight Search: </label>
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
                 <?php // echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
                 <?php // echo $form->error($model, 'record_search'); ?>
@@ -299,7 +300,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'type' => 'raw',
                 'value' => function($data) {
 
-            if ($data->authorManageRights)
+            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Entry_Date)) > 1970)
                 echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
         },
             ),
@@ -308,7 +309,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            if (!empty($data->authorManageRights))
+            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Exit_Date)) > 1970)
                 echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
         },
             ),

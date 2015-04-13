@@ -77,7 +77,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Group_Country_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Group_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Group_Country_Id', $countries, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_Country_Id'); ?>
                                 </div>
 
@@ -89,7 +89,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Group_Language_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_Language_Id'); ?>
                                 </div>
 

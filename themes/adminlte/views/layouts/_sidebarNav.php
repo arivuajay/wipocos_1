@@ -70,7 +70,7 @@
                         array('label' => '<i class="fa fa-suitcase"></i> <span>Works Category</span>', 'url' => array('/site/masterworkscategory/index')),
                     ),
                 ),
-                array('label' => '<i class="fa fa-briefcase"></i> <span>Documents</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                array('label' => '<i class="fa fa-briefcase"></i> <span>Documentation</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
