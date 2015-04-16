@@ -91,7 +91,6 @@ class AuthoraccountController extends Controller {
      */
     public function actionCreate() {
         $model = new AuthorAccount;
-        $address_model = new AuthorAccountAddress;
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
@@ -102,16 +101,14 @@ class AuthoraccountController extends Controller {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
                 $this->redirect('update/id/' . $model->Auth_Acc_Id . '/tab/6');
             }
-        }else{
+        } else {
             $model->Auth_Birth_Country_Id = 2;
-$model->Auth_Nationality_Id = 2;
-$model->Auth_Language_Id = 1;
-
+            $model->Auth_Nationality_Id = 2;
+            $model->Auth_Language_Id = 1;
         }
 
         $this->render('create', array(
             'model' => $model,
-            'address_model' => $address_model,
             'tab' => 1
         ));
     }
@@ -155,7 +152,7 @@ $model->Auth_Language_Id = 1;
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
-             if ($model->save()) {
+            if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/1'));
             }
@@ -179,8 +176,8 @@ $model->Auth_Language_Id = 1;
 
             if ($biograph_model->save()) {
                 GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Auth_Internal_Code}'");
-                if(isset($_POST['group_ids']) && !empty($_POST['group_ids'])){
-                    foreach($_POST['group_ids'] as $gid):
+                if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
+                    foreach ($_POST['group_ids'] as $gid):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
                         $group->Group_Member_Internal_Code = $model->Auth_Internal_Code;
@@ -215,7 +212,7 @@ $model->Auth_Language_Id = 1;
             }
         } elseif (isset($_POST['AuthorUpload'])) {
             $upload_model->attributes = $_POST['AuthorUpload'];
-            if($fileedit == NULL){
+            if ($fileedit == NULL) {
                 $upload_model->setAttribute('Auth_Upl_File', isset($_FILES['AuthorUpload']['name']['Aut_Upl_File']) ? $_FILES['AuthorUpload']['name']['Aut_Upl_File'] : '');
             }
 

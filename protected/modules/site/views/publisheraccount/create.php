@@ -1,10 +1,10 @@
 <?php
-/* @var $this AuthoraccountController */
-/* @var $model AuthorAccount */
+/* @var $this PublisheraccountController */
+/* @var $model PublisherAccount */
 
-$this->title='Create Author';
+$this->title='Create Publishers';
 $this->breadcrumbs=array(
-	'Authors'=>array('index'),
+	'Publishers'=>array('index'),
 	$this->title,
 );
 ?>
