@@ -25,7 +25,7 @@
                                     $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'O'));
                                     $internal_code = $gen_int_code->Fullcode;
                                 }else{
-                                    $internal_code = $model->Perf_Internal_Code;
+                                    $internal_code = $model->Org_Code;
                                 }
                                 ?>
 
