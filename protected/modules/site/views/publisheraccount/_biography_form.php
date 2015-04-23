@@ -9,37 +9,37 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Pub_Acc_Id', array('value' => $publisher_model->Pub_Acc_Id));
-//    $groups = Group::model()->findAll('Group_Is_Author = :publisher', array(':publisher' => '1'));
-//    $group_ids = !$model->isNewRecord ? CHtml::listData($publisher_model->groupMembers,'Group_Member_Id','Group_Id') : array();
+    $groups = PublisherGroup::model()->findAll('Pub_Group_Is_Publisher = :publisher', array(':publisher' => '1'));
+    $group_ids = !$model->isNewRecord ? CHtml::listData($publisher_model->publisherGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Id') : array();
     ?>
     <div class="box-body">
 
-        <!--        <div class="form-group">
-                    <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
-                    <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th style="width: 10px"><?php // echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
-                                <th>Group Name</th>
-                                <th>Code</th>
-                            </tr>
-        <?php // foreach ($groups as $key => $group) { ?>
-                                <tr>
-            <?php // $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : ''; ?>
-                                    <td><input type="checkbox" class="group_ids" name="group_ids[<?php // echo $group->Group_Id ?>]" value="<?php // echo $group->Group_Id ?>" <?php // echo $checked ?> /></td>
-                                    <td><?php // echo $group->Group_Name ?></td>
-                                    <td><?php // echo $group->Group_Internal_Code ?></td>
-                                </tr>
-        <?php // } ?>
-                        </table>
-                    </div>
-                </div>-->
+        <div class="form-group">
+            <label for="GroupMembers_Pub_Group_Id" class="col-sm-2 control-label">Groups </label>
+            <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
+                <table class="table table-bordered">
+                    <tr>
+                        <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
+                        <th>Group Name</th>
+                        <th>Code</th>
+                    </tr>
+                    <?php foreach ($groups as $key => $group) { ?>
+                        <tr>
+                            <?php $checked = (!empty($group_ids) && in_array($group->Pub_Group_Id, $group_ids)) ? 'checked' : ''; ?>
+                            <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Pub_Group_Id?>]" value="<?php echo $group->Pub_Group_Id?>" <?php echo $checked?> /></td>
+                            <td><?php echo $group->Pub_Group_Name ?></td>
+                            <td><?php echo $group->Pub_Group_Internal_Code ?></td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+        </div>
 
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Pub_Managers', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-            <?php echo $form->textField($model, 'Pub_Managers', array('class' => 'form-control')); ?>
-            <?php echo $form->error($model, 'Pub_Managers'); ?>
+                <?php echo $form->textField($model, 'Pub_Managers', array('class' => 'form-control')); ?>
+                <?php echo $form->error($model, 'Pub_Managers'); ?>
             </div>
         </div>
 

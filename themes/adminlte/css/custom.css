@@ -41,3 +41,10 @@ and open the template in the editor.
 #advance-search-block #advance-search-form{
     display: none;
 }
+
+.boxdivs{
+    clear:both;
+    float:left;
+    width: 102% !important;
+    margin-left: -10px !important;
+}

@@ -42,6 +42,13 @@ class PublisherAccount extends CActiveRecord {
         return '{{publisher_account}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -78,6 +85,9 @@ class PublisherAccount extends CActiveRecord {
             'publisherPseudonyms' => array(self::HAS_MANY, 'PublisherPseudonym', 'Pub_Acc_Id'),
             'publisherRelatedRights' => array(self::HAS_MANY, 'PublisherRelatedRights', 'Pub_Acc_Id'),
             'publisherSuccessions' => array(self::HAS_MANY, 'PublisherSuccession', 'Pub_Acc_Id'),
+            'publisherGroupMembers' => array(self::HAS_MANY, 'PublisherGroupMembers', 'Pub_Group_Member_Internal_Code',
+                'foreignKey' => array('Pub_Group_Member_Internal_Code' => 'Pub_Internal_Code')
+            ),
         );
     }
 

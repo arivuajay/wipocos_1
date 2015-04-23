@@ -1,30 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{publisher_payment_method}}".
+ * This is the model class for table "{{publisher_group_original_publisher}}".
  *
- * The followings are the available columns in table '{{publisher_payment_method}}':
- * @property integer $Pub_Pay_Id
- * @property integer $Pub_Acc_Id
- * @property integer $Pub_Pay_Method_id
- * @property string $Pub_Bank_Account
- * @property string $Pub_Bank_Code
- * @property string $Pub_Bank_Branch
- * @property string $Active
+ * The followings are the available columns in table '{{publisher_group_original_publisher}}':
+ * @property integer $Pub_Group_Org_Id
+ * @property integer $Pub_Group_Id
+ * @property string $Pub_Group_Org_IPI_Name_Number
+ * @property string $Pub_Group_Org_IPI_Base_Number
+ * @property string $Pub_Group_Org_Internal_Code
+ * @property string $Pub_Group_Org_Name
  * @property string $Created_Date
  * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property PublisherAccount $pubAcc
- * @property MasterPaymentMethod $pubPayMethod
+ * @property PublisherGroup $pubGroup
  */
-class PublisherPaymentMethod extends CActiveRecord {
+class PublisherGroupOriginalPublisher extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{publisher_payment_method}}';
+        return '{{publisher_group_original_publisher}}';
     }
 
     /**
@@ -34,14 +32,13 @@ class PublisherPaymentMethod extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch', 'required'),
-            array('Pub_Acc_Id, Pub_Pay_Method_id', 'numerical', 'integerOnly' => true),
-            array('Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch', 'length', 'max' => 255),
-            array('Active', 'length', 'max' => 1),
+            array('Pub_Group_Id, Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_IPI_Base_Number, Pub_Group_Org_Internal_Code, Pub_Group_Org_Name', 'required'),
+            array('Pub_Group_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_IPI_Base_Number, Pub_Group_Org_Internal_Code, Pub_Group_Org_Name', 'length', 'max' => 100),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Pay_Id, Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Pub_Group_Org_Id, Pub_Group_Id, Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_IPI_Base_Number, Pub_Group_Org_Internal_Code, Pub_Group_Org_Name, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -52,8 +49,7 @@ class PublisherPaymentMethod extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
-            'pubPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Pub_Pay_Method_id'),
+            'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
         );
     }
 
@@ -62,13 +58,12 @@ class PublisherPaymentMethod extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Pub_Pay_Id' => 'Pay',
-            'Pub_Acc_Id' => 'Acc',
-            'Pub_Pay_Method_id' => 'Pay Method',
-            'Pub_Bank_Account' => 'Bank Account',
-            'Pub_Bank_Code' => 'Bank Code',
-            'Pub_Bank_Branch' => 'Bank Branch',
-            'Active' => 'Active',
+            'Pub_Group_Org_Id' => 'Pub Group Org',
+            'Pub_Group_Id' => 'Pub Group',
+            'Pub_Group_Org_IPI_Name_Number' => 'IPI Name Number',
+            'Pub_Group_Org_IPI_Base_Number' => 'IPI Base Number',
+            'Pub_Group_Org_Internal_Code' => 'Internal Code',
+            'Pub_Group_Org_Name' => 'Publisher Name',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );
@@ -91,13 +86,12 @@ class PublisherPaymentMethod extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Pub_Pay_Id', $this->Pub_Pay_Id);
-        $criteria->compare('Pub_Acc_Id', $this->Pub_Acc_Id);
-        $criteria->compare('Pub_Pay_Method_id', $this->Pub_Pay_Method_id);
-        $criteria->compare('Pub_Bank_Account', $this->Pub_Bank_Account, true);
-        $criteria->compare('Pub_Bank_Code', $this->Pub_Bank_Code, true);
-        $criteria->compare('Pub_Bank_Branch', $this->Pub_Bank_Branch, true);
-        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Pub_Group_Org_Id', $this->Pub_Group_Org_Id);
+        $criteria->compare('Pub_Group_Id', $this->Pub_Group_Id);
+        $criteria->compare('Pub_Group_Org_IPI_Name_Number', $this->Pub_Group_Org_IPI_Name_Number, true);
+        $criteria->compare('Pub_Group_Org_IPI_Base_Number', $this->Pub_Group_Org_IPI_Base_Number, true);
+        $criteria->compare('Pub_Group_Org_Internal_Code', $this->Pub_Group_Org_Internal_Code, true);
+        $criteria->compare('Pub_Group_Org_Name', $this->Pub_Group_Org_Name, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
@@ -113,7 +107,7 @@ class PublisherPaymentMethod extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return PublisherPaymentMethod the static model class
+     * @return PublisherGroupOriginalPublisher the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

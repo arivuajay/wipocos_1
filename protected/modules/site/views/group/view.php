@@ -18,7 +18,6 @@ $this->breadcrumbs=array(
 	'data'=>$model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
 	'attributes'=>array(
-		'Group_Id',
 		'Group_Name',
                 array(
                 'name' => 'Group_Is_Author',

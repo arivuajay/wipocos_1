@@ -6,6 +6,13 @@ $this->title = 'Groups';
 $this->breadcrumbs = array(
     'Groups',
 );
+
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
 <div class="col-lg-12 col-md-12">
     <div class="row">
@@ -66,7 +73,7 @@ $this->breadcrumbs = array(
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Group_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Group_Date', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Group_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Group_Date'); ?>
                         </div>
                     </div>
@@ -245,3 +252,11 @@ $this->breadcrumbs = array(
         ?>
     </div>
 </div>
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('index', $js);
+?>
