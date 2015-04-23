@@ -171,6 +171,7 @@ $(function() {
              baseTable.fnFilter( $(this).val() );
         });
     }
+    
 });
 
 function setHeight(){
