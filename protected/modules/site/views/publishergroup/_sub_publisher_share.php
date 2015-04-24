@@ -10,7 +10,7 @@ $form = $this->beginWidget('CActiveForm', array(
 echo $form->hiddenField($model, 'Pub_Group_Id', array('value' => $group_model->Pub_Group_Id));
 ?>
 <div class="box-body col-lg-6">
-    <h4>Share of Original Publisher</h4>
+    <h4>Share of Sub Publisher</h4>
     <div class="form-group">
         <?php echo $form->labelEx($model, 'Pub_Group_Sub_Share_Broadcast', array('class' => 'col-sm-4 control-label')); ?>
         <div class="col-sm-6">

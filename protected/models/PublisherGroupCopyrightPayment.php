@@ -37,6 +37,11 @@ class PublisherGroupCopyrightPayment extends CActiveRecord {
             array('Pub_Group_Pay_Copy_Id, Pub_Group_Pay_Copy_Rate', 'length', 'max' => 10),
             array('Pub_Group_Pay_Copy_Payee', 'length', 'max' => 100),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Group_Pay_Copy_Payee',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Pay_Copy_Id, Pub_Group_Id, Pub_Group_Pay_Copy_Payee, Pub_Group_Pay_Copy_Rate, Pub_Group_Pay_Copy_Pay_Method, Pub_Group_Pay_Copy_Bank_Account, Created_Date, Rowversion', 'safe', 'on' => 'search'),

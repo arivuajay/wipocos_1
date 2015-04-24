@@ -36,6 +36,11 @@ class PublisherBiography extends CActiveRecord {
             array('Pub_Managers', 'length', 'max' => 500),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Biogrph_Annotation',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Biogrph_Id, Pub_Acc_Id, Pub_Managers, Pub_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),

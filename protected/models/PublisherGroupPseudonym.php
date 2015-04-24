@@ -37,6 +37,11 @@ class PublisherGroupPseudonym extends CActiveRecord {
             array('Pub_Group_Pseudo_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Group_Pseudo_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Pseudo_Id, Pub_Group_Id, Pub_Group_Pseudo_Type_Id, Pub_Group_Pseudo_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),

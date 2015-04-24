@@ -101,4 +101,15 @@ class Myclass extends CController {
 
         return $gender;
     }
+    
+    public static function getGroupClause($key = NULL){
+        $clause = array(
+            'M' => 'Made',
+            'S' => 'Sale'
+        );
+        if(isset($key) && $key != NULL)
+            return $clause[$key];
+
+        return $clause;
+    }
 }

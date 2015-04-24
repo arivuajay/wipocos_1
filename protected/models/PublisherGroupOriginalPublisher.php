@@ -36,6 +36,11 @@ class PublisherGroupOriginalPublisher extends CActiveRecord {
             array('Pub_Group_Id', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_IPI_Base_Number, Pub_Group_Org_Internal_Code, Pub_Group_Org_Name', 'length', 'max' => 100),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Org_Id, Pub_Group_Id, Pub_Group_Org_IPI_Name_Number, Pub_Group_Org_IPI_Base_Number, Pub_Group_Org_Internal_Code, Pub_Group_Org_Name, Created_Date, Rowversion', 'safe', 'on' => 'search'),

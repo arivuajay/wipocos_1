@@ -34,7 +34,7 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
-                    <div class="box-primary">
+                    <div class="box-primary box">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'publisher-account-form',

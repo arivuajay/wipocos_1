@@ -112,8 +112,13 @@ class PublishergroupController extends Controller {
         $sub_share_publisher_model = empty($sub_share_publisher_exists) ? new PublisherGroupSubShare : $sub_share_publisher_exists;
         
         $catalog_exists = PublisherGroupCatalogue::model()->findByAttributes(array('Pub_Group_Id' => $id));
-        $catalog_model = empty($catalog_exists) ? new PublisherGroupCatalogue : $catalog_exists;
-
+        if(empty($catalog_exists)){
+            $catalog_model = new PublisherGroupCatalogue('create');
+        }else{
+            $catalog_model = $catalog_exists;
+            $catalog_model->setScenario('update');
+        }
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $managed_model, $payment_model, $rel_payment_model, $biograph_model, 
             $psedonym_model, $address_model, $org_publisher_model, $sub_publisher_model, $org_publisher_model,
@@ -202,6 +207,22 @@ class PublishergroupController extends Controller {
             if ($sub_share_publisher_model->save()) {
                 Yii::app()->user->setFlash('success', 'Sub Publisher Share Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $sub_share_publisher_model->Pub_Group_Id . '/tab/8'));
+            }
+        } elseif (isset($_POST['PublisherGroupCatalogue'])) {
+            $catalog_model->attributes = $_POST['PublisherGroupCatalogue'];
+            if($_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']){
+                $catalog_model->setAttribute('Pub_Group_Cat_File', $_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']);
+            }
+
+            if ($catalog_model->validate()) {
+                $catalog_model->setUploadDirectory(UPLOAD_DIR);
+                $catalog_model->uploadFile();
+                if ($catalog_model->save()) {
+                    Yii::app()->user->setFlash('success', 'Subcontracted Catalogue Saved Successfully!!!');
+                    $this->redirect(array('publishergroup/update/id/' . $catalog_model->Pub_Group_Id . '/tab/8'));
+                }
+            }else{
+                $tab = 8;
             }
         }
 

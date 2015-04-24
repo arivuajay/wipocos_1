@@ -1,4 +1,4 @@
-<div class="box-primary">
+<div class="box-primary box">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'author-related-rights-form',

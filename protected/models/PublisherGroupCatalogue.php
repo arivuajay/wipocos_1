@@ -23,6 +23,8 @@
  * @property MasterTerritories $pubGroupCatTerritory
  */
 class PublisherGroupCatalogue extends CActiveRecord {
+    const FILE_SIZE = 1;
+
 
     /**
      * @return string the associated database table name
@@ -38,12 +40,20 @@ class PublisherGroupCatalogue extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Id, Pub_Group_Cat_Number, Pub_Group_Cat_Start_Date, Pub_Group_Cat_End_Date, Pub_Group_Cat_Name, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Sign_Date, Pub_Group_Cat_File', 'required'),
+            array('Pub_Group_Id, Pub_Group_Cat_Number, Pub_Group_Cat_Start_Date, Pub_Group_Cat_End_Date, Pub_Group_Cat_Name, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Sign_Date', 'required'),
             array('Pub_Group_Id, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Reference', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Cat_Number, Pub_Group_Cat_Name', 'length', 'max' => 100),
             array('Pub_Group_Cat_Clasue', 'length', 'max' => 4),
             array('Pub_Group_Cat_File', 'length', 'max' => 255),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Group_Cat_Number, Pub_Group_Cat_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
+            array('Pub_Group_Cat_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
+            array('Pub_Group_Cat_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
+            array('Pub_Group_Cat_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Cat_Id, Pub_Group_Id, Pub_Group_Cat_Number, Pub_Group_Cat_Start_Date, Pub_Group_Cat_End_Date, Pub_Group_Cat_Name, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Clasue, Pub_Group_Cat_Sign_Date, Pub_Group_Cat_File, Pub_Group_Cat_Reference, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -138,6 +148,15 @@ class PublisherGroupCatalogue extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Pub_Group_Cat_File',
+            )
+        );
     }
 
 }

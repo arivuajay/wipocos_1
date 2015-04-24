@@ -36,6 +36,11 @@ class PublisherSuccession extends CActiveRecord {
             array('Pub_Suc_Name', 'length', 'max' => 255),
             array('Pub_Suc_Address_1, Pub_Suc_Address_2', 'length', 'max' => 500),
             array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation', 'safe'),
+            array(
+                'Pub_Suc_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Suc_Id, Pub_Acc_Id, Pub_Suc_Date_Transfer, Pub_Suc_Name, Pub_Suc_Address_1, Pub_Suc_Address_2, Pub_Suc_Annotation', 'safe', 'on' => 'search'),

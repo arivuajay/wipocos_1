@@ -60,6 +60,11 @@ class PublisherGroupRepresentative extends CActiveRecord {
             array('Pub_Group_Unknown_Address, Active', 'length', 'max' => 1),
             array('Pub_Group_Home_Email, Pub_Group_Mailing_Email', 'email'),
             array('Created_Date, Rowversion', 'safe'),
+            array(
+                'Pub_Group_Rep_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Invalid characters',
+            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Addr_Id, Pub_Group_Id, Pub_Group_Rep_Name, Pub_Group_Rep_Address_1, Pub_Group_Rep_Address_2, Pub_Group_Rep_Address_3, Pub_Group_Rep_Address_4, Pub_Group_Home_Address_1, Pub_Group_Home_Address_2, Pub_Group_Home_Address_3, Pub_Group_Home_Address_4, Pub_Group_Home_Fax, Pub_Group_Home_Telephone, Pub_Group_Home_Email, Pub_Group_Home_Website, Pub_Group_Mailing_Address_1, Pub_Group_Mailing_Address_2, Pub_Group_Mailing_Address_3, Pub_Group_Mailing_Address_4, Pub_Group_Mailing_Telephone, Pub_Group_Mailing_Fax, Pub_Group_Mailing_Email, Pub_Group_Mailing_Website, Pub_Group_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
