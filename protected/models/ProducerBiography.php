@@ -1,27 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "{{publisher_biography}}".
+ * This is the model class for table "{{producer_biography}}".
  *
- * The followings are the available columns in table '{{publisher_biography}}':
- * @property integer $Pub_Biogrph_Id
- * @property integer $Pub_Acc_Id
- * @property string $Pub_Managers
- * @property string $Pub_Biogrph_Annotation
+ * The followings are the available columns in table '{{producer_biography}}':
+ * @property integer $Pro_Biogrph_Id
+ * @property integer $Pro_Acc_Id
+ * @property string $Pro_Managers
+ * @property string $Pro_Biogrph_Annotation
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property PublisherAccount $pubAcc
+ * @property ProducerAccount $proAcc
  */
-class PublisherBiography extends CActiveRecord {
+class ProducerBiography extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{publisher_biography}}';
+        return '{{producer_biography}}';
     }
 
     /**
@@ -31,19 +31,14 @@ class PublisherBiography extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id, Pub_Biogrph_Annotation', 'required'),
-            array('Pub_Acc_Id', 'numerical', 'integerOnly' => true),
-            array('Pub_Managers', 'length', 'max' => 500),
+            array('Pro_Acc_Id, Pro_Biogrph_Annotation', 'required'),
+            array('Pro_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Managers', 'length', 'max' => 500),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
-            array(
-                'Pub_Biogrph_Annotation',
-                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Only Alphabets are allowed ',
-            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Biogrph_Id, Pub_Acc_Id, Pub_Managers, Pub_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Pro_Biogrph_Id, Pro_Acc_Id, Pro_Managers, Pro_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -54,7 +49,7 @@ class PublisherBiography extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
+            'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
         );
     }
 
@@ -63,10 +58,10 @@ class PublisherBiography extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Pub_Biogrph_Id' => 'Biogrph',
-            'Pub_Acc_Id' => 'Acc',
-            'Pub_Managers' => 'Managers',
-            'Pub_Biogrph_Annotation' => 'Annotation',
+            'Pro_Biogrph_Id' => 'Biogrph',
+            'Pro_Acc_Id' => 'Acc',
+            'Pro_Managers' => 'Managers',
+            'Pro_Biogrph_Annotation' => 'Annotation',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -90,10 +85,10 @@ class PublisherBiography extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Pub_Biogrph_Id', $this->Pub_Biogrph_Id);
-        $criteria->compare('Pub_Acc_Id', $this->Pub_Acc_Id);
-        $criteria->compare('Pub_Managers', $this->Pub_Managers, true);
-        $criteria->compare('Pub_Biogrph_Annotation', $this->Pub_Biogrph_Annotation, true);
+        $criteria->compare('Pro_Biogrph_Id', $this->Pro_Biogrph_Id);
+        $criteria->compare('Pro_Acc_Id', $this->Pro_Acc_Id);
+        $criteria->compare('Pro_Managers', $this->Pro_Managers, true);
+        $criteria->compare('Pro_Biogrph_Annotation', $this->Pro_Biogrph_Annotation, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -110,7 +105,7 @@ class PublisherBiography extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return PublisherBiography the static model class
+     * @return ProducerBiography the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

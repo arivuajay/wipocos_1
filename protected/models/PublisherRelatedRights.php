@@ -47,7 +47,7 @@ class PublisherRelatedRights extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Entry_Date, Pub_Rel_Internal_Position_Id, Pub_Rel_Entry_Date_2, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id', 'required'),
+            array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Entry_Date, Pub_Rel_Internal_Position_Id, Pub_Rel_Entry_Date_2, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id, Pub_Rel_Type_Rght_Id', 'required'),
             array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Internal_Position_Id, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id', 'numerical', 'integerOnly' => true),
             array('Pub_Rel_File', 'length', 'max' => 255),
             array('Pub_Rel_Duration', 'length', 'max' => 100),
@@ -93,8 +93,8 @@ class PublisherRelatedRights extends CActiveRecord {
             'Pub_Rel_Profession_Id' => 'Profession',
             'Pub_Rel_File' => 'Physical File Location',
             'Pub_Rel_Duration' => 'Duration',
-            'Pub_Rel_Avl_Work_Cat_Id' => 'Work Category',
-            'Pub_Rel_Type_Rght_Id' => 'RightHolder Type',
+            'Pub_Rel_Avl_Work_Cat_Id' => 'Sector',
+            'Pub_Rel_Type_Rght_Id' => 'Type of Right Holder',
             'Pub_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Pub_Rel_Territories_Id' => 'Territories',
         );

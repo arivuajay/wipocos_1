@@ -1,8 +1,8 @@
 <?php
 /* @var $this PublishergroupController */
 /* @var $model PublisherGroup */
-
-$this->title='Create Publisher Groups';
+$g_type = ucfirst($type);
+$this->title="Create {$g_type} Groups";
 $this->breadcrumbs=array(
 	'Publisher Groups'=>array('index'),
 	$this->title,

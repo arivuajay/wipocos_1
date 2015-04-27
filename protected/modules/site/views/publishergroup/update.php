@@ -2,7 +2,12 @@
 /* @var $this PublishergroupController */
 /* @var $model PublisherGroup */
 
-$this->title='Update Publisher Groups: '. $model->Pub_Group_Id;
+if($model->Pub_Group_Is_Publisher == '1'){
+    $g_type = 'Publisher';
+}else{
+    $g_type = 'Producer';
+}
+$this->title="Update {$g_type} Groups: {$model->Pub_Group_Id}";
 $this->breadcrumbs=array(
 	'Publisher Groups'=>array('index'),
 	'Update Publisher Groups',

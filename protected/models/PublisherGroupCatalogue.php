@@ -49,7 +49,7 @@ class PublisherGroupCatalogue extends CActiveRecord {
             array(
                 'Pub_Group_Cat_Number, Pub_Group_Cat_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
+                'message' => 'Only Alphabets are allowed ',
             ),
             array('Pub_Group_Cat_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
             array('Pub_Group_Cat_File', 'file', 'allowEmpty' => false, 'on' => 'create'),

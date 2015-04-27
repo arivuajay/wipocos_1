@@ -62,11 +62,11 @@ class PublisherAccount extends CActiveRecord {
             array('Active', 'length', 'max' => 1),
             array('Pub_Internal_Code, Pub_Corporate_Name', 'unique'),
             array('Pub_Reg_Date, Pub_Excerpt_Date, Created_Date, Rowversion', 'safe'),
-            array(
-                'Pub_Corporate_Name',
-                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
-            ),
+//            array(
+//                'Pub_Corporate_Name',
+//                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+//                'message' => 'Only Alphabets are allowed ',
+//            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Acc_Id, Pub_Corporate_Name, Pub_Internal_Code, Pub_Ipi, Pub_Ipi_Base_Number, Pub_Date, Pub_Place, Pub_Country_Id, Pub_Legal_Form_id, Pub_Reg_Date, Pub_Reg_Number, Pub_Excerpt_Date, Pub_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -104,7 +104,7 @@ class PublisherAccount extends CActiveRecord {
             'Pub_Acc_Id' => 'Publisher',
             'Pub_Corporate_Name' => 'Corporate Name',
             'Pub_Internal_Code' => 'Internal Code',
-            'Pub_Ipi' => 'IPI Number',
+            'Pub_Ipi' => 'IPI Name Number',
             'Pub_Ipi_Base_Number' => 'IPI Base Number',
             'Pub_Date' => 'Date',
             'Pub_Place' => 'Place',

@@ -63,7 +63,7 @@ class PublisherGroupRepresentative extends CActiveRecord {
             array(
                 'Pub_Group_Rep_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
+                'message' => 'Only Alphabets are allowed ',
             ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

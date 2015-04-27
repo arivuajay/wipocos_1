@@ -34,14 +34,14 @@ class PublisherPaymentMethod extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch', 'required'),
+            array('Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account', 'required'),
             array('Pub_Acc_Id, Pub_Pay_Method_id', 'numerical', 'integerOnly' => true),
-            array('Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch', 'length', 'max' => 255),
+            array('Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Pub_Pay_Address, Pub_Pay_Iban, Pub_Pay_Swift', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Pay_Id, Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Pub_Pay_Id, Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Active, Created_Date, Rowversion, Pub_Pay_Address, Pub_Pay_Iban, Pub_Pay_Swift', 'safe', 'on' => 'search'),
         );
     }
 
@@ -64,10 +64,13 @@ class PublisherPaymentMethod extends CActiveRecord {
         return array(
             'Pub_Pay_Id' => 'Pay',
             'Pub_Acc_Id' => 'Acc',
-            'Pub_Pay_Method_id' => 'Pay Method',
+            'Pub_Pay_Method_id' => 'Method',
             'Pub_Bank_Account' => 'Bank Account',
             'Pub_Bank_Code' => 'Bank Code',
             'Pub_Bank_Branch' => 'Bank Branch',
+            'Pub_Pay_Address' => 'Address',
+            'Pub_Pay_Iban' => 'IBAN',
+            'Pub_Pay_Swift' => 'SWIFT-BIC',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

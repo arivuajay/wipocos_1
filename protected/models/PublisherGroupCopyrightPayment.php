@@ -40,7 +40,7 @@ class PublisherGroupCopyrightPayment extends CActiveRecord {
             array(
                 'Pub_Group_Pay_Copy_Payee',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
+                'message' => 'Only Alphabets are allowed ',
             ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

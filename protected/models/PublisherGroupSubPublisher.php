@@ -39,7 +39,7 @@ class PublisherGroupSubPublisher extends CActiveRecord {
             array(
                 'Pub_Group_Sub_Name, Pub_Group_Sub_IPI_Name_Number',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
+                'message' => 'Only Alphabets are allowed ',
             ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

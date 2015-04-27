@@ -1,10 +1,10 @@
 <?php
-/* @var $this PublisheraccountController */
+/* @var $this ProduceraccountController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Publishers';
+$this->title = 'Producers';
 $this->breadcrumbs = array(
-    'Publishers',
+    'Producers',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -33,93 +33,93 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'search-form',
                         'method' => 'get',
-                        'action' => array('/site/publisheraccount/index'),
+                        'action' => array('/site/produceraccount/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
                     ?>
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Corporate_Name', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Corporate_Name'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Corporate_Name', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Corporate_Name'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Internal_Code', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Internal_Code'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Internal_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Internal_Code'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Ipi', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Ipi', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Ipi'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Ipi', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Ipi', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Ipi'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Ipi_Base_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Ipi_Base_Number', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Ipi_Base_Number'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Ipi_Base_Number', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Ipi_Base_Number', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Ipi_Base_Number'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Date', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Date'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Date', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Date'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Place', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Place'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Place', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Place'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Country_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Country_Id', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Country_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Country_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Country_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Country_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Legal_Form_id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Legal_Form_id', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Legal_Form_id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Legal_Form_id', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Legal_Form_id', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Legal_Form_id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Reg_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Reg_Date', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Reg_Date'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Reg_Date', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Reg_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Reg_Date'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Reg_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Reg_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Reg_Number'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Reg_Number', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Reg_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Reg_Number'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Excerpt_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Excerpt_Date', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Excerpt_Date'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Excerpt_Date', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Excerpt_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Excerpt_Date'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Language_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Language_Id', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Language_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Pro_Language_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Pro_Language_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Pro_Language_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -156,19 +156,19 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'class' => 'IndexColumn',
                     'header' => '',
                 ),
-                'Pub_Corporate_Name',
-                'Pub_Internal_Code',
-                'Pub_Ipi',
-                'Pub_Ipi_Base_Number',
-                'Pub_Date',
-                'Pub_Place',
+                'Pro_Corporate_Name',
+                'Pro_Internal_Code',
+                'Pro_Ipi',
+                'Pro_Ipi_Base_Number',
+                'Pro_Date',
+                'Pro_Place',
                 /*
-                  'Pub_Country_Id',
-                  'Pub_Legal_Form_id',
-                  'Pub_Reg_Date',
-                  'Pub_Reg_Number',
-                  'Pub_Excerpt_Date',
-                  'Pub_Language_Id',
+                  'Pro_Country_Id',
+                  'Pro_Legal_Form_id',
+                  'Pro_Reg_Date',
+                  'Pro_Reg_Number',
+                  'Pro_Excerpt_Date',
+                  'Pro_Language_Id',
                   array(
                   'name' => 'Active',
                   'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -202,8 +202,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create/type/publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher', array('/site/publisheraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create/type/producer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer', array('/site/produceraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -215,19 +215,19 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
-            'Pub_Corporate_Name',
-            'Pub_Internal_Code',
-            'Pub_Ipi',
-            'Pub_Ipi_Base_Number',
-            'Pub_Date',
-            'Pub_Place',
+            'Pro_Corporate_Name',
+            'Pro_Internal_Code',
+            'Pro_Ipi',
+            'Pro_Ipi_Base_Number',
+            'Pro_Date',
+            'Pro_Place',
             /*
-              'Pub_Country_Id',
-              'Pub_Legal_Form_id',
-              'Pub_Reg_Date',
-              'Pub_Reg_Number',
-              'Pub_Excerpt_Date',
-              'Pub_Language_Id',
+              'Pro_Country_Id',
+              'Pro_Legal_Form_id',
+              'Pro_Reg_Date',
+              'Pro_Reg_Number',
+              'Pro_Excerpt_Date',
+              'Pro_Language_Id',
               array(
               'name' => 'Active',
               'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -249,7 +249,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publishers</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Producers</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

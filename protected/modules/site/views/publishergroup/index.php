@@ -2,9 +2,9 @@
 /* @var $this PublishergroupController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Publisher Groups';
+$this->title = 'Publisher/Producer Groups';
 $this->breadcrumbs = array(
-    'Publisher Groups',
+    'Publisher/Producer Groups',
 );
 
 $themeUrl = $this->themeUrl;
@@ -259,7 +259,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publisher Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publisher/Producer Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

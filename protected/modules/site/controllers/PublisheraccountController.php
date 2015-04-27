@@ -74,7 +74,7 @@ class PublisheraccountController extends Controller {
             $model->attributes = $_POST['PublisherAccount'];
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'PublisherAccount Created Successfully!!!');
-                $this->redirect(array('publisheraccount/update/id/' . $model->Pub_Acc_Id . '/tab/1'));
+                $this->redirect(array('publisheraccount/update/id/' . $model->Pub_Acc_Id . '/tab/6'));
             }
         } else {
             $model->Pub_Country_Id = 2;

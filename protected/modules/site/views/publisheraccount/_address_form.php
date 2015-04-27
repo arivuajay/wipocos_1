@@ -15,6 +15,7 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Pub_Acc_Id', array('value' => $publisher_model->Pub_Acc_Id));
+    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
     ?>
     <div class="col-lg-5 col-xs-5">
         <div class="box-body">
@@ -53,7 +54,7 @@
                 <?php echo $form->error($model, 'Pub_Mailing_Address_3'); ?>
             </div>
 
-            <div class="form-group">
+<!--            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Publisher_Account_1', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Pub_Publisher_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Publisher_Account_1'); ?>
@@ -69,12 +70,18 @@
                 <?php echo $form->labelEx($model, 'Pub_Publisher_Account_3', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Pub_Publisher_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Publisher_Account_3'); ?>
-            </div>
+            </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Unknown_Address', array('class' => '')); ?><br />
                 <?php echo $form->checkBox($model, 'Pub_Unknown_Address', array('class' => 'form-control', 'checked' => $model->Pub_Unknown_Address == 'Y' ? true : false)); ?>
                 <?php echo $form->error($model, 'Pub_Unknown_Address'); ?>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'Pub_Addr_Country_Id', array('class' => '')); ?><br />
+                <?php echo $form->dropDownList($model, 'Pub_Addr_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->error($model, 'Pub_Addr_Country_Id'); ?>
             </div>
 
         </div>
@@ -131,7 +138,7 @@
                 <?php echo $form->error($model, 'Pub_Mailing_Website'); ?>
             </div>
 
-            <div class="form-group">
+<!--            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Producer_Account_1', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Pub_Producer_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Producer_Account_1'); ?>
@@ -147,7 +154,7 @@
                 <?php echo $form->labelEx($model, 'Pub_Producer_Account_3', array('class' => '')); ?>
                 <?php echo $form->textField($model, 'Pub_Producer_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Producer_Account_3'); ?>
-            </div>
+            </div>-->
         </div>
     </div>
 

@@ -1,3 +1,14 @@
+<?php 
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
+?>
+
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -13,16 +24,25 @@
     $group_ids = !$model->isNewRecord ? CHtml::listData($author_model->groupMembers,'Group_Member_Id','Group_Id') : array();
     ?>
     <div class="box-body">
+         <div class="form-group">
+            <label for="base_table_search" class="col-sm-2 control-label required">Search</label>                    
+            <div class="col-sm-5">
+                <input type="text" id="base_table_search" class="form-control">
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-datatable">
+                    <thead>
                     <tr>
                         <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id'))?></th>
                         <th>Group Name</th>
                         <th>Code</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     <?php foreach ($groups as $key => $group) {?>
                     <tr>
                         <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : '';?>
@@ -31,6 +51,7 @@
                         <td><?php echo $group->Group_Internal_Code?></td>
                     </tr>
                     <?php }?>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -47,7 +68,7 @@
     <div class="box-footer">
         <div class="form-group">
             <div class="col-sm-0 col-sm-offset-2">
-                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('id' => 'member-submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
     </div>
@@ -61,6 +82,11 @@ $js = <<< EOD
         });
         $('#group_id').on('ifUnchecked', function(event){
             $('.group_ids').iCheck('uncheck');
+        });
+        
+        $('#member-submit').click(function(ev) {
+            $("#base_table_search").val('').trigger("keyup");
+            return true;
         });
     });
 EOD;

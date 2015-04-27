@@ -31,7 +31,7 @@ class PublisherSuccession extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id', 'required'),
+            array('Pub_Acc_Id, Pub_Suc_Name, Pub_Suc_Address_1, Pub_Suc_Annotation', 'required'),
             array('Pub_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Pub_Suc_Name', 'length', 'max' => 255),
             array('Pub_Suc_Address_1, Pub_Suc_Address_2', 'length', 'max' => 500),
@@ -39,7 +39,7 @@ class PublisherSuccession extends CActiveRecord {
             array(
                 'Pub_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
+                'message' => 'Only Alphabets are allowed ',
             ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

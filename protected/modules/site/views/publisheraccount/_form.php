@@ -27,9 +27,9 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                 <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Address</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Payment</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Marks, Series <br />and Cross-references</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Marks, Series & Cross-references</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
+                <!--<li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
                 <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Succession</a></li>
             </ul>
             <div class="tab-content">
@@ -166,28 +166,28 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
                         $this->renderPartial('_address_form', array('model' => $address_model, 'publisher_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
                         $this->renderPartial('_payment_form', array('model' => $payment_model, 'publisher_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'publisher_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
                         $this->renderPartial('_pseudonym_form', array('model' => $psedonym_model, 'publisher_model' => $model));
                     }
                     ?>
@@ -199,16 +199,16 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                     }
                     ?>
                 </div>
-                <div class="tab-pane" id="tab_7">
+<!--                <div class="tab-pane" id="tab_7">
                     <?php
-                    if (!$model->isNewRecord) {
-                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'publisher_model' => $model, 'regions' => $regions));
-                    }
+//                    if (!$model->isNewRecord) {
+//                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'publisher_model' => $model, 'regions' => $regions));
+//                    }
                     ?>
-                </div>
+                </div>-->
                 <div class="tab-pane" id="tab_8">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
                         $this->renderPartial('_succession_form', array('model' => $succession_model, 'publisher_model' => $model));
                     }
                     ?>

@@ -54,13 +54,13 @@ class PublisherGroup extends CActiveRecord {
             array('Pub_Group_Name, Pub_Group_Place', 'length', 'max' => 100),
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
-            array('Pub_Group_Internal_Code', 'unique'),
+            array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
             array('Rowversion', 'safe'),
-            array(
-                'Pub_Group_Name',
-                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
-                'message' => 'Invalid characters',
-            ),
+//            array(
+//                'Pub_Group_Name',
+//                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+//                'message' => 'Only Alphabets are allowed ',
+//            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Id, Pub_Group_Name, Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Pub_Group_Internal_Code, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Date, Pub_Group_Place, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),

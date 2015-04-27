@@ -11,16 +11,16 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'performer-biography-form',
+        'id' => 'producer-biography-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
         ),
         'enableAjaxValidation' => true,
     ));
-    echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
-    $groups = Group::model()->findAll('Group_Is_Performer = :performer', array(':performer' => '1'));
-    $group_ids = !$model->isNewRecord ? CHtml::listData($performer_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
+    echo $form->hiddenField($model, 'Pro_Acc_Id', array('value' => $producer_model->Pro_Acc_Id));
+    $groups = PublisherGroup::model()->findAll('Pub_Group_Is_Publisher = :producer', array(':producer' => '1'));
+    $group_ids = !$model->isNewRecord ? CHtml::listData($producer_model->producerGroupMembers, 'Pro_Group_Member_Id', 'Pro_Group_Id') : array();
     ?>
     <div class="box-body">
         <div class="form-group">
@@ -29,9 +29,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <input type="text" id="base_table_search" class="form-control">
             </div>
         </div>
-        
+
         <div class="form-group">
-            <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
+            <label for="GroupMembers_Pro_Group_Id" class="col-sm-2 control-label">Affiliated Groups </label>
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
                 <table class="table table-bordered table-datatable">
                     <thead>
@@ -44,10 +44,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <tbody>
                     <?php foreach ($groups as $key => $group) { ?>
                         <tr>
-                            <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : ''; ?>
-                            <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id ?>]" value="<?php echo $group->Group_Id ?>" <?php echo $checked ?> /></td>
-                            <td><?php echo $group->Group_Name ?></td>
-                            <td><?php echo $group->Group_Internal_Code ?></td>
+                            <?php $checked = (!empty($group_ids) && in_array($group->Pub_Group_Id, $group_ids)) ? 'checked' : ''; ?>
+                            <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Pub_Group_Id?>]" value="<?php echo $group->Pub_Group_Id?>" <?php echo $checked?> /></td>
+                            <td><?php echo $group->Pub_Group_Name ?></td>
+                            <td><?php echo $group->Pub_Group_Internal_Code ?></td>
                         </tr>
                     <?php } ?>
                     </tbody>
@@ -56,10 +56,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Perf_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Pro_Managers', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textArea($model, 'Perf_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
-                <?php echo $form->error($model, 'Perf_Biogrph_Annotation'); ?>
+                <?php echo $form->textField($model, 'Pro_Managers', array('class' => 'form-control')); ?>
+                <?php echo $form->error($model, 'Pro_Managers'); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textArea($model, 'Pro_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->error($model, 'Pro_Biogrph_Annotation'); ?>
             </div>
         </div>
 
