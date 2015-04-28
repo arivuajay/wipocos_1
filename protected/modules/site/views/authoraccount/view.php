@@ -52,11 +52,14 @@ $this->breadcrumbs=array(
                     'value' => isset($model->authMaritalStatus->Marital_State) ? $model->authMaritalStatus->Marital_State : 'Not Set'
                 ),
 		'Auth_Spouse_Name',
-		'Auth_Gender',
 		array(
-                'name' => 'Active',
+                'name' => 'Auth_Gender',
+                'value' => Myclass::getGender($model->Auth_Gender)
+            ),
+		array(
+                'name' => 'Status',
                 'type' => 'raw',
-                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                'value' => $model->status
             ),
 	),
 )); ?>

@@ -43,6 +43,7 @@ class PerformerAccount extends CActiveRecord {
     public $expiry_date;
     public $hierarchy_level;
     public $record_search;
+    public $search_status;
 
     /**
      * @return string the associated database table name
@@ -73,6 +74,11 @@ class PerformerAccount extends CActiveRecord {
             array('Created_Date, Rowversion,record_search', 'safe'),
             array('Perf_Internal_Code', 'unique'),
             array('Perf_Sur_Name', 'nameUnique'),
+            array(
+                'Perf_First_Name, Perf_Sur_Name, Perf_Spouse_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Only Alphabets are allowed ',
+            ),
             array('Perf_First_Name', 'UniqueAttributesValidator', 'with'=>'Perf_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -181,6 +187,15 @@ class PerformerAccount extends CActiveRecord {
         $criteria->compare('performerRelatedRights.Perf_Rel_Exit_Date', $this->expiry_date, true);
         $criteria->compare('performerRelatedRights.Perf_Rel_Internal_Position_Id', $this->hierarchy_level, true);
 
+        $now = new CDbExpression("NOW()");
+        if($this->search_status == 'A'){
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date > '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+        }elseif($this->search_status == 'I'){
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date is NULL OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00"');
+        }elseif($this->search_status == 'E'){
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date < '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+        }
+
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -241,4 +256,14 @@ class PerformerAccount extends CActiveRecord {
         }
     }
 
+    public function getStatus() {
+        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        if($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00'){
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if(strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
+                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+            }
+        }
+        return $status;
+    }
 }

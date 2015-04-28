@@ -98,9 +98,8 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                 </div>
                                 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Active', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Active', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Active'); ?>
+                                    <label>Status</label><br />
+                                    <?php echo $model->status;?>
                                 </div>
 
                             </div>

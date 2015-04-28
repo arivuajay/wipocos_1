@@ -34,11 +34,19 @@
  */
 class ProducerAccount extends CActiveRecord {
 
+    public $search_status;
     /**
      * @return string the associated database table name
      */
     public function tableName() {
         return '{{producer_account}}';
+    }
+    
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
     }
 
     /**
@@ -69,12 +77,12 @@ class ProducerAccount extends CActiveRecord {
             'proCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Pro_Country_Id'),
             'proLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Pro_Language_Id'),
             'proLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Pro_Legal_Form_id'),
-            'producerAccountAddresses' => array(self::HAS_MANY, 'ProducerAccountAddress', 'Pro_Acc_Id'),
-            'producerBiographies' => array(self::HAS_MANY, 'ProducerBiography', 'Pro_Acc_Id'),
-            'producerPaymentMethods' => array(self::HAS_MANY, 'ProducerPaymentMethod', 'Pro_Acc_Id'),
-            'producerPseudonyms' => array(self::HAS_MANY, 'ProducerPseudonym', 'Pro_Acc_Id'),
-            'producerRelatedRights' => array(self::HAS_MANY, 'ProducerRelatedRights', 'Pro_Acc_Id'),
-            'producerSuccessions' => array(self::HAS_MANY, 'ProducerSuccession', 'Pro_Acc_Id'),
+            'producerAccountAddresses' => array(self::HAS_ONE, 'ProducerAccountAddress', 'Pro_Acc_Id'),
+            'producerBiographies' => array(self::HAS_ONE, 'ProducerBiography', 'Pro_Acc_Id'),
+            'producerPaymentMethods' => array(self::HAS_ONE, 'ProducerPaymentMethod', 'Pro_Acc_Id'),
+            'producerPseudonyms' => array(self::HAS_ONE, 'ProducerPseudonym', 'Pro_Acc_Id'),
+            'producerRelatedRights' => array(self::HAS_ONE, 'ProducerRelatedRights', 'Pro_Acc_Id'),
+            'producerSuccessions' => array(self::HAS_ONE, 'ProducerSuccession', 'Pro_Acc_Id'),
         );
     }
 
@@ -99,6 +107,7 @@ class ProducerAccount extends CActiveRecord {
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'search_status' => 'Status',
         );
     }
 
@@ -118,6 +127,7 @@ class ProducerAccount extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('producerRelatedRights');
 
         $criteria->compare('Pro_Acc_Id', $this->Pro_Acc_Id);
         $criteria->compare('Pro_Corporate_Name', $this->Pro_Corporate_Name, true);
@@ -135,6 +145,15 @@ class ProducerAccount extends CActiveRecord {
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+        
+        $now = new CDbExpression("NOW()");
+        if($this->search_status == 'A'){
+            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date > '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
+        }elseif($this->search_status == 'I'){
+            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date is NULL OR producerRelatedRights.Pro_Rel_Exit_Date = "0000-00-00"');
+        }elseif($this->search_status == 'E'){
+            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date < '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -156,10 +175,22 @@ class ProducerAccount extends CActiveRecord {
 
     public function dataProvider() {
         return new CActiveDataProvider($this, array(
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
+    }
+    
+    public function getStatus() {
+        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        if($this->producerRelatedRights && $this->producerRelatedRights->Pro_Rel_Exit_Date != '' && $this->producerRelatedRights->Pro_Rel_Exit_Date != '0000-00-00'){
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if(strtotime($this->producerRelatedRights->Pro_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
+                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+            }
+        }
+        return $status;
     }
 
 }

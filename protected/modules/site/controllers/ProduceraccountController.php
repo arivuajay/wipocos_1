@@ -16,6 +16,15 @@ class ProduceraccountController extends Controller {
         );
     }
 
+    public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Producers_" . time() . ".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
+    
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -210,7 +219,13 @@ class ProduceraccountController extends Controller {
         if (isset($_GET['ProducerAccount'])) {
             $search = true;
             $searchModel->attributes = $_GET['ProducerAccount'];
+            $searchModel->search_status = $_GET['ProducerAccount']['search_status'];
             $searchModel->search();
+        }
+
+        if ($this->isExportRequest()) {
+            $this->exportCSV(array('Producers Accounts:'), null, false);
+            $this->exportCSV($model->search(), array('Pro_Internal_Code', 'Pro_Corporate_Name'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));

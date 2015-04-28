@@ -124,12 +124,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php
-                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ;
-                            ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -152,16 +148,24 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
                 'Pub_Corporate_Name',
                 'Pub_Internal_Code',
                 'Pub_Ipi',
                 'Pub_Ipi_Base_Number',
                 'Pub_Date',
                 'Pub_Place',
+                array(
+                'name' => 'Status',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->status;
+                },
+            ),
                 /*
                   'Pub_Country_Id',
                   'Pub_Legal_Form_id',
@@ -201,7 +205,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 
 <div class="col-lg-12 col-md-12">
-    <div class="row mb10">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 row">
+            <div class="form-group">
+                <label class="control-label">Spotlight Search: </label>
+                <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
+            </div>
+        </div>
         <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create/type/publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
         <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher', array('/site/publisheraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
@@ -211,16 +221,24 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
+//            array(
+//                'class' => 'IndexColumn',
+//                'header' => '',
+//            ),
             'Pub_Corporate_Name',
             'Pub_Internal_Code',
             'Pub_Ipi',
             'Pub_Ipi_Base_Number',
             'Pub_Date',
             'Pub_Place',
+            array(
+                'name' => 'Status',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->status;
+                },
+            ),
             /*
               'Pub_Country_Id',
               'Pub_Legal_Form_id',
@@ -245,11 +263,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             )
         );
 
+        $export_btn = $this->renderExportGridButton('publisher-base-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));
+        
         $this->widget('booster.widgets.TbExtendedGridView', array(
-            'type' => 'striped bordered',
+            'id' => 'publisher-base-grid',
+            'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publishers</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}&nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publishers</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

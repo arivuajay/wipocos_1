@@ -43,6 +43,7 @@ class AuthorAccount extends CActiveRecord {
     public $expiry_date;
     public $hierarchy_level;
     public $record_search;
+    public $search_status;
 
     /**
      * @return string the associated database table name
@@ -73,6 +74,11 @@ class AuthorAccount extends CActiveRecord {
             array('Created_Date, Rowversion,record_search', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
             array('Auth_Internal_Code', 'unique'),
+            array(
+                'Auth_First_Name, Auth_Sur_Name, Auth_Spouse_Name',
+                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Only Alphabets are allowed ',
+            ),
             array('Auth_First_Name', 'UniqueAttributesValidator', 'with'=>'Auth_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -137,6 +143,7 @@ class AuthorAccount extends CActiveRecord {
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
             'hierarchy_level' => 'Internal Position',
+            'search_status' => 'Status',
         );
     }
 
@@ -179,6 +186,15 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('authorManageRights.Auth_Mnge_Exit_Date', $this->expiry_date, true);
         $criteria->compare('authorManageRights.Auth_Mnge_Internal_Position_Id', $this->hierarchy_level, true);
+        
+        $now = new CDbExpression("NOW()");
+        if($this->search_status == 'A'){
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date > '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+        }elseif($this->search_status == 'I'){
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date is NULL OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00"');
+        }elseif($this->search_status == 'E'){
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date < '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -257,5 +273,15 @@ class AuthorAccount extends CActiveRecord {
         }
         return $text;
     }
-
+    
+    public function getStatus() {
+        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        if($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00'){
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if(strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+            }
+        }
+        return $status;
+    }
 }

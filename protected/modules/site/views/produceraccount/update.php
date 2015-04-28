@@ -4,8 +4,8 @@
 
 $this->title='Update Producer: '. $model->Pro_Acc_Id;
 $this->breadcrumbs=array(
-	'Producer Accounts'=>array('index'),
-	'Update Producer Accounts',
+	'Producers'=>array('index'),
+	'Update Producer',
 );
 ?>
 

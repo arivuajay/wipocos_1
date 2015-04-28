@@ -34,6 +34,7 @@
  * @property PublisherSuccession[] $publisherSuccessions
  */
 class PublisherAccount extends CActiveRecord {
+    public $search_status;
 
     /**
      * @return string the associated database table name
@@ -83,13 +84,13 @@ class PublisherAccount extends CActiveRecord {
             'pubLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Pub_Language_Id'),
             'pubCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Pub_Country_Id'),
             'pubLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Pub_Legal_Form_id'),
-            'publisherAccountAddresses' => array(self::HAS_MANY, 'PublisherAccountAddress', 'Pub_Acc_Id'),
-            'publisherBiographies' => array(self::HAS_MANY, 'PublisherBiography', 'Pub_Acc_Id'),
-            'publisherManageRights' => array(self::HAS_MANY, 'PublisherManageRights', 'Pub_Acc_Id'),
-            'publisherPaymentMethods' => array(self::HAS_MANY, 'PublisherPaymentMethod', 'Pub_Acc_Id'),
-            'publisherPseudonyms' => array(self::HAS_MANY, 'PublisherPseudonym', 'Pub_Acc_Id'),
-            'publisherRelatedRights' => array(self::HAS_MANY, 'PublisherRelatedRights', 'Pub_Acc_Id'),
-            'publisherSuccessions' => array(self::HAS_MANY, 'PublisherSuccession', 'Pub_Acc_Id'),
+            'publisherAccountAddresses' => array(self::HAS_ONE, 'PublisherAccountAddress', 'Pub_Acc_Id'),
+            'publisherBiographies' => array(self::HAS_ONE, 'PublisherBiography', 'Pub_Acc_Id'),
+            'publisherManageRights' => array(self::HAS_ONE, 'PublisherManageRights', 'Pub_Acc_Id'),
+            'publisherPaymentMethods' => array(self::HAS_ONE, 'PublisherPaymentMethod', 'Pub_Acc_Id'),
+            'publisherPseudonyms' => array(self::HAS_ONE, 'PublisherPseudonym', 'Pub_Acc_Id'),
+            'publisherRelatedRights' => array(self::HAS_ONE, 'PublisherRelatedRights', 'Pub_Acc_Id'),
+            'publisherSuccessions' => array(self::HAS_ONE, 'PublisherSuccession', 'Pub_Acc_Id'),
             'publisherGroupMembers' => array(self::HAS_MANY, 'PublisherGroupMembers', 'Pub_Group_Member_Internal_Code',
                 'foreignKey' => array('Pub_Group_Member_Internal_Code' => 'Pub_Internal_Code')
             ),
@@ -117,6 +118,7 @@ class PublisherAccount extends CActiveRecord {
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'search_status' => 'Status',
         );
     }
 
@@ -136,6 +138,7 @@ class PublisherAccount extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('publisherManageRights');
 
         $criteria->compare('Pub_Acc_Id', $this->Pub_Acc_Id);
         $criteria->compare('Pub_Corporate_Name', $this->Pub_Corporate_Name, true);
@@ -153,6 +156,15 @@ class PublisherAccount extends CActiveRecord {
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+
+        $now = new CDbExpression("NOW()");
+        if($this->search_status == 'A'){
+            $criteria->addCondition('publisherManageRights.Pub_Mnge_Exit_Date > '.$now.' And publisherManageRights.Pub_Mnge_Exit_Date != "0000-00-00"');
+        }elseif($this->search_status == 'I'){
+            $criteria->addCondition('publisherManageRights.Pub_Mnge_Exit_Date is NULL OR publisherManageRights.Pub_Mnge_Exit_Date = "0000-00-00"');
+        }elseif($this->search_status == 'E'){
+            $criteria->addCondition('publisherManageRights.Pub_Mnge_Exit_Date < '.$now.' And publisherManageRights.Pub_Mnge_Exit_Date != "0000-00-00"');
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -174,9 +186,10 @@ class PublisherAccount extends CActiveRecord {
 
     public function dataProvider() {
         return new CActiveDataProvider($this, array(
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
     
@@ -188,5 +201,14 @@ class PublisherAccount extends CActiveRecord {
         }
     }
 
-
+    public function getStatus() {
+        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        if($this->publisherManageRights && $this->publisherManageRights->Pub_Mnge_Exit_Date != '' && $this->publisherManageRights->Pub_Mnge_Exit_Date != '0000-00-00'){
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if(strtotime($this->publisherManageRights->Pub_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+            }
+        }
+        return $status;
+    }
 }

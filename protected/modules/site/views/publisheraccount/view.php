@@ -32,9 +32,9 @@ $this->breadcrumbs=array(
 		'Pub_Excerpt_Date',
 		'Pub_Language_Id',
 		array(
-                'name' => 'Active',
+                'name' => 'Status',
                 'type' => 'raw',
-                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                'value' => $model->status
             ),
 	),
 )); ?>

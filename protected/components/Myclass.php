@@ -112,4 +112,16 @@ class Myclass extends CController {
 
         return $clause;
     }
+    
+    public static function getSearchStatus($key = NULL){
+        $search = array(
+            'A' => 'Active',
+            'E' => 'Expired',
+            'I' => 'Non-Member',
+        );
+        if(isset($key) && $key != NULL)
+            return $search[$key];
+
+        return $search;
+    }
 }

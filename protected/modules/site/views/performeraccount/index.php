@@ -124,14 +124,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'hierarchy_level'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                   <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php
-                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ;
-                            ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -175,25 +171,25 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date)) > 1970)
+                if ($data->performerRelatedRights && $data->performerRelatedRights->Perf_Rel_Entry_Date != '' && $data->performerRelatedRights->Perf_Rel_Entry_Date != '0000-00-00')
                     echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date));
             },
                 ),
                 array(
-                    'name' => 'Expiry Date',
+                    'name' => 'Date of Birth',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date)) > 1970)
-                    echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
+                if ($data->Perf_DOB != '' && $data->Perf_DOB != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->Perf_DOB));
             },
                 ),
                 array(
-                    'name' => 'Active',
+                    'name' => 'Status',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+                 echo $data->status;
             },
                 ),
 //                'Perf_Ipi',
@@ -293,25 +289,25 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date)) > 1970)
+                if ($data->performerRelatedRights && $data->performerRelatedRights->Perf_Rel_Entry_Date != '' && $data->performerRelatedRights->Perf_Rel_Entry_Date != '0000-00-00')
                 echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Entry_Date));
         },
             ),
+                array(
+                    'name' => 'Date of Birth',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                if ($data->Perf_DOB != '' && $data->Perf_DOB != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->Perf_DOB));
+            },
+                ),
             array(
-                'name' => 'Expiry Date',
+                'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            if ($data->performerRelatedRights && date('Y', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date)) > 1970)
-                echo date('Y-m-d', strtotime($data->performerRelatedRights->Perf_Rel_Exit_Date));
-        },
-            ),
-            array(
-                'name' => 'Active',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+                echo $data->status;
         },
             ),
 //            'Perf_Ipi',

@@ -16,6 +16,15 @@ class GroupController extends Controller {
         );
     }
 
+    public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Groups_" . time() . ".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
+    
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -190,7 +199,13 @@ class GroupController extends Controller {
         if (isset($_GET['Group'])) {
             $search = true;
             $searchModel->attributes = $_GET['Group'];
+            $searchModel->search_status = $_GET['Group']['search_status'];
             $searchModel->search();
+        }
+
+        if ($this->isExportRequest()) {
+            $this->exportCSV(array('Groups:'), null, false);
+            $this->exportCSV($model->search(), array('Group_Internal_Code', 'Group_Name'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));

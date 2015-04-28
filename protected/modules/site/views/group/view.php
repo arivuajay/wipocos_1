@@ -48,9 +48,9 @@ $this->breadcrumbs=array(
                 'value' => isset($model->groupLanguage->Lang_Name) ? $model->groupLanguage->Lang_Name : 'Not set'
                 ),
 		array(
-                'name' => 'Active',
+                'name' => 'Status',
                 'type' => 'raw',
-                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                'value' => $model->status
             ),
 	),
 )); ?>

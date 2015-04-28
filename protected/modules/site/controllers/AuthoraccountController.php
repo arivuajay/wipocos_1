@@ -282,6 +282,7 @@ class AuthoraccountController extends Controller {
         } else if (isset($_GET['AuthorAccount'])) {
             $search = true;
             $searchModel->attributes = $_GET['AuthorAccount'];
+            $searchModel->search_status = $_GET['AuthorAccount']['search_status'];
             $searchModel->search();
         }
 

@@ -281,6 +281,7 @@ $model->Perf_Language_Id = 1;
         } else if (isset($_GET['PerformerAccount'])) {
             $search = true;
             $searchModel->attributes = $_GET['PerformerAccount'];
+            $searchModel->search_status = $_GET['PerformerAccount']['search_status'];
             $searchModel->search();
         }
 

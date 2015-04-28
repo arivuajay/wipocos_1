@@ -4,7 +4,7 @@
 
 $this->title='Create Producer';
 $this->breadcrumbs=array(
-	'Producer Accounts'=>array('index'),
+	'Producer'=>array('index'),
 	$this->title,
 );
 ?>

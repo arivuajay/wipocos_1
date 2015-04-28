@@ -129,12 +129,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php
-                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ;
-                            ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -178,49 +174,27 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                    'value' => function($data) {
-            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Entry_Date)) > 1970 )
+            if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
                 echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
         },
                 ),
                 array(
-                    'name' => 'Expiry Date',
+                    'name' => 'Date of Birth',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Exit_Date)) > 1970)
-                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
+                if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->Auth_DOB));
             },
                 ),
-                array(
-                    'name' => 'Active',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-            },
-                ),
-//                'Auth_Ipi',
-//                'Auth_Ipi_Base_Number',
-//                'Auth_Ipn_Number',
-                /*
-                  'Auth_DOB',
-                  'Auth_Place_Of_Birth_Id',
-                  'Auth_Birth_Country_Id',
-                  'Auth_Nationality_Id',
-                  'Auth_Language_Id',
-                  'Auth_Identity_Number',
-                  'Auth_Marital_Status_Id',
-                  'Auth_Spouse_Name',
-                  'Auth_Gender',
-                  array(
-                  'name' => 'Active',
-                  'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                  'type' => 'raw',
-                  'value' => function($data) {
-                  echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                  },
-                  ),
-                 */
+            array(
+                'name' => 'Status',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->status;
+                },
+            ),
                 array(
                     'header' => 'Actions',
                     'class' => 'booster.widgets.TbButtonColumn',
@@ -244,28 +218,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <?php
-//        $form = $this->beginWidget('CActiveForm', array(
-//            'id' => 'global-search-form',
-//            'method' => 'get',
-//            'action' => array('/site/authoraccount/index'),
-//            'htmlOptions' => array('role' => 'form')
-//        ));
-        ?>
         <div class="col-lg-4 col-md-4 row">
             <div class="form-group">
                 <label class="control-label">Spotlight Search: </label>
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
-                <?php // echo $form->textField($model, 'record_search', array('class' => 'form-control')); ?>
-                <?php // echo $form->error($model, 'record_search'); ?>
             </div>
         </div>
-        <!--        <div class="col-lg-2 col-md-2">
-        <?php echo CHtml::submitButton('Go', array('class' => 'btn btn-primary btn-sm')); ?>&nbsp;&nbsp;
-        <?php echo CHtml::link('Clear', array('/site/authoraccount/index'), array('class' => 'btn btn-primary btn-sm')); ?>
-                </div>-->
         <?php
-//        $this->endWidget();
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/authoraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
@@ -300,27 +259,35 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'type' => 'raw',
                 'value' => function($data) {
 
-            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Entry_Date)) > 1970)
+            if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
                 echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
         },
             ),
+                array(
+                    'name' => 'Date of Birth',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->Auth_DOB));
+            },
+                    ),
             array(
-                'name' => 'Expiry Date',
+                'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            if ($data->authorManageRights && date('Y',strtotime($data->authorManageRights->Auth_Mnge_Exit_Date)) > 1970)
-                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Exit_Date));
-        },
+                    echo $data->status;
+                },
             ),
-            array(
-                'name' => 'Active',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
+//            array(
+//                'name' => 'Active',
+//                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                'type' => 'raw',
+//                'value' => function($data) {
+//            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//        },
+//            ),
             /*
               'Auth_DOB',
               'Auth_Place_Of_Birth_Id',

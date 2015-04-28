@@ -172,6 +172,12 @@ $js = <<< EOD
     $(document).ready(function(){
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
+        $("#GroupManageRights_Group_Mnge_Entry_Date").on("change", function(){
+            $("#GroupManageRights_Group_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#GroupManageRights_Group_Mnge_Exit_Date").on("change", function(){
+            $("#GroupManageRights_Group_Mnge_Exit_Date_2").val($(this).val());
+        });
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

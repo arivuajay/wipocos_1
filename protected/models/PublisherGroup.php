@@ -34,6 +34,7 @@
  * @property PublisherGroupRepresentative[] $publisherGroupRepresentatives
  */
 class PublisherGroup extends CActiveRecord {
+    public $search_status;
 
     /**
      * @return string the associated database table name
@@ -77,13 +78,13 @@ class PublisherGroup extends CActiveRecord {
             'pubGroupCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Pub_Group_Country_Id'),
             'pubGroupLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Pub_Group_Language_Id'),
             'pubGroupLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Pub_Group_Legal_Form_Id'),
-            'publisherGroupBiographies' => array(self::HAS_MANY, 'PublisherGroupBiography', 'Pub_Group_Id'),
-            'publisherGroupCopyrightPayments' => array(self::HAS_MANY, 'PublisherGroupCopyrightPayment', 'Pub_Group_Id'),
-            'publisherGroupManageRights' => array(self::HAS_MANY, 'PublisherGroupManageRights', 'Pub_Group_Id'),
+            'publisherGroupBiographies' => array(self::HAS_ONE, 'PublisherGroupBiography', 'Pub_Group_Id'),
+            'publisherGroupCopyrightPayments' => array(self::HAS_ONE, 'PublisherGroupCopyrightPayment', 'Pub_Group_Id'),
+            'publisherGroupManageRights' => array(self::HAS_ONE, 'PublisherGroupManageRights', 'Pub_Group_Id'),
             'publisherGroupMembers' => array(self::HAS_MANY, 'PublisherGroupMembers', 'Pub_Group_Id'),
-            'publisherGroupPseudonyms' => array(self::HAS_MANY, 'PublisherGroupPseudonym', 'Pub_Group_Id'),
-            'publisherGroupRelatedPayments' => array(self::HAS_MANY, 'PublisherGroupRelatedPayment', 'Pub_Group_Id'),
-            'publisherGroupRepresentatives' => array(self::HAS_MANY, 'PublisherGroupRepresentative', 'Pub_Group_Id'),
+            'publisherGroupPseudonyms' => array(self::HAS_ONE, 'PublisherGroupPseudonym', 'Pub_Group_Id'),
+            'publisherGroupRelatedPayments' => array(self::HAS_ONE, 'PublisherGroupRelatedPayment', 'Pub_Group_Id'),
+            'publisherGroupRepresentatives' => array(self::HAS_ONE, 'PublisherGroupRepresentative', 'Pub_Group_Id'),
         );
     }
 
@@ -108,6 +109,7 @@ class PublisherGroup extends CActiveRecord {
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'search_status' => 'Status',
         );
     }
 
@@ -127,6 +129,7 @@ class PublisherGroup extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('publisherGroupManageRights');
 
         $criteria->compare('Pub_Group_Id', $this->Pub_Group_Id);
         $criteria->compare('Pub_Group_Name', $this->Pub_Group_Name, true);
@@ -144,6 +147,15 @@ class PublisherGroup extends CActiveRecord {
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+
+        $now = new CDbExpression("NOW()");
+        if($this->search_status == 'A'){
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date > '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+        }elseif($this->search_status == 'I'){
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is NULL OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00"');
+        }elseif($this->search_status == 'E'){
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -165,9 +177,10 @@ class PublisherGroup extends CActiveRecord {
 
     public function dataProvider() {
         return new CActiveDataProvider($this, array(
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 
@@ -179,4 +192,14 @@ class PublisherGroup extends CActiveRecord {
         }
     }
 
+    public function getStatus() {
+        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        if($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00'){
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if(strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+            }
+        }
+        return $status;
+    }
 }

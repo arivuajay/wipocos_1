@@ -22,7 +22,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     if ($group_model->Pub_Group_Is_Publisher == '1') {
         $users = PublisherAccount::model()->isActive()->findAll();
     } elseif ($group_model->Pub_Group_Is_Producer == '1') {
-//        $users = ProducerAccount::model()->isActive()->findAll();
+        $users = ProducerAccount::model()->isActive()->findAll();
     }
 
     $user_ids = CHtml::listData($group_model->publisherGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Member_Internal_Code');
@@ -65,12 +65,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     if ($group_model->Pub_Group_Is_Producer == '1') {
                         foreach ($users as $key => $user) {
                             ?>
-<!--                            <tr>
-                                <?php $checked = (!empty($user_ids) && in_array($user->Perf_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_Internal_Code ?>]" value="<?php echo $user->Perf_Internal_Code ?>" <?php echo $checked ?> /></td>
-                                <td><?php echo $user->Perf_First_Name ?></td>
-                                <td><?php echo $user->Perf_Internal_Code ?></td>
-                            </tr>-->
+                            <tr>
+                                <?php $checked = (!empty($user_ids) && in_array($user->Pro_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
+                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Pro_Internal_Code ?>]" value="<?php echo $user->Pro_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                <td><?php echo $user->Pro_Corporate_Name ?></td>
+                                <td><?php echo $user->Pro_Internal_Code ?></td>
+                            </tr>
                             <?php
                         }
                     }

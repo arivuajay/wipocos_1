@@ -15,6 +15,15 @@ class PublishergroupController extends Controller {
                 //'postOnly + delete', // we only allow deletion via POST request
         );
     }
+    
+    public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Publisher_Producer_Groups" . time() . ".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
 
     /**
      * Specifies the access control rules.
@@ -258,7 +267,12 @@ class PublishergroupController extends Controller {
         if (isset($_GET['PublisherGroup'])) {
             $search = true;
             $searchModel->attributes = $_GET['PublisherGroup'];
+            $searchModel->search_status = $_GET['PublisherGroup']['search_status'];
             $searchModel->search();
+        }
+        if ($this->isExportRequest()) {
+            $this->exportCSV(array('Groups:'), null, false);
+            $this->exportCSV($model->search(), array('Pub_Group_Internal_Code', 'Pub_Group_Corporate_Name'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));

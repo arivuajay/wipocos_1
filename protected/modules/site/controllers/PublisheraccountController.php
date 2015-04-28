@@ -222,6 +222,7 @@ class PublisheraccountController extends Controller {
         if (isset($_GET['PublisherAccount'])) {
             $search = true;
             $searchModel->attributes = $_GET['PublisherAccount'];
+            $searchModel->search_status = $_GET['PublisherAccount']['search_status'];
             $searchModel->search();
         }
 
