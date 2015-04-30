@@ -64,6 +64,7 @@ class MasterroleController extends Controller {
         if (isset($_POST['MasterRole'])) {
             $model->attributes = $_POST['MasterRole'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Role {$model->Role_Code} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'MasterRole Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Role_ID));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterroleController extends Controller {
         if (isset($_POST['MasterRole'])) {
             $model->attributes = $_POST['MasterRole'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Role {$model->Role_Code} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'MasterRole Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Role_ID));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterroleController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Role {$model->Role_Code} successfully.", "music");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

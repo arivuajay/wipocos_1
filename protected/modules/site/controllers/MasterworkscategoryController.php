@@ -64,6 +64,7 @@ class MasterworkscategoryController extends Controller {
         if (isset($_POST['MasterWorksCategory'])) {
             $model->attributes = $_POST['MasterWorksCategory'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Work Category {$model->Work_Category_Name} successfully.", "suitcase");
                 Yii::app()->user->setFlash('success', 'MasterWorksCategory Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Work_Category_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterworkscategoryController extends Controller {
         if (isset($_POST['MasterWorksCategory'])) {
             $model->attributes = $_POST['MasterWorksCategory'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Work Category {$model->Work_Category_Name} successfully.", "suitcase");
                 Yii::app()->user->setFlash('success', 'MasterWorksCategory Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Work_Category_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterworkscategoryController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Work Category {$model->Work_Category_Name} successfully.", "suitcase");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

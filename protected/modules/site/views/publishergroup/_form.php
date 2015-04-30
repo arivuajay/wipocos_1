@@ -22,7 +22,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Cross-references</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Representatives</a></li>
-                <!--<li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub publishing Catalog</a></li>-->
+                <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub publishing Catalog</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -191,31 +191,31 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     }
                     ?>
                 </div>
-                <!--                <div class="tab-pane" id="tab_8">
+                                <div class="tab-pane" id="tab_8">
                                     <div class="box box-primary boxdivs">
                 <?php
-//                        if (!$model->isNewRecord) {
-//                            $this->renderPartial('_original_publisher', array('model' => $org_publisher_model, 'group_model' => $model));
-//                            $this->renderPartial('_sub_publisher', array('model' => $sub_publisher_model, 'group_model' => $model));
-//                        }
+                        if (!$model->isNewRecord) {
+                            $this->renderPartial('_original_publisher', array('model' => $org_publisher_model, 'group_model' => $model));
+                            $this->renderPartial('_sub_publisher', array('model' => $sub_publisher_model, 'group_model' => $model));
+                        }
                 ?>
                                     </div>
                                     <div class="box box-primary boxdivs">
                 <?php
-//                        if (!$model->isNewRecord) {
-//                            $this->renderPartial('_original_publisher_share', array('model' => $org_share_publisher_model, 'group_model' => $model));
-//                            $this->renderPartial('_sub_publisher_share', array('model' => $sub_share_publisher_model, 'group_model' => $model));
-//                        }
+                        if (!$model->isNewRecord) {
+                            $this->renderPartial('_original_publisher_share', array('model' => $org_share_publisher_model, 'group_model' => $model));
+                            $this->renderPartial('_sub_publisher_share', array('model' => $sub_share_publisher_model, 'group_model' => $model));
+                        }
                 ?>
                                     </div>
                                     <div class="box box-primary boxdivs">
                 <?php
-//                    if (!$model->isNewRecord) {
-//                        $this->renderPartial('_group_catalogue', array('model' => $catalog_model, 'group_model' => $model));
-//                    }
+                    if (!$model->isNewRecord) {
+                        $this->renderPartial('_group_catalogue', array('model' => $catalog_model, 'group_model' => $model));
+                    }
                 ?>
                                     </div>
-                                </div>-->
+                                </div>
             </div>
         </div>
 

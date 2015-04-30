@@ -64,6 +64,7 @@ class OrganizationController extends Controller {
         if (isset($_POST['Organization'])) {
             $model->attributes = $_POST['Organization'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Organization {$model->Org_Code} successfully.", "building");
                 Yii::app()->user->setFlash('success', 'Organization Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -88,6 +89,7 @@ class OrganizationController extends Controller {
         if (isset($_POST['Organization'])) {
             $model->attributes = $_POST['Organization'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Organization {$model->Org_Code} successfully.", "building");
                 Yii::app()->user->setFlash('success', 'Organization Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -105,7 +107,9 @@ class OrganizationController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Organization {$model->Org_Code} successfully.", "building");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

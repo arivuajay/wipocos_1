@@ -65,8 +65,10 @@ class MasterscreenController extends Controller {
 
         if (isset($_POST['MasterScreen'])) {
             $model->attributes = $_POST['MasterScreen'];
-            if ($model->save())
+            if ($model->save()){
+                Myclass::addAuditTrail("Created Screen {$model->Module_ID} successfully.", "image-o");
                 $this->redirect(array('view', 'id' => $model->Master_Screen_ID));
+            }
         }
 
         $this->render('create', array(
@@ -87,8 +89,10 @@ class MasterscreenController extends Controller {
 
         if (isset($_POST['MasterScreen'])) {
             $model->attributes = $_POST['MasterScreen'];
-            if ($model->save())
+            if ($model->save()){
+                Myclass::addAuditTrail("Updated Screen {$model->Module_ID} successfully.", "image-o");
                 $this->redirect(array('view', 'id' => $model->Master_Screen_ID));
+            }
         }
 
         $this->render('update', array(
@@ -103,7 +107,9 @@ class MasterscreenController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Screen {$model->Module_ID} successfully.", "image-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

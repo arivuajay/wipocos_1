@@ -64,6 +64,7 @@ class MasterprofessionController extends Controller {
         if (isset($_POST['MasterProfession'])) {
             $model->attributes = $_POST['MasterProfession'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Profession {$model->Profession_Name} successfully.", "male");
                 Yii::app()->user->setFlash('success', 'MasterProfession Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Profession_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterprofessionController extends Controller {
         if (isset($_POST['MasterProfession'])) {
             $model->attributes = $_POST['MasterProfession'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Profession {$model->Profession_Name} successfully.", "male");
                 Yii::app()->user->setFlash('success', 'MasterProfession Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Profession_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterprofessionController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Profession {$model->Profession_Name} successfully.", "male");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

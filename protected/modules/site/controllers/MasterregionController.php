@@ -64,6 +64,7 @@ class MasterregionController extends Controller {
         if (isset($_POST['MasterRegion'])) {
             $model->attributes = $_POST['MasterRegion'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Region {$model->Region_Name} successfully.", "building-o");
                 Yii::app()->user->setFlash('success', 'MasterRegion Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Region_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterregionController extends Controller {
         if (isset($_POST['MasterRegion'])) {
             $model->attributes = $_POST['MasterRegion'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Region {$model->Region_Name} successfully.", "building-o");
                 Yii::app()->user->setFlash('success', 'MasterRegion Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Region_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterregionController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Region {$model->Region_Name} successfully.", "building-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

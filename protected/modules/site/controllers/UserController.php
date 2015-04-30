@@ -69,6 +69,7 @@ class UserController extends Controller {
                     );
                     $message = $mail->getMessage('registration', $trans_array);
                     $mail->send($model->email, $subject, $message);
+                    Myclass::addAuditTrail("Created User {$model->username} successfully.", "user");
                     Yii::app()->user->setFlash('success', 'User Created Successfully!!!');
                     $this->redirect(array('index'));
                 endif;
@@ -96,6 +97,7 @@ class UserController extends Controller {
             $model->attributes = $_POST['User'];
             if ($model->validate()) {
                 $model->save(false);
+                Myclass::addAuditTrail("Updated User {$model->username} successfully.", "user");
                 Yii::app()->user->setFlash('success', 'User Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -113,7 +115,9 @@ class UserController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted User {$model->username} successfully.", "user");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

@@ -64,6 +64,7 @@ class MastertyperightsController extends Controller {
         if (isset($_POST['MasterTypeRights'])) {
             $model->attributes = $_POST['MasterTypeRights'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Type of Right {$model->Type_Rights_Name} successfully.", "at");
                 Yii::app()->user->setFlash('success', 'MasterTypeRights Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Type_Rights_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastertyperightsController extends Controller {
         if (isset($_POST['MasterTypeRights'])) {
             $model->attributes = $_POST['MasterTypeRights'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Type of Right {$model->Type_Rights_Name} successfully.", "at");
                 Yii::app()->user->setFlash('success', 'MasterTypeRights Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Type_Rights_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastertyperightsController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Type of Right {$model->Type_Rights_Name} successfully.", "at");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

@@ -64,6 +64,7 @@ class MasterterritoriesController extends Controller {
         if (isset($_POST['MasterTerritories'])) {
             $model->attributes = $_POST['MasterTerritories'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Territory {$model->Territory_Name} successfully.", "institution");
                 Yii::app()->user->setFlash('success', 'MasterTerritories Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Territory_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterterritoriesController extends Controller {
         if (isset($_POST['MasterTerritories'])) {
             $model->attributes = $_POST['MasterTerritories'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Territory {$model->Territory_Name} successfully.", "institution");
                 Yii::app()->user->setFlash('success', 'MasterTerritories Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Territory_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterterritoriesController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Territory {$model->Territory_Name} successfully.", "institution");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

@@ -73,6 +73,7 @@ class PublishergroupController extends Controller {
         if (isset($_POST['PublisherGroup'])) {
             $model->attributes = $_POST['PublisherGroup'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'PublisherGroup Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -136,6 +137,7 @@ class PublishergroupController extends Controller {
         if (isset($_POST['PublisherGroup'])) {
             $model->attributes = $_POST['PublisherGroup'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Publisher Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -150,12 +152,14 @@ class PublishergroupController extends Controller {
                 endforeach;
             }
 
+            Myclass::addAuditTrail("Updated Publisher Group Memeber {$model->Pub_Group_Internal_Code} successfully.", "group");
             Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
             $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/2'));
         } elseif (isset($_POST['PublisherGroupCopyrightPayment'])) {
             $payment_model->attributes = $_POST['PublisherGroupCopyrightPayment'];
 
             if ($payment_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Payment Method {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $payment_model->Pub_Group_Id . '/tab/3'));
             }
@@ -163,6 +167,7 @@ class PublishergroupController extends Controller {
             $rel_payment_model->attributes = $_POST['PublisherGroupRelatedPayment'];
 
             if ($rel_payment_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Payment Method {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $rel_payment_model->Pub_Group_Id . '/tab/3'));
             }
@@ -170,12 +175,14 @@ class PublishergroupController extends Controller {
             $biograph_model->attributes = $_POST['PublisherGroupBiography'];
             if ($biograph_model->save()) {
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
+                Myclass::addAuditTrail("Updated Publisher Group Biography {$model->Pub_Group_Internal_Code} successfully.", "group");
                 $this->redirect(array('publishergroup/update/id/' . $biograph_model->Pub_Group_Id . '/tab/4'));
             }
         } elseif (isset($_POST['PublisherGroupPseudonym'])) {
             $psedonym_model->attributes = $_POST['PublisherGroupPseudonym'];
 
             if ($psedonym_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Pseudonym {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $psedonym_model->Pub_Group_Id . '/tab/5'));
             }
@@ -184,6 +191,7 @@ class PublishergroupController extends Controller {
 
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Managed Rights {$model->Pub_Group_Internal_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('publishergroup/update/id/' . $managed_model->Pub_Group_Id . '/tab/6'));
                 }
@@ -193,6 +201,7 @@ class PublishergroupController extends Controller {
             $address_model->Pub_Group_Unknown_Address = $_POST['PublisherGroupRepresentative']['Pub_Group_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Address {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $address_model->Pub_Group_Id . '/tab/7'));
             }
@@ -200,6 +209,7 @@ class PublishergroupController extends Controller {
             $org_publisher_model->attributes = $_POST['PublisherGroupOriginalPublisher'];
 
             if ($org_publisher_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Original Publisher {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Original Publisher Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $org_publisher_model->Pub_Group_Id . '/tab/8'));
             }
@@ -207,6 +217,7 @@ class PublishergroupController extends Controller {
             $org_share_publisher_model->attributes = $_POST['PublisherGroupOriginalShare'];
 
             if ($org_share_publisher_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Share {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Original Publisher Share Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $org_share_publisher_model->Pub_Group_Id . '/tab/8'));
             }
@@ -214,6 +225,7 @@ class PublishergroupController extends Controller {
             $sub_share_publisher_model->attributes = $_POST['PublisherGroupSubShare'];
 
             if ($sub_share_publisher_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Sub Publisher Share {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Sub Publisher Share Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $sub_share_publisher_model->Pub_Group_Id . '/tab/8'));
             }
@@ -227,6 +239,7 @@ class PublishergroupController extends Controller {
                 $catalog_model->setUploadDirectory(UPLOAD_DIR);
                 $catalog_model->uploadFile();
                 if ($catalog_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Group Subcontracted Catalogue {$model->Pub_Group_Internal_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Subcontracted Catalogue Saved Successfully!!!');
                     $this->redirect(array('publishergroup/update/id/' . $catalog_model->Pub_Group_Id . '/tab/8'));
                 }
@@ -245,7 +258,9 @@ class PublishergroupController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

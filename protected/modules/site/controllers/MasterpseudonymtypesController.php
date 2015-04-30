@@ -64,6 +64,7 @@ class MasterpseudonymtypesController extends Controller {
         if (isset($_POST['MasterPseudonymTypes'])) {
             $model->attributes = $_POST['MasterPseudonymTypes'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Pseudonym {$model->Pseudo_Code} successfully.", "tty");
                 Yii::app()->user->setFlash('success', 'MasterPseudonymTypes Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Pseudo_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterpseudonymtypesController extends Controller {
         if (isset($_POST['MasterPseudonymTypes'])) {
             $model->attributes = $_POST['MasterPseudonymTypes'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Pseudonym {$model->Pseudo_Code} successfully.", "tty");
                 Yii::app()->user->setFlash('success', 'MasterPseudonymTypes Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Pseudo_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterpseudonymtypesController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Pseudonym {$model->Pseudo_Code} successfully.", "tty");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

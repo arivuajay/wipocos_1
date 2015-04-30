@@ -64,6 +64,7 @@ class MasterpaymentmethodController extends Controller {
         if (isset($_POST['MasterPaymentMethod'])) {
             $model->attributes = $_POST['MasterPaymentMethod'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Payment Method {$model->Paymode_Name} successfully.", "paypal");
                 Yii::app()->user->setFlash('success', 'MasterPaymentMethod Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Paymode_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterpaymentmethodController extends Controller {
         if (isset($_POST['MasterPaymentMethod'])) {
             $model->attributes = $_POST['MasterPaymentMethod'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Payment Method {$model->Paymode_Name} successfully.", "paypal");
                 Yii::app()->user->setFlash('success', 'MasterPaymentMethod Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Paymode_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterpaymentmethodController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Payment Method {$model->Paymode_Name} successfully.", "paypal");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

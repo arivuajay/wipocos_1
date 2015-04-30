@@ -64,6 +64,7 @@ class SharedefinitionperroleController extends Controller {
         if (isset($_POST['ShareDefinitionPerRole'])) {
             $model->attributes = $_POST['ShareDefinitionPerRole'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created ShareDefinitionPerRole {$model->Shr_Def_Id} successfully.", "share-alt");
                 Yii::app()->user->setFlash('success', 'ShareDefinitionPerRole Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Shr_Def_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class SharedefinitionperroleController extends Controller {
         if (isset($_POST['ShareDefinitionPerRole'])) {
             $model->attributes = $_POST['ShareDefinitionPerRole'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated ShareDefinitionPerRole {$model->Shr_Def_Id} successfully.", "share-alt");
                 Yii::app()->user->setFlash('success', 'ShareDefinitionPerRole Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Shr_Def_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class SharedefinitionperroleController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted ShareDefinitionPerRole {$model->Shr_Def_Id} successfully.", "share-alt");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

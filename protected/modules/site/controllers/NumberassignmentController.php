@@ -65,6 +65,7 @@ class NumberassignmentController extends Controller {
             $_POST['NumberAssignment']['series_list'] == 'S' ? $_POST['NumberAssignment']['Num_Assgn_List'] = '' : '';
             $model->attributes = $_POST['NumberAssignment'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Number Assignment {$model->Num_Assgn_List} successfully.", "sort-numeric-asc");
                 Yii::app()->user->setFlash('success', 'NumberAssignment Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -90,6 +91,7 @@ class NumberassignmentController extends Controller {
             $_POST['NumberAssignment']['series_list'] == 'S' ? $_POST['NumberAssignment']['Num_Assgn_List'] = '' : '';
             $model->attributes = $_POST['NumberAssignment'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Number Assignment {$model->Num_Assgn_List} successfully.", "sort-numeric-asc");
                 Yii::app()->user->setFlash('success', 'NumberAssignment Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -108,7 +110,9 @@ class NumberassignmentController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Number Assignment {$model->Num_Assgn_List} successfully.", "sort-numeric-asc");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

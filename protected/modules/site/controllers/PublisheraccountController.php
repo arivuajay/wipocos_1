@@ -73,6 +73,7 @@ class PublisheraccountController extends Controller {
         if (isset($_POST['PublisherAccount'])) {
             $model->attributes = $_POST['PublisherAccount'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Publisher {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'PublisherAccount Created Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $model->Pub_Acc_Id . '/tab/6'));
             }
@@ -121,6 +122,7 @@ class PublisheraccountController extends Controller {
         if (isset($_POST['PublisherAccount'])) {
             $model->attributes = $_POST['PublisherAccount'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Publisher {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'PublisherAccount Updated Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $model->Pub_Acc_Id . '/tab/1'));
             }
@@ -129,6 +131,7 @@ class PublisheraccountController extends Controller {
             $address_model->Pub_Unknown_Address = $_POST['PublisherAccountAddress']['Pub_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Address {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $address_model->Pub_Acc_Id . '/tab/2'));
             }
@@ -136,6 +139,7 @@ class PublisheraccountController extends Controller {
             $payment_model->attributes = $_POST['PublisherPaymentMethod'];
 
             if ($payment_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Payment Method {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $payment_model->Pub_Acc_Id . '/tab/3'));
             }
@@ -152,6 +156,7 @@ class PublisheraccountController extends Controller {
 //                        $group->save(false);
 //                    endforeach;
 //                }
+                Myclass::addAuditTrail("Updated Publisher Biography {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $biograph_model->Pub_Acc_Id . '/tab/4'));
             }
@@ -159,6 +164,7 @@ class PublisheraccountController extends Controller {
             $psedonym_model->attributes = $_POST['PublisherPseudonym'];
 
             if ($psedonym_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Pseudonym {$model->Pub_Corporate_Name} successfully.", "microphone");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $psedonym_model->Pub_Acc_Id . '/tab/5'));
             }
@@ -167,6 +173,7 @@ class PublisheraccountController extends Controller {
 
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Managed Rights {$model->Pub_Corporate_Name} successfully.", "microphone");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('publisheraccount/update/id/' . $managed_model->Pub_Acc_Id . '/tab/6'));
                 }
@@ -176,6 +183,7 @@ class PublisheraccountController extends Controller {
 
             if ($related_model->validate()) {
                 if ($related_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Related Rights {$model->Pub_Corporate_Name} successfully.", "microphone");
                     Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
                     $this->redirect(array('publisheraccount/update/id/' . $related_model->Pub_Acc_Id . '/tab/7'));
                 }
@@ -185,6 +193,7 @@ class PublisheraccountController extends Controller {
 
             if ($succession_model->validate()) {
                 if ($succession_model->save()) {
+                Myclass::addAuditTrail("Updated Publisher Succession {$model->Pub_Corporate_Name} successfully.", "microphone");
                     Yii::app()->user->setFlash('success', 'Succession Saved Successfully!!!');
                     $this->redirect(array('publisheraccount/update/id/' . $succession_model->Pub_Acc_Id . '/tab/8'));
                 }
@@ -202,7 +211,9 @@ class PublisheraccountController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Publisher {$model->Pub_Corporate_Name} successfully.", "microphone");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

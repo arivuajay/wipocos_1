@@ -64,6 +64,7 @@ class MastertypeController extends Controller {
         if (isset($_POST['MasterType'])) {
             $model->attributes = $_POST['MasterType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Type {$model->Type_Name} successfully.", "list");
                 Yii::app()->user->setFlash('success', 'MasterType Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -88,6 +89,7 @@ class MastertypeController extends Controller {
         if (isset($_POST['MasterType'])) {
             $model->attributes = $_POST['MasterType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Type {$model->Type_Name} successfully.", "list");
                 Yii::app()->user->setFlash('success', 'MasterType Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -105,7 +107,9 @@ class MastertypeController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Master Type {$model->Type_Name} successfully.", "list");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
