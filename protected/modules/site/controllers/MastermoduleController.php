@@ -64,6 +64,7 @@ class MastermoduleController extends Controller {
         if (isset($_POST['MasterModule'])) {
             $model->attributes = $_POST['MasterModule'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Module {$model->Module_Code} successfully.", "building-o");
                 Yii::app()->user->setFlash('success', 'MasterModule Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Module_ID));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastermoduleController extends Controller {
         if (isset($_POST['MasterModule'])) {
             $model->attributes = $_POST['MasterModule'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Module {$model->Module_Code} successfully.", "building-o");
                 Yii::app()->user->setFlash('success', 'MasterModule Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Module_ID));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastermoduleController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Master Module {$model->Module_Code} successfully.", "building-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

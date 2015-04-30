@@ -64,6 +64,7 @@ class MasterdocumenttypeController extends Controller {
         if (isset($_POST['MasterDocumentType'])) {
             $model->attributes = $_POST['MasterDocumentType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created MasterDocumentType {$model->Doc_Type_Name} successfully.", "file-audio-o");
                 Yii::app()->user->setFlash('success', 'MasterDocumentType Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Doc_Type_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterdocumenttypeController extends Controller {
         if (isset($_POST['MasterDocumentType'])) {
             $model->attributes = $_POST['MasterDocumentType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated MasterDocumentType {$model->Doc_Type_Name} successfully.", "file-audio-o");
                 Yii::app()->user->setFlash('success', 'MasterDocumentType Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Doc_Type_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterdocumenttypeController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted MasterDocumentType {$model->Doc_Type_Name} successfully.", "file-audio-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

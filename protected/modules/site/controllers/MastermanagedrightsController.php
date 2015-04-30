@@ -64,6 +64,7 @@ class MastermanagedrightsController extends Controller {
         if (isset($_POST['MasterManagedRights'])) {
             $model->attributes = $_POST['MasterManagedRights'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Manage Rights {$model->Mgd_Rights_Name} successfully.", "copyright");
                 Yii::app()->user->setFlash('success', 'MasterManagedRights Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Mgd_Rights_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastermanagedrightsController extends Controller {
         if (isset($_POST['MasterManagedRights'])) {
             $model->attributes = $_POST['MasterManagedRights'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Manage Rights {$model->Mgd_Rights_Name} successfully.", "copyright");
                 Yii::app()->user->setFlash('success', 'MasterManagedRights Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Mgd_Rights_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastermanagedrightsController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Master Manage Rights {$model->Mgd_Rights_Name} successfully.", "copyright");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

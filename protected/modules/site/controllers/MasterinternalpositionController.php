@@ -64,6 +64,7 @@ class MasterinternalpositionController extends Controller {
         if (isset($_POST['MasterInternalPosition'])) {
             $model->attributes = $_POST['MasterInternalPosition'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created MasterInternalPosition {$model->Int_Post_Name} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'MasterInternalPosition Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Int_Post_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterinternalpositionController extends Controller {
         if (isset($_POST['MasterInternalPosition'])) {
             $model->attributes = $_POST['MasterInternalPosition'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated MasterInternalPosition {$model->Int_Post_Name} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'MasterInternalPosition Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Int_Post_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterinternalpositionController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted MasterInternalPosition {$model->Int_Post_Name} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

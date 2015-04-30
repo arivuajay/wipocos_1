@@ -64,6 +64,7 @@ class MastercountryController extends Controller {
         if (isset($_POST['MasterCountry'])) {
             $model->attributes = $_POST['MasterCountry'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Country {$model->Country_Name} successfully.", "globe");
                 Yii::app()->user->setFlash('success', 'MasterCountry Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Country_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastercountryController extends Controller {
         if (isset($_POST['MasterCountry'])) {
             $model->attributes = $_POST['MasterCountry'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Country {$model->Country_Name} successfully.", "globe");
                 Yii::app()->user->setFlash('success', 'MasterCountry Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Country_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastercountryController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Country {$model->Country_Name} successfully.", "globe");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

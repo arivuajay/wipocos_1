@@ -64,6 +64,7 @@ class MasterlanguageController extends Controller {
         if (isset($_POST['MasterLanguage'])) {
             $model->attributes = $_POST['MasterLanguage'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Language {$model->Lang_Name} successfully.", "language");
                 Yii::app()->user->setFlash('success', 'MasterLanguage Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Lang_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterlanguageController extends Controller {
         if (isset($_POST['MasterLanguage'])) {
             $model->attributes = $_POST['MasterLanguage'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Language {$model->Lang_Name} successfully.", "language");
                 Yii::app()->user->setFlash('success', 'MasterLanguage Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Lang_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterlanguageController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Created Master Language {$model->Lang_Name} successfully.", "language");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

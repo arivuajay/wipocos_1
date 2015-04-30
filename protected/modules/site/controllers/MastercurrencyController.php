@@ -64,6 +64,7 @@ class MastercurrencyController extends Controller {
         if (isset($_POST['MasterCurrency'])) {
             $model->attributes = $_POST['MasterCurrency'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Currency {$model->Currency_Name} successfully.", "globe");
                 Yii::app()->user->setFlash('success', 'MasterCurrency Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -88,6 +89,7 @@ class MastercurrencyController extends Controller {
         if (isset($_POST['MasterCurrency'])) {
             $model->attributes = $_POST['MasterCurrency'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Currency {$model->Currency_Name} successfully.", "globe");
                 Yii::app()->user->setFlash('success', 'MasterCurrency Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -105,7 +107,9 @@ class MastercurrencyController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Currency {$model->Currency_Name} successfully.", "globe");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

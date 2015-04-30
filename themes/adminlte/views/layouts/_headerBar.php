@@ -101,9 +101,10 @@
                             <ul class="menu">
                                 <?php
                                 $myActivities = AuditTrail::model()->mine()->orderDesc()->findAll(array('limit' => 10));
-                                $actColors = array('info', 'success', 'warning', 'danger');
+                                $actColors = array('info','warning','success','primary','danger');
                                 foreach ($myActivities as $key => $act) {
-                                    $col = array_rand($actColors);
+                                    $col = ($key % 5);
+
                                     echo "<li><a href='#'><i class='fa fa-{$act->aud_class} {$actColors[$col]}'></i>{$act->aud_message}</a></li>";
                                 }
                                 ?>

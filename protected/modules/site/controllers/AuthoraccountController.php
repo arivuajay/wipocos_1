@@ -98,6 +98,7 @@ class AuthoraccountController extends Controller {
             $model->attributes = $_POST['AuthorAccount'];
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
             if ($model->save()) {
+                Myclass::addAuditTrail("Created a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
                 Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
                 $this->redirect('update/id/' . $model->Auth_Acc_Id . '/tab/6');
             }
@@ -153,6 +154,7 @@ class AuthoraccountController extends Controller {
             $model->attributes = $_POST['AuthorAccount'];
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} AuthorAccount successfully.", "user");
                 Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/1'));
             }
@@ -161,6 +163,7 @@ class AuthoraccountController extends Controller {
             $address_model->Auth_Unknown_Address = $_POST['AuthorAccountAddress']['Auth_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Address successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $address_model->Auth_Acc_Id . '/tab/2'));
             }
@@ -168,6 +171,7 @@ class AuthoraccountController extends Controller {
             $payment_model->attributes = $_POST['AuthorPaymentMethod'];
 
             if ($payment_model->save()) {
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Payment successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $payment_model->Auth_Acc_Id . '/tab/3'));
             }
@@ -184,6 +188,7 @@ class AuthoraccountController extends Controller {
                         $group->save(false);
                     endforeach;
                 }
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Biography successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $biograph_model->Auth_Acc_Id . '/tab/4'));
             }
@@ -191,6 +196,7 @@ class AuthoraccountController extends Controller {
             $psedonym_model->attributes = $_POST['AuthorPseudonym'];
 
             if ($psedonym_model->save()) {
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Pseudonym successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $psedonym_model->Auth_Acc_Id . '/tab/5'));
             }
@@ -199,6 +205,7 @@ class AuthoraccountController extends Controller {
 
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
+                    Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Managed Rights successfully.", "user");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('authoraccount/update/id/' . $managed_model->Auth_Acc_Id . '/tab/6'));
                 }
@@ -207,6 +214,7 @@ class AuthoraccountController extends Controller {
             $death_model->attributes = $_POST['AuthorDeathInheritance'];
 
             if ($death_model->save()) {
+                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Death Inheritance successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
                 $this->redirect(array('authoraccount/update/id/' . $death_model->Auth_Acc_Id . '/tab/7'));
             }
@@ -220,6 +228,7 @@ class AuthoraccountController extends Controller {
                 $upload_model->setUploadDirectory(UPLOAD_DIR);
                 $upload_model->uploadFile();
                 if ($upload_model->save()) {
+                    Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Document saved successfully.", "user");
                     Yii::app()->user->setFlash('success', 'Document saved Successfully!!!');
                     $this->redirect(array('authoraccount/update/id/' . $death_model->Auth_Acc_Id . '/tab/8'));
                 }
@@ -241,7 +250,9 @@ class AuthoraccountController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
@@ -266,6 +277,7 @@ class AuthoraccountController extends Controller {
         $model->setUploadDirectory(UPLOAD_DIR);
         try {
             $model->delete();
+            Myclass::addAuditTrail("Deleted a file {$model->Auth_Upl_Doc_Name} successfully.", "user");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

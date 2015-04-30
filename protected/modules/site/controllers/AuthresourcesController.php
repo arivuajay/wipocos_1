@@ -64,6 +64,8 @@ class AuthresourcesController extends Controller {
         if (isset($_POST['AuthResources'])) {
             $model->attributes = $_POST['AuthResources'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Auth Resources successfully.", "users");
+
                 Yii::app()->user->setFlash('success', 'AuthResources Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Resource_ID));
                 $this->redirect(array('index'));
@@ -89,6 +91,7 @@ class AuthresourcesController extends Controller {
         if (isset($_POST['AuthResources'])) {
             $model->attributes = $_POST['AuthResources'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Auth Resources successfully.", "users");
                 Yii::app()->user->setFlash('success', 'AuthResources Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Resource_ID));
                 $this->redirect(array('index'));
@@ -108,6 +111,8 @@ class AuthresourcesController extends Controller {
     public function actionDelete($id) {
         try {
             $this->loadModel($id)->delete();
+
+            Myclass::addAuditTrail("Deleted Auth Resources successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

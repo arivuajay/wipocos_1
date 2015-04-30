@@ -64,6 +64,7 @@ class MasterdocumentstatusController extends Controller {
         if (isset($_POST['MasterDocumentStatus'])) {
             $model->attributes = $_POST['MasterDocumentStatus'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created MasterDocument Status {$model->Document_Sts_Name} successfully.", "briefcase");
                 Yii::app()->user->setFlash('success', 'MasterDocumentStatus Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Document_Sts_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterdocumentstatusController extends Controller {
         if (isset($_POST['MasterDocumentStatus'])) {
             $model->attributes = $_POST['MasterDocumentStatus'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated MasterDocument Status {$model->Document_Sts_Name} successfully.", "briefcase");
                 Yii::app()->user->setFlash('success', 'MasterDocumentStatus Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Document_Sts_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterdocumentstatusController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted MasterDocument Status {$model->Document_Sts_Name} successfully.", "briefcase");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

@@ -64,6 +64,7 @@ class MastermaritalstatusController extends Controller {
         if (isset($_POST['MasterMaritalStatus'])) {
             $model->attributes = $_POST['MasterMaritalStatus'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Marital Status {$model->Marital_State} successfully.", "female");
                 Yii::app()->user->setFlash('success', 'MasterMaritalStatus Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Marital_State_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastermaritalstatusController extends Controller {
         if (isset($_POST['MasterMaritalStatus'])) {
             $model->attributes = $_POST['MasterMaritalStatus'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Marital Status {$model->Marital_State} successfully.", "female");
                 Yii::app()->user->setFlash('success', 'MasterMaritalStatus Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Marital_State_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastermaritalstatusController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Master Marital Status {$model->Marital_State} successfully.", "female");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

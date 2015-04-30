@@ -53,6 +53,7 @@ class DefaultController extends Controller {
         if (isset($_POST['sign_in'])) {
             $model->attributes = $_POST['LoginForm'];
             if ($model->validate() && $model->login()):
+                Myclass::addAuditTrail("{$model->username} logged-in successfully.", "user");
                 $this->goHome();
             endif;
         }
@@ -62,6 +63,7 @@ class DefaultController extends Controller {
 
     public function actionLogout() {
         Yii::app()->user->logout();
+        Myclass::addAuditTrail(Yii::app()->user->username . " logged-out successfully.", "user");
         $this->redirect(array('/site/default/login'));
     }
 
@@ -113,6 +115,7 @@ class DefaultController extends Controller {
             $model->attributes = $_POST['User'];
             if ($model->validate()):
                 $model->save(false);
+                Myclass::addAuditTrail("Updated a {$model->username} successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Profile updated successfully');
                 $this->refresh();
             endif;

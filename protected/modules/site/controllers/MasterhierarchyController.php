@@ -64,6 +64,7 @@ class MasterhierarchyController extends Controller {
         if (isset($_POST['MasterHierarchy'])) {
             $model->attributes = $_POST['MasterHierarchy'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created MasterHierarchy {$model->Hierarchy_Name} successfully.", "fa-file-o");
                 Yii::app()->user->setFlash('success', 'MasterHierarchy Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -88,6 +89,7 @@ class MasterhierarchyController extends Controller {
         if (isset($_POST['MasterHierarchy'])) {
             $model->attributes = $_POST['MasterHierarchy'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated MasterHierarchy {$model->Hierarchy_Name} successfully.", "fa-file-o");
                 Yii::app()->user->setFlash('success', 'MasterHierarchy Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -105,7 +107,9 @@ class MasterhierarchyController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted MasterHierarchy {$model->Hierarchy_Name} successfully.", "fa-file-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

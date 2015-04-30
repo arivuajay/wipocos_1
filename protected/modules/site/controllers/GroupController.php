@@ -73,6 +73,7 @@ class GroupController extends Controller {
         if (isset($_POST['Group'])) {
             $model->attributes = $_POST['Group'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created a {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Group Created Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -113,6 +114,7 @@ class GroupController extends Controller {
         if (isset($_POST['Group'])) {
             $model->attributes = $_POST['Group'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated a {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
@@ -126,6 +128,7 @@ class GroupController extends Controller {
                     $group->save(false);
                 endforeach;
             }
+            Myclass::addAuditTrail("Memeber Saved on {$model->Group_Name} successfully.", "users");
 
             Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
             $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/2'));
@@ -133,12 +136,14 @@ class GroupController extends Controller {
             $payment_model->attributes = $_POST['GroupPaymentMethod'];
 
             if ($payment_model->save()) {
+                Myclass::addAuditTrail("Payment Method Saved on {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
                 $this->redirect(array('group/update/id/' . $payment_model->Group_Id . '/tab/3'));
             }
         } elseif (isset($_POST['GroupBiography'])) {
             $biograph_model->attributes = $_POST['GroupBiography'];
             if ($biograph_model->save()) {
+                Myclass::addAuditTrail("Biography Saved on {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('group/update/id/' . $biograph_model->Group_Id . '/tab/4'));
             }
@@ -146,6 +151,7 @@ class GroupController extends Controller {
             $psedonym_model->attributes = $_POST['GroupPseudonym'];
 
             if ($psedonym_model->save()) {
+                Myclass::addAuditTrail("Pseudonym Saved on {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
                 $this->redirect(array('group/update/id/' . $psedonym_model->Group_Id . '/tab/5'));
             }
@@ -154,6 +160,7 @@ class GroupController extends Controller {
 
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
+                    Myclass::addAuditTrail("Managed Rights Saved on {$model->Group_Name} successfully.", "users");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('group/update/id/' . $managed_model->Group_Id . '/tab/6'));
                 }
@@ -163,6 +170,7 @@ class GroupController extends Controller {
             $address_model->Group_Unknown_Address = $_POST['GroupRepresentative']['Group_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
+                Myclass::addAuditTrail("Address Saved on {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
                 $this->redirect(array('group/update/id/' . $address_model->Group_Id . '/tab/7'));
             }
@@ -178,7 +186,9 @@ class GroupController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a {$model->Group_Name} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

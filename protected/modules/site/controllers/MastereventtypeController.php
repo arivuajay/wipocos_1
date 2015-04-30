@@ -64,6 +64,7 @@ class MastereventtypeController extends Controller {
         if (isset($_POST['MasterEventType'])) {
             $model->attributes = $_POST['MasterEventType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created MasterEventType {$model->Evt_Type_Name} successfully.", "newspaper-o");
                 Yii::app()->user->setFlash('success', 'MasterEventType Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Evt_Type_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MastereventtypeController extends Controller {
         if (isset($_POST['MasterEventType'])) {
             $model->attributes = $_POST['MasterEventType'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated MasterEventType {$model->Evt_Type_Name} successfully.", "newspaper-o");
                 Yii::app()->user->setFlash('success', 'MasterEventType Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Evt_Type_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MastereventtypeController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted MasterEventType {$model->Evt_Type_Name} successfully.", "newspaper-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));

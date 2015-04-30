@@ -64,6 +64,7 @@ class MasterlegalformController extends Controller {
         if (isset($_POST['MasterLegalForm'])) {
             $model->attributes = $_POST['MasterLegalForm'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Created Master Legal Form {$model->Legal_Form_Name} successfully.", "file-o");
                 Yii::app()->user->setFlash('success', 'MasterLegalForm Created Successfully!!!');
                 //$this->redirect(array('view','id'=>$model->Master_Legal_Form_Id));
                 $this->redirect(array('index'));
@@ -89,6 +90,7 @@ class MasterlegalformController extends Controller {
         if (isset($_POST['MasterLegalForm'])) {
             $model->attributes = $_POST['MasterLegalForm'];
             if ($model->save()) {
+                Myclass::addAuditTrail("Updated Master Legal Form {$model->Legal_Form_Name} successfully.", "file-o");
                 Yii::app()->user->setFlash('success', 'MasterLegalForm Updated Successfully!!!');
 //				$this->redirect(array('view','id'=>$model->Master_Legal_Form_Id));
                 $this->redirect(array('index'));
@@ -107,7 +109,9 @@ class MasterlegalformController extends Controller {
      */
     public function actionDelete($id) {
         try {
-            $this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Master Legal Form {$model->Legal_Form_Name} successfully.", "file-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
