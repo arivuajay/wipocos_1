@@ -62,8 +62,8 @@ class DefaultController extends Controller {
     }
 
     public function actionLogout() {
-        Yii::app()->user->logout();
         Myclass::addAuditTrail(Yii::app()->user->username . " logged-out successfully.", "user");
+        Yii::app()->user->logout();
         $this->redirect(array('/site/default/login'));
     }
 
