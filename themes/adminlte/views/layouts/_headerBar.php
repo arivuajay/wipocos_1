@@ -91,50 +91,31 @@
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-warning"></i>
-                        <span class="label label-warning">10</span>
+                        <i class="fa fa-tasks"></i>
+                        <!--<span class="label label-warning">10</span>-->
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 10 notifications</li>
+                        <li class="header">Latest Activities</li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li>
-                                    <a href="#">
-                                        <i class="ion ion-ios7-people info"></i> 5 new members joined today
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-warning danger"></i> Very long description here that may not fit into the page
-                                        and may cause design problems
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-users warning"></i> 5 new members joined
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#">
-                                        <i class="ion ion-ios7-cart success"></i> 25 sales made
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="ion ion-ios7-person danger"></i> You changed your username
-                                    </a>
-                                </li>
+                                <?php
+                                $myActivities = AuditTrail::model()->mine()->orderDesc()->findAll(array('limit' => 10));
+                                $actColors = array('info', 'success', 'warning', 'danger');
+                                foreach ($myActivities as $key => $act) {
+                                    $col = array_rand($actColors);
+                                    echo "<li><a href='#'><i class='fa fa-{$act->aud_class} {$actColors[$col]}'></i>{$act->aud_message}</a></li>";
+                                }
+                                ?>
                             </ul>
                         </li>
-                        <li class="footer"><a href="#">View all</a></li>
+                        <li class="footer"><?php echo CHtml::link('View all', array('/site/audittrail/index')); ?></li>
                     </ul>
                 </li>
                 <!-- Tasks: style can be found in dropdown.less -->
                 <li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-tasks"></i>
+                        <i class="fa fa-warning"></i>
                         <span class="label label-danger">9</span>
                     </a>
                     <ul class="dropdown-menu">

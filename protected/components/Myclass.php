@@ -101,7 +101,7 @@ class Myclass extends CController {
 
         return $gender;
     }
-    
+
     public static function getGroupClause($key = NULL){
         $clause = array(
             'M' => 'Made',
@@ -112,7 +112,7 @@ class Myclass extends CController {
 
         return $clause;
     }
-    
+
     public static function getSearchStatus($key = NULL){
         $search = array(
             'A' => 'Active',
@@ -123,5 +123,14 @@ class Myclass extends CController {
             return $search[$key];
 
         return $search;
+    }
+
+    public static function addAuditTrail($message,$class = 'comment-o') {
+        $obj = new AuditTrail();
+        $obj->aud_message   = $message;
+        $obj->aud_class     = $class;
+
+        $obj->save();
+        return;
     }
 }

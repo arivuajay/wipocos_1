@@ -49,7 +49,7 @@ class Society extends CActiveRecord {
     public function tableName() {
         return '{{society}}';
     }
-    
+
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         return array(
@@ -71,6 +71,7 @@ class Society extends CActiveRecord {
             array('Society_Logo_File', 'length', 'max' => 255),
             array('Society_Subscription', 'length', 'max' => 100),
             array('Society_Code', 'length', 'max' => 50),
+            array('Society_Code', 'unique'),
             array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency_Id', 'length', 'max' => 50),
             array('Society_Rate, Society_Factor', 'length', 'max' => 10),
             array('Active', 'length', 'max' => 1),
@@ -83,7 +84,7 @@ class Society extends CActiveRecord {
             array('Society_Id, Society_Code, Society_Abbr_Id, Society_Logo_File, Society_Language_Id, Society_Mailing_Address, Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Hirearchy_Id, Society_Payment_Id, Society_Type_Id, Society_Factor, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights, Society_Currency_Id, Society_Rate, Society_Main_Performer_Id, Society_Producer_Id, Active, Created_Date, Rowversion, Society_Subscription', 'safe', 'on' => 'search'),
         );
     }
-    
+
     /**
      * @return array relational rules.
      */

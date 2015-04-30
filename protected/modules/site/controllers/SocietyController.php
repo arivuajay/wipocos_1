@@ -67,6 +67,7 @@ class SocietyController extends Controller {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
                 if ($model->save()) {
+                    Myclass::addAuditTrail("Created a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Created Successfully!!!');
                     $this->redirect(array('index'));
                 }
@@ -99,6 +100,7 @@ class SocietyController extends Controller {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
                 if ($model->save()) {
+                    Myclass::addAuditTrail("Updated a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Updated Successfully!!!');
                     $this->redirect(array('index'));
                 }
@@ -120,6 +122,7 @@ class SocietyController extends Controller {
         $model->setUploadDirectory(UPLOAD_DIR);
         try {
             $model->delete();
+            Myclass::addAuditTrail("Deleted a {$model->Society_Code} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
