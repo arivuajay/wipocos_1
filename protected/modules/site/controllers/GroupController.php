@@ -74,8 +74,8 @@ class GroupController extends Controller {
             $model->attributes = $_POST['Group'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created a {$model->Group_Name} successfully.", "users");
-                Yii::app()->user->setFlash('success', 'Group Created Successfully!!!');
-                $this->redirect(array('index'));
+                Yii::app()->user->setFlash('success', 'Group Created Successfully. Please Fill Managed Rights!!!');
+                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/6'));
             }
         }
 

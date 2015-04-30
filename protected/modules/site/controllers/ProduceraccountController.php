@@ -74,7 +74,7 @@ class ProduceraccountController extends Controller {
             $model->attributes = $_POST['ProducerAccount'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Producer {$model->Pro_Corporate_Name} successfully.", "money");
-                Yii::app()->user->setFlash('success', 'ProducerAccount Created Successfully!!!');
+                Yii::app()->user->setFlash('success', 'ProducerAccount Created Successfully. Please Fill Related Rights!!!');
                 $this->redirect(array('produceraccount/update/id/' . $model->Pro_Acc_Id . '/tab/6'));
             }
         }

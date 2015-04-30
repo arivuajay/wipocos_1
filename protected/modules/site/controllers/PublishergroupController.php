@@ -74,8 +74,8 @@ class PublishergroupController extends Controller {
             $model->attributes = $_POST['PublisherGroup'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'PublisherGroup Created Successfully!!!');
-                $this->redirect(array('index'));
+                Yii::app()->user->setFlash('success', 'PublisherGroup Created Successfully. Please Fill Managed Rights!!!');
+                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/6'));
             }
         }
 

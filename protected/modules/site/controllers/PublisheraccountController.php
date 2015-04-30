@@ -74,7 +74,7 @@ class PublisheraccountController extends Controller {
             $model->attributes = $_POST['PublisherAccount'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Publisher {$model->Pub_Corporate_Name} successfully.", "microphone");
-                Yii::app()->user->setFlash('success', 'PublisherAccount Created Successfully!!!');
+                Yii::app()->user->setFlash('success', 'PublisherAccount Created Successfully. Please Fill Managed Rights!!!');
                 $this->redirect(array('publisheraccount/update/id/' . $model->Pub_Acc_Id . '/tab/6'));
             }
         } else {
