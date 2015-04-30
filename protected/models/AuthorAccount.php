@@ -187,9 +187,9 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('authorManageRights.Auth_Mnge_Exit_Date', $this->expiry_date, true);
         $criteria->compare('authorManageRights.Auth_Mnge_Internal_Position_Id', $this->hierarchy_level, true);
         
-        $now = new CDbExpression("NOW()");
+        $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date > '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date is NULL OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){

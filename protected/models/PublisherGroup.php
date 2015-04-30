@@ -148,9 +148,9 @@ class PublisherGroup extends CActiveRecord {
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
-        $now = new CDbExpression("NOW()");
+        $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date > '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is NULL OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){

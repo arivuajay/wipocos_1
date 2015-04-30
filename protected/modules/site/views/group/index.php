@@ -141,8 +141,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => '',
                 ),
                 'Group_Name',
-                'Group_Is_Author',
-                'Group_Is_Performer',
+            array(
+                'name' => 'Group_Is_Author',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+            echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
+            ),
+            array(
+                'name' => 'Group_Is_Performer',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+            echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
+            ),
                 'Group_Internal_Code',
                 'Group_IPI_Name_Number',
                 'Group_IPN_Base_Number',
@@ -230,7 +244,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            echo $data->status;
+            echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
         },
             ),
             array(

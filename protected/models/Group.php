@@ -40,6 +40,7 @@ class Group extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null And groupManageRights.Group_Mnge_Exit_Date != '0000-00-00' And groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
 
@@ -138,9 +139,9 @@ class Group extends CActiveRecord {
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
-        $now = new CDbExpression("NOW()");
+        $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date > '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date is NULL OR groupManageRights.Group_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){

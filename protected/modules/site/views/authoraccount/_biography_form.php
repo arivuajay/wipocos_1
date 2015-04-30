@@ -20,7 +20,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
-    $groups = Group::model()->findAll('Group_Is_Author = :author', array(':author' => '1'));
+    $groups = Group::model()->with('groupManageRights')->isStatusActive()->findAll('Group_Is_Author = :author', array(':author' => '1'));
     $group_ids = !$model->isNewRecord ? CHtml::listData($author_model->groupMembers,'Group_Member_Id','Group_Id') : array();
     ?>
     <div class="box-body">
