@@ -78,7 +78,7 @@
                         array('label' => '<i class="fa fa-music"></i> <span>Performer</span>', 'url' => array('/site/performeraccount/index')),
                         array('label' => '<i class="fa fa-group"></i> <span>Publisher/Producer Group</span>', 'url' => array('/site/publishergroup/index')),
                         array('label' => '<i class="fa fa-microphone"></i> <span>Publisher</span>', 'url' => array('/site/publisheraccount/index')),
-                        array('label' => '<i class="fa fa-microphone"></i> <span>Producer</span>', 'url' => array('/site/produceraccount/index')),
+                        array('label' => '<i class="fa fa-money"></i> <span>Producer</span>', 'url' => array('/site/produceraccount/index')),
                     ),
                 ),
 //                array('label' => '<i class="fa fa-th"></i> <span>Number Assignment</span>', 'url' => array('/site/numberassignment/index')),
