@@ -61,6 +61,7 @@ class ProducerAccount extends CActiveRecord {
             array('Pro_Ipi, Pro_Ipi_Base_Number, Pro_Country_Id, Pro_Legal_Form_id, Pro_Language_Id', 'numerical', 'integerOnly' => true),
             array('Pro_Corporate_Name, Pro_Internal_Code, Pro_Place, Pro_Reg_Number', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
+            array('Pro_Internal_Code, Pro_Corporate_Name', 'unique'),
             array('Pro_Reg_Date, Pro_Excerpt_Date, Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
