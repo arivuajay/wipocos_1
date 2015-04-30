@@ -17,4 +17,5 @@ class SiteModule extends CWebModule {
         } else
             return false;
     }
+
 }

@@ -29,6 +29,7 @@
 class Group extends CActiveRecord {
 
     public $search_status;
+    public $is_auth_performer;
     /**
      * @return string the associated database table name
      */
@@ -101,6 +102,7 @@ class Group extends CActiveRecord {
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'search_status' => 'Status',
+            'is_auth_performer' => 'Author/Performer',
         );
     }
 
@@ -147,6 +149,13 @@ class Group extends CActiveRecord {
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
         }
+        
+        if($this->is_auth_performer == 'A'){
+            $criteria->compare('Group_Is_Author', '1', true);
+        }elseif($this->is_auth_performer == 'P'){
+            $criteria->compare('Group_Is_Performer', '1', true);
+        }
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(

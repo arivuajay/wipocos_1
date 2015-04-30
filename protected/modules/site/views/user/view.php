@@ -1,5 +1,5 @@
 <?php
-$this->title = 'View User #'.$model->name;
+$this->title = 'View User #' . $model->name;
 $this->breadcrumbs = array(
     'Users' => array('index'),
     'View User',
@@ -15,15 +15,15 @@ $this->breadcrumbs = array(
     <?php
     $this->widget('zii.widgets.CDetailView', array(
         'data' => $model,
-        'htmlOptions' => array('class'=>'table table-striped table-bordered'),
+        'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
             'id',
             'username',
             'name',
             array(
                 'label' => $model->getAttributeLabel('email'),
-                'type'  => 'raw',
-                'value' => CHtml::link($model->email,"mailto:{$model->email}")
+                'type' => 'raw',
+                'value' => CHtml::link($model->email, "mailto:{$model->email}")
             ),
             array(
                 'label' => $model->getAttributeLabel('role'),

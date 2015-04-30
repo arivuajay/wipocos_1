@@ -39,7 +39,7 @@
                 <?php echo $form->textField($model, 'Pub_Group_Rep_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Group_Rep_Address_3'); ?>
             </div>
-            
+
             <div class="form-group">
                 <?php echo $form->textField($model, 'Pub_Group_Rep_Address_4', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Group_Rep_Address_4'); ?>
@@ -61,7 +61,7 @@
                 <?php echo $form->textField($model, 'Pub_Group_Home_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Group_Home_Address_3'); ?>
             </div>
-            
+
             <div class="form-group">
                 <?php echo $form->textField($model, 'Pub_Group_Home_Address_4', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Group_Home_Address_4'); ?>

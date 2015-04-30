@@ -38,13 +38,13 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Exit_Date', array('class' => '')); ?>
-                 <?php 
+                <?php
                 $exit_date = '';
-                if(isset($model->Perf_Rel_Exit_Date)){
+                if (isset($model->Perf_Rel_Exit_Date)) {
                     $exit_date = $model->Perf_Rel_Exit_Date != "0000-00-00" ? $model->Perf_Rel_Exit_Date : '';
                 }
                 ?>
-               <?php echo $form->textField($model, 'Perf_Rel_Exit_Date', array('class' => 'form-control date', 'value' => $exit_date)); ?>
+                <?php echo $form->textField($model, 'Perf_Rel_Exit_Date', array('class' => 'form-control date', 'value' => $exit_date)); ?>
                 <?php echo $form->error($model, 'Perf_Rel_Exit_Date'); ?>
             </div>
 
@@ -92,16 +92,16 @@
             </div>
 
             <?php if (!$model->isNewRecord) { ?>
-<!--                <div class="form-group">
-                    <?php echo CHtml::link('View File', $model->getFilePath(),  array('target' => '_blank')) ?>
-                </div>-->
+                <!--                <div class="form-group">
+                <?php echo CHtml::link('View File', $model->getFilePath(), array('target' => '_blank')) ?>
+                                </div>-->
             <?php } ?>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Perf_Rel_Duration', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Perf_Rel_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                <?php echo $form->error($model, 'Perf_Rel_Duration'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Perf_Rel_Duration', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Perf_Rel_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+            <?php echo $form->error($model, 'Perf_Rel_Duration'); ?>
+                        </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Avl_Work_Cat_Id', array('class' => '')); ?>
@@ -109,11 +109,11 @@
                 <?php echo $form->error($model, 'Perf_Rel_Avl_Work_Cat_Id'); ?>
             </div>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Perf_Rel_Type_Rght_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Perf_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
-                <?php echo $form->error($model, 'Perf_Rel_Type_Rght_Id'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Perf_Rel_Type_Rght_Id', array('class' => '')); ?>
+            <?php echo $form->dropDownList($model, 'Perf_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
+            <?php echo $form->error($model, 'Perf_Rel_Type_Rght_Id'); ?>
+                        </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Managed_Rights_Id', array('class' => '')); ?>

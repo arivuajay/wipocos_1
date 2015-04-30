@@ -38,9 +38,9 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Exit_Date', array('class' => '')); ?>
-                <?php 
+                <?php
                 $exit_date = '';
-                if(isset($model->Auth_Mnge_Exit_Date)){
+                if (isset($model->Auth_Mnge_Exit_Date)) {
                     $exit_date = $model->Auth_Mnge_Exit_Date != "0000-00-00" ? $model->Auth_Mnge_Exit_Date : '';
                 }
                 ?>
@@ -92,16 +92,16 @@
             </div>
 
             <?php if (!$model->isNewRecord) { ?>
-<!--                <div class="form-group">
-                    <?php echo CHtml::link('View File', $model->getFilePath(),  array('target' => '_blank')) ?>
-                </div>-->
+                <!--                <div class="form-group">
+                <?php echo CHtml::link('View File', $model->getFilePath(), array('target' => '_blank')) ?>
+                                </div>-->
             <?php } ?>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+            <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
+                        </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Avl_Work_Cat_Id', array('class' => '')); ?>

@@ -23,7 +23,7 @@ $this->breadcrumbs = array(
     ));
     ?>
     <div class="body bg-gray">
-            <?php if (isset($this->flashMessages)): ?>
+        <?php if (isset($this->flashMessages)): ?>
             <?php foreach ($this->flashMessages as $key => $message) { ?>
                 <div class="alert alert-<?php echo $key; ?> fade in">
                     <button type="button" class="close close-sm" data-dismiss="alert">

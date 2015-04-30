@@ -15,7 +15,7 @@ class PublishergroupController extends Controller {
                 //'postOnly + delete', // we only allow deletion via POST request
         );
     }
-    
+
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -79,7 +79,7 @@ class PublishergroupController extends Controller {
         }
 
         $tab = 1;
-        $this->render('create', compact('model','tab','type'));
+        $this->render('create', compact('model', 'tab', 'type'));
     }
 
     /**
@@ -116,20 +116,20 @@ class PublishergroupController extends Controller {
 
         $org_share_publisher_exists = PublisherGroupOriginalShare::model()->findByAttributes(array('Pub_Group_Id' => $id));
         $org_share_publisher_model = empty($org_share_publisher_exists) ? new PublisherGroupOriginalShare : $org_share_publisher_exists;
-        
+
         $sub_share_publisher_exists = PublisherGroupSubShare::model()->findByAttributes(array('Pub_Group_Id' => $id));
         $sub_share_publisher_model = empty($sub_share_publisher_exists) ? new PublisherGroupSubShare : $sub_share_publisher_exists;
-        
+
         $catalog_exists = PublisherGroupCatalogue::model()->findByAttributes(array('Pub_Group_Id' => $id));
-        if(empty($catalog_exists)){
+        if (empty($catalog_exists)) {
             $catalog_model = new PublisherGroupCatalogue('create');
-        }else{
+        } else {
             $catalog_model = $catalog_exists;
             $catalog_model->setScenario('update');
         }
-        
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $managed_model, $payment_model, $rel_payment_model, $biograph_model, 
+        $this->performAjaxValidation(array($model, $managed_model, $payment_model, $rel_payment_model, $biograph_model,
             $psedonym_model, $address_model, $org_publisher_model, $sub_publisher_model, $org_publisher_model,
             $org_share_publisher_model, $sub_share_publisher_model, $catalog_model));
 
@@ -139,19 +139,19 @@ class PublishergroupController extends Controller {
                 Yii::app()->user->setFlash('success', 'Publisher Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
-        }elseif (isset($_POST['GroupMembers'])) {
+        } elseif (isset($_POST['GroupMembers'])) {
             PublisherGroupMembers::model()->deleteAll("Pub_Group_Id = '{$model->Pub_Group_Id}'");
-                if(isset($_POST['user_ids']) && !empty($_POST['user_ids'])){
-                    foreach($_POST['user_ids'] as $uid):
-                        $group = new PublisherGroupMembers;
-                        $group->Pub_Group_Id = $model->Pub_Group_Id;
-                        $group->Pub_Group_Member_Internal_Code = $uid;
-                        $group->save(false);
-                    endforeach;
-                }
+            if (isset($_POST['user_ids']) && !empty($_POST['user_ids'])) {
+                foreach ($_POST['user_ids'] as $uid):
+                    $group = new PublisherGroupMembers;
+                    $group->Pub_Group_Id = $model->Pub_Group_Id;
+                    $group->Pub_Group_Member_Internal_Code = $uid;
+                    $group->save(false);
+                endforeach;
+            }
 
-                Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
-                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/2'));
+            Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
+            $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/2'));
         } elseif (isset($_POST['PublisherGroupCopyrightPayment'])) {
             $payment_model->attributes = $_POST['PublisherGroupCopyrightPayment'];
 
@@ -219,7 +219,7 @@ class PublishergroupController extends Controller {
             }
         } elseif (isset($_POST['PublisherGroupCatalogue'])) {
             $catalog_model->attributes = $_POST['PublisherGroupCatalogue'];
-            if($_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']){
+            if ($_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']) {
                 $catalog_model->setAttribute('Pub_Group_Cat_File', $_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']);
             }
 
@@ -230,14 +230,12 @@ class PublishergroupController extends Controller {
                     Yii::app()->user->setFlash('success', 'Subcontracted Catalogue Saved Successfully!!!');
                     $this->redirect(array('publishergroup/update/id/' . $catalog_model->Pub_Group_Id . '/tab/8'));
                 }
-            }else{
+            } else {
                 $tab = 8;
             }
         }
 
-        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 
-                'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model',
-                'sub_share_publisher_model', 'catalog_model'));
+        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
     }
 
     /**
@@ -246,7 +244,15 @@ class PublishergroupController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -268,6 +274,7 @@ class PublishergroupController extends Controller {
             $search = true;
             $searchModel->attributes = $_GET['PublisherGroup'];
             $searchModel->search_status = $_GET['PublisherGroup']['search_status'];
+            $searchModel->is_pub_producer = $_GET['PublisherGroup']['is_pub_producer'];
             $searchModel->search();
         }
         if ($this->isExportRequest()) {
@@ -312,19 +319,7 @@ class PublishergroupController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'publisher-group-form'
-                || $_POST['ajax'] === 'publisher-group-managed-rights-form'
-                || $_POST['ajax'] === 'publisher-group-copy-payment-method-form'
-                || $_POST['ajax'] === 'publisher-group-related-payment-method-form'
-                || $_POST['ajax'] === 'publisher-group-biography-form'
-                || $_POST['ajax'] === 'publisher-group-pseudonym-form'
-                || $_POST['ajax'] === 'publisher-group-account-address-form'
-                || $_POST['ajax'] === 'publisher-group-member-form'
-                || $_POST['ajax'] === 'publisher-group-original-publisher-form'
-                || $_POST['ajax'] === 'publisher-group-sub-publisher-form'
-                || $_POST['ajax'] === 'publisher-group-original-share-form'
-                || $_POST['ajax'] === 'publisher-group-sub-share-form'
-                || $_POST['ajax'] === 'publisher-group-catalogue-form'
+                $_POST['ajax'] === 'publisher-group-form' || $_POST['ajax'] === 'publisher-group-managed-rights-form' || $_POST['ajax'] === 'publisher-group-copy-payment-method-form' || $_POST['ajax'] === 'publisher-group-related-payment-method-form' || $_POST['ajax'] === 'publisher-group-biography-form' || $_POST['ajax'] === 'publisher-group-pseudonym-form' || $_POST['ajax'] === 'publisher-group-account-address-form' || $_POST['ajax'] === 'publisher-group-member-form' || $_POST['ajax'] === 'publisher-group-original-publisher-form' || $_POST['ajax'] === 'publisher-group-sub-publisher-form' || $_POST['ajax'] === 'publisher-group-original-share-form' || $_POST['ajax'] === 'publisher-group-sub-share-form' || $_POST['ajax'] === 'publisher-group-catalogue-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

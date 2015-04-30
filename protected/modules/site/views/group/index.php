@@ -112,17 +112,23 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'is_auth_performer', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'is_auth_performer', array('A' => 'Author', 'P' => 'Performer'), array('prompt' => '', 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-<?php $this->endWidget(); ?>
+                    <?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -141,33 +147,33 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => '',
                 ),
                 'Group_Name',
-            array(
-                'name' => 'Group_Is_Author',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
-            array(
-                'name' => 'Group_Is_Performer',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
+                array(
+                    'name' => 'Group_Is_Author',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
+                ),
+                array(
+                    'name' => 'Group_Is_Performer',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
+                ),
                 'Group_Internal_Code',
                 'Group_IPI_Name_Number',
                 'Group_IPN_Base_Number',
                 array(
-                'name' => 'Status',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo $data->status;
-                },
-            ),
+                    'name' => 'Status',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->status;
+            },
+                ),
                 /*
                   'Group_IPN_Number',
                   'Group_Date',
@@ -214,8 +220,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create','type'=>'performer'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -252,8 +258,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->status;
-                },
+            echo $data->status;
+        },
             ),
             /*
               'Group_IPN_Number',
@@ -280,7 +286,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         );
 
         $export_btn = $this->renderExportGridButton('pub-group-base-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));
-        
+
         $this->widget('booster.widgets.TbExtendedGridView', array(
             'id' => 'pub-group-base-grid',
             'type' => 'striped bordered datatable',

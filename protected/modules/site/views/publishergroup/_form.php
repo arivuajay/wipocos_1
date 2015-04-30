@@ -96,7 +96,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                                 <div class="form-group">
                                     <label>Status</label><br />
-                                    <?php echo $model->status;?>
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>
@@ -191,31 +191,31 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     }
                     ?>
                 </div>
-<!--                <div class="tab-pane" id="tab_8">
-                    <div class="box box-primary boxdivs">
-                        <?php
+                <!--                <div class="tab-pane" id="tab_8">
+                                    <div class="box box-primary boxdivs">
+                <?php
 //                        if (!$model->isNewRecord) {
 //                            $this->renderPartial('_original_publisher', array('model' => $org_publisher_model, 'group_model' => $model));
 //                            $this->renderPartial('_sub_publisher', array('model' => $sub_publisher_model, 'group_model' => $model));
 //                        }
-                        ?>
-                    </div>
-                    <div class="box box-primary boxdivs">
-                        <?php
+                ?>
+                                    </div>
+                                    <div class="box box-primary boxdivs">
+                <?php
 //                        if (!$model->isNewRecord) {
 //                            $this->renderPartial('_original_publisher_share', array('model' => $org_share_publisher_model, 'group_model' => $model));
 //                            $this->renderPartial('_sub_publisher_share', array('model' => $sub_share_publisher_model, 'group_model' => $model));
 //                        }
-                        ?>
-                    </div>
-                    <div class="box box-primary boxdivs">
-                    <?php
+                ?>
+                                    </div>
+                                    <div class="box box-primary boxdivs">
+                <?php
 //                    if (!$model->isNewRecord) {
 //                        $this->renderPartial('_group_catalogue', array('model' => $catalog_model, 'group_model' => $model));
 //                    }
-                    ?>
-                    </div>
-                </div>-->
+                ?>
+                                    </div>
+                                </div>-->
             </div>
         </div>
 
@@ -226,6 +226,12 @@ $js = <<< EOD
     $(document).ready(function(){
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
+        $("#PublisherGroupManageRights_Pub_Group_Mnge_Entry_Date").on("change", function(){
+            $("#PublisherGroupManageRights_Pub_Group_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#PublisherGroupManageRights_Pub_Group_Mnge_Exit_Date").on("change", function(){
+            $("#PublisherGroupManageRights_Pub_Group_Mnge_Exit_Date_2").val($(this).val());
+        });
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

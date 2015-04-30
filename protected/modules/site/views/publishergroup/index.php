@@ -111,8 +111,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'is_pub_producer', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'is_pub_producer', array('PU' => 'Publisher', 'PR' => 'Producer'), array('prompt' => '', 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -145,28 +151,28 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                    },
+                echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
                 ),
                 array(
                     'name' => 'Pub_Group_Is_Producer',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                    },
+                echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
                 ),
                 'Pub_Group_Internal_Code',
                 'Pub_Group_IPI_Name_Number',
                 'Pub_Group_IPN_Base_Number',
-                            array(
-                'name' => 'Status',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo $data->status;
-                },
-            ),
+                array(
+                    'name' => 'Status',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->status;
+            },
+                ),
                 /*
                   'Pub_Group_IPD_Number',
                   'Pub_Group_Date',
@@ -213,8 +219,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create','type'=>'publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create','type'=>'producer'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create', 'type' => 'publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create', 'type' => 'producer'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -232,27 +238,27 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                },
+            echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
             ),
             array(
                 'name' => 'Pub_Group_Is_Producer',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                },
+            echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
             ),
             'Pub_Group_Internal_Code',
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',
-                        array(
+            array(
                 'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->status;
-                },
+            echo $data->status;
+        },
             ),
             /*
               'Pub_Group_IPD_Number',

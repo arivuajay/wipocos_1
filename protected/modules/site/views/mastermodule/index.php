@@ -2,9 +2,9 @@
 /* @var $this MastermoduleController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title='Master Modules';
-$this->breadcrumbs=array(
-	'Master Modules',
+$this->title = 'Master Modules';
+$this->breadcrumbs = array(
+    'Master Modules',
 );
 ?>
 
@@ -16,26 +16,26 @@ $this->breadcrumbs=array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <?php 
+        <?php
         $gridColumns = array(
             array(
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
-		'Module_Code',
-		'Description',
-		'Active',
-		'Created_Date',
-		'Rowversion',
-		array(
+            'Module_Code',
+            'Description',
+            'Active',
+            'Created_Date',
+            'Rowversion',
+            array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )
-            );
-        
-            $this->widget('booster.widgets.TbExtendedGridView', array(
+        );
+
+        $this->widget('booster.widgets.TbExtendedGridView', array(
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,

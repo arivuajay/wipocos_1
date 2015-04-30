@@ -2,9 +2,9 @@
 /* @var $this SharedefinitionperroleController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title='Share Definition Per Roles';
-$this->breadcrumbs=array(
-	'Share Definition Per Roles',
+$this->title = 'Share Definition Per Roles';
+$this->breadcrumbs = array(
+    'Share Definition Per Roles',
 );
 ?>
 <div class="col-lg-12 col-md-12">
@@ -18,64 +18,67 @@ $this->breadcrumbs=array(
             </div>
             <section class="content">
                 <div class="row">
-                    <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'search-form',
-	'method'=>'get',
-        'action' => array('/site/sharedefinitionperrole/index'),
-        'htmlOptions' => array('role' => 'form')
-)); 
-$roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
-?>
-                    
-                                         <div class="col-lg-4 col-md-4">
+                    <?php
+                    $form = $this->beginWidget('CActiveForm', array(
+                        'id' => 'search-form',
+                        'method' => 'get',
+                        'action' => array('/site/sharedefinitionperrole/index'),
+                        'htmlOptions' => array('role' => 'form')
+                    ));
+                    $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
+                    ?>
+
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Shr_Def_Role',  array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel,'Shr_Def_Role', $roles, array('class'=>'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel,'Shr_Def_Role'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Shr_Def_Role', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Shr_Def_Role', $roles, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Shr_Def_Role'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Shr_Def_Equ_remn',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Shr_Def_Equ_remn',array('class'=>'form-control')); ?>
-                            <?php echo $form->error($searchModel,'Shr_Def_Equ_remn'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Shr_Def_Equ_remn', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Shr_Def_Equ_remn', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Shr_Def_Equ_remn'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Shr_Def_Blank_Tape_remn',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Shr_Def_Blank_Tape_remn',array('class'=>'form-control')); ?>
-                            <?php echo $form->error($searchModel,'Shr_Def_Blank_Tape_remn'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Shr_Def_Blank_Tape_remn', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Shr_Def_Blank_Tape_remn', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Shr_Def_Blank_Tape_remn'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Shr_Def_Neigh_Rgts',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Shr_Def_Neigh_Rgts',array('class'=>'form-control')); ?>
-                            <?php echo $form->error($searchModel,'Shr_Def_Neigh_Rgts'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Shr_Def_Neigh_Rgts', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Shr_Def_Neigh_Rgts', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Shr_Def_Neigh_Rgts'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Shr_Def_Excl_Rgts',  array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel,'Shr_Def_Excl_Rgts',array('class'=>'form-control')); ?>
-                            <?php echo $form->error($searchModel,'Shr_Def_Excl_Rgts'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Shr_Def_Excl_Rgts', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Shr_Def_Excl_Rgts', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Shr_Def_Excl_Rgts'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel,'Active',  array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));; ?>
-                            <?php echo $form->error($searchModel,'Active'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                            ;
+                            ?>
+<?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
-                                        <div class="col-lg-2 col-md-2">
+                    <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-                    <?php  $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -87,63 +90,63 @@ $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Rol
 <?php if ($search) { ?>
     <div class="col-lg-12 col-md-12">
         <div class="row">
-        <?php 
-        $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
-            array(
-                'name' => 'Shr_Def_Role',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+            <?php
+            $gridColumns = array(
+                array(
+                    'class' => 'IndexColumn',
+                    'header' => '',
+                ),
+                array(
+                    'name' => 'Shr_Def_Role',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
-              },
-            ),
-		'Shr_Def_Equ_remn',
-		'Shr_Def_Blank_Tape_remn',
-		'Shr_Def_Neigh_Rgts',
-		'Shr_Def_Excl_Rgts',
-		array(
-                'name' => 'Active',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                },
-            ),
-		array(
-                'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{update}{delete}',
-            )
-            );
-        
-            $this->widget('booster.widgets.TbExtendedGridView', array(
-            'type' => 'striped bordered',
-            'dataProvider' => $searchModel->search(),
-            'responsiveTable' => true,
-            'template' => "<div class='panel panel-primary'><div class='panel-heading'><div class='pull-right'>{summary}</div><h3 class='panel-title'><i class='glyphicon glyphicon-search'></i> Search Results</h3></div>\n<div class='panel-body'>{items}\n{pager}</div></div>",
-            'columns' => $gridColumns
+                    'value' => function($data) {
+                echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
+            },
+                ),
+                'Shr_Def_Equ_remn',
+                'Shr_Def_Blank_Tape_remn',
+                'Shr_Def_Neigh_Rgts',
+                'Shr_Def_Excl_Rgts',
+                array(
+                    'name' => 'Active',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
+                ),
+                array(
+                    'header' => 'Actions',
+                    'class' => 'booster.widgets.TbButtonColumn',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                    'template' => '{view}{update}{delete}',
                 )
-        );
-        ?>
-    </div>
+            );
+
+            $this->widget('booster.widgets.TbExtendedGridView', array(
+                'type' => 'striped bordered',
+                'dataProvider' => $searchModel->search(),
+                'responsiveTable' => true,
+                'template' => "<div class='panel panel-primary'><div class='panel-heading'><div class='pull-right'>{summary}</div><h3 class='panel-title'><i class='glyphicon glyphicon-search'></i> Search Results</h3></div>\n<div class='panel-body'>{items}\n{pager}</div></div>",
+                'columns' => $gridColumns
+                    )
+            );
+            ?>
+        </div>
     </div>
 <?php } ?>
 
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create ShareDefinitionPerRole', array('/site/sharedefinitionperrole/create'), array('class' => 'btn btn-success pull-right')); ?>
+<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create ShareDefinitionPerRole', array('/site/sharedefinitionperrole/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <?php 
+        <?php
         $gridColumns = array(
             array(
                 'class' => 'IndexColumn',
@@ -154,30 +157,30 @@ $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Rol
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
-              },
+            echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
+        },
             ),
-		'Shr_Def_Equ_remn',
-		'Shr_Def_Blank_Tape_remn',
-		'Shr_Def_Neigh_Rgts',
-		'Shr_Def_Excl_Rgts',
-		array(
+            'Shr_Def_Equ_remn',
+            'Shr_Def_Blank_Tape_remn',
+            'Shr_Def_Neigh_Rgts',
+            'Shr_Def_Excl_Rgts',
+            array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-                },
+            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
             ),
-		array(
+            array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )
-            );
-        
-            $this->widget('booster.widgets.TbExtendedGridView', array(
+        );
+
+        $this->widget('booster.widgets.TbExtendedGridView', array(
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,

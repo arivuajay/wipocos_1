@@ -38,9 +38,9 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Mnge_Exit_Date', array('class' => '')); ?>
-                <?php 
+                <?php
                 $exit_date = '';
-                if(isset($model->Pub_Mnge_Exit_Date)){
+                if (isset($model->Pub_Mnge_Exit_Date)) {
                     $exit_date = $model->Pub_Mnge_Exit_Date != "0000-00-00" ? $model->Pub_Mnge_Exit_Date : '';
                 }
                 ?>
@@ -61,9 +61,9 @@
             </div>
 
             <div class="form-group">
-                <?php 
+                <?php
                 $exit_date_2 = '';
-                if(isset($model->Pub_Mnge_Exit_Date_2)){
+                if (isset($model->Pub_Mnge_Exit_Date_2)) {
                     $exit_date_2 = $model->Pub_Mnge_Exit_Date_2 != "0000-00-00" ? $model->Pub_Mnge_Exit_Date_2 : '';
                 }
                 ?>
@@ -97,11 +97,11 @@
                 <?php echo $form->error($model, 'Pub_Mnge_File'); ?>
             </div>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pub_Mnge_Duration', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pub_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                <?php echo $form->error($model, 'Pub_Mnge_Duration'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pub_Mnge_Duration', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pub_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+            <?php echo $form->error($model, 'Pub_Mnge_Duration'); ?>
+                        </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Mnge_Avl_Work_Cat_Id', array('class' => '')); ?>

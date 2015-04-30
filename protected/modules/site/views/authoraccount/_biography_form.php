@@ -1,4 +1,4 @@
-<?php 
+<?php
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
@@ -21,10 +21,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ));
     echo $form->hiddenField($model, 'Auth_Acc_Id', array('value' => $author_model->Auth_Acc_Id));
     $groups = Group::model()->with('groupManageRights')->isStatusActive()->findAll('Group_Is_Author = :author', array(':author' => '1'));
-    $group_ids = !$model->isNewRecord ? CHtml::listData($author_model->groupMembers,'Group_Member_Id','Group_Id') : array();
+    $group_ids = !$model->isNewRecord ? CHtml::listData($author_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
     ?>
     <div class="box-body">
-         <div class="form-group">
+        <div class="form-group">
             <label for="base_table_search" class="col-sm-2 control-label required">Search</label>                    
             <div class="col-sm-5">
                 <input type="text" id="base_table_search" class="form-control">
@@ -36,21 +36,21 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
                 <table class="table table-bordered table-datatable">
                     <thead>
-                    <tr>
-                        <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id'))?></th>
-                        <th>Group Name</th>
-                        <th>Code</th>
-                    </tr>
+                        <tr>
+                            <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
+                            <th>Group Name</th>
+                            <th>Code</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($groups as $key => $group) {?>
-                    <tr>
-                        <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : '';?>
-                        <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id?>]" value="<?php echo $group->Group_Id?>" <?php echo $checked?> /></td>
-                        <td><?php echo $group->Group_Name?></td>
-                        <td><?php echo $group->Group_Internal_Code?></td>
-                    </tr>
-                    <?php }?>
+                        <?php foreach ($groups as $key => $group) { ?>
+                            <tr>
+                                <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : ''; ?>
+                                <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id ?>]" value="<?php echo $group->Group_Id ?>" <?php echo $checked ?> /></td>
+                                <td><?php echo $group->Group_Name ?></td>
+                                <td><?php echo $group->Group_Internal_Code ?></td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>

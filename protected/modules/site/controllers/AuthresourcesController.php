@@ -106,7 +106,15 @@ class AuthresourcesController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -175,18 +183,18 @@ class AuthresourcesController extends Controller {
 
         return $this->render('user_base', compact('model'));
     }
-    
+
     public function actionRole($rid = null) {
         $model = new AuthResources();
-        if($rid)
+        if ($rid)
             $model->Master_Role_ID = $rid;
 
         return $this->render('role_base', compact('model'));
     }
-    
+
     public function actionGetscreensbymodule() {
         $mid = $id = $type = '';
-        if(isset($_GET['mid']) && isset($_GET['id']) && isset($_GET['type'])){
+        if (isset($_GET['mid']) && isset($_GET['id']) && isset($_GET['type'])) {
             $mid = $_GET['mid'];
             $id = $_GET['id'];
             $type = $_GET['type'];
@@ -194,29 +202,29 @@ class AuthresourcesController extends Controller {
         $model = new AuthResources();
         $masters = MasterScreen::model()->findAllByAttributes(array('Module_ID' => $mid));
 
-        if($type == 'role'){
+        if ($type == 'role') {
             $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, 'Master_Role_ID' => $id));
-        }elseif ($type == 'user') {
+        } elseif ($type == 'user') {
             $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, 'Master_User_ID' => $id));
         }
 
         if (Yii::app()->request->isPostRequest) {
             $valid = true;
             foreach ($_POST['AuthResources'] as $data) {
-                if(is_array($data)){
+                if (is_array($data)) {
                     $model = !isset($data['Master_Resource_ID']) ? new AuthResources : $this->loadModel($data['Master_Resource_ID']);
                     $model->attributes = $data;
                     $valid = $model->save() && $valid;
                 }
             }
-            if($valid){
+            if ($valid) {
                 Yii::app()->user->setFlash('success', 'Changes saved successfully!!!');
                 $action = $_POST['AuthResources']['type'] == 'user' ? '/site/user' : '/site/masterrole';
-                return $this->redirect(array($action.'/index'));
+                return $this->redirect(array($action . '/index'));
             }
         } else {
             return $this->renderPartial('_screen_by_module', compact(
-                    'masters','exist_resources','model','id','type','mid'
+                                    'masters', 'exist_resources', 'model', 'id', 'type', 'mid'
             ));
         }
     }

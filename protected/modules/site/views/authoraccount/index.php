@@ -130,7 +130,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -173,10 +173,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'name' => 'Created_Date',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
-                   'value' => function($data) {
-            if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
-                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
-        },
+                    'value' => function($data) {
+                if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+            },
                 ),
                 array(
                     'name' => 'Date of Birth',
@@ -187,14 +187,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     echo date('Y-m-d', strtotime($data->Auth_DOB));
             },
                 ),
-            array(
-                'name' => 'Status',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo $data->status;
-                },
-            ),
+                array(
+                    'name' => 'Status',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->status;
+            },
+                ),
                 array(
                     'header' => 'Actions',
                     'class' => 'booster.widgets.TbButtonColumn',
@@ -225,7 +225,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
         <?php
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create','type'=>'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
+        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
         echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/authoraccount/create'), array('class' => 'btn btn-success pull-right'));
         ?>
     </div>
@@ -263,22 +263,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
         },
             ),
-                array(
-                    'name' => 'Date of Birth',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
-                    echo date('Y-m-d', strtotime($data->Auth_DOB));
-            },
-                    ),
+            array(
+                'name' => 'Date of Birth',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+            if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                echo date('Y-m-d', strtotime($data->Auth_DOB));
+        },
+            ),
             array(
                 'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->status;
-                },
+            echo $data->status;
+        },
             ),
 //            array(
 //                'name' => 'Active',

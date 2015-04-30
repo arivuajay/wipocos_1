@@ -46,6 +46,7 @@ class ProducerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is not Null And producerRelatedRights.Pro_Rel_Exit_Date != '0000-00-00' And producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
         );
     }
 

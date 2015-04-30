@@ -24,7 +24,7 @@ class GroupController extends Controller {
 //                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
         ));
     }
-    
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -79,7 +79,7 @@ class GroupController extends Controller {
         }
 
         $tab = 1;
-        $this->render('create', compact('model','tab','type'));
+        $this->render('create', compact('model', 'tab', 'type'));
     }
 
     /**
@@ -107,7 +107,6 @@ class GroupController extends Controller {
 
 //        $member_exists = GroupMember::model()->findByAttributes(array('Group_Id' => $id));
 //        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
-
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $payment_model, $managed_model, $biograph_model, $address_model, $psedonym_model));
 
@@ -117,19 +116,19 @@ class GroupController extends Controller {
                 Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
                 $this->redirect(array('index'));
             }
-        }elseif (isset($_POST['GroupMembers'])) {
+        } elseif (isset($_POST['GroupMembers'])) {
             GroupMembers::model()->deleteAll("Group_Id = '{$model->Group_Id}'");
-                if(isset($_POST['user_ids']) && !empty($_POST['user_ids'])){
-                    foreach($_POST['user_ids'] as $uid):
-                        $group = new GroupMembers;
-                        $group->Group_Id = $model->Group_Id;
-                        $group->Group_Member_Internal_Code = $uid;
-                        $group->save(false);
-                    endforeach;
-                }
+            if (isset($_POST['user_ids']) && !empty($_POST['user_ids'])) {
+                foreach ($_POST['user_ids'] as $uid):
+                    $group = new GroupMembers;
+                    $group->Group_Id = $model->Group_Id;
+                    $group->Group_Member_Internal_Code = $uid;
+                    $group->save(false);
+                endforeach;
+            }
 
-                Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
-                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/2'));
+            Yii::app()->user->setFlash('success', 'Memeber Saved Successfully!!!');
+            $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/2'));
         } elseif (isset($_POST['GroupPaymentMethod'])) {
             $payment_model->attributes = $_POST['GroupPaymentMethod'];
 
@@ -178,7 +177,15 @@ class GroupController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -200,6 +207,7 @@ class GroupController extends Controller {
             $search = true;
             $searchModel->attributes = $_GET['Group'];
             $searchModel->search_status = $_GET['Group']['search_status'];
+            $searchModel->is_auth_performer = $_GET['Group']['is_auth_performer'];
             $searchModel->search();
         }
 
@@ -245,13 +253,7 @@ class GroupController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'group-form'
-                || $_POST['ajax'] === 'group-payment-method-form'
-                || $_POST['ajax'] === 'group-managed-rights-form'
-                || $_POST['ajax'] === 'group-account-address-form'
-                || $_POST['ajax'] === 'group-pseudonym-form'
-                || $_POST['ajax'] === 'group-biography-form'
-                || $_POST['ajax'] === 'group-member-form'
+                $_POST['ajax'] === 'group-form' || $_POST['ajax'] === 'group-payment-method-form' || $_POST['ajax'] === 'group-managed-rights-form' || $_POST['ajax'] === 'group-account-address-form' || $_POST['ajax'] === 'group-pseudonym-form' || $_POST['ajax'] === 'group-biography-form' || $_POST['ajax'] === 'group-member-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

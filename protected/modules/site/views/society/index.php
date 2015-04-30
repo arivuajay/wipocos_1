@@ -109,18 +109,20 @@ $this->breadcrumbs = array(
                     <div class="col-lg-3 col-md-3">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ; ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php
+                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                            ;
+                            ?>
+<?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-                    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -134,57 +136,57 @@ $this->breadcrumbs = array(
         <div class="row">
             <?php
             $gridColumns = array(
-            array(
-            'class' => 'IndexColumn',
-            'header' => '',
-            ),
-            'Society_Code',
-            array(
-                'name' => 'Society_Abbr_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                array(
+                    'class' => 'IndexColumn',
+                    'header' => '',
+                ),
+                'Society_Code',
+                array(
+                    'name' => 'Society_Abbr_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
-                'value' => function($data) {
-                    echo $data->socOrg->Org_Abbrevation;
-              },
-            ),
-            array(
-                'name' => 'Society_Country_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                  'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->socCountry->Country_Name) ? $data->socCountry->Country_Name : '';
-              },
-            ),
-            array(
-                'name' => 'Society_Territory_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'value' => function($data) {
+                echo $data->socOrg->Org_Abbrevation;
+            },
+                ),
+                array(
+                    'name' => 'Society_Country_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo isset($data->socCountry->Country_Name) ? $data->socCountry->Country_Name : '';
+            },
+                ),
+                array(
+                    'name' => 'Society_Territory_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->socTerritory->Territory_Name) ? $data->socTerritory->Territory_Name : '';
-              },
-            ),
-            array(
-                'name' => 'Society_Region_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'value' => function($data) {
+                echo isset($data->socTerritory->Territory_Name) ? $data->socTerritory->Territory_Name : '';
+            },
+                ),
+                array(
+                    'name' => 'Society_Region_Id',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
-                'value' => function($data) {
-                    echo isset($data->socRegion->Region_Name) ? $data->socRegion->Region_Name : '';
-              },
-            ),
-              array(
-              'name' => 'Active',
-              'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
-              'value' => function($data) {
-              echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-              },
-              ),
-            array(
-            'header' => 'Actions',
-            'class' => 'booster.widgets.TbButtonColumn',
-            'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-            'template' => '{view}{update}{delete}',
-            )
+                    'value' => function($data) {
+                echo isset($data->socRegion->Region_Name) ? $data->socRegion->Region_Name : '';
+            },
+                ),
+                array(
+                    'name' => 'Active',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+            },
+                ),
+                array(
+                    'header' => 'Actions',
+                    'class' => 'booster.widgets.TbButtonColumn',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                    'template' => '{view}{update}{delete}',
+                )
             );
 
             $this->widget('booster.widgets.TbExtendedGridView', array(
@@ -203,7 +205,7 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Society', array('/site/society/create'), array('class' => 'btn btn-success pull-right')); ?>
+<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Society', array('/site/society/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -221,41 +223,41 @@ $this->breadcrumbs = array(
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->socOrg->Org_Abbrevation;
-              },
+            echo $data->socOrg->Org_Abbrevation;
+        },
             ),
             array(
                 'name' => 'Society_Country_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->socCountry->Country_Name) ? $data->socCountry->Country_Name : '';
-              },
+            echo isset($data->socCountry->Country_Name) ? $data->socCountry->Country_Name : '';
+        },
             ),
             array(
                 'name' => 'Society_Territory_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->socTerritory->Territory_Name) ? $data->socTerritory->Territory_Name : '';
-              },
+            echo isset($data->socTerritory->Territory_Name) ? $data->socTerritory->Territory_Name : '';
+        },
             ),
             array(
                 'name' => 'Society_Region_Id',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
+                'type' => 'raw',
                 'value' => function($data) {
-                    echo isset($data->socRegion->Region_Name) ? $data->socRegion->Region_Name : '';
-              },
+            echo isset($data->socRegion->Region_Name) ? $data->socRegion->Region_Name : '';
+        },
             ),
-              array(
-              'name' => 'Active',
-              'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-              'type' => 'raw',
-              'value' => function($data) {
-              echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-              },
-              ),
+            array(
+                'name' => 'Active',
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+            echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+        },
+            ),
             array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',

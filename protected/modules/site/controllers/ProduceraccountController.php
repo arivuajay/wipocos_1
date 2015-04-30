@@ -24,7 +24,7 @@ class ProduceraccountController extends Controller {
 //                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
         ));
     }
-    
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -74,7 +74,7 @@ class ProduceraccountController extends Controller {
             $model->attributes = $_POST['ProducerAccount'];
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'ProducerAccount Created Successfully!!!');
-                $this->redirect(array('produceraccount/update/id/'.$model->Pro_Acc_Id.'/tab/6'));
+                $this->redirect(array('produceraccount/update/id/' . $model->Pro_Acc_Id . '/tab/6'));
             }
         }
 
@@ -198,7 +198,15 @@ class ProduceraccountController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -265,14 +273,7 @@ class ProduceraccountController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'producer-account-form'
-                || $_POST['ajax'] === 'producer-account-address-form'
-                || $_POST['ajax'] === 'producer-managed-rights-form'
-                || $_POST['ajax'] === 'producer-payment-method-form'
-                || $_POST['ajax'] === 'producer-pseudonym-form'
-                || $_POST['ajax'] === 'producer-related-rights-form'
-                || $_POST['ajax'] === 'producer-succession-form'
-                || $_POST['ajax'] === 'producer-biography-form'
+                $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'producer-account-address-form' || $_POST['ajax'] === 'producer-managed-rights-form' || $_POST['ajax'] === 'producer-payment-method-form' || $_POST['ajax'] === 'producer-pseudonym-form' || $_POST['ajax'] === 'producer-related-rights-form' || $_POST['ajax'] === 'producer-succession-form' || $_POST['ajax'] === 'producer-biography-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

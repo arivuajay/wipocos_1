@@ -2,9 +2,9 @@
 /* @var $this AuthresourcesController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title='Auth Resources';
-$this->breadcrumbs=array(
-	'Auth Resources',
+$this->title = 'Auth Resources';
+$this->breadcrumbs = array(
+    'Auth Resources',
 );
 ?>
 
@@ -16,34 +16,34 @@ $this->breadcrumbs=array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <?php 
+        <?php
         $gridColumns = array(
             array(
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
-		'Master_User_ID',
-		'Master_Role_ID',
-		'Master_Module_ID',
-		'Master_Screen_ID',
-		'Master_Task_ADD',
-		'Master_Task_SEE',
-		/*
-		'Master_Task_UPT',
-		'Master_Task_DEL',
-		'Active',
-		'Created_Date',
-		'Rowversion',
-		*/
-		array(
+            'Master_User_ID',
+            'Master_Role_ID',
+            'Master_Module_ID',
+            'Master_Screen_ID',
+            'Master_Task_ADD',
+            'Master_Task_SEE',
+            /*
+              'Master_Task_UPT',
+              'Master_Task_DEL',
+              'Active',
+              'Created_Date',
+              'Rowversion',
+             */
+            array(
                 'header' => 'Actions',
                 'class' => 'booster.widgets.TbButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )
-            );
-        
-            $this->widget('booster.widgets.TbExtendedGridView', array(
+        );
+
+        $this->widget('booster.widgets.TbExtendedGridView', array(
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,

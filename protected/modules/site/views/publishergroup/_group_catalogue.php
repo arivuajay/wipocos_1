@@ -13,7 +13,7 @@ $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll()
 <div class="box-body col-lg-12">
     <h4>Subcontracted Catalogue</h4>
     <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pub_Group_Cat_Number', array('class' => 'col-sm-3 control-label')); ?>
+        <?php echo $form->labelEx($model, 'Pub_Group_Cat_Number', array('class' => 'col-sm-3 control-label')); ?>
         <div class="col-sm-5">
             <?php echo $form->textField($model, 'Pub_Group_Cat_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
             <?php echo $form->error($model, 'Pub_Group_Cat_Number'); ?>
@@ -75,7 +75,7 @@ $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll()
             <?php echo $form->error($model, 'Pub_Group_Cat_File'); ?>
         </div>
     </div>
-    
+
     <?php if (!$model->isNewRecord) { ?>
         <div class="form-group">
             <div class="col-sm-5  col-sm-offset-3">

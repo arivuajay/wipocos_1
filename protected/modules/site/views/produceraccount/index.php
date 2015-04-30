@@ -125,7 +125,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control'));?>
+                            <?php echo $form->dropDownList($searchModel, 'search_status', Myclass::getSearchStatus(), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -159,13 +159,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Pro_Date',
                 'Pro_Place',
                 array(
-                'name' => 'Status',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo $data->status;
-                },
-            ),
+                    'name' => 'Status',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->status;
+            },
+                ),
                 /*
                   'Pro_Country_Id',
                   'Pro_Legal_Form_id',
@@ -236,8 +236,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->status;
-                },
+            echo $data->status;
+        },
             ),
             /*
               'Pro_Country_Id',
@@ -264,7 +264,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         );
 
         $export_btn = $this->renderExportGridButton('producer-base-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));
-        
+
         $this->widget('booster.widgets.TbExtendedGridView', array(
             'id' => 'producer-base-grid',
             'type' => 'striped bordered datatable',

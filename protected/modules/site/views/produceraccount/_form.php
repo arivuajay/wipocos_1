@@ -1,6 +1,6 @@
 <?php
-/* @var $this PublisheraccountController */
-/* @var $model PublisherAccount */
+/* @var $this ProduceraccountController */
+/* @var $model ProducerAccount */
 /* @var $form CActiveForm */
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -79,9 +79,9 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->error($model, 'Pro_Ipi_Base_Number'); ?>
                                 </div>
 
-                                <?php 
+                                <?php
                                 $reg_date = '';
-                                if(isset($model->Pro_Reg_Date) && $model->Pro_Reg_Date != '0000-00-00'){
+                                if (isset($model->Pro_Reg_Date) && $model->Pro_Reg_Date != '0000-00-00') {
                                     $reg_date = $model->Pro_Reg_Date;
                                 }
                                 ?>
@@ -96,10 +96,10 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->textField($model, 'Pro_Reg_Number', array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pro_Reg_Number'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>Status</label><br />
-                                    <?php echo $model->status;?>
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>
@@ -137,9 +137,9 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->error($model, 'Pro_Legal_Form_id'); ?>
                                 </div>
 
-                                <?php 
+                                <?php
                                 $expr_date = '';
-                                if(isset($model->Pro_Excerpt_Date) && $model->Pro_Excerpt_Date != '0000-00-00'){
+                                if (isset($model->Pro_Excerpt_Date) && $model->Pro_Excerpt_Date != '0000-00-00') {
                                     $expr_date = $model->Pro_Excerpt_Date;
                                 }
                                 ?>
@@ -198,13 +198,13 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                     }
                     ?>
                 </div>
-<!--                <div class="tab-pane" id="tab_7">
-                    <?php
+                <!--                <div class="tab-pane" id="tab_7">
+                <?php
 //                    if (!$model->isNewRecord) {
 //                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'producer_model' => $model, 'regions' => $regions));
 //                    }
-                    ?>
-                </div>-->
+                ?>
+                                </div>-->
                 <div class="tab-pane" id="tab_8">
                     <?php
                     if (!$model->isNewRecord && !$related_model->isNewRecord) {
@@ -212,7 +212,7 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                     }
                     ?>
                 </div>
-                
+
             </div>
         </div>
 
@@ -223,22 +223,21 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        $('#PublisherAccount_Pro_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
         
-        $("#PublisherManageRights_Pro_Mnge_Entry_Date").on("change", function(){
-            $("#PublisherManageRights_Pro_Mnge_Entry_Date_2").val($(this).val());
+        $("#ProducerRelatedRights_Pro_Mnge_Entry_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Mnge_Entry_Date_2").val($(this).val());
         });
-        $("#PublisherManageRights_Pro_Mnge_Exit_Date").on("change", function(){
-            $("#PublisherManageRights_Pro_Mnge_Exit_Date_2").val($(this).val());
+        $("#ProducerRelatedRights_Pro_Mnge_Exit_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Mnge_Exit_Date_2").val($(this).val());
         });
         
-        $("#PublisherRelatedRights_Pro_Rel_Entry_Date").on("change", function(){
-             $("#PublisherRelatedRights_Pro_Rel_Entry_Date_2").val($(this).val());
+        $("#ProducerRelatedRights_Pro_Rel_Entry_Date").on("change", function(){
+             $("#ProducerRelatedRights_Pro_Rel_Entry_Date_2").val($(this).val());
         });
-        $("#PublisherRelatedRights_Pro_Rel_Exit_Date").on("change", function(){
-            $("#PublisherRelatedRights_Pro_Rel_Exit_Date_2").val($(this).val());
+        $("#ProducerRelatedRights_Pro_Rel_Exit_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Rel_Exit_Date_2").val($(this).val());
         });
     });
 EOD;

@@ -13,17 +13,17 @@
     <div class="box-body">
         <?php
         $trans_date = '';
-        if(isset($model->Pub_Suc_Date_Transfer) && $model->Pub_Suc_Date_Transfer != '0000-00-00'){
+        if (isset($model->Pub_Suc_Date_Transfer) && $model->Pub_Suc_Date_Transfer != '0000-00-00') {
             $trans_date = $model->Pub_Suc_Date_Transfer;
         }
         ?>
-<!--        <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pub_Suc_Date_Transfer', array('class' => 'col-sm-2 control-label')); ?>
-            <div class="col-sm-5">
-                <?php echo $form->textField($model, 'Pub_Suc_Date_Transfer', array('class' => 'form-control date', 'value' => $trans_date)); ?>
-                <?php echo $form->error($model, 'Pub_Suc_Date_Transfer'); ?>
-            </div>
-        </div>-->
+        <!--        <div class="form-group">
+        <?php echo $form->labelEx($model, 'Pub_Suc_Date_Transfer', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+        <?php echo $form->textField($model, 'Pub_Suc_Date_Transfer', array('class' => 'form-control date', 'value' => $trans_date)); ?>
+        <?php echo $form->error($model, 'Pub_Suc_Date_Transfer'); ?>
+                    </div>
+                </div>-->
 
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Pub_Suc_Name', array('class' => 'col-sm-2 control-label')); ?>

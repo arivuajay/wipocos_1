@@ -70,61 +70,61 @@ $this->breadcrumbs = array(
 </div>
 
 <?php if ($search) { ?>
-<div class="col-lg-12 col-md-12">
-    <div class="row">
-        <?php
-        $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
-            'Role_Code',
-            'Description',
-            array(
-                'name' => 'is_Admin',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo ($data->is_Admin == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
-                },
-            ),
-            array(
-                'name' => 'Active',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-                    echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
-                },
-            ),
-            array(
-                'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{privilages}{view}{update}{delete}',
-                'buttons' => array(
-                    'privilages' => array(//the name {reply} must be same
-                        'label' => '<i class="fa fa-cogs"></i>',
-                        'options' => array(
-                            'title' => 'Privilages',
-                        ),
-                        'url' => 'CHtml::normalizeUrl(array("/site/authresources/role/rid/".rawurlencode($data->Master_Role_ID)))',
-                    ),
+    <div class="col-lg-12 col-md-12">
+        <div class="row">
+            <?php
+            $gridColumns = array(
+                array(
+                    'class' => 'IndexColumn',
+                    'header' => '',
                 ),
-            )
-        );
-
-        $this->widget('booster.widgets.TbExtendedGridView', array(
-            'type' => 'striped bordered',
-            'dataProvider' => $searchModel->search(),
-            'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-search"></i>  Search Results</h3></div><div class="panel-body">{items}{pager}</div></div>',
-            'columns' => $gridColumns
+                'Role_Code',
+                'Description',
+                array(
+                    'name' => 'is_Admin',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->is_Admin == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
+            },
+                ),
+                array(
+                    'name' => 'Active',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
+            },
+                ),
+                array(
+                    'header' => 'Actions',
+                    'class' => 'booster.widgets.TbButtonColumn',
+                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                    'template' => '{privilages}{view}{update}{delete}',
+                    'buttons' => array(
+                        'privilages' => array(//the name {reply} must be same
+                            'label' => '<i class="fa fa-cogs"></i>',
+                            'options' => array(
+                                'title' => 'Privilages',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/authresources/role/rid/".rawurlencode($data->Master_Role_ID)))',
+                        ),
+                    ),
                 )
-        );
-        ?>
+            );
+
+            $this->widget('booster.widgets.TbExtendedGridView', array(
+                'type' => 'striped bordered',
+                'dataProvider' => $searchModel->search(),
+                'responsiveTable' => true,
+                'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-search"></i>  Search Results</h3></div><div class="panel-body">{items}{pager}</div></div>',
+                'columns' => $gridColumns
+                    )
+            );
+            ?>
+        </div>
     </div>
-</div>
-<?php }?>
+<?php } ?>
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
@@ -141,16 +141,16 @@ $this->breadcrumbs = array(
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo ($data->is_Admin == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
-                },
+            echo ($data->is_Admin == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
+        },
             ),
             array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
-                },
+            echo ($data->Active == 1) ? "<i class='fa fa-circle text-green'></i>" : "<i class='fa fa-circle text-red'></i>";
+        },
             ),
             array(
                 'header' => 'Actions',

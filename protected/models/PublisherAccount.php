@@ -47,6 +47,7 @@ class PublisherAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'isStatusActive' => array('condition' => "publisherManageRights.Pub_Mnge_Exit_Date is not Null And publisherManageRights.Pub_Mnge_Exit_Date != '0000-00-00' And publisherManageRights.Pub_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
 

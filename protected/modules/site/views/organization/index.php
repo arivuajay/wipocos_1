@@ -105,8 +105,10 @@ $this->breadcrumbs = array(
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ; ?>
+                            <?php
+                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                            ;
+                            ?>
 <?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
@@ -159,7 +161,7 @@ $this->breadcrumbs = array(
                     'value' => function($data) {
                 echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
             }
-                    ),
+                ),
                 'Org_Society_Type_Id',
                 array(
                     'name' => 'Active',
@@ -232,13 +234,13 @@ $this->breadcrumbs = array(
             echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
         },
             ),
-                array(
-                    'name' => 'Org_Currency_Id',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
-                    //              'type' => 'raw',
-                    'value' => function($data) {
-                echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
-            },
+            array(
+                'name' => 'Org_Currency_Id',
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
+                //              'type' => 'raw',
+                'value' => function($data) {
+            echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
+        },
             ),
             'Org_Society_Type_Id',
             array(
@@ -248,7 +250,7 @@ $this->breadcrumbs = array(
                 'value' => function($data) {
             echo ($data->Active == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
         }
-                ),
+            ),
             /*
               'Org_Address',
               'Org_Telephone',

@@ -43,7 +43,7 @@ echo $form->hiddenField($model, 'Pub_Group_Id', array('value' => $group_model->P
             <?php echo $form->error($model, 'Pub_Group_Sub_Name'); ?>
         </div>
     </div>
-    
+
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-2">
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>

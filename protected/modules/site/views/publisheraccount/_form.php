@@ -79,9 +79,9 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->error($model, 'Pub_Ipi_Base_Number'); ?>
                                 </div>
 
-                                <?php 
+                                <?php
                                 $reg_date = '';
-                                if(isset($model->Pub_Reg_Date) && $model->Pub_Reg_Date != '0000-00-00'){
+                                if (isset($model->Pub_Reg_Date) && $model->Pub_Reg_Date != '0000-00-00') {
                                     $reg_date = $model->Pub_Reg_Date;
                                 }
                                 ?>
@@ -96,10 +96,10 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->textField($model, 'Pub_Reg_Number', array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pub_Reg_Number'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>Status</label><br />
-                                    <?php echo $model->status;?>
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>
@@ -137,9 +137,9 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                                     <?php echo $form->error($model, 'Pub_Legal_Form_id'); ?>
                                 </div>
 
-                                <?php 
+                                <?php
                                 $expr_date = '';
-                                if(isset($model->Pub_Excerpt_Date) && $model->Pub_Excerpt_Date != '0000-00-00'){
+                                if (isset($model->Pub_Excerpt_Date) && $model->Pub_Excerpt_Date != '0000-00-00') {
                                     $expr_date = $model->Pub_Excerpt_Date;
                                 }
                                 ?>
@@ -198,13 +198,13 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                     }
                     ?>
                 </div>
-<!--                <div class="tab-pane" id="tab_7">
-                    <?php
+                <!--                <div class="tab-pane" id="tab_7">
+                <?php
 //                    if (!$model->isNewRecord) {
 //                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'publisher_model' => $model, 'regions' => $regions));
 //                    }
-                    ?>
-                </div>-->
+                ?>
+                                </div>-->
                 <div class="tab-pane" id="tab_8">
                     <?php
                     if (!$model->isNewRecord && !$managed_model->isNewRecord) {
@@ -212,7 +212,7 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                     }
                     ?>
                 </div>
-                
+
             </div>
         </div>
 

@@ -56,6 +56,7 @@ class AuthorAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is not Null And authorManageRights.Auth_Mnge_Exit_Date != '0000-00-00' And authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
 

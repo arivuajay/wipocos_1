@@ -84,9 +84,9 @@
             </div>
 
             <?php if (!$model->isNewRecord) { ?>
-<!--                <div class="form-group">
-                    <?php echo CHtml::link('View File', $model->getFilePath(),  array('target' => '_blank')) ?>
-                </div>-->
+                <!--                <div class="form-group">
+                <?php echo CHtml::link('View File', $model->getFilePath(), array('target' => '_blank')) ?>
+                                </div>-->
             <?php } ?>
 
             <div class="form-group">

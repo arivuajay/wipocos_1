@@ -201,7 +201,15 @@ class PublisheraccountController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -268,14 +276,7 @@ class PublisheraccountController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'publisher-account-form'
-                || $_POST['ajax'] === 'publisher-account-address-form'
-                || $_POST['ajax'] === 'publisher-managed-rights-form'
-                || $_POST['ajax'] === 'publisher-payment-method-form'
-                || $_POST['ajax'] === 'publisher-pseudonym-form'
-                || $_POST['ajax'] === 'publisher-related-rights-form'
-                || $_POST['ajax'] === 'publisher-succession-form'
-                || $_POST['ajax'] === 'publisher-biography-form'
+                $_POST['ajax'] === 'publisher-account-form' || $_POST['ajax'] === 'publisher-account-address-form' || $_POST['ajax'] === 'publisher-managed-rights-form' || $_POST['ajax'] === 'publisher-payment-method-form' || $_POST['ajax'] === 'publisher-pseudonym-form' || $_POST['ajax'] === 'publisher-related-rights-form' || $_POST['ajax'] === 'publisher-succession-form' || $_POST['ajax'] === 'publisher-biography-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

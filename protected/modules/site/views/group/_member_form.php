@@ -1,4 +1,4 @@
-<?php 
+<?php
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
@@ -20,9 +20,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ));
 
     if ($group_model->Group_Is_Author == '1') {
-        $users = AuthorAccount::model()->isActive()->findAll();
+        $users = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll();
     } elseif ($group_model->Group_Is_Performer == '1') {
-        $users = PerformerAccount::model()->isActive()->findAll();
+        $users = PerformerAccount::model()->with('performerRelatedRights')->isStatusActive()->findAll();
     }
 
     $user_ids = CHtml::listData($group_model->groupMembers, 'Group_Member_Id', 'Group_Member_Internal_Code');
@@ -40,11 +40,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             <div class="col-sm-5" style="max-height: 300px; overflow-y: scroll">
                 <table class="table table-bordered table-datatable">
                     <thead>
-                    <tr>
-                        <th style="width: 10px"><?php echo CHtml::checkBox('user_id', false, array('id' => 'user_id')) ?></th>
-                        <th>User Name</th>
-                        <th>Internal Code</th>
-                    </tr>
+                        <tr>
+                            <th style="width: 10px"><?php echo CHtml::checkBox('user_id', false, array('id' => 'user_id')) ?></th>
+                            <th>User Name</th>
+                            <th>Internal Code</th>
+                        </tr>
                     </thead>
                     <?php
                     if ($group_model->Group_Is_Author == '1') {
@@ -61,20 +61,20 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     }
                     ?>
                     <tbody>
-                    <?php
-                    if ($group_model->Group_Is_Performer == '1') {
-                        foreach ($users as $key => $user) {
-                            ?>
-                            <tr>
-                                <?php $checked = (!empty($user_ids) && in_array($user->Perf_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_Internal_Code ?>]" value="<?php echo $user->Perf_Internal_Code ?>" <?php echo $checked ?> /></td>
-                                <td><?php echo $user->Perf_First_Name ?></td>
-                                <td><?php echo $user->Perf_Internal_Code ?></td>
-                            </tr>
-                            <?php
+                        <?php
+                        if ($group_model->Group_Is_Performer == '1') {
+                            foreach ($users as $key => $user) {
+                                ?>
+                                <tr>
+                                    <?php $checked = (!empty($user_ids) && in_array($user->Perf_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
+                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_Internal_Code ?>]" value="<?php echo $user->Perf_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                    <td><?php echo $user->Perf_First_Name ?></td>
+                                    <td><?php echo $user->Perf_Internal_Code ?></td>
+                                </tr>
+                                <?php
+                            }
                         }
-                    }
-                    ?>
+                        ?>
 
                     </tbody>
                 </table>

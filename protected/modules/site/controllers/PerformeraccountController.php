@@ -26,7 +26,7 @@ class PerformeraccountController extends Controller {
         return array(
             'exportableGrid' => array(
                 'class' => 'application.components.ExportableGridBehavior',
-                'filename' => "Performers_".time().".csv",
+                'filename' => "Performers_" . time() . ".csv",
 //                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
         ));
     }
@@ -76,7 +76,7 @@ class PerformeraccountController extends Controller {
 
         $related_exists = PerformerRelatedRights::model()->findByAttributes(array('Perf_Acc_Id' => $id));
         $related_model = empty($related_exists) ? array() : $related_exists;
-        
+
         $biograph_exists = PerformerBiography::model()->findByAttributes(array('Perf_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
 
@@ -101,10 +101,10 @@ class PerformeraccountController extends Controller {
                 Yii::app()->user->setFlash('success', 'PerformerAccount Created Successfully. Please fill related rights!!!');
                 $this->redirect('update/id/' . $model->Perf_Acc_Id . '/tab/6');
             }
-        }else{
+        } else {
             $model->Perf_Birth_Country_Id = 2;
-$model->Perf_Nationality_Id = 2;
-$model->Perf_Language_Id = 1;
+            $model->Perf_Nationality_Id = 2;
+            $model->Perf_Language_Id = 1;
         }
 
         $this->render('create', array(
@@ -176,8 +176,8 @@ $model->Perf_Language_Id = 1;
 
             if ($biograph_model->save()) {
                 GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Perf_Internal_Code}'");
-                if(isset($_POST['group_ids']) && !empty($_POST['group_ids'])){
-                    foreach($_POST['group_ids'] as $gid):
+                if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
+                    foreach ($_POST['group_ids'] as $gid):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
                         $group->Group_Member_Internal_Code = $model->Perf_Internal_Code;
@@ -212,7 +212,7 @@ $model->Perf_Language_Id = 1;
             }
         } elseif (isset($_POST['PerformerUpload'])) {
             $upload_model->attributes = $_POST['PerformerUpload'];
-            if($fileedit == NULL){
+            if ($fileedit == NULL) {
                 $upload_model->setAttribute('Perf_Upl_File', isset($_FILES['PerformerUpload']['name']['Perf_Upl_File']) ? $_FILES['PerformerUpload']['name']['Perf_Upl_File'] : '');
             }
 
@@ -231,7 +231,7 @@ $model->Perf_Language_Id = 1;
         }
 
         $this->render('update', compact(
-                'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model', 'upload_model'));
+                        'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model', 'upload_model'));
     }
 
     /**
@@ -240,7 +240,15 @@ $model->Perf_Language_Id = 1;
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        try {
+            $this->loadModel($id)->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -256,7 +264,15 @@ $model->Perf_Language_Id = 1;
         $perf_acc_id = $model->Perf_Acc_Id;
 
         $model->setUploadDirectory(UPLOAD_DIR);
-        $model->delete();
+        try {
+            $model->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -334,15 +350,7 @@ $model->Perf_Language_Id = 1;
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'performer-account-form'
-                || $_POST['ajax'] === 'performer-account-address-form'
-                || $_POST['ajax'] === 'performer-payment-method-form'
-                || $_POST['ajax'] === 'performer-pseudonym-form'
-                || $_POST['ajax'] === 'performer-death-inheritance-form'
-                || $_POST['ajax'] === 'performer-related-rights-form'
-                || $_POST['ajax'] === 'performer-managed-rights-form'
-                || $_POST['ajax'] === 'performer-biography-form'
-                || $_POST['ajax'] === 'performer-upload-form'
+                $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'performer-account-address-form' || $_POST['ajax'] === 'performer-payment-method-form' || $_POST['ajax'] === 'performer-pseudonym-form' || $_POST['ajax'] === 'performer-death-inheritance-form' || $_POST['ajax'] === 'performer-related-rights-form' || $_POST['ajax'] === 'performer-managed-rights-form' || $_POST['ajax'] === 'performer-biography-form' || $_POST['ajax'] === 'performer-upload-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

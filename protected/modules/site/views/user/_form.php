@@ -6,8 +6,8 @@
                 'id' => 'profile-form',
                 'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
                 'enableAjaxValidation' => true,
-                'clientOptions'=>array(
-                    'validateOnSubmit'=>true,
+                'clientOptions' => array(
+                    'validateOnSubmit' => true,
                 )
             ));
             ?>
@@ -15,21 +15,21 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'username', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'username', array('class'=>'form-control','size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->textField($model, 'username', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                         <?php echo $form->error($model, 'username'); ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'name', array('class'=>'form-control','size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->textField($model, 'name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                         <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'email', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'email', array('class'=>'form-control','size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->textField($model, 'email', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                         <?php echo $form->error($model, 'email'); ?>
                     </div>
                 </div>
@@ -37,14 +37,14 @@
                     <?php echo $form->labelEx($model, 'role', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php $roles = CHtml::listData(MasterRole::model()->findAll(), 'Master_Role_ID', 'Description'); ?>
-                        <?php echo $form->dropDownList($model, 'role', $roles,array('class'=>'form-control')); ?>
+                        <?php echo $form->dropDownList($model, 'role', $roles, array('class' => 'form-control')); ?>
                         <?php echo $form->error($model, 'role'); ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5 statusfield">
-                        <?php echo $form->checkBox($model, 'status',array('class'=>'form-control')); ?>
+                        <?php echo $form->checkBox($model, 'status', array('class' => 'form-control')); ?>
                     </div>
                 </div>
             </div><!-- /.box-body -->

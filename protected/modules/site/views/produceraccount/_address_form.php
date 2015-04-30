@@ -54,23 +54,23 @@
                 <?php echo $form->error($model, 'Pro_Mailing_Address_3'); ?>
             </div>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Publisher_Account_1', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Publisher_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Publisher_Account_1'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Publisher_Account_2', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Publisher_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Publisher_Account_2'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Publisher_Account_3', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Publisher_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Publisher_Account_3'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Publisher_Account_1', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Publisher_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Publisher_Account_1'); ?>
+                        </div>
+            
+                        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Publisher_Account_2', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Publisher_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Publisher_Account_2'); ?>
+                        </div>
+            
+                        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Publisher_Account_3', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Publisher_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Publisher_Account_3'); ?>
+                        </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pro_Unknown_Address', array('class' => '')); ?><br />
@@ -138,23 +138,23 @@
                 <?php echo $form->error($model, 'Pro_Mailing_Website'); ?>
             </div>
 
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Producer_Account_1', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Producer_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Producer_Account_1'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Producer_Account_2', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Producer_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Producer_Account_2'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Pro_Producer_Account_3', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Pro_Producer_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Pro_Producer_Account_3'); ?>
-            </div>-->
+            <!--            <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Producer_Account_1', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Producer_Account_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Producer_Account_1'); ?>
+                        </div>
+            
+                        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Producer_Account_2', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Producer_Account_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Producer_Account_2'); ?>
+                        </div>
+            
+                        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Producer_Account_3', array('class' => '')); ?>
+            <?php echo $form->textField($model, 'Pro_Producer_Account_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+            <?php echo $form->error($model, 'Pro_Producer_Account_3'); ?>
+                        </div>-->
         </div>
     </div>
 

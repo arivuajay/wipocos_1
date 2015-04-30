@@ -92,7 +92,7 @@ class SocietyController extends Controller {
 
         if (isset($_POST['Society'])) {
             $model->attributes = $_POST['Society'];
-            if($_FILES['Society']['name']['Society_Logo_File']){
+            if ($_FILES['Society']['name']['Society_Logo_File']) {
                 $model->setAttribute('Society_Logo_File', $_FILES['Society']['name']['Society_Logo_File']);
             }
             if ($model->validate()) {
@@ -118,7 +118,15 @@ class SocietyController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         $model->setUploadDirectory(UPLOAD_DIR);
-        $model->delete();
+        try {
+            $model->delete();
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {

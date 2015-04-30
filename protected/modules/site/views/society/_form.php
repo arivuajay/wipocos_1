@@ -40,7 +40,7 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                         <?php echo $form->error($model, 'Society_Abbr_Id'); ?>
 
                     </div>
-                    
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Logo_File', array('class' => '')); ?>
 
@@ -60,14 +60,14 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                         <?php echo $form->textField($model, 'Society_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
                         <?php echo $form->error($model, 'Society_Code'); ?>
                     </div>
-                    
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Language_Id', array('class' => '')); ?>
 
                         <?php echo $form->dropDownList($model, 'Society_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Society_Language_Id'); ?>
                     </div>
-                    
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Mailing_Address', array('class' => '')); ?>
 
@@ -135,7 +135,7 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                         <?php echo $form->dropDownList($model, 'Society_Payment_Id', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Society_Payment_Id'); ?>
                     </div>
-                    
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Type_Id', array('class' => '')); ?>
 
@@ -192,19 +192,19 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                         <?php echo $form->error($model, 'Society_RelatedRights'); ?>
                     </div>
 
-<!--                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Society_Main_Performer_Id', array('class' => '')); ?>
-
-                        <?php echo $form->textField($model, 'Society_Main_Performer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                        <?php echo $form->error($model, 'Society_Main_Performer_Id'); ?>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'Society_Producer_Id', array('class' => '')); ?>
-
-                        <?php echo $form->textField($model, 'Society_Producer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                        <?php echo $form->error($model, 'Society_Producer_Id'); ?>
-                    </div>-->
+                    <!--                    <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Society_Main_Performer_Id', array('class' => '')); ?>
+                    
+                    <?php echo $form->textField($model, 'Society_Main_Performer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                    <?php echo $form->error($model, 'Society_Main_Performer_Id'); ?>
+                                        </div>
+                    
+                                        <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Society_Producer_Id', array('class' => '')); ?>
+                    
+                    <?php echo $form->textField($model, 'Society_Producer_Id', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                    <?php echo $form->error($model, 'Society_Producer_Id'); ?>
+                                        </div>-->
 
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Currency_Id', array('class' => '')); ?>
@@ -217,7 +217,7 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                         <?php echo $form->textField($model, 'Society_Subscription', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
                         <?php echo $form->error($model, 'Society_Subscription'); ?>
                     </div>
-                    
+
                 </div>
 
             </div>
