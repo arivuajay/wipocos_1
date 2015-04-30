@@ -31,7 +31,7 @@ class PublisherGroupSubShare extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Sub_Share_Broadcast, Pub_Group_Sub_Share_Mechanical', 'required'),
-            array('Pub_Group_Id, Pub_Group_Sub_Share_Broadcast, Pub_Group_Sub_Share_Mechanical', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_Sub_Share_Broadcast, Pub_Group_Sub_Share_Mechanical', 'numerical', 'integerOnly' => false),
             array('Pub_Group_Sub_Share_Broadcast, Pub_Group_Sub_Share_Mechanical', 'length', 'max' => 10),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().

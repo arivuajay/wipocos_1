@@ -191,31 +191,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     }
                     ?>
                 </div>
-                                <div class="tab-pane" id="tab_8">
-                                    <div class="box box-primary boxdivs">
-                <?php
-                        if (!$model->isNewRecord) {
-                            $this->renderPartial('_original_publisher', array('model' => $org_publisher_model, 'group_model' => $model));
-                            $this->renderPartial('_sub_publisher', array('model' => $sub_publisher_model, 'group_model' => $model));
-                        }
-                ?>
-                                    </div>
-                                    <div class="box box-primary boxdivs">
-                <?php
-                        if (!$model->isNewRecord) {
-                            $this->renderPartial('_original_publisher_share', array('model' => $org_share_publisher_model, 'group_model' => $model));
-                            $this->renderPartial('_sub_publisher_share', array('model' => $sub_share_publisher_model, 'group_model' => $model));
-                        }
-                ?>
-                                    </div>
-                                    <div class="box box-primary boxdivs">
-                <?php
+
+                <div class="tab-pane" id="tab_8">
+                    <?php
                     if (!$model->isNewRecord) {
-                        $this->renderPartial('_group_catalogue', array('model' => $catalog_model, 'group_model' => $model));
+                        $this->renderPartial('_sub_publish_catalog',compact('model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
                     }
-                ?>
-                                    </div>
-                                </div>
+                    ?>
+                </div>
             </div>
         </div>
 

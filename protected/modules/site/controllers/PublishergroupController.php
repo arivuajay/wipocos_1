@@ -139,7 +139,7 @@ class PublishergroupController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
                 Yii::app()->user->setFlash('success', 'Publisher Group Updated Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/1'));
             }
         } elseif (isset($_POST['GroupMembers'])) {
             PublisherGroupMembers::model()->deleteAll("Pub_Group_Id = '{$model->Pub_Group_Id}'");
@@ -205,49 +205,60 @@ class PublishergroupController extends Controller {
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
                 $this->redirect(array('publishergroup/update/id/' . $address_model->Pub_Group_Id . '/tab/7'));
             }
-        } elseif (isset($_POST['PublisherGroupOriginalPublisher'])) {
-            $org_publisher_model->attributes = $_POST['PublisherGroupOriginalPublisher'];
+        }
+ 
+        if(isset($_POST['PublisherGroupOriginalPublisher']) 
+        || isset($_POST['PublisherGroupSubPublisher'])
+        || isset($_POST['PublisherGroupOriginalShare'])
+        || isset($_POST['PublisherGroupSubShare'])
+        || isset($_POST['PublisherGroupOriginalShare'])
+        ){
+            $tab = 8;
+            $validate = false;
+            
+            if (isset($_POST['PublisherGroupOriginalPublisher'])) {
+                $org_publisher_model->attributes = $_POST['PublisherGroupOriginalPublisher'];
+                $validate = $org_publisher_model->save() ? true : false;
+            } 
+            
+            if (isset($_POST['PublisherGroupSubPublisher'])) {
+                $sub_publisher_model->attributes = $_POST['PublisherGroupSubPublisher'];
+                $validate = $sub_publisher_model->save() ? $validate && true : false;
+            } 
 
-            if ($org_publisher_model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group Original Publisher {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'Original Publisher Saved Successfully!!!');
-                $this->redirect(array('publishergroup/update/id/' . $org_publisher_model->Pub_Group_Id . '/tab/8'));
-            }
-        } elseif (isset($_POST['PublisherGroupOriginalShare'])) {
-            $org_share_publisher_model->attributes = $_POST['PublisherGroupOriginalShare'];
+            if (isset($_POST['PublisherGroupOriginalShare'])) {
+                $org_share_publisher_model->attributes = $_POST['PublisherGroupOriginalShare'];
+                $validate = $org_share_publisher_model->save() ? $validate && true : false;
+            } 
 
-            if ($org_share_publisher_model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group Share {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'Original Publisher Share Saved Successfully!!!');
-                $this->redirect(array('publishergroup/update/id/' . $org_share_publisher_model->Pub_Group_Id . '/tab/8'));
-            }
-        } elseif (isset($_POST['PublisherGroupSubShare'])) {
-            $sub_share_publisher_model->attributes = $_POST['PublisherGroupSubShare'];
-
-            if ($sub_share_publisher_model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group Sub Publisher Share {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'Sub Publisher Share Saved Successfully!!!');
-                $this->redirect(array('publishergroup/update/id/' . $sub_share_publisher_model->Pub_Group_Id . '/tab/8'));
-            }
-        } elseif (isset($_POST['PublisherGroupCatalogue'])) {
-            $catalog_model->attributes = $_POST['PublisherGroupCatalogue'];
-            if ($_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']) {
-                $catalog_model->setAttribute('Pub_Group_Cat_File', $_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']);
+            if (isset($_POST['PublisherGroupSubShare'])) {
+                $sub_share_publisher_model->attributes = $_POST['PublisherGroupSubShare'];
+                $validate = $sub_share_publisher_model->save() ? $validate && true : false;
             }
 
-            if ($catalog_model->validate()) {
-                $catalog_model->setUploadDirectory(UPLOAD_DIR);
-                $catalog_model->uploadFile();
-                if ($catalog_model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group Subcontracted Catalogue {$model->Pub_Group_Internal_Code} successfully.", "group");
-                    Yii::app()->user->setFlash('success', 'Subcontracted Catalogue Saved Successfully!!!');
-                    $this->redirect(array('publishergroup/update/id/' . $catalog_model->Pub_Group_Id . '/tab/8'));
+            if (isset($_POST['PublisherGroupCatalogue'])) {
+                $catalog_model->attributes = $_POST['PublisherGroupCatalogue'];
+                if (isset($_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File'])) {
+                    $catalog_model->setAttribute('Pub_Group_Cat_File', $_FILES['PublisherGroupCatalogue']['name']['Pub_Group_Cat_File']);
                 }
-            } else {
-                $tab = 8;
+
+                if ($catalog_model->validate()) {
+                    $catalog_model->setUploadDirectory(UPLOAD_DIR);
+                    $catalog_model->uploadFile();
+                    if ($catalog_model->save()) {
+                        $validate = $validate && true;
+                    }
+                } else {
+                    $validate = false;
+                }
+            }
+            if($validate){
+                Yii::app()->user->setFlash('success', 'Sub publishing Catalog saved!!!');
+                Myclass::addAuditTrail("Publisher Group Subcontracted Catalogue {$model->Pub_Group_Internal_Code} saved successfully.", "group");
+                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/8'));
             }
         }
-
+        
         $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
     }
 

@@ -27,11 +27,11 @@ echo $form->hiddenField($model, 'Pub_Group_Id', array('value' => $group_model->P
         </div>
     </div>
 
-    <div class="form-group">
+<!--    <div class="form-group">
         <div class="col-sm-0 col-sm-offset-2">
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
         </div>
-    </div>
+    </div>-->
 
 </div><!-- /.box-body -->
 <?php $this->endWidget(); ?>             
