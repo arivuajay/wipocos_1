@@ -52,7 +52,7 @@ class Group extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Group_Name, Group_Internal_Code, Group_IPN_Number, Group_Date', 'required'),
+            array('Group_Name, Group_Internal_Code, Group_Date', 'required'),
             array('Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id', 'numerical', 'integerOnly' => true),
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
@@ -93,7 +93,7 @@ class Group extends CActiveRecord {
             'Group_IPI_Name_Number' => 'IPI Name Number',
             'Group_IPN_Base_Number' => 'IPN Base Number',
             'Group_IPN_Number' => 'IPN Number',
-            'Group_Date' => 'Date',
+            'Group_Date' => 'Date of Formation',
             'Group_Place' => 'Place',
             'Group_Country_Id' => 'Country',
             'Group_Legal_Form_Id' => 'Legal Form',
@@ -143,24 +143,26 @@ class Group extends CActiveRecord {
 
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00" OR groupManageRights.Group_Mnge_Exit_Date is null');
+//            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date is NULL OR groupManageRights.Group_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
         }
         
-        if($this->is_auth_performer == 'A'){
+        if($this->is_auth_performer == 'author'){
             $criteria->compare('Group_Is_Author', '1', true);
-        }elseif($this->is_auth_performer == 'P'){
+        }elseif($this->is_auth_performer == 'performer'){
             $criteria->compare('Group_Is_Performer', '1', true);
         }
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 
@@ -175,7 +177,15 @@ class Group extends CActiveRecord {
     }
 
     public function dataProvider() {
+        $criteria = new CDbCriteria;
+        if($this->is_auth_performer == 'author'){
+            $criteria->compare('Group_Is_Author', '1', true);
+        }elseif($this->is_auth_performer == 'performer'){
+            $criteria->compare('Group_Is_Performer', '1', true);
+        }
+        
         return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
             'pagination' => false
 //            'pagination' => array(
 //                'pageSize' => PAGE_SIZE,
@@ -192,9 +202,10 @@ class Group extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
         if($this->groupManageRights && $this->groupManageRights->Group_Mnge_Exit_Date != '' && $this->groupManageRights->Group_Mnge_Exit_Date != '0000-00-00'){
-            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
             if(strtotime($this->groupManageRights->Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
                 $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
             }

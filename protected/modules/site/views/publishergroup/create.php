@@ -2,9 +2,9 @@
 /* @var $this PublishergroupController */
 /* @var $model PublisherGroup */
 $g_type = ucfirst($type);
-$this->title = "Create {$g_type} Groups";
+$this->title = "Create {$g_type} Group";
 $this->breadcrumbs = array(
-    'Publisher Groups' => array('index'),
+    "{$g_type} Groups" => array('publishergroup/index/role/'.  lcfirst($g_type)),
     $this->title,
 );
 ?>

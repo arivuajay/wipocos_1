@@ -2,7 +2,7 @@
 /* @var $this GroupController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Groups';
+$this->title = ucfirst($role).' Groups';
 $this->breadcrumbs = array(
     'Groups',
 );
@@ -16,6 +16,8 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
+
+<?php $this->renderPartial('/default/_colors')?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -110,12 +112,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Group_Language_Id'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                    <?php echo $form->hiddenField($searchModel, 'is_auth_performer', array('class' => 'form-control', 'value' => $role)); ?>
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'is_auth_performer', array('class' => ' control-label')); ?>
                             <?php echo $form->dropDownList($searchModel, 'is_auth_performer', array('A' => 'Author', 'P' => 'Performer'), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
@@ -142,28 +145,29 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
                 'Group_Name',
-                array(
-                    'name' => 'Group_Is_Author',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-            },
-                ),
-                array(
-                    'name' => 'Group_Is_Performer',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-            },
-                ),
+//                array(
+//                    'name' => 'Group_Is_Author',
+//                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//            },
+//                ),
+//                array(
+//                    'name' => 'Group_Is_Performer',
+//                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//            },
+//                ),
                 'Group_Internal_Code',
+                'Group_Date',
                 'Group_IPI_Name_Number',
                 'Group_IPN_Base_Number',
                 array(
@@ -237,22 +241,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Group_Internal_Code',
             'Group_Date',
             'Group_IPN_Number',
-            array(
-                'name' => 'Group_Is_Author',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
-            array(
-                'name' => 'Group_Is_Performer',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
+//            array(
+//                'name' => 'Group_Is_Author',
+//                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                'type' => 'raw',
+//                'value' => function($data) {
+//            echo ($data->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//        },
+//            ),
+//            array(
+//                'name' => 'Group_Is_Performer',
+//                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                'type' => 'raw',
+//                'value' => function($data) {
+//            echo ($data->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//        },
+//            ),
             array(
                 'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),

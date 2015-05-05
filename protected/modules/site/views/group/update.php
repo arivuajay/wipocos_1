@@ -1,11 +1,15 @@
 <?php
 /* @var $this GroupController */
 /* @var $model Group */
-
-$this->title = 'Update Groups: ' . $model->Group_Id;
+if($model->Group_Is_Author == '1'){
+    $role = 'Author';
+}elseif($model->Group_Is_Performer == '1'){
+    $role = 'Performer';
+}
+$this->title = "Update {$role} Group: {$model->Group_Id}";
 $this->breadcrumbs = array(
-    'Groups' => array('index'),
-    'Update Groups',
+    "{$role} Groups" => array('group/index/role/'.lcfirst($role)),
+    "Update",
 );
 ?>
 

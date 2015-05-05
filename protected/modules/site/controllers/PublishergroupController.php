@@ -290,7 +290,7 @@ class PublishergroupController extends Controller {
     /**
      * Lists all models.
      */
-    public function actionIndex() {
+    public function actionIndex($role = NULL) {
         $search = false;
 
         $model = new PublisherGroup();
@@ -298,17 +298,21 @@ class PublishergroupController extends Controller {
         $searchModel->unsetAttributes();  // clear any default values
         if (isset($_GET['PublisherGroup'])) {
             $search = true;
+            $role = $_GET['PublisherGroup']['is_pub_producer'];
+            
             $searchModel->attributes = $_GET['PublisherGroup'];
             $searchModel->search_status = $_GET['PublisherGroup']['search_status'];
             $searchModel->is_pub_producer = $_GET['PublisherGroup']['is_pub_producer'];
             $searchModel->search();
         }
+        $model->is_pub_producer = $role;
+        
         if ($this->isExportRequest()) {
             $this->exportCSV(array('Groups:'), null, false);
             $this->exportCSV($model->search(), array('Pub_Group_Internal_Code', 'Pub_Group_Corporate_Name'));
         }
 
-        $this->render('index', compact('searchModel', 'search', 'model'));
+        $this->render('index', compact('searchModel', 'search', 'model', 'role'));
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
 /* @var $this PublishergroupController */
 /* @var $dataProvider CActiveDataProvider */
-
-$this->title = 'Publisher/Producer Groups';
+$g_type = ucfirst($role);
+$this->title = $g_type.' Groups';
 $this->breadcrumbs = array(
-    'Publisher/Producer Groups',
+$g_type.' Groups',
 );
 
 $themeUrl = $this->themeUrl;
@@ -16,6 +16,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
+<?php $this->renderPartial('/default/_colors')?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -109,12 +110,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Pub_Group_Language_Id'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                    <?php echo $form->hiddenField($searchModel, 'is_pub_producer', array('class' => 'form-control', 'value' => $role)); ?>
+
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'is_pub_producer', array('class' => ' control-label')); ?>
                             <?php echo $form->dropDownList($searchModel, 'is_pub_producer', array('PU' => 'Publisher', 'PR' => 'Producer'), array('prompt' => '', 'class' => 'form-control')); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
@@ -146,23 +149,24 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => '',
                 ),
                 'Pub_Group_Name',
-                array(
-                    'name' => 'Pub_Group_Is_Publisher',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-            },
-                ),
-                array(
-                    'name' => 'Pub_Group_Is_Producer',
-                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                    'type' => 'raw',
-                    'value' => function($data) {
-                echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-            },
-                ),
+//                array(
+//                    'name' => 'Pub_Group_Is_Publisher',
+//                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//            },
+//                ),
+//                array(
+//                    'name' => 'Pub_Group_Is_Producer',
+//                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//            },
+//                ),
                 'Pub_Group_Internal_Code',
+                'Pub_Group_Date',
                 'Pub_Group_IPI_Name_Number',
                 'Pub_Group_IPN_Base_Number',
                 array(
@@ -233,23 +237,24 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                'header' => '',
 //            ),
             'Pub_Group_Name',
-            array(
-                'name' => 'Pub_Group_Is_Publisher',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
-            array(
-                'name' => 'Pub_Group_Is_Producer',
-                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
-                'type' => 'raw',
-                'value' => function($data) {
-            echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
-        },
-            ),
+//            array(
+//                'name' => 'Pub_Group_Is_Publisher',
+//                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                'type' => 'raw',
+//                'value' => function($data) {
+//            echo ($data->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//        },
+//            ),
+//            array(
+//                'name' => 'Pub_Group_Is_Producer',
+//                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+//                'type' => 'raw',
+//                'value' => function($data) {
+//            echo ($data->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>';
+//        },
+//            ),
             'Pub_Group_Internal_Code',
+            'Pub_Group_Date',
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',
             array(
@@ -289,7 +294,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Publisher/Producer Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  '.$g_type.' Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

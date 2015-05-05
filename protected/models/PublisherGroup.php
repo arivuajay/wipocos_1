@@ -109,7 +109,7 @@ class PublisherGroup extends CActiveRecord {
             'Pub_Group_IPI_Name_Number' => 'IPI Name Number',
             'Pub_Group_IPN_Base_Number' => 'IPN Base Number',
             'Pub_Group_IPD_Number' => 'IPD Number',
-            'Pub_Group_Date' => 'Date',
+            'Pub_Group_Date' => 'Date of Formation',
             'Pub_Group_Place' => 'Place',
             'Pub_Group_Country_Id' => 'Country',
             'Pub_Group_Legal_Form_Id' => 'Legal Form',
@@ -166,9 +166,9 @@ class PublisherGroup extends CActiveRecord {
             $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
         }
 
-        if($this->is_pub_producer == 'PU'){
+        if($this->is_pub_producer == 'publisher'){
             $criteria->compare('Pub_Group_Is_Publisher', '1', true);
-        }elseif($this->is_pub_producer == 'PR'){
+        }elseif($this->is_pub_producer == 'producer'){
             $criteria->compare('Pub_Group_Is_Producer', '1', true);
         }
         
@@ -191,7 +191,15 @@ class PublisherGroup extends CActiveRecord {
     }
 
     public function dataProvider() {
+        $criteria = new CDbCriteria;
+        if($this->is_pub_producer == 'publisher'){
+            $criteria->compare('Pub_Group_Is_Publisher', '1', true);
+        }elseif($this->is_pub_producer == 'producer'){
+            $criteria->compare('Pub_Group_Is_Producer', '1', true);
+        }
+        
         return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
             'pagination' => false
 //            'pagination' => array(
 //                'pageSize' => PAGE_SIZE,

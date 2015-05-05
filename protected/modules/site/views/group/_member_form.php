@@ -42,7 +42,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <thead>
                         <tr>
                             <th style="width: 10px"><?php echo CHtml::checkBox('user_id', false, array('id' => 'user_id')) ?></th>
-                            <th>User Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Internal Code</th>
                         </tr>
                     </thead>
@@ -54,6 +55,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 <?php $checked = (!empty($user_ids) && in_array($user->Auth_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
                                 <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Auth_Internal_Code ?>]" value="<?php echo $user->Auth_Internal_Code ?>" <?php echo $checked ?> /></td>
                                 <td><?php echo $user->Auth_First_Name ?></td>
+                                <td><?php echo $user->Auth_Sur_Name ?></td>
                                 <td><?php echo $user->Auth_Internal_Code ?></td>
                             </tr>
                             <?php
@@ -69,6 +71,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     <?php $checked = (!empty($user_ids) && in_array($user->Perf_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
                                     <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_Internal_Code ?>]" value="<?php echo $user->Perf_Internal_Code ?>" <?php echo $checked ?> /></td>
                                     <td><?php echo $user->Perf_First_Name ?></td>
+                                    <td><?php echo $user->Perf_Sur_Name ?></td>
                                     <td><?php echo $user->Perf_Internal_Code ?></td>
                                 </tr>
                                 <?php

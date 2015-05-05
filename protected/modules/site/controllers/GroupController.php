@@ -199,34 +199,41 @@ class GroupController extends Controller {
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
+            if($model->Group_Is_Author == '1'){
+                $role = 'author';
+            }elseif($model->Group_Is_Performer == '1'){
+                $role = 'performer';
+            }
             Yii::app()->user->setFlash('success', 'Group Deleted Successfully!!!');
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('group/index/role/'.$role));
         }
     }
 
     /**
      * Lists all models.
      */
-    public function actionIndex() {
+    public function actionIndex($role = NULL) {
         $search = false;
-
         $model = new Group();
         $searchModel = new Group('search');
         $searchModel->unsetAttributes();  // clear any default values
         if (isset($_GET['Group'])) {
             $search = true;
+            $role = $_GET['Group']['is_auth_performer'];
+            
             $searchModel->attributes = $_GET['Group'];
             $searchModel->search_status = $_GET['Group']['search_status'];
-            $searchModel->is_auth_performer = $_GET['Group']['is_auth_performer'];
+            $searchModel->is_auth_performer = $role;
             $searchModel->search();
         }
+        $model->is_auth_performer = $role;
 
         if ($this->isExportRequest()) {
             $this->exportCSV(array('Groups:'), null, false);
             $this->exportCSV($model->search(), array('Group_Internal_Code', 'Group_Name'));
         }
 
-        $this->render('index', compact('searchModel', 'search', 'model'));
+        $this->render('index', compact('searchModel', 'search', 'model', 'role'));
     }
 
     /**

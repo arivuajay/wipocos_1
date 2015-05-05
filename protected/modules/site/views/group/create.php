@@ -2,10 +2,10 @@
 /* @var $this GroupController */
 /* @var $model Group */
 
-$this->title = 'Create Groups';
+$this->title = 'Create '.ucfirst($type).' Group';
 $this->breadcrumbs = array(
-    'Groups' => array('index'),
-    $this->title,
+    ucfirst($type).' Groups' => array('group/index/role/'.$type),
+    'Create Group',
 );
 ?>
 

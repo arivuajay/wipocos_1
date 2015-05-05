@@ -190,7 +190,8 @@ class PerformerAccount extends CActiveRecord {
 
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
+//            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date is NULL OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){
@@ -258,9 +259,10 @@ class PerformerAccount extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
         if($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00'){
-            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
             if(strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
                 $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
             }

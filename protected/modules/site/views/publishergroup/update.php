@@ -7,10 +7,10 @@ if ($model->Pub_Group_Is_Publisher == '1') {
 } else {
     $g_type = 'Producer';
 }
-$this->title = "Update {$g_type} Groups: {$model->Pub_Group_Id}";
+$this->title = "Update {$g_type} Group: {$model->Pub_Group_Id}";
 $this->breadcrumbs = array(
-    'Publisher Groups' => array('index'),
-    'Update Publisher Groups',
+    'Publisher Groups' => array('publishergroup/index/role/'.  lcfirst($g_type)),
+    'Update Group',
 );
 ?>
 

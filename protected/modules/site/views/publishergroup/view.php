@@ -1,11 +1,16 @@
 <?php
 /* @var $this PublishergroupController */
 /* @var $model PublisherGroup */
+if($model->Pub_Group_Is_Publisher == '1'){
+    $role = 'Publisher';
+}elseif($model->Pub_Group_Is_Producer == '1'){
+    $role = 'Producer';
+}
 
 $this->title = 'View #' . $model->Pub_Group_Id;
 $this->breadcrumbs = array(
-    'Publisher Groups' => array('index'),
-    'View ' . 'PublisherGroup',
+    "{$role} Groups" => array('publishergroup/index/role/'.  lcfirst($role)),
+    "View {$role} Group",
 );
 ?>
 <div class="user-view">
@@ -20,16 +25,16 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
             'Pub_Group_Name',
-            array(
-                'name' => 'Pub_Group_Is_Publisher',
-                'type' => 'raw',
-                'value' => ($model->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-            ),
-            array(
-                'name' => 'Pub_Group_Is_Producer',
-                'type' => 'raw',
-                'value' => ($model->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-            ),
+//            array(
+//                'name' => 'Pub_Group_Is_Publisher',
+//                'type' => 'raw',
+//                'value' => ($model->Pub_Group_Is_Publisher == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
+//            array(
+//                'name' => 'Pub_Group_Is_Producer',
+//                'type' => 'raw',
+//                'value' => ($model->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
             'Pub_Group_Internal_Code',
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',

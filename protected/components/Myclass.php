@@ -117,7 +117,7 @@ class Myclass extends CController {
         $search = array(
             'A' => 'Active',
             'E' => 'Expired',
-            'I' => 'Non-Member',
+//            'I' => 'Non-Member',
         );
         if(isset($key) && $key != NULL)
             return $search[$key];

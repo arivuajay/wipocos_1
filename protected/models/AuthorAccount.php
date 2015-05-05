@@ -190,7 +190,8 @@ class AuthorAccount extends CActiveRecord {
         
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
+//            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date is NULL OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){
@@ -199,9 +200,10 @@ class AuthorAccount extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 
@@ -276,9 +278,10 @@ class AuthorAccount extends CActiveRecord {
     }
     
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
         if($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00'){
-            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
             if(strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
                 $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
             }

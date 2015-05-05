@@ -1,10 +1,15 @@
 <?php
 /* @var $this GroupController */
 /* @var $model Group */
+if($model->Group_Is_Author == '1'){
+    $role = 'Author';
+}elseif($model->Group_Is_Performer == '1'){
+    $role = 'Performer';
+}
 
 $this->title = 'View #' . $model->Group_Id;
 $this->breadcrumbs = array(
-    'Groups' => array('index'),
+    "{$role} Groups" => array('group/index/role/'.lcfirst($role)),
     'View ' . 'Group',
 );
 ?>
@@ -20,16 +25,16 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
             'Group_Name',
-            array(
-                'name' => 'Group_Is_Author',
-                'type' => 'raw',
-                'value' => ($model->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-            ),
-            array(
-                'name' => 'Group_Is_Performer',
-                'type' => 'raw',
-                'value' => ($model->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-            ),
+//            array(
+//                'name' => 'Group_Is_Author',
+//                'type' => 'raw',
+//                'value' => ($model->Group_Is_Author == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
+//            array(
+//                'name' => 'Group_Is_Performer',
+//                'type' => 'raw',
+//                'value' => ($model->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
             'Group_Internal_Code',
             'Group_IPN_Base_Number',
             'Group_IPI_Name_Number',
