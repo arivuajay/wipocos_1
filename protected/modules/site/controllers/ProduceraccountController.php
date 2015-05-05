@@ -55,9 +55,26 @@ class ProduceraccountController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
+        $model = $this->loadModel($id);
+        $address_exists = ProducerAccountAddress::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $address_model = empty($address_exists) ? array() : $address_exists;
+
+        $payment_exists = ProducerPaymentMethod::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $payment_model = empty($payment_exists) ? array() : $payment_exists;
+
+        $psedonym_exists = ProducerPseudonym::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? array() : $psedonym_exists;
+
+        $death_exists = ProducerSuccession::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $death_model = empty($death_exists) ? array() : $death_exists;
+
+        $related_exists = ProducerRelatedRights::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $related_model = empty($related_exists) ? array() : $related_exists;
+
+        $biograph_exists = ProducerBiography::model()->findByAttributes(array('Pro_Acc_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
+
+        $this->render('view', compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model'));
     }
 
     /**
@@ -144,15 +161,15 @@ class ProduceraccountController extends Controller {
             $biograph_model->attributes = $_POST['ProducerBiography'];
 
             if ($biograph_model->save()) {
-//                GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Pro_Internal_Code}'");
-//                if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
-//                    foreach ($_POST['group_ids'] as $gid):
-//                        $group = new GroupMembers;
-//                        $group->Group_Id = $gid;
-//                        $group->Group_Member_Internal_Code = $model->Pro_Internal_Code;
-//                        $group->save(false);
-//                    endforeach;
-//                }
+                PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_Internal_Code = '{$model->Pro_Internal_Code}'");
+                if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
+                    foreach ($_POST['group_ids'] as $gid):
+                        $group = new PublisherGroupMembers;
+                        $group->Pub_Group_Id = $gid;
+                        $group->Pub_Group_Member_Internal_Code = $model->Pro_Internal_Code;
+                        $group->save(false);
+                    endforeach;
+                }
                 Myclass::addAuditTrail("Updated Producer Biography {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('produceraccount/update/id/' . $biograph_model->Pro_Acc_Id . '/tab/4'));

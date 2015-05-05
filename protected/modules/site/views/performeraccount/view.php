@@ -228,7 +228,7 @@ $this->breadcrumbs = array(
                 ),
             ));
         } else {
-            echo 'Mmanaged Rights Not Created';
+            echo 'Managed Rights Not Created';
         }
         ?>
 
@@ -248,6 +248,7 @@ $this->breadcrumbs = array(
             echo 'Biography Not Created';
         }
         ?>
+        <br />
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Perf_Internal_Code));
         if (!empty($members)) {?>

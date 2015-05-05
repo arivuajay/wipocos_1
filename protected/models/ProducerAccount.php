@@ -86,6 +86,9 @@ class ProducerAccount extends CActiveRecord {
             'producerPseudonyms' => array(self::HAS_ONE, 'ProducerPseudonym', 'Pro_Acc_Id'),
             'producerRelatedRights' => array(self::HAS_ONE, 'ProducerRelatedRights', 'Pro_Acc_Id'),
             'producerSuccessions' => array(self::HAS_ONE, 'ProducerSuccession', 'Pro_Acc_Id'),
+            'producerGroupMembers' => array(self::HAS_MANY, 'PublisherGroupMembers', 'Pub_Group_Member_Internal_Code',
+                'foreignKey' => array('Pub_Group_Member_Internal_Code' => 'Pro_Internal_Code')
+            ),
         );
     }
 
@@ -94,7 +97,7 @@ class ProducerAccount extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Pro_Acc_Id' => 'Acc',
+            'Pro_Acc_Id' => 'Id',
             'Pro_Corporate_Name' => 'Corporate Name',
             'Pro_Internal_Code' => 'Internal Code',
             'Pro_Ipi' => 'IPI Name Number',
