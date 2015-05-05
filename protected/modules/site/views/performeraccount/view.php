@@ -248,6 +248,33 @@ $this->breadcrumbs = array(
             echo 'Biography Not Created';
         }
         ?>
+        <?php
+        $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Perf_Internal_Code));
+        if (!empty($members)) {?>
+        <div class="">
+                <div class="box-header">
+                    <h4 class="box-title">Assigned Groups</h4>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-condensed">
+                        <tbody><tr>
+                                <th>#</th>
+                                <th>Group Name</th>
+                            </tr>
+                            <?php foreach ($members as $key => $member) { ?>
+                                <tr>
+                                    <td><?php echo $key + 1 ?>.</td>
+                                    <td><?php echo $member->group->Group_Name ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody></table>
+                </div>
+            </div>
+        <?php
+        } else {
+            echo 'No groups assigned';
+        }
+        ?>
 
     </div>
 </div>
