@@ -56,7 +56,8 @@ class PerformerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is not Null And performerRelatedRights.Perf_Rel_Exit_Date != '0000-00-00' And performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is Null OR performerRelatedRights.Perf_Rel_Exit_Date = '0000-00-00' OR performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
+//            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is not Null And performerRelatedRights.Perf_Rel_Exit_Date != '0000-00-00' And performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
         );
     }
 
@@ -190,7 +191,7 @@ class PerformerAccount extends CActiveRecord {
 
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
 //            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date is NULL OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00"');

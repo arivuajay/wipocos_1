@@ -41,7 +41,8 @@ class Group extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null And groupManageRights.Group_Mnge_Exit_Date != '0000-00-00' And groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null OR groupManageRights.Group_Mnge_Exit_Date = '0000-00-00' OR groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
+//            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null And groupManageRights.Group_Mnge_Exit_Date != '0000-00-00' And groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
 

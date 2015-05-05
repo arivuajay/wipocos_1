@@ -48,7 +48,8 @@ class PublisherGroup extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is not Null And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != '0000-00-00' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is Null OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = '0000-00-00' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
+//            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is not Null And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != '0000-00-00' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
     /**
@@ -159,7 +160,8 @@ class PublisherGroup extends CActiveRecord {
 
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00" OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is null');
+//            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is NULL OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){
@@ -216,9 +218,10 @@ class PublisherGroup extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
         if($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00'){
-            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
             if(strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
                 $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
             }

@@ -56,7 +56,8 @@ class AuthorAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is not Null And authorManageRights.Auth_Mnge_Exit_Date != '0000-00-00' And authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is not Null OR authorManageRights.Auth_Mnge_Exit_Date = '0000-00-00' OR authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
+//            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is not Null And authorManageRights.Auth_Mnge_Exit_Date != '0000-00-00' And authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
 
@@ -190,7 +191,7 @@ class AuthorAccount extends CActiveRecord {
         
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
 //            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date is NULL OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00"');

@@ -46,7 +46,8 @@ class ProducerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is not Null And producerRelatedRights.Pro_Rel_Exit_Date != '0000-00-00' And producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is Null OR producerRelatedRights.Pro_Rel_Exit_Date = '0000-00-00' OR producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
+//            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is not Null And producerRelatedRights.Pro_Rel_Exit_Date != '0000-00-00' And producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
         );
     }
 
@@ -150,7 +151,8 @@ class ProducerAccount extends CActiveRecord {
         
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' OR producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00" OR producerRelatedRights.Pro_Rel_Exit_Date is null');
+//            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
         }elseif($this->search_status == 'I'){
             $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date is NULL OR producerRelatedRights.Pro_Rel_Exit_Date = "0000-00-00"');
         }elseif($this->search_status == 'E'){
@@ -185,9 +187,10 @@ class ProducerAccount extends CActiveRecord {
     }
     
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
+        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
         if($this->producerRelatedRights && $this->producerRelatedRights->Pro_Rel_Exit_Date != '' && $this->producerRelatedRights->Pro_Rel_Exit_Date != '0000-00-00'){
-            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
             if(strtotime($this->producerRelatedRights->Pro_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
                 $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
             }
