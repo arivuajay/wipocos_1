@@ -98,7 +98,7 @@ $this->breadcrumbs = array(
         ?>
 
 
-        <h4>Death Inheritance</h4>
+        <h4>Succession</h4>
         <?php
         if (!empty($death_model)) {
             $this->widget('zii.widgets.CDetailView', array(
