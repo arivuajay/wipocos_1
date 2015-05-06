@@ -17,6 +17,7 @@
  * @property integer $Pub_Group_Country_Id
  * @property integer $Pub_Group_Legal_Form_Id
  * @property integer $Pub_Group_Language_Id
+ * @property string $Pub_Group_Non_Member
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -37,6 +38,13 @@ class PublisherGroup extends CActiveRecord {
     public $search_status;
     public $is_pub_producer;
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pub_Group_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Pub_Group_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -48,7 +56,7 @@ class PublisherGroup extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is Null OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = '0000-00-00' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Pub_Group_Non_Member = 'N' AND publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is Null OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = '0000-00-00' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
 //            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is not Null And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != '0000-00-00' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
@@ -65,7 +73,7 @@ class PublisherGroup extends CActiveRecord {
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
             array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
-            array('Rowversion', 'safe'),
+            array('Rowversion, Pub_Group_Non_Member', 'safe'),
 //            array(
 //                'Pub_Group_Name',
 //                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -120,6 +128,7 @@ class PublisherGroup extends CActiveRecord {
             'Rowversion' => 'Rowversion',
             'search_status' => 'Status',
             'is_pub_producer' => 'Publisher/Producer',
+            'Pub_Group_Non_Member' => 'Non Member',
         );
     }
 
@@ -161,11 +170,12 @@ class PublisherGroup extends CActiveRecord {
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
             $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00" OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is null');
-//            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Pub_Group_Non_Member', 'N', true);
         }elseif($this->search_status == 'I'){
-            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is NULL OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00"');
+            $criteria->compare('Pub_Group_Non_Member', 'Y', true);
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Pub_Group_Non_Member', 'N', true);
         }
 
         if($this->is_pub_producer == 'publisher'){
@@ -219,12 +229,14 @@ class PublisherGroup extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
-        if($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00'){
-//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if(strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
-                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+        if($this->Pub_Group_Non_Member == 'Y'){
+            $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
+        }else{
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00'){
+                if(strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                    $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+                }
             }
         }
         return $status;

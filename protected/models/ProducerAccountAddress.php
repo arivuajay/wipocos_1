@@ -38,6 +38,12 @@
  */
 class ProducerAccountAddress extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pro_Addr_Country_Id = DEFAULT_COUNTRY_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

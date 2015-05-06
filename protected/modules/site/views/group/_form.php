@@ -94,9 +94,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Active', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Active', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Active'); ?>
+                                    <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->error($model, 'Group_Non_Member'); ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>

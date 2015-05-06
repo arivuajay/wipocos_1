@@ -95,6 +95,12 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
+                                </div>
+                                
+                                <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
                                 </div>

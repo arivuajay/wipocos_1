@@ -39,6 +39,12 @@
  */
 class GroupRepresentative extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Group_Country_Id = DEFAULT_COUNTRY_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

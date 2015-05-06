@@ -116,7 +116,7 @@ class GroupController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated a {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/1'));
             }
         } elseif (isset($_POST['GroupMembers'])) {
             GroupMembers::model()->deleteAll("Group_Id = '{$model->Group_Id}'");

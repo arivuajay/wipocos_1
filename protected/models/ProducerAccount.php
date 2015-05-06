@@ -17,6 +17,7 @@
  * @property string $Pro_Reg_Number
  * @property string $Pro_Excerpt_Date
  * @property integer $Pro_Language_Id
+ * @property string $Pro_Non_Member
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -35,6 +36,14 @@
 class ProducerAccount extends CActiveRecord {
 
     public $search_status;
+    
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pro_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Pro_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -46,7 +55,7 @@ class ProducerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is Null OR producerRelatedRights.Pro_Rel_Exit_Date = '0000-00-00' OR producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Pro_Non_Member = 'N' AND producerRelatedRights.Pro_Rel_Exit_Date is Null OR producerRelatedRights.Pro_Rel_Exit_Date = '0000-00-00' OR producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
 //            'isStatusActive' => array('condition' => "producerRelatedRights.Pro_Rel_Exit_Date is not Null And producerRelatedRights.Pro_Rel_Exit_Date != '0000-00-00' And producerRelatedRights.Pro_Rel_Exit_Date >= DATE(NOW())")
         );
     }
@@ -63,7 +72,7 @@ class ProducerAccount extends CActiveRecord {
             array('Pro_Corporate_Name, Pro_Internal_Code, Pro_Place, Pro_Reg_Number', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
             array('Pro_Internal_Code, Pro_Corporate_Name', 'unique'),
-            array('Pro_Reg_Date, Pro_Excerpt_Date, Created_Date, Rowversion', 'safe'),
+            array('Pro_Reg_Date, Pro_Excerpt_Date, Created_Date, Rowversion, Pro_Non_Member', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Acc_Id, Pro_Corporate_Name, Pro_Internal_Code, Pro_Ipi, Pro_Ipi_Base_Number, Pro_Date, Pro_Place, Pro_Country_Id, Pro_Legal_Form_id, Pro_Reg_Date, Pro_Reg_Number, Pro_Excerpt_Date, Pro_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -114,6 +123,7 @@ class ProducerAccount extends CActiveRecord {
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'search_status' => 'Status',
+            'Pro_Non_Member' => 'Non Member',
         );
     }
 
@@ -154,12 +164,13 @@ class ProducerAccount extends CActiveRecord {
         
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
-            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' OR producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00" OR producerRelatedRights.Pro_Rel_Exit_Date is null');
-//            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
+            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date >= '.$now.' OR producerRelatedRights.Pro_Rel_Exit_Date = "0000-00-00" OR producerRelatedRights.Pro_Rel_Exit_Date is null');
+            $criteria->compare('Pro_Non_Member', 'N', true);
         }elseif($this->search_status == 'I'){
-            $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date is NULL OR producerRelatedRights.Pro_Rel_Exit_Date = "0000-00-00"');
+            $criteria->compare('Pro_Non_Member', 'Y', true);
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('producerRelatedRights.Pro_Rel_Exit_Date < '.$now.' And producerRelatedRights.Pro_Rel_Exit_Date != "0000-00-00"');
+            $criteria->compare('Pro_Non_Member', 'N', true);
         }
 
         return new CActiveDataProvider($this, array(
@@ -199,12 +210,14 @@ class ProducerAccount extends CActiveRecord {
     }
     
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
-        if($this->producerRelatedRights && $this->producerRelatedRights->Pro_Rel_Exit_Date != '' && $this->producerRelatedRights->Pro_Rel_Exit_Date != '0000-00-00'){
-//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if(strtotime($this->producerRelatedRights->Pro_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
-                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+        if($this->Pro_Non_Member == 'Y'){
+            $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
+        }else{
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if($this->producerRelatedRights && $this->producerRelatedRights->Pro_Rel_Exit_Date != '' && $this->producerRelatedRights->Pro_Rel_Exit_Date != '0000-00-00'){
+                if(strtotime($this->producerRelatedRights->Pro_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
+                    $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+                }
             }
         }
         return $status;

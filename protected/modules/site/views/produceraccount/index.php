@@ -149,10 +149,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
                 'Pro_Corporate_Name',
                 'Pro_Internal_Code',
                 'Pro_Ipi',

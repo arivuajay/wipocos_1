@@ -105,6 +105,12 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                                 </div>
 
                                 <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Auth_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->error($model, 'Auth_Non_Member'); ?>
+                                </div>
+                                
+                                <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
                                 </div>

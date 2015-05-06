@@ -144,10 +144,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                array(
-                    'class' => 'IndexColumn',
-                    'header' => '',
-                ),
+//                array(
+//                    'class' => 'IndexColumn',
+//                    'header' => '',
+//                ),
                 'Pub_Group_Name',
 //                array(
 //                    'name' => 'Pub_Group_Is_Publisher',

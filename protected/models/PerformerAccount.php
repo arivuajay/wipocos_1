@@ -20,6 +20,7 @@
  * @property integer $Perf_Marital_Status_Id
  * @property string $Perf_Spouse_Name
  * @property string $Perf_Gender
+ * @property string $Perf_Non_Member
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -45,6 +46,14 @@ class PerformerAccount extends CActiveRecord {
     public $record_search;
     public $search_status;
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Perf_Birth_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Perf_Nationality_Id = DEFAULT_NATIONALITY_ID;
+            $this->Perf_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -56,7 +65,7 @@ class PerformerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is Null OR performerRelatedRights.Perf_Rel_Exit_Date = '0000-00-00' OR performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Perf_Non_Member = 'N' AND performerRelatedRights.Perf_Rel_Exit_Date is Null OR performerRelatedRights.Perf_Rel_Exit_Date = '0000-00-00' OR performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
 //            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is not Null And performerRelatedRights.Perf_Rel_Exit_Date != '0000-00-00' And performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
         );
     }
@@ -73,7 +82,7 @@ class PerformerAccount extends CActiveRecord {
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
             array('Perf_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search', 'safe'),
+            array('Created_Date, Rowversion,record_search, Perf_Non_Member', 'safe'),
             array('Perf_Internal_Code', 'unique'),
             array('Perf_Sur_Name', 'nameUnique'),
             array(
@@ -84,7 +93,7 @@ class PerformerAccount extends CActiveRecord {
             array('Perf_First_Name', 'UniqueAttributesValidator', 'with'=>'Perf_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
+            array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Perf_Non_Member, Active, Created_Date, Rowversion, expiry_date, hierarchy_level, record_search', 'safe', 'on' => 'search'),
         );
     }
 
@@ -146,6 +155,7 @@ class PerformerAccount extends CActiveRecord {
             'Rowversion' => 'Rowversion',
             'expiry_date' => 'Expiry Date',
             'hierarchy_level' => 'Internal Position',
+            'Perf_Non_Member' => 'Non Member',
         );
     }
 
@@ -192,11 +202,12 @@ class PerformerAccount extends CActiveRecord {
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
             $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
-//            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+            $criteria->compare('Perf_Non_Member', 'N', true);
         }elseif($this->search_status == 'I'){
-            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date is NULL OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00"');
+            $criteria->compare('Perf_Non_Member', 'Y', true);
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date < '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+            $criteria->compare('Perf_Non_Member', 'N', true);
         }
 
 
@@ -261,12 +272,14 @@ class PerformerAccount extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
-        if($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00'){
-//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if(strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
-                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+        if($this->Perf_Non_Member == 'Y'){
+            $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
+        }else{
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00'){
+                if(strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
+                    $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+                }
             }
         }
         return $status;

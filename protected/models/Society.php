@@ -26,6 +26,7 @@
  * @property string $Society_Rate
  * @property string $Society_Main_Performer_Id
  * @property string $Society_Producer_Id
+ * @property integer $Society_Language_Id
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -43,6 +44,13 @@
 class Society extends CActiveRecord {
     const LOGO_SIZE = 1;
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Society_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Society_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

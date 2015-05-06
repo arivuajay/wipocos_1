@@ -18,6 +18,7 @@
  * @property integer $Group_Legal_Form_Id
  * @property integer $Group_Language_Id
  * @property string $Active
+ * @property string $Group_Non_Member
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -30,6 +31,14 @@ class Group extends CActiveRecord {
 
     public $search_status;
     public $is_auth_performer;
+    
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Group_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Group_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -41,7 +50,7 @@ class Group extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null OR groupManageRights.Group_Mnge_Exit_Date = '0000-00-00' OR groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Group_Non_Member = 'N' AND groupManageRights.Group_Mnge_Exit_Date is not Null OR groupManageRights.Group_Mnge_Exit_Date = '0000-00-00' OR groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
 //            'isStatusActive' => array('condition' => "groupManageRights.Group_Mnge_Exit_Date is not Null And groupManageRights.Group_Mnge_Exit_Date != '0000-00-00' And groupManageRights.Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
@@ -58,7 +67,7 @@ class Group extends CActiveRecord {
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Group_Non_Member', 'safe'),
             array('Group_Internal_Code', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -104,6 +113,7 @@ class Group extends CActiveRecord {
             'Rowversion' => 'Rowversion',
             'search_status' => 'Status',
             'is_auth_performer' => 'Author/Performer',
+            'Group_Non_Member' => 'Non Member',
         );
     }
 
@@ -145,11 +155,12 @@ class Group extends CActiveRecord {
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00" OR groupManageRights.Group_Mnge_Exit_Date is null');
-//            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Group_Non_Member', 'N', true);
         }elseif($this->search_status == 'I'){
-            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date is NULL OR groupManageRights.Group_Mnge_Exit_Date = "0000-00-00"');
+            $criteria->compare('Group_Non_Member', 'Y', true);
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Group_Non_Member', 'N', true);
         }
         
         if($this->is_auth_performer == 'author'){
@@ -203,12 +214,14 @@ class Group extends CActiveRecord {
     }
 
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
-        if($this->groupManageRights && $this->groupManageRights->Group_Mnge_Exit_Date != '' && $this->groupManageRights->Group_Mnge_Exit_Date != '0000-00-00'){
-//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if(strtotime($this->groupManageRights->Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
-                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+        if($this->Group_Non_Member == 'Y'){
+            $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
+        }else{
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if($this->groupManageRights && $this->groupManageRights->Group_Mnge_Exit_Date != '' && $this->groupManageRights->Group_Mnge_Exit_Date != '0000-00-00'){
+                if(strtotime($this->groupManageRights->Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                    $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+                }
             }
         }
         return $status;

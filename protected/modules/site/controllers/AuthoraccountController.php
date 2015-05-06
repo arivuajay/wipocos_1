@@ -102,10 +102,6 @@ class AuthoraccountController extends Controller {
                 Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
                 $this->redirect('update/id/' . $model->Auth_Acc_Id . '/tab/6');
             }
-        } else {
-            $model->Auth_Birth_Country_Id = 2;
-            $model->Auth_Nationality_Id = 2;
-            $model->Auth_Language_Id = 1;
         }
 
         $this->render('create', array(

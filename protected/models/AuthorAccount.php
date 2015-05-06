@@ -20,6 +20,7 @@
  * @property integer $Auth_Marital_Status_Id
  * @property string $Auth_Spouse_Name
  * @property string $Auth_Gender
+ * @property string $Auth_Non_Member
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -45,6 +46,14 @@ class AuthorAccount extends CActiveRecord {
     public $record_search;
     public $search_status;
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Auth_Birth_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Auth_Nationality_Id = DEFAULT_NATIONALITY_ID;
+            $this->Auth_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -56,7 +65,7 @@ class AuthorAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is Null OR authorManageRights.Auth_Mnge_Exit_Date = '0000-00-00' OR authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Auth_Non_Member = 'N' AND authorManageRights.Auth_Mnge_Exit_Date is Null OR authorManageRights.Auth_Mnge_Exit_Date = '0000-00-00' OR authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
 //            'isStatusActive' => array('condition' => "authorManageRights.Auth_Mnge_Exit_Date is not Null And authorManageRights.Auth_Mnge_Exit_Date != '0000-00-00' And authorManageRights.Auth_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
@@ -84,7 +93,7 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_First_Name', 'UniqueAttributesValidator', 'with'=>'Auth_Sur_Name' , "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member', 'safe', 'on' => 'search'),
         );
     }
 
@@ -146,6 +155,7 @@ class AuthorAccount extends CActiveRecord {
             'expiry_date' => 'Expiry Date',
             'hierarchy_level' => 'Internal Position',
             'search_status' => 'Status',
+            'Auth_Non_Member' => 'Non Member',
         );
     }
 
@@ -192,11 +202,12 @@ class AuthorAccount extends CActiveRecord {
         $now = new CDbExpression("DATE(NOW())");
         if($this->search_status == 'A'){
             $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
-//            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Auth_Non_Member', 'N', true);
         }elseif($this->search_status == 'I'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date is NULL OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00"');
+            $criteria->compare('Auth_Non_Member', 'Y', true);
         }elseif($this->search_status == 'E'){
             $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date < '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Auth_Non_Member', 'N', true);
         }
 
         return new CActiveDataProvider($this, array(
@@ -279,12 +290,14 @@ class AuthorAccount extends CActiveRecord {
     }
     
     public function getStatus() {
-        $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-//        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
-        if($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00'){
-//            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if(strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
-                $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+        if($this->Auth_Non_Member == 'Y'){
+            $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
+        }else{
+            $status = '<i class="fa fa-circle text-green" title="Active"></i>';
+            if($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00'){
+                if(strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+                    $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
+                }
             }
         }
         return $status;

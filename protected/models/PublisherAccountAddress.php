@@ -27,6 +27,7 @@
  * @property string $Pub_Producer_Account_2
  * @property string $Pub_Producer_Account_3
  * @property string $Pub_Unknown_Address
+ * @property integer $Pub_Addr_Country_Id
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -36,6 +37,12 @@
  */
 class PublisherAccountAddress extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pub_Addr_Country_Id = DEFAULT_COUNTRY_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
