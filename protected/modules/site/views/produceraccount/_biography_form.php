@@ -20,7 +20,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ));
     echo $form->hiddenField($model, 'Pro_Acc_Id', array('value' => $producer_model->Pro_Acc_Id));
     $groups = PublisherGroup::model()->with('publisherGroupManageRights')->isStatusActive()->findAll('Pub_Group_Is_Producer = :producer', array(':producer' => '1'));
-    $group_ids = !$model->isNewRecord ? CHtml::listData($producer_model->producerGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Id') : array();
+    $group_ids = $producer_model->producerGroupMembers ? CHtml::listData($producer_model->producerGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Id') : array();
     ?>
     <div class="box-body">
         <div class="form-group">

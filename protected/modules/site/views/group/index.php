@@ -224,8 +224,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php 
+        if($role == 'author'){
+            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
+        }elseif($role == 'performer'){
+            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right'));
+        }?>
     </div>
 </div>
 

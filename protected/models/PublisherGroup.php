@@ -59,7 +59,7 @@ class PublisherGroup extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Name, Pub_Group_Internal_Code, Pub_Group_IPD_Number, Pub_Group_Date', 'required'),
+            array('Pub_Group_Name, Pub_Group_Internal_Code, Pub_Group_Date', 'required'),
             array('Pub_Group_Id, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Name, Pub_Group_Place', 'length', 'max' => 100),
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),

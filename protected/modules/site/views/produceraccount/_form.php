@@ -27,10 +27,10 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                 <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Address</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Payment</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Marks, Series & Cross-references</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Marks, Series & <br />Cross-references</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <!--<li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
-                <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Succession</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Liquidation and Inheritance</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">

@@ -96,7 +96,7 @@ class PublisherManageRights extends CActiveRecord {
             'Pub_Mnge_File' => 'Physical File Location',
             'Pub_Mnge_Duration' => 'Duration',
             'Pub_Mnge_Avl_Work_Cat_Id' => 'Sector',
-            'Pub_Mnge_Type_Rght_Id' => 'Type of Right Holder',
+            'Pub_Mnge_Type_Rght_Id' => 'RightHolder Type',
             'Pub_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Pub_Mnge_Territories_Id' => 'Territories',
         );

@@ -98,7 +98,7 @@ $this->breadcrumbs = array(
         ?>
 
 
-        <h4>Succession</h4>
+        <h4>Liquidation and Inheritance</h4>
         <?php
         if (!empty($death_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -113,7 +113,7 @@ $this->breadcrumbs = array(
                 ),
             ));
         } else {
-            echo 'Succession Not Created';
+            echo 'Liquidation and Inheritance Not Created';
         }
         ?>
 

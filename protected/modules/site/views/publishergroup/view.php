@@ -38,7 +38,7 @@ $this->breadcrumbs = array(
             'Pub_Group_Internal_Code',
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',
-            'Pub_Group_IPD_Number',
+//            'Pub_Group_IPD_Number',
             'Pub_Group_Date',
             'Pub_Group_Place',
             array(

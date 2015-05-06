@@ -32,5 +32,8 @@ return array(
     
     'SITENAME' => 'Wipocos',
     'EMAILHEADERIMAGE' => '',
+    
+    'DEFAULT_COUNTRY' => 'Nepal',
+    'DEFAULT_COUNTRY_ID' => '2',
 );
 

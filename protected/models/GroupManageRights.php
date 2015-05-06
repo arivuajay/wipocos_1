@@ -96,7 +96,7 @@ class GroupManageRights extends CActiveRecord {
             'Group_Mnge_File' => 'File',
             'Group_Mnge_Duration' => 'Duration',
             'Group_Mnge_Avl_Work_Cat_Id' => 'Work Category',
-            'Group_Mnge_Type_Rght_Id' => 'Type Right',
+            'Group_Mnge_Type_Rght_Id' => 'RightHolder Type',
             'Group_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Group_Mnge_Territories_Id' => 'Territories',
         );

@@ -94,7 +94,7 @@ class PublisherRelatedRights extends CActiveRecord {
             'Pub_Rel_File' => 'Physical File Location',
             'Pub_Rel_Duration' => 'Duration',
             'Pub_Rel_Avl_Work_Cat_Id' => 'Sector',
-            'Pub_Rel_Type_Rght_Id' => 'Type of Right Holder',
+            'Pub_Rel_Type_Rght_Id' => 'RightHolder Type',
             'Pub_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Pub_Rel_Territories_Id' => 'Territories',
         );

@@ -118,11 +118,13 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->error($model, 'Pub_Group_IPN_Base_Number'); ?>
                                 </div>
 
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_IPD_Number', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_IPD_Number'); ?>
-                                </div>
+                                <?php if ((isset($type) && $type == 'producer') || (isset($model->Pub_Group_Is_Producer) && $model->Pub_Group_Is_Producer == '1')) {?>
+                                    <div class="form-group">
+                                        <?php echo $form->labelEx($model, 'Pub_Group_IPD_Number', array('class' => '')); ?>
+                                        <?php echo $form->textField($model, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
+                                        <?php echo $form->error($model, 'Pub_Group_IPD_Number'); ?>
+                                    </div>
+                                <?php }?>
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Date', array('class' => '')); ?>

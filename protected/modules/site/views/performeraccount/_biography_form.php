@@ -20,7 +20,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ));
     echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
     $groups = Group::model()->with('groupManageRights')->isStatusActive()->findAll('Group_Is_Performer = :performer', array(':performer' => '1'));
-    $group_ids = !$model->isNewRecord ? CHtml::listData($performer_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
+    $group_ids = $performer_model->groupMembers ? CHtml::listData($performer_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
     ?>
     <div class="box-body">
         <div class="form-group">

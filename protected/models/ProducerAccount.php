@@ -190,6 +190,14 @@ class ProducerAccount extends CActiveRecord {
         ));
     }
     
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'PR'));
+            $gen_inter_model->Gen_Inter_Code += 1;
+            $gen_inter_model->save(false);
+        }
+    }
+    
     public function getStatus() {
         $status = '<i class="fa fa-circle text-green" title="Active"></i>';
 //        $status = '<i class="fa fa-circle text-red" title="Non-Member"></i>';
