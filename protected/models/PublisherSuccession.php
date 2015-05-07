@@ -66,7 +66,7 @@ class PublisherSuccession extends CActiveRecord {
             'Pub_Suc_Id' => 'Suc',
             'Pub_Acc_Id' => 'Acc',
             'Pub_Suc_Date_Transfer' => 'Date of Transfer',
-            'Pub_Suc_Name' => 'Successor Name',
+            'Pub_Suc_Name' => 'Surname',
             'Pub_Suc_Address_1' => 'Address 1',
             'Pub_Suc_Address_2' => 'Address 2',
             'Pub_Suc_Annotation' => 'Additional Annotations',
