@@ -82,7 +82,7 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search', 'safe'),
+            array('Created_Date, Rowversion,record_search, Auth_Non_Member', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
             array('Auth_Internal_Code', 'unique'),
             array(
