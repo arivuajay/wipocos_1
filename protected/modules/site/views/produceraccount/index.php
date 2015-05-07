@@ -14,6 +14,10 @@ $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
+
+$countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
+$languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
+$legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 'Master_Legal_Form_Id', 'Legal_Form_Name');
 ?>
 <?php $this->renderPartial('/default/_colors')?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
@@ -84,14 +88,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pro_Country_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pro_Country_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pro_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pro_Country_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pro_Legal_Form_id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pro_Legal_Form_id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pro_Legal_Form_id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pro_Legal_Form_id'); ?>
                         </div>
                     </div>
@@ -119,7 +123,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pro_Language_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pro_Language_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pro_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pro_Language_Id'); ?>
                         </div>
                     </div>
@@ -156,9 +160,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Pro_Corporate_Name',
                 'Pro_Internal_Code',
                 'Pro_Ipi',
-                'Pro_Ipi_Base_Number',
+              //  'Pro_Ipi_Base_Number',
                 'Pro_Date',
-                'Pro_Place',
+//                'Pro_Place',
                 array(
                     'name' => 'Status',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
@@ -185,7 +189,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                  */
                 array(
                     'header' => 'Actions',
-                    'class' => 'booster.widgets.TbButtonColumn',
+                    'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                     'template' => '{view}{update}{delete}',
                 )
@@ -229,9 +233,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Pro_Corporate_Name',
             'Pro_Internal_Code',
             'Pro_Ipi',
-            'Pro_Ipi_Base_Number',
+           // 'Pro_Ipi_Base_Number',
             'Pro_Date',
-            'Pro_Place',
+//            'Pro_Place',
             array(
                 'name' => 'Status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
@@ -258,7 +262,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
              */
             array(
                 'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
+                'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )

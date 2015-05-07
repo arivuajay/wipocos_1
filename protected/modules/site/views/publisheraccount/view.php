@@ -28,7 +28,7 @@ $this->breadcrumbs = array(
                 'Pub_Corporate_Name',
                 'Pub_Ipi',
                 'Pub_Ipi_Base_Number',
-                'Pub_Place',
+//                'Pub_Place',
                 'Pub_Reg_Date',
                 'Pub_Reg_Number',
                 'Pub_Excerpt_Date',

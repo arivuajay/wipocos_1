@@ -15,6 +15,11 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
 $nationalities = CHtml::listData(MasterNationality::model()->isActive()->findAll(), 'Master_Nation_Id', 'Nation_Name');
 $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master_Region_Id', 'Region_Name');
 ?>
+<div class="row pull-right" style="margin: 0 0 10px;">
+    <div class="col-lg-12">
+        <?php $this->renderPartial('/default/_colors')?>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
@@ -45,7 +50,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
                             'enableAjaxValidation' => true,
                         ));
                         ?>
-                        <div class="col-lg-5 col-xs-5">
+                        <div class="col-lg-5">
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
@@ -118,8 +123,8 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
 
                             </div>
                         </div>
-                        <div class="col-lg-1 col-xs-1"></div>
-                        <div class="col-lg-5 col-xs-5">
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-5">
                             <div class="box-body">
 
                                 <div class="form-group">

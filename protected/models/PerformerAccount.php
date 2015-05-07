@@ -65,7 +65,7 @@ class PerformerAccount extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "$alias.Perf_Non_Member = 'N' AND performerRelatedRights.Perf_Rel_Exit_Date is Null OR performerRelatedRights.Perf_Rel_Exit_Date = '0000-00-00' OR performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Perf_Non_Member = 'N' AND (performerRelatedRights.Perf_Rel_Exit_Date is Null OR performerRelatedRights.Perf_Rel_Exit_Date = '0000-00-00' OR performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW()))")
 //            'isStatusActive' => array('condition' => "performerRelatedRights.Perf_Rel_Exit_Date is not Null And performerRelatedRights.Perf_Rel_Exit_Date != '0000-00-00' And performerRelatedRights.Perf_Rel_Exit_Date >= DATE(NOW())")
         );
     }

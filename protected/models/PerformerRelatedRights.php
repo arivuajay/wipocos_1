@@ -32,8 +32,14 @@
  * @property MasterWorksCategory $perfRelAvlWorkCat
  */
 class PerformerRelatedRights extends CActiveRecord {
-    const FILE_SIZE = 10;
+//    const FILE_SIZE = 10;
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Perf_Rel_Type_Rght_Id = DEFAULT_PERFORMER_RIGHT_HOLDER_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -53,7 +59,7 @@ class PerformerRelatedRights extends CActiveRecord {
             array('Perf_Rel_File', 'length', 'max' => 255),
             array('Perf_Rel_Duration', 'length', 'max' => 100),
             array('Perf_Rel_Exit_Date, Perf_Rel_Exit_Date_2', 'safe'),
-            array('Perf_Rel_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
+//            array('Perf_Rel_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Rel_Rgt_Id, Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Entry_Date, Perf_Rel_Exit_Date, Perf_Rel_Internal_Position_Id, Perf_Rel_Entry_Date_2, Perf_Rel_Exit_Date_2, Perf_Rel_Region_Id, Perf_Rel_Profession_Id, Perf_Rel_File, Perf_Rel_Duration, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Type_Rght_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id', 'safe', 'on' => 'search'),

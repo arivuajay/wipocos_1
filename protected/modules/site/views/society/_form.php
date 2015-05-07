@@ -30,7 +30,7 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
                 'enableAjaxValidation' => false,
             ));
             ?>
-            <div class="col-lg-5 col-xs-5">
+            <div class="col-lg-5">
                 <div class="box-body">
 
                     <div class="form-group">
@@ -126,8 +126,8 @@ $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'M
 
                 </div>
             </div>
-            <div class="col-lg-1 col-xs-1"></div>
-            <div class="col-lg-5 col-xs-5">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-5">
                 <div class="box-body">
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Payment_Id', array('class' => '')); ?>

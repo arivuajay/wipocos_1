@@ -95,7 +95,16 @@ class GroupController extends Controller {
         $payment_model = empty($payment_exists) ? new GroupPaymentMethod : $payment_exists;
 
         $managed_exists = GroupManageRights::model()->findByAttributes(array('Group_Id' => $id));
-        $managed_model = empty($managed_exists) ? new GroupManageRights : $managed_exists;
+        if(empty($managed_exists)){
+            $managed_model = new GroupManageRights;
+            if($model->Group_Is_Author == '1'){
+                $managed_model->Group_Mnge_Type_Rght_Id = DEFAULT_AUTHOR_GROUP_RIGHT_HOLDER_ID;
+            }elseif($model->Group_Is_Performer == '1'){
+                $managed_model->Group_Mnge_Type_Rght_Id = DEFAULT_PERFORMER_GROUP_RIGHT_HOLDER_ID;
+            }
+        }else{
+            $managed_model = $managed_exists;
+        }
 
         $psedonym_exists = GroupPseudonym::model()->findByAttributes(array('Group_Id' => $id));
         $psedonym_model = empty($psedonym_exists) ? new GroupPseudonym : $psedonym_exists;

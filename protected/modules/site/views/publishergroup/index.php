@@ -15,6 +15,10 @@ $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
+
+$countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
+$languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
+$legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 'Master_Legal_Form_Id', 'Legal_Form_Name');
 ?>
 <?php $this->renderPartial('/default/_colors')?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
@@ -68,13 +72,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Pub_Group_IPN_Base_Number'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_IPD_Number', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'Pub_Group_IPD_Number'); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_Date', array('class' => ' control-label')); ?>
@@ -92,21 +96,21 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_Country_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Group_Country_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pub_Group_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pub_Group_Country_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_Legal_Form_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Group_Legal_Form_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pub_Group_Legal_Form_Id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pub_Group_Legal_Form_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_Language_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Group_Language_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Pub_Group_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Pub_Group_Language_Id'); ?>
                         </div>
                     </div>
@@ -195,7 +199,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                  */
                 array(
                     'header' => 'Actions',
-                    'class' => 'booster.widgets.TbButtonColumn',
+                    'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                     'template' => '{view}{update}{delete}',
                 )
@@ -288,7 +292,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
              */
             array(
                 'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
+                'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )

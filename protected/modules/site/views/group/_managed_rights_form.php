@@ -20,7 +20,7 @@
     $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master_Region_Id', 'Region_Name');
     ?>
 
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-5">
         <div class="box-body">
 
 
@@ -82,8 +82,8 @@
 
         </div>
     </div>
-    <div class="col-lg-1 col-xs-1"></div>
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5">
         <div class="box-body">
 
             <div class="form-group">

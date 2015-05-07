@@ -10,6 +10,9 @@
     ));
     echo $form->hiddenField($model, 'Pro_Acc_Id', array('value' => $producer_model->Pro_Acc_Id));
     ?>
+    <div class="box-header">
+        <h3 class="box-title">Successor</h3>
+    </div>
     <div class="box-body">
         <?php
         $trans_date = '';

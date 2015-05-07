@@ -17,7 +17,7 @@
     echo $form->hiddenField($model, 'Pub_Acc_Id', array('value' => $publisher_model->Pub_Acc_Id));
     $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
     ?>
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-5">
         <div class="box-body">
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Head_Address_1', array('class' => '')); ?>
@@ -87,8 +87,8 @@
         </div>
 
     </div>
-    <div class="col-lg-1 col-xs-1"></div>
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5">
         <div class="box-body">
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Head_Telephone', array('class' => '')); ?>

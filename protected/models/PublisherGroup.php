@@ -56,7 +56,7 @@ class PublisherGroup extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
-            'isStatusActive' => array('condition' => "$alias.Pub_Group_Non_Member = 'N' AND publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is Null OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = '0000-00-00' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
+            'isStatusActive' => array('condition' => "$alias.Pub_Group_Non_Member = 'N' AND (publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is Null OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = '0000-00-00' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW()))")
 //            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is not Null And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != '0000-00-00' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }

@@ -48,3 +48,7 @@ and open the template in the editor.
     width: 102% !important;
     margin-left: -10px !important;
 }
+
+.foundation{
+    border:1px solid #93BF02
+}

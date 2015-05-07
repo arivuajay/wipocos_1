@@ -98,8 +98,24 @@ class PublishergroupController extends Controller {
         $rel_payment_model = empty($rel_payment_exists) ? new PublisherGroupRelatedPayment : $rel_payment_exists;
 
         $managed_exists = PublisherGroupManageRights::model()->findByAttributes(array('Pub_Group_Id' => $id));
-        $managed_model = empty($managed_exists) ? new PublisherGroupManageRights : $managed_exists;
+        if(empty($managed_exists)){
+            $managed_model = new PublisherGroupManageRights;
+            if($model->Pub_Group_Is_Publisher == '1'){
+                $managed_model->Pub_Group_Mnge_Type_Rght_Id = DEFAULT_PUBLISHER_GROUP_RIGHT_HOLDER_ID;
+            }elseif($model->Pub_Group_Is_Producer == '1'){
+                $managed_model->Pub_Group_Mnge_Type_Rght_Id = DEFAULT_PRODUCER_GROUP_RIGHT_HOLDER_ID;
+            }
+        }else{
+            $managed_model = $managed_exists;
+        }
+        
+        if($model->Pub_Group_Is_Publisher == '1'){
+            $managed_model->is_pub_producer = 'PU';
+        }elseif($model->Pub_Group_Is_Producer == '1'){
+            $managed_model->is_pub_producer = 'PR';
+        }
 
+        
         $psedonym_exists = PublisherGroupPseudonym::model()->findByAttributes(array('Pub_Group_Id' => $id));
         $psedonym_model = empty($psedonym_exists) ? new PublisherGroupPseudonym : $psedonym_exists;
 

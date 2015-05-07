@@ -107,7 +107,7 @@ $this->breadcrumbs = array(
                 'aud_created_date',
                 array(
                     'header' => 'Actions',
-                    'class' => 'booster.widgets.TbButtonColumn',
+                    'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                     'template' => '{delete}',
                 )
@@ -155,7 +155,7 @@ $this->breadcrumbs = array(
             'aud_created_date',
             array(
                 'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
+                'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{delete}',
             )

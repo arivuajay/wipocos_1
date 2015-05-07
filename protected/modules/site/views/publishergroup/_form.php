@@ -9,6 +9,11 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
+<div class="row pull-right" style="margin: 0 0 10px;">
+    <div class="col-lg-12">
+        <?php $this->renderPartial('/default/_colors') ?>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
@@ -48,7 +53,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             }
                         }
                         ?>
-                        <div class="col-lg-5 col-xs-5">
+                        <div class="col-lg-5">
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
@@ -71,15 +76,60 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_Place', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_Place'); ?>
+                                    <?php echo $form->labelEx($model, 'Pub_Group_IPI_Name_Number', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Pub_Group_IPI_Name_Number', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_IPI_Name_Number'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_Country_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Pub_Group_Country_Id', $countries, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_Country_Id'); ?>
+                                    <?php echo $form->labelEx($model, 'Pub_Group_IPN_Base_Number', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Pub_Group_IPN_Base_Number', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_IPN_Base_Number'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-1"></div>
+
+                        <div class="col-lg-5">
+                            <div class="box-body">
+                                <div class="form-group foundation">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Foundation</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Pub_Group_Date', array('class' => '')); ?>
+                                                <?php echo $form->textField($model, 'Pub_Group_Date', array('class' => 'form-control date')); ?>
+                                                <?php echo $form->error($model, 'Pub_Group_Date'); ?>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Pub_Group_Place', array('class' => '')); ?>
+                                                <?php echo $form->textField($model, 'Pub_Group_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                                                <?php echo $form->error($model, 'Pub_Group_Place'); ?>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Pub_Group_Country_Id', array('class' => '')); ?>
+                                                <?php echo $form->dropDownList($model, 'Pub_Group_Country_Id', $countries, array('class' => 'form-control')); ?>
+                                                <?php echo $form->error($model, 'Pub_Group_Country_Id'); ?>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -93,50 +143,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->dropDownList($model, 'Pub_Group_Language_Id', $languages, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Language_Id'); ?>
                                 </div>
+                                <?php if ((isset($type) && $type == 'producer') || (isset($model->Pub_Group_Is_Producer) && $model->Pub_Group_Is_Producer == '1')) { ?>
+                                    <!--                                    <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Group_IPD_Number', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_IPD_Number'); ?>
+                                                                        </div>-->
+                                <?php } ?>
 
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-xs-1"></div>
-
-                        <div class="col-lg-5 col-xs-5">
-                            <div class="box-body">
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_IPI_Name_Number', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_IPI_Name_Number', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_IPI_Name_Number'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_IPN_Base_Number', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_IPN_Base_Number', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_IPN_Base_Number'); ?>
-                                </div>
-
-                                <?php if ((isset($type) && $type == 'producer') || (isset($model->Pub_Group_Is_Producer) && $model->Pub_Group_Is_Producer == '1')) {?>
-                                    <div class="form-group">
-                                        <?php echo $form->labelEx($model, 'Pub_Group_IPD_Number', array('class' => '')); ?>
-                                        <?php echo $form->textField($model, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
-                                        <?php echo $form->error($model, 'Pub_Group_IPD_Number'); ?>
-                                    </div>
-                                <?php }?>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_Date', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_Date', array('class' => 'form-control date')); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_Date'); ?>
-                                </div>
                             </div>
                         </div>
 
@@ -203,7 +217,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 <div class="tab-pane" id="tab_8">
                     <?php
                     if (!$model->isNewRecord) {
-                        $this->renderPartial('_sub_publish_catalog',compact('model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
+                        $this->renderPartial('_sub_publish_catalog', compact('model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
                     }
                     ?>
                 </div>

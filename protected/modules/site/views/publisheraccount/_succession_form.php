@@ -10,6 +10,9 @@
     ));
     echo $form->hiddenField($model, 'Pub_Acc_Id', array('value' => $publisher_model->Pub_Acc_Id));
     ?>
+    <div class="box-header">
+        <h3 class="box-title">Successor</h3>
+    </div>
     <div class="box-body">
         <?php
         $trans_date = '';

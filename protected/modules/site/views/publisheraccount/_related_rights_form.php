@@ -19,7 +19,7 @@
     $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(), 'Master_Int_Post_Id', 'Int_Post_Name');
     ?>
 
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-5">
         <div class="box-body">
 
             <div class="form-group">
@@ -73,8 +73,8 @@
 
         </div>
     </div>
-    <div class="col-lg-1 col-xs-1"></div>
-    <div class="col-lg-5 col-xs-5">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5">
         <div class="box-body">
 
             <div class="form-group">
@@ -103,7 +103,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Rel_Type_Rght_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Pub_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control', 'prompt' => '')); ?>
+                <?php echo $form->dropDownList($model, 'Pub_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Pub_Rel_Type_Rght_Id'); ?>
             </div>
 

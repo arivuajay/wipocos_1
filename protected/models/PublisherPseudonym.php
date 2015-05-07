@@ -68,7 +68,7 @@ class PublisherPseudonym extends CActiveRecord {
             'Pub_Pseudo_Id' => 'Pseudo',
             'Pub_Acc_Id' => 'Acc',
             'Pub_Pseudo_Type_Id' => 'Type of reference',
-            'Pub_Pseudo_Name' => 'Corporate name',
+            'Pub_Pseudo_Name' => 'Name or Corporate name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

@@ -34,6 +34,12 @@
  */
 class PublisherManageRights extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pub_Mnge_Type_Rght_Id = DEFAULT_PUBLISHER_RIGHT_HOLDER_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

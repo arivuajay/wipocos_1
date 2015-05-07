@@ -9,9 +9,14 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 ?>
+<div class="row pull-right" style="margin: 0 0 10px;">
+    <div class="col-lg-12">
+        <?php $this->renderPartial('/default/_colors') ?>
+    </div>
+</div>
 
 <div class="row">
-    <div class="col-lg-12 col-xs-12">
+    <div class="col-lg-12">
 
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -47,7 +52,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             }
                         }
                         ?>
-                        <div class="col-lg-5 col-xs-5">
+                        <div class="col-lg-5">
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
@@ -70,48 +75,6 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Place', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Group_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                                    <?php echo $form->error($model, 'Group_Place'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Country_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Group_Country_Id', $countries, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Group_Country_Id'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Legal_Form_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Group_Legal_Form_Id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Group_Legal_Form_Id'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Language_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Group_Language_Id'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
-                                    <?php echo $form->error($model, 'Group_Non_Member'); ?>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-xs-1"></div>
-
-                        <div class="col-lg-5 col-xs-5">
-                            <div class="box-body">
-
-                                <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Group_IPI_Name_Number', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Group_IPI_Name_Number', array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_IPI_Name_Number'); ?>
@@ -130,10 +93,62 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Date', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Group_Date', array('class' => 'form-control date')); ?>
-                                    <?php echo $form->error($model, 'Group_Date'); ?>
+                                    <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Group_Non_Member'); ?>
                                 </div>
+
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1"></div>
+
+                        <div class="col-lg-6">
+                            <div class="box-body">
+
+                                <div class="form-group foundation">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Foundation</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Group_Date', array('class' => '')); ?>
+                                                <?php echo $form->textField($model, 'Group_Date', array('class' => 'form-control date')); ?>
+                                                <?php echo $form->error($model, 'Group_Date'); ?>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Group_Place', array('class' => '')); ?>
+                                                <?php echo $form->textField($model, 'Group_Place', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                                                <?php echo $form->error($model, 'Group_Place'); ?>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Group_Country_Id', array('class' => '')); ?>
+                                                <?php echo $form->dropDownList($model, 'Group_Country_Id', $countries, array('class' => 'form-control')); ?>
+                                                <?php echo $form->error($model, 'Group_Country_Id'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Group_Legal_Form_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Group_Legal_Form_Id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->error($model, 'Group_Legal_Form_Id'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Group_Language_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Group_Language_Id'); ?>
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -178,18 +193,18 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
-<?php
-if (!$model->isNewRecord) {
-    $this->renderPartial('_managed_rights_form', array('model' => $managed_model, 'group_model' => $model));
-}
-?>
+                    <?php
+                    if (!$model->isNewRecord) {
+                        $this->renderPartial('_managed_rights_form', array('model' => $managed_model, 'group_model' => $model));
+                    }
+                    ?>
                 </div>
                 <div class="tab-pane" id="tab_7">
-<?php
-if (!$model->isNewRecord && !$managed_model->isNewRecord) {
-    $this->renderPartial('_representative_form', array('model' => $address_model, 'group_model' => $model));
-}
-?>
+                    <?php
+                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                        $this->renderPartial('_representative_form', array('model' => $address_model, 'group_model' => $model));
+                    }
+                    ?>
                 </div>
             </div>
         </div>

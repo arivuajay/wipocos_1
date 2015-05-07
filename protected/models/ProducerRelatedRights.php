@@ -35,6 +35,12 @@
  */
 class ProducerRelatedRights extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pro_Rel_Type_Rght_Id = DEFAULT_PRODUCER_RIGHT_HOLDER_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -86,16 +92,16 @@ class ProducerRelatedRights extends CActiveRecord {
             'Pro_Rel_Rgt_Id' => 'Rgt',
             'Pro_Acc_Id' => 'Pro Acc',
             'Pro_Rel_Society_Id' => 'Society',
-            'Pro_Rel_Entry_Date' => 'Start of mandate',
-            'Pro_Rel_Exit_Date' => 'End of mandate',
+            'Pro_Rel_Entry_Date' => 'Entry Date',
+            'Pro_Rel_Exit_Date' => 'Exit Date',
             'Pro_Rel_Internal_Position_Id' => 'Internal Position',
-            'Pro_Rel_Entry_Date_2' => 'Position Start',
-            'Pro_Rel_Exit_Date_2' => 'Position End',
+            'Pro_Rel_Entry_Date_2' => 'Entry Date',
+            'Pro_Rel_Exit_Date_2' => 'Exit Date',
             'Pro_Rel_Region_Id' => 'Region',
             'Pro_Rel_Profession_Id' => 'Profession',
-            'Pro_Rel_File' => 'Physical File Location',
+            'Pro_Rel_File' => 'File',
             'Pro_Rel_Duration' => 'Duration',
-            'Pro_Rel_Avl_Work_Cat_Id' => 'Sector',
+            'Pro_Rel_Avl_Work_Cat_Id' => 'Category of Performance',
             'Pro_Rel_Type_Rght_Id' => 'RightHolder Type',
             'Pro_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Pro_Rel_Territories_Id' => 'Territories',

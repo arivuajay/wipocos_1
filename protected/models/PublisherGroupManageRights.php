@@ -36,6 +36,12 @@
  */
 class PublisherGroupManageRights extends CActiveRecord {
 
+    public $is_pub_producer;
+
+    public function init() {
+        parent::init();
+    }
+
     /**
      * @return string the associated database table name
      */
@@ -84,7 +90,7 @@ class PublisherGroupManageRights extends CActiveRecord {
      * @return array customized attribute labels (name=>label)
      */
     public function attributeLabels() {
-        return array(
+        $label = array(
             'Pub_Group_Mnge_Rgt_Id' => 'Rgt',
             'Pub_Group_Id' => 'Group',
             'Pub_Group_Mnge_Society_Id' => 'Society',
@@ -104,6 +110,50 @@ class PublisherGroupManageRights extends CActiveRecord {
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );
+        if (isset($this->is_pub_producer) && $this->is_pub_producer == 'PU') {
+            $label = array(
+                'Pub_Group_Mnge_Rgt_Id' => 'Rgt',
+                'Pub_Group_Id' => 'Group',
+                'Pub_Group_Mnge_Society_Id' => 'Society',
+                'Pub_Group_Mnge_Entry_Date' => 'Start of mandate',
+                'Pub_Group_Mnge_Exit_Date' => 'End of mandate',
+                'Pub_Group_Mnge_Internal_Position_Id' => 'Internal Position',
+                'Pub_Group_Mnge_Entry_Date_2' => 'Position Start',
+                'Pub_Group_Mnge_Exit_Date_2' => 'Position End',
+                'Pub_Group_Mnge_Region_Id' => 'Region',
+                'Pub_Group_Mnge_Profession_Id' => 'Profession',
+                'Pub_Group_Mnge_File' => 'Physical File Location',
+                'Pub_Group_Mnge_Duration' => 'Duration',
+                'Pub_Group_Mnge_Avl_Work_Cat_Id' => 'Work Categroy',
+                'Pub_Group_Mnge_Type_Rght_Id' => 'RightHolder Type',
+                'Pub_Group_Mnge_Managed_Rights_Id' => 'Managed Rights',
+                'Pub_Group_Mnge_Territories_Id' => 'Territories',
+                'Created_Date' => 'Created Date',
+                'Rowversion' => 'Rowversion',
+            );
+        } elseif (isset($this->is_pub_producer) && $this->is_pub_producer == 'PR') {
+            $label = array(
+                'Pub_Group_Mnge_Rgt_Id' => 'Rgt',
+                'Pub_Group_Id' => 'Group',
+                'Pub_Group_Mnge_Society_Id' => 'Society',
+                'Pub_Group_Mnge_Entry_Date' => 'Entry Date',
+                'Pub_Group_Mnge_Exit_Date' => 'Exit Date',
+                'Pub_Group_Mnge_Internal_Position_Id' => 'Internal Position',
+                'Pub_Group_Mnge_Entry_Date_2' => 'Entry Date',
+                'Pub_Group_Mnge_Exit_Date_2' => 'Exit Date',
+                'Pub_Group_Mnge_Region_Id' => 'Region',
+                'Pub_Group_Mnge_Profession_Id' => 'Profession',
+                'Pub_Group_Mnge_File' => 'File',
+                'Pub_Group_Mnge_Duration' => 'Duration',
+                'Pub_Group_Mnge_Avl_Work_Cat_Id' => 'Category of Performance',
+                'Pub_Group_Mnge_Type_Rght_Id' => 'RightHolder Type',
+                'Pub_Group_Mnge_Managed_Rights_Id' => 'Managed Rights',
+                'Pub_Group_Mnge_Territories_Id' => 'Territories',
+                'Created_Date' => 'Created Date',
+                'Rowversion' => 'Rowversion',
+            );
+        }
+        return $label;
     }
 
     /**

@@ -68,7 +68,7 @@ class ProducerSuccession extends CActiveRecord {
             'Pro_Suc_Id' => 'Pro Suc',
             'Pro_Acc_Id' => 'Pro Acc',
             'Pro_Suc_Date_Transfer' => 'Date Transfer',
-            'Pro_Suc_Name' => 'Successor Name',
+            'Pro_Suc_Name' => 'Surname',
             'Pro_Suc_Address_1' => 'Address 1',
             'Pro_Suc_Address_2' => 'Address 2',
             'Pro_Suc_Annotation' => 'Annotation',

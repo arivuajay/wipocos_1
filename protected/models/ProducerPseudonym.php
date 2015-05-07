@@ -68,7 +68,7 @@ class ProducerPseudonym extends CActiveRecord {
             'Pro_Pseudo_Id' => 'Pseudo',
             'Pro_Acc_Id' => 'Acc',
             'Pro_Pseudo_Type_Id' => 'Type of reference',
-            'Pro_Pseudo_Name' => 'Corporate name',
+            'Pro_Pseudo_Name' => 'Name or Corporate name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
