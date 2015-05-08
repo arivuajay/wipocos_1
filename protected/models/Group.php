@@ -103,7 +103,7 @@ class Group extends CActiveRecord {
             'Group_IPI_Name_Number' => 'IPI Name Number',
             'Group_IPN_Base_Number' => 'IPN Base Number',
             'Group_IPN_Number' => 'IPN Number',
-            'Group_Date' => 'Date of Formation',
+            'Group_Date' => ' Date of Foundation',
             'Group_Place' => 'Place',
             'Group_Country_Id' => 'Country',
             'Group_Legal_Form_Id' => 'Legal Form',

@@ -71,7 +71,7 @@ class ProducerSuccession extends CActiveRecord {
             'Pro_Suc_Name' => 'Surname',
             'Pro_Suc_Address_1' => 'Address 1',
             'Pro_Suc_Address_2' => 'Address 2',
-            'Pro_Suc_Annotation' => 'Annotation',
+            'Pro_Suc_Annotation' => 'Additional Annotation',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );

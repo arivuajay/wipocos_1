@@ -118,7 +118,7 @@ class PublisherGroup extends CActiveRecord {
             'Pub_Group_IPI_Name_Number' => 'IPI Name Number',
             'Pub_Group_IPN_Base_Number' => 'IPN Base Number',
             'Pub_Group_IPD_Number' => 'IPD Number',
-            'Pub_Group_Date' => 'Date of Formation',
+            'Pub_Group_Date' => ' Date of Foundation',
             'Pub_Group_Place' => 'Place',
             'Pub_Group_Country_Id' => 'Country',
             'Pub_Group_Legal_Form_Id' => 'Legal Form',

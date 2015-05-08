@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 Yii::import('booster.widgets.TbButtonColumn');
+Yii::import('application.components.UserIdentity');
 
 /**
  * Description of MyActionButtonColumn
@@ -18,14 +19,10 @@ class MyActionButtonColumn extends TbButtonColumn {
 
         $this->buttons = array(
             'delete' => array(
-                'visible' => '$this->checkAccess("'.Yii::app()->user->name.'")'
+                'visible' => 'UserIdentity::checkAccess("'.Yii::app()->user->name.'")'
             )
         );
         
         parent::initDefaultButtons();
-    }
-
-    protected function checkAccess($name) {
-        return ($name == 'admin');
     }
 }

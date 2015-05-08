@@ -10,8 +10,27 @@ $this->breadcrumbs = array(
 ?>
 <div class="user-view col-lg-12">
     <p>
-        <?php echo CHtml::link('Update', array('update', 'id' => $model->Pro_Acc_Id), array('class' => 'btn btn-primary')); ?>
-        <?php echo CHtml::link('Delete', array('delete', 'id' => $model->Pro_Acc_Id), array('confirm' => 'Are you sure you want to delete this item?', 'class' => 'btn btn-danger'));
+        <?php
+        $this->widget(
+                'booster.widgets.TbButton', array(
+                    'label' => 'Update',
+                    'url' => array('update', 'id' => $model->Pro_Acc_Id),
+                    'buttonType' => 'link',
+                    'context' => 'primary',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'booster.widgets.TbButton', array(
+                    'label' => 'Delete',
+                    'url' => array('delete', 'id' => $model->Pro_Acc_Id),
+                    'buttonType' => 'link',
+                    'context' => 'danger',
+                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
         ?>
     </p>
 </div>
@@ -233,8 +252,9 @@ $this->breadcrumbs = array(
         <br />
         <?php
         $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
-        if (!empty($members)) {?>
-        <div class="">
+        if (!empty($members)) {
+            ?>
+            <div class="">
                 <div class="box-header">
                     <h4 class="box-title">Assigned Groups</h4>
                 </div>
@@ -253,7 +273,7 @@ $this->breadcrumbs = array(
                         </tbody></table>
                 </div>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No groups assigned';
         }

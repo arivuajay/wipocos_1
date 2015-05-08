@@ -52,3 +52,7 @@ and open the template in the editor.
 .foundation{
     border:1px solid #93BF02
 }
+
+.form-horizontal .control-label {
+  text-align: left;
+}

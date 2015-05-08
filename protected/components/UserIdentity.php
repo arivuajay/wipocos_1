@@ -66,4 +66,7 @@ class UserIdentity extends CUserIdentity {
         return;
     }
 
+    public static function checkAccess($name) {
+        return ($name == 'admin');
+    }
 }
