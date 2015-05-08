@@ -12,8 +12,6 @@ $this->breadcrumbs = array(
 <div class="user-view">
     <p>
         <?php
-        echo Yii::app()->controller->id ;
-        echo Yii::app()->controller->action->id;
         $this->widget(
                 'booster.widgets.TbButton', array(
                     'label' => 'Update',
@@ -27,7 +25,7 @@ $this->breadcrumbs = array(
         $this->widget(
                 'application.components.MyTbButton', array(
                     'label' => 'Delete',
-                    'url' => array('/psdfsdf/delete', 'id' => $model->Master_Country_Id),
+                    'url' => array('delete', 'id' => $model->Master_Country_Id),
                     'buttonType' => 'link',
                     'context' => 'danger',
                     'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),

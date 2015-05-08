@@ -8,8 +8,27 @@ $this->breadcrumbs = array(
 
 <div class="user-view">
     <p>
-        <?= CHtml::link('Update', array('update', 'id' => $model->id), array('class' => 'btn btn-primary')); ?>
-        <?= CHtml::link('Delete', array('delete', 'id' => $model->id), array('confirm' => 'Are you sure you want to delete this item?', 'class' => 'btn btn-danger'));
+         <?php
+        $this->widget(
+                'booster.widgets.TbButton', array(
+                    'label' => 'Update',
+                    'url' => array('update', 'id' => $model->id),
+                    'buttonType' => 'link',
+                    'context' => 'primary',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'application.components.MyTbButton', array(
+                    'label' => 'Delete',
+                    'url' => array('delete', 'id' => $model->id),
+                    'buttonType' => 'link',
+                    'context' => 'danger',
+                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
         ?>
     </p>
     <?php
