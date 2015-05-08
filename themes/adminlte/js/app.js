@@ -164,14 +164,14 @@ $(function() {
             "bLengthChange": false,
             "bSort": true,
             "bInfo": false,
-            "iDisplayLength": 100,
+            "iDisplayLength": 100
         });
 
         $('#base_table_search').keyup(function(){
              baseTable.fnFilter( $(this).val() );
         });
     }
-    
+
 });
 
 function setHeight(){

@@ -126,6 +126,7 @@ class AuditTrail extends CActiveRecord
 
         public function dataProvider() {
             return new CActiveDataProvider($this, array(
+                 'criteria'=> array('order' => 'aud_id desc'),
                 'pagination' => array(
                     'pageSize' => PAGE_SIZE,
                 )
