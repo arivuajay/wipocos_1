@@ -21,7 +21,7 @@
         }
         ?>
         <!--        <div class="form-group">
-        <?php echo $form->labelEx($model, 'Pro_Suc_Date_Transfer', array('class' => 'col-sm-2 control-label')); ?>
+        <?php echo $form->labelEx($model, 'Pro_Suc_Date_Transfer', array('class' => 'col-sm-3 control-label')); ?>
                     <div class="col-sm-5">
         <?php echo $form->textField($model, 'Pro_Suc_Date_Transfer', array('class' => 'form-control date', 'value' => $trans_date)); ?>
         <?php echo $form->error($model, 'Pro_Suc_Date_Transfer'); ?>
@@ -29,7 +29,7 @@
                 </div>-->
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pro_Suc_Name', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Pro_Suc_Name', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Pro_Suc_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pro_Suc_Name'); ?>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pro_Suc_Address_1', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Pro_Suc_Address_1', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Pro_Suc_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 500)); ?>
                 <?php echo $form->error($model, 'Pro_Suc_Address_1'); ?>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pro_Suc_Address_2', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Pro_Suc_Address_2', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Pro_Suc_Address_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 500)); ?>
                 <?php echo $form->error($model, 'Pro_Suc_Address_2'); ?>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Pro_Suc_Annotation', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Pro_Suc_Annotation', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textArea($model, 'Pro_Suc_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
                 <?php echo $form->error($model, 'Pro_Suc_Annotation'); ?>

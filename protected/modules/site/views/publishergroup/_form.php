@@ -17,6 +17,20 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
+        <?php
+        $rights_label = 'Managed Rights';
+        if($model->isNewRecord){
+        if (isset($type)) {
+            if ($type == 'producer') {
+                $rights_label = 'Related Rights';
+            }
+        }
+        }else{
+            if($model->Pub_Group_Is_Producer == '1'){
+                $rights_label = 'Related Rights';
+            }
+        }
+        ?>
 
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -25,7 +39,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Payments</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Cross-references</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>><?php echo $rights_label?></a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Representatives</a></li>
                 <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub publishing Catalog</a></li>
             </ul>
