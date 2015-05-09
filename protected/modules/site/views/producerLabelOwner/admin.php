@@ -3,7 +3,7 @@
 /* @var $model ProducerLabelOwner */
 
 $this->breadcrumbs=array(
-	'Producer Label Owners'=>array('index'),
+	'Producer Label Ownerships'=>array('index'),
 	'Manage',
 );
 
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Producer Label Owners</h1>
+<h1>Manage Producer Label Ownerships</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>

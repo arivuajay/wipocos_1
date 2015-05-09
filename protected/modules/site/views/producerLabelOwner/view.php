@@ -4,7 +4,7 @@
 
 $this->title = 'View #' . $model->Label_Owner_Id;
 $this->breadcrumbs = array(
-    'Producer Label Owners' => array('index'),
+    'Producer Label Ownerships' => array('index'),
     'View ' . 'ProducerLabelOwner',
 );
 ?>

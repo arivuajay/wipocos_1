@@ -62,7 +62,13 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Exit_Date_2', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Mnge_Exit_Date_2', array('class' => 'form-control date', 'value' => isset($model->Auth_Mnge_Exit_Date_2) ? $model->Auth_Mnge_Exit_Date_2 : date('Y-m-d'))); ?>
+                <?php
+                $exit_date_2 = '';
+                if (isset($model->Auth_Mnge_Exit_Date_2)) {
+                    $exit_date_2 = $model->Auth_Mnge_Exit_Date_2 != "0000-00-00" ? $model->Auth_Mnge_Exit_Date_2 : '';
+                }
+                ?>
+                <?php echo $form->textField($model, 'Auth_Mnge_Exit_Date_2', array('class' => 'form-control date', 'value' => $exit_date_2)); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Exit_Date_2'); ?>
             </div>
 

@@ -61,6 +61,8 @@ class PublisherGroupManageRights extends CActiveRecord {
             array('Pub_Group_Mnge_File', 'length', 'max' => 255),
             array('Pub_Group_Mnge_Duration', 'length', 'max' => 100),
             array('Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Exit_Date_2, Created_Date, Rowversion', 'safe'),
+            array('Pub_Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Mnge_Rgt_Id, Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Entry_Date, Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Entry_Date_2, Pub_Group_Mnge_Exit_Date_2, Pub_Group_Mnge_Region_Id, Pub_Group_Mnge_Profession_Id, Pub_Group_Mnge_File, Pub_Group_Mnge_Duration, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Pub_Group_Mnge_Managed_Rights_Id, Pub_Group_Mnge_Territories_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),

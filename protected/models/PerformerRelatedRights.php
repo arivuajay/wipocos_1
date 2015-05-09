@@ -59,6 +59,8 @@ class PerformerRelatedRights extends CActiveRecord {
             array('Perf_Rel_File', 'length', 'max' => 255),
             array('Perf_Rel_Duration', 'length', 'max' => 100),
             array('Perf_Rel_Exit_Date, Perf_Rel_Exit_Date_2', 'safe'),
+            array('Perf_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Perf_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
 //            array('Perf_Rel_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

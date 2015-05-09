@@ -2,10 +2,10 @@
 /* @var $this ProducerLabelOwnerController */
 /* @var $model ProducerLabelOwner */
 
-$this->title='Update Producer Label Owners: '. $model->Label_Owner_Id;
+$this->title='Update Producer Label Ownerships: '. $model->Label_Owner_Id;
 $this->breadcrumbs=array(
-	'Producer Label Owners'=>array('index'),
-	'Update Producer Label Owners',
+	'Producer Label Ownerships'=>array('index'),
+	'Update Producer Label Ownerships',
 );
 ?>
 

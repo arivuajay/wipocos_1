@@ -8,9 +8,9 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
-$this->title = 'Producer Label Owners';
+$this->title = 'Producer Label Ownerships';
 $this->breadcrumbs = array(
-    'Producer Label Owners',
+    'Producer Label Ownerships',
 );
 $labels = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
 $producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 'Pro_Corporate_Name');
@@ -172,7 +172,7 @@ $producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Producer Label Owners</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Producer Label Ownerships</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

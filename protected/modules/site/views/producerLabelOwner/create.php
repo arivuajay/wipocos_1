@@ -2,9 +2,9 @@
 /* @var $this ProducerLabelOwnerController */
 /* @var $model ProducerLabelOwner */
 
-$this->title='Create Producer Label Owners';
+$this->title='Create Producer Label Ownerships';
 $this->breadcrumbs=array(
-	'Producer Label Owners'=>array('index'),
+	'Producer Label Ownerships'=>array('index'),
 	$this->title,
 );
 ?>

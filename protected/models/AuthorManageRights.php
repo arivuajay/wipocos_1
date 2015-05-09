@@ -59,6 +59,8 @@ class AuthorManageRights extends CActiveRecord {
             array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Mnge_File', 'length', 'max' => 255),
             array('Auth_Mnge_Duration', 'length', 'max' => 100),
+            array('Auth_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Auth_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
