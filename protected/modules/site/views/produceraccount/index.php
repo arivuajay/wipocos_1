@@ -217,6 +217,7 @@ $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Labels Ownership', array('/site/producerlabelowner/create'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
         <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create/type/producer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
         <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer', array('/site/produceraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>

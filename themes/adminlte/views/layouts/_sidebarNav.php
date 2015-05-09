@@ -51,6 +51,7 @@
                         array('label' => '<i class="fa fa-file"></i> <span>Documents</span>', 'url' => array('/site/masterdocument/index')),
                         array('label' => '<i class="fa fa-group"></i> <span>Internal position</span>', 'url' => array('/site/masterinternalposition/index')),
                         array('label' => '<i class="fa fa-bullseye"></i> <span>International Number</span>', 'url' => array('/site/masterinternationalnumber/index')),
+                        array('label' => '<i class="fa fa-file-image-o"></i> <span>Labels</span>', 'url' => array('/site/masterlabel/index')),
                         array('label' => '<i class="fa fa-file-o"></i> <span>Legal Form</span>', 'url' => array('/site/masterlegalform/index')),
                         array('label' => '<i class="fa fa-language"></i> <span>Languages</span>', 'url' => array('/site/masterlanguage/index')),
                         array('label' => '<i class="fa fa-copyright"></i> <span>Managed rights</span>', 'url' => array('/site/mastermanagedrights/index')),
