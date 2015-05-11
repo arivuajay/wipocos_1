@@ -125,7 +125,7 @@ $js = <<< EOD
         $('.loader').hide();
         $('.date').datepicker({
             format: 'yyyy-mm-dd',
-            autoclose: true
+//            autoclose: true
         });
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
