@@ -123,7 +123,10 @@ $producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 
 $js = <<< EOD
     $(document).ready(function () {
         $('.loader').hide();
-        $('.date').datepicker({format: 'yyyy-mm-dd'});
+        $('.date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
             checkShare();
