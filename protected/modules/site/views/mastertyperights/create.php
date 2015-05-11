@@ -2,9 +2,9 @@
 /* @var $this MastertyperightsController */
 /* @var $model MasterTypeRights */
 
-$this->title = 'Create Master Type Rights';
+$this->title = 'Create Right Holder Type';
 $this->breadcrumbs = array(
-    'Master Type Rights' => array('index'),
+    'Right Holder Types' => array('index'),
     $this->title,
 );
 ?>

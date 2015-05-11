@@ -2,9 +2,9 @@
 /* @var $this MastertyperightsController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Master Type Rights';
+$this->title = 'Right Holder Types';
 $this->breadcrumbs = array(
-    'Master Type Rights',
+    'Right Holder Type',
 );
 ?>
 <div class="col-lg-12 col-md-12">
@@ -100,7 +100,7 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create MasterTypeRights', array('/site/mastertyperights/create'), array('class' => 'btn btn-success pull-right')); ?>
+<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create RightHolder Type', array('/site/mastertyperights/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -133,7 +133,7 @@ $this->breadcrumbs = array(
             'type' => 'striped bordered',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Master Type Rights</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Right Holder Types</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );
