@@ -39,7 +39,7 @@ $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
-                    <div class="box-primary">
+                    <div class="box box-primary">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'author-account-form',

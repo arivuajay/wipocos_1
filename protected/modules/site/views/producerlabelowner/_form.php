@@ -84,6 +84,7 @@ $producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
+        <div class="text-right"><span>Note: Save can be enabled When Share is 100 % </span></div>
         <div class="box box-primary">
             <?php echo CHtml::form(array('/site/producerlabelowner/insertlabel'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'label_form')) ?>
             <div class="box-header">
