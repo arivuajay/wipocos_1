@@ -16,8 +16,14 @@ echo "\$this->breadcrumbs=array(
 );\n";
 ?>
 ?>
-<div class="col-lg-12 col-md-12">
-    <div class="row">
+<div class="col-lg-12 col-md-12" id="advance-search-form">
+    <div class="row mb10" id="advance-search-label">
+        <?php
+        $search_icon = '<i class="fa fa-angle-right"></i>';
+        echo "<?php echo CHtml::link('{$search_icon} Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>" 
+        ?>
+    </div>
+    <div class="row" id="advance-search-form">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">

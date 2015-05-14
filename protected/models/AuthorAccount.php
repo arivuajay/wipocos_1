@@ -265,7 +265,8 @@ class AuthorAccount extends CActiveRecord {
     protected function afterSave() {
         if ($this->isNewRecord) {
             $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
-            $gen_inter_model->Gen_Inter_Code += 1;
+            $len = strlen($gen_inter_model->Gen_Inter_Code);
+            $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
             $gen_inter_model->save(false);
         }
     }

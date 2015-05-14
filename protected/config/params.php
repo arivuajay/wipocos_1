@@ -35,7 +35,7 @@ return array(
     
     'DEFAULT_COUNTRY_ID' => '2',
     'DEFAULT_NATIONALITY_ID' => '2',
-    'DEFAULT_LANGUAGE_ID' => '1',
+    'DEFAULT_LANGUAGE_ID' => '5',
     
     'DEFAULT_AUTHOR_RIGHT_HOLDER_ID' => '1',
     'DEFAULT_AUTHOR_GROUP_RIGHT_HOLDER_ID' => '1',
@@ -48,5 +48,8 @@ return array(
     
     'DEFAULT_PRODUCER_RIGHT_HOLDER_ID' => '3',
     'DEFAULT_PRODUCER_GROUP_RIGHT_HOLDER_ID' => '3',
+    
+    'DEFAULT_FACTOR_ID' => '1',
+    'DEFAULT_TYPE_ID' => '4',
 );
 
