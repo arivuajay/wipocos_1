@@ -184,7 +184,7 @@ class Work extends CActiveRecord {
     
     protected function beforeValidate() {
         $this->Work_Duration = $this->duration_hours.':'.$this->duration_minutes.':'.$this->duration_seconds;
-        if(isset($this->Work_Instrumentation)){
+        if(isset($this->Work_Instrumentation) && is_array($this->Work_Instrumentation)){
             $this->Work_Instrumentation = implode(',', $this->Work_Instrumentation);
         }
 
