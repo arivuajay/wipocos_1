@@ -140,7 +140,7 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
 //                ),
                 'Work_Org_Title',
                 array(
-                    'header' => 'Work_Language_Id',
+                    'header' => 'Language',
                     'value' => function($data) {
                         if (!empty($data->workLanguage->Lang_Name))
                             echo $data->workLanguage->Lang_Name;
@@ -150,7 +150,7 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
                 'Work_Iswc',
                 'Work_Wic_Code',
                 array(
-                    'header' => 'Work_Type_Id',
+                    'header' => 'Type',
                     'value' => function($data) {
                         if (!empty($data->workType->Type_Name))
                             echo $data->workType->Type_Name;
@@ -209,7 +209,7 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
 //            ),
                 'Work_Org_Title',
                 array(
-                    'header' => 'Work_Language_Id',
+                    'header' => 'Language',
                     'value' => function($data) {
                         if (!empty($data->workLanguage->Lang_Name))
                             echo $data->workLanguage->Lang_Name;
@@ -219,7 +219,7 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
                 'Work_Iswc',
                 'Work_Wic_Code',
                 array(
-                    'header' => 'Work_Type_Id',
+                    'header' => 'Type',
                     'value' => function($data) {
                         if (!empty($data->workType->Type_Name))
                             echo $data->workType->Type_Name;

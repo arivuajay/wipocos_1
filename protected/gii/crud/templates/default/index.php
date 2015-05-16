@@ -16,7 +16,7 @@ echo "\$this->breadcrumbs=array(
 );\n";
 ?>
 ?>
-<div class="col-lg-12 col-md-12" id="advance-search-form">
+<div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php
         $search_icon = '<i class="fa fa-angle-right"></i>';

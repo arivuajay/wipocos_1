@@ -1,30 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "{{master_instrument}}".
+ * This is the model class for table "{{work_publishing}}".
  *
- * The followings are the available columns in table '{{master_instrument}}':
- * @property integer $Master_Inst_Id
- * @property string $Instrument_Name
- * @property string $Active
+ * The followings are the available columns in table '{{work_publishing}}':
+ * @property integer $Work_Pub_Id
+ * @property integer $Work_Id
+ * @property string $Work_Pub_Contact_Start
+ * @property string $Work_Pub_Contact_End
+ * @property string $Work_Pub_Territories
+ * @property string $Work_Pub_Sign_Date
+ * @property string $Work_Pub_File
+ * @property integer $Work_Pub_References
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property Work $work
  */
-class MasterInstrument extends CActiveRecord {
+class WorkPublishing extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{master_instrument}}';
+        return '{{work_publishing}}';
     }
 
-    public function scopes() {
-        $alias = $this->getTableAlias(false, false);
-        return array(
-            'isActive' => array('condition' => "$alias.Active = '1'"),
-        );
-    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -32,14 +34,14 @@ class MasterInstrument extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Instrument_Code, Instrument_Name', 'required'),
-            array('Instrument_Code', 'length', 'max' => 100),
-            array('Instrument_Name', 'length', 'max' => 255),
-            array('Active', 'length', 'max' => 1),
+            array('Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References', 'required'),
+            array('Work_Id, Work_Pub_References', 'numerical', 'integerOnly' => true),
+            array('Work_Pub_Territories', 'length', 'max' => 500),
+            array('Work_Pub_File', 'length', 'max' => 255),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Inst_Id, Instrument_Name, Instrument_Code, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Pub_Id, Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,6 +52,7 @@ class MasterInstrument extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
         );
     }
 
@@ -58,10 +61,14 @@ class MasterInstrument extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Master_Inst_Id' => 'Id',
-            'Instrument_Name' => 'Name',
-            'Instrument_Code' => 'Code',
-            'Active' => 'Active',
+            'Work_Pub_Id' => 'Work Pub',
+            'Work_Id' => 'Work',
+            'Work_Pub_Contact_Start' => 'Begin',
+            'Work_Pub_Contact_End' => 'End',
+            'Work_Pub_Territories' => 'Territories',
+            'Work_Pub_Sign_Date' => 'Date of signature',
+            'Work_Pub_File' => 'File',
+            'Work_Pub_References' => 'Number of references',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );
@@ -84,9 +91,14 @@ class MasterInstrument extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Master_Inst_Id', $this->Master_Inst_Id);
-        $criteria->compare('Instrument_Name', $this->Instrument_Name, true);
-        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Work_Pub_Id', $this->Work_Pub_Id);
+        $criteria->compare('Work_Id', $this->Work_Id);
+        $criteria->compare('Work_Pub_Contact_Start', $this->Work_Pub_Contact_Start, true);
+        $criteria->compare('Work_Pub_Contact_End', $this->Work_Pub_Contact_End, true);
+        $criteria->compare('Work_Pub_Territories', $this->Work_Pub_Territories, true);
+        $criteria->compare('Work_Pub_Sign_Date', $this->Work_Pub_Sign_Date, true);
+        $criteria->compare('Work_Pub_File', $this->Work_Pub_File, true);
+        $criteria->compare('Work_Pub_References', $this->Work_Pub_References);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
@@ -102,7 +114,7 @@ class MasterInstrument extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return MasterInstrument the static model class
+     * @return WorkPublishing the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -114,6 +126,13 @@ class MasterInstrument extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    protected function beforeValidate() {
+        if(isset($this->Work_Pub_Territories) && is_array($this->Work_Pub_Territories)){
+            $this->Work_Pub_Territories = implode(',', array_filter($this->Work_Pub_Territories));
+        }
+        return parent::beforeValidate();
     }
 
 }

@@ -67,7 +67,7 @@ class Work extends CActiveRecord {
             array('Work_Org_Title, Work_Internal_Code, Work_Iswc, Work_Wic_Code', 'length', 'max' => 100),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Work_Instrumentation', 'length', 'max' => 10),
+            array('Work_Instrumentation', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code', 'unique'),
             array('Active', 'length', 'max' => 1),
@@ -185,7 +185,7 @@ class Work extends CActiveRecord {
     protected function beforeValidate() {
         $this->Work_Duration = $this->duration_hours.':'.$this->duration_minutes.':'.$this->duration_seconds;
         if(isset($this->Work_Instrumentation) && is_array($this->Work_Instrumentation)){
-            $this->Work_Instrumentation = implode(',', $this->Work_Instrumentation);
+            $this->Work_Instrumentation = implode(',', array_filter($this->Work_Instrumentation));
         }
 
         return parent::beforeValidate();

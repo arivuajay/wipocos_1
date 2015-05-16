@@ -13,6 +13,7 @@ $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Ma
 $types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
 $factors = CHtml::listData(MasterFactor::model()->isActive()->findAll(), 'Master_Factor_Id', 'Factor');
 $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
+$territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
 ?>
 
 <div class="row">
@@ -21,9 +22,11 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -163,14 +166,14 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
                         $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'work_model' => $model, 'languages' => $languages, 'types' => $types));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model));
                     }
                     ?>
@@ -179,6 +182,20 @@ $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(),
                     <?php
                     if (!$model->isNewRecord) {
                         $this->renderPartial('_documentation_form', array('model' => $document_model, 'work_model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_5">
+                    <?php
+                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_6">
+                    <?php
+                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                        $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>
