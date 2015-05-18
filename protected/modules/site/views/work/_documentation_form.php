@@ -10,7 +10,7 @@
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
     $doc_status = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(), 'Master_Document_Sts_Id', 'Document_Sts_Name');
-    $doc_type = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(), 'Master_Doc_Type_Id', 'Doc_Type_Name');
+    $doc_type = Myclass::getMasterDocumentType();
     ?>
     <div class="box-body">
         <div class="form-group">

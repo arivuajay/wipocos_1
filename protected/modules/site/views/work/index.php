@@ -6,10 +6,10 @@ $this->title = 'Works';
 $this->breadcrumbs = array(
     'Works',
 );
-$languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
-$types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
-$factors = CHtml::listData(MasterFactor::model()->isActive()->findAll(), 'Master_Factor_Id', 'Factor');
-$instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
+$languages = Myclass::getMasterLanguage();
+$types = Myclass::getMasterType();
+$factors = Myclass::getMasterFactor();
+$instruments = Myclass::getMasterInstrument();
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">

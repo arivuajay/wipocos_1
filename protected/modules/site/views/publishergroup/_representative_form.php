@@ -15,7 +15,7 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Pub_Group_Id', array('value' => $group_model->Pub_Group_Id));
-    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
+    $countries = Myclass::getMasterCountry(false);
     ?>
 
     <div class="col-lg-5">

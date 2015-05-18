@@ -137,7 +137,7 @@ $form = $this->beginWidget('CActiveForm', array(
         <h4>Subcontracted Catalogue</h4>
         <?php
         echo $form->hiddenField($catalog_model, 'Pub_Group_Id', array('value' => $model->Pub_Group_Id));
-        $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
+        $territories = Myclass::getMasterTerritory();
         ?>
         <div class="form-group">
             <?php echo $form->labelEx($catalog_model, 'Pub_Group_Cat_Number', array('class' => 'col-sm-3 control-label')); ?>

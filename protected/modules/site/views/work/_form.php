@@ -9,11 +9,11 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
-$languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
-$types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
-$factors = CHtml::listData(MasterFactor::model()->isActive()->findAll(), 'Master_Factor_Id', 'Factor');
-$instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
-$territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
+$languages = Myclass::getMasterLanguage();
+$types = Myclass::getMasterType();
+$factors = Myclass::getMasterFactor();
+$instruments = Myclass::getMasterInstrument();
+$territories = Myclass::getMasterTerritory();
 ?>
 
 <div class="row">

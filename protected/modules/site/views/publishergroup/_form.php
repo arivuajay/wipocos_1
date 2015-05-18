@@ -55,9 +55,9 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             ),
                             'enableAjaxValidation' => true,
                         ));
-                        $countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
-                        $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
-                        $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(), 'Master_Legal_Form_Id', 'Legal_Form_Name');
+                        $countries = Myclass::getMasterCountry();
+                        $languages = Myclass::getMasterLanguage();
+                        $legal_forms = Myclass::getMasterLegalForm();
 
                         if (isset($type)) {
                             if ($type == 'publisher') {

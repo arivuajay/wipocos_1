@@ -20,7 +20,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Auth_Pseudo_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php $psedonyms = CHtml::listData(MasterPseudonymTypes::model()->isActive()->findAll(), 'Pseudo_Id', 'Pseudo_Code'); ?>
+                <?php $psedonyms = Myclass::getMasterPseudonym(); ?>
                 <?php echo $form->dropDownList($model, 'Auth_Pseudo_Type_Id', $psedonyms, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Auth_Pseudo_Type_Id'); ?>
             </div>

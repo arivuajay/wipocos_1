@@ -35,7 +35,7 @@ $this->breadcrumbs = array(
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Master_Module_ID') ?>
-                    <?php $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description') ?>
+                    <?php $modules = Myclass::getMasterModule() ?>
                     <?php
                     echo $form->dropDownList($model, 'Master_Module_ID', $modules, array(
                         'prompt' => 'Choose Module',

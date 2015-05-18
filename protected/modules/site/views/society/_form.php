@@ -2,19 +2,19 @@
 /* @var $this SocietyController */
 /* @var $model Society */
 /* @var $form CActiveForm */
-$countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name');
-$territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
-$regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(), 'Master_Region_Id', 'Region_Name');
-$professions = CHtml::listData(MasterProfession::model()->isActive()->findAll(), 'Master_Profession_Id', 'Profession_Name');
+$countries = Myclass::getMasterCountry();
+$territories = Myclass::getMasterTerritory();
+$regions = Myclass::getMasterRegion();
+$professions = Myclass::getMasterProfession();
 $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
-$pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(), 'Master_Paymode_Id', 'Paymode_Name');
-$documents = CHtml::listData(MasterDocument::model()->isActive()->findAll(), 'Master_Doc_Id', 'Doc_Name');
-$document_types = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(), 'Master_Doc_Type_Id', 'Doc_Type_Name');
-$organization = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
-$hierarchy = CHtml::listData(MasterHierarchy::model()->isActive()->findAll(), 'Master_Hierarchy_Id', 'Hierarchy_Name');
-$types = CHtml::listData(MasterType::model()->isActive()->findAll(), 'Master_Type_Id', 'Type_Name');
-$languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(), 'Master_Lang_Id', 'Lang_Name');
-$currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name');
+$pay_methods = Myclass::getMasterPaymentMethod();
+$documents = Myclass::getMasterDocument();
+$document_types = Myclass::getMasterDocumentType();
+$organization = Myclass::getOrganization();
+$hierarchy = Myclass::getMasterHierarchy();
+$types = Myclass::getMasterType();
+$languages = Myclass::getMasterLanguage();
+$currencies = Myclass::getMasterCurrency();
 ?>
 
 <div class="row">

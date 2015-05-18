@@ -44,7 +44,7 @@ $this->breadcrumbs = array(
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Doc_Type_Status_Id', array('class' => ' control-label')); ?>
-                            <?php $sts = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(), 'Master_Document_Sts_Id', 'Document_Sts_Code') ?>
+                            <?php $sts = Myclass::getMasterDocumentStatus(); ?>
                             <?php echo $form->dropDownList($searchModel, 'Doc_Type_Status_Id', $sts, array('class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'Doc_Type_Status_Id'); ?>
                         </div>

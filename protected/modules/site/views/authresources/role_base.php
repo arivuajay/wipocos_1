@@ -18,7 +18,7 @@ $this->breadcrumbs = array(
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Master_Role_ID') ?>
-                    <?php $names = CHtml::listData(MasterRole::model()->findAll(array('order' => 'Role_Code')), 'Master_Role_ID', 'Description') ?>
+                    <?php $names = Myclass::getMasterRole(); ?>
                     <?php
                     echo $form->dropDownList($model, 'Master_Role_ID', $names, array(
                         'prompt' => 'Choose Role',
@@ -35,7 +35,7 @@ $this->breadcrumbs = array(
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Master_Module_ID') ?>
-                    <?php $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description') ?>
+                    <?php $modules = Myclass::getMasterModule() ?>
                     <?php
                     echo $form->dropDownList($model, 'Master_Module_ID', $modules, array(
                         'prompt' => 'Choose Module',

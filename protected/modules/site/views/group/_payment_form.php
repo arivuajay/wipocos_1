@@ -21,7 +21,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Group_Pay_Method_id', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(), 'Master_Paymode_Id', 'Paymode_Name'); ?>
+                <?php $pay_methods = Myclass::getMasterPaymentMethod(); ?>
                 <?php echo $form->dropDownList($model, 'Group_Pay_Method_id', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Group_Pay_Method_id'); ?>
             </div>

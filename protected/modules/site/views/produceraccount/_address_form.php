@@ -15,7 +15,7 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Pro_Acc_Id', array('value' => $producer_model->Pro_Acc_Id));
-    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
+    $countries = Myclass::getMasterCountry(false);
     ?>
     <div class="box-body">
         <div class="row">

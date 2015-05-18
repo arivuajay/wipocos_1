@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Org_Nation_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php $nationalities = CHtml::listData(MasterNationality::model()->isActive()->findAll(), 'Master_Nation_Id', 'Nation_Name') ?>
+                        <?php $nationalities = Myclass::getMasterNationality(); ?>
                         <?php echo $form->dropDownList($model, 'Org_Nation_Id', $nationalities, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Org_Nation_Id'); ?>
                     </div>
@@ -56,7 +56,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Org_Country_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php $countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(), 'Master_Country_Id', 'Country_Name') ?>
+                        <?php $countries = Myclass::getMasterCountry(); ?>
                         <?php echo $form->dropDownList($model, 'Org_Country_Id', $countries, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Org_Country_Id'); ?>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Org_Currency_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name') ?>
+                        <?php $currencies = Myclass::getMasterCurrency() ?>
                         <?php echo $form->dropDownList($model, 'Org_Currency_Id', $currencies, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Org_Currency_Id'); ?>
                     </div>

@@ -12,8 +12,8 @@ $this->title = 'Producer Label Ownerships';
 $this->breadcrumbs = array(
     'Producer Label Ownerships',
 );
-$labels = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
-$producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 'Pro_Corporate_Name');
+$labels = Myclass::getMasterLabel();
+$producers = Myclass::getProducer();
 ?>
 <div class="col-lg-12 col-md-12">
     <div class="row">

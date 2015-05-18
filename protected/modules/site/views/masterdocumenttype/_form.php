@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Doc_Type_Status_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-2">
-                        <?php $sts = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(), 'Master_Document_Sts_Id', 'Document_Sts_Code') ?>
+                        <?php $sts = Myclass::getMasterDocumentStatus(); ?>
                         <?php echo $form->dropDownList($model, 'Doc_Type_Status_Id', $sts, array('class' => 'form-control')); ?>
                         <?php echo $form->error($model, 'Doc_Type_Status_Id'); ?>
                     </div>

@@ -26,14 +26,14 @@ $this->breadcrumbs = array(
                         'htmlOptions' => array('role' => 'form')
                     ));
 
-                    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
-                    $territories = CHtml::listData(MasterTerritories::model()->findAll(), 'Master_Territory_Id', 'Territory_Name');
-                    $regions = CHtml::listData(MasterRegion::model()->findAll(), 'Master_Region_Id', 'Region_Name');
-                    $professions = CHtml::listData(MasterProfession::model()->findAll(), 'Master_Profession_Id', 'Profession_Name');
+                    $countries = Myclass::getMasterCountry(false);
+                    $territories = Myclass::getMasterTerritory(false);
+                    $regions = Myclass::getMasterRegion(false);
+                    $professions = Myclass::getMasterProfession(false);
                     $roles = CHtml::listData(MasterRole::model()->findAll(), 'Master_Role_ID', 'Description');
-                    $pay_methods = CHtml::listData(MasterPaymentMethod::model()->findAll(), 'Master_Paymode_Id', 'Paymode_Name');
-                    $documents = CHtml::listData(MasterDocument::model()->findAll(), 'Master_Doc_Id', 'Doc_Name');
-                    $document_types = CHtml::listData(MasterDocumentType::model()->findAll(), 'Master_Doc_Type_Id', 'Doc_Type_Name');
+                    $pay_methods = Myclass::getMasterPaymentMethod(false);
+                    $documents = Myclass::getMasterDocument(false);
+                    $document_types = Myclass::getMasterDocumentType(false);
                     ?>
 
                     <div class="col-lg-3 col-md-3">

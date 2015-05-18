@@ -10,13 +10,13 @@
     ));
     echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
 
-    $societies = CHtml::listData(Society::model()->with('socOrg')->isActive()->findAll(), 'Society_Id', 'Society_Code');
-    $professions = CHtml::listData(MasterProfession::model()->isActive()->findAll(), 'Master_Profession_Id', 'Profession_Name');
-    $work_categories = CHtml::listData(MasterWorksCategory::model()->isActive()->findAll(), 'Master_Work_Category_Id', 'Work_Category_Name');
-    $right_types = CHtml::listData(MasterTypeRights::model()->isActive()->findAll(), 'Master_Type_Rights_Id', 'Type_Rights_Name');
-    $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
-    $managed_rights = CHtml::listData(MasterManagedRights::model()->isActive()->findAll(), 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name');
-    $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(), 'Master_Int_Post_Id', 'Int_Post_Name');
+    $societies = Myclass::getSociety();
+    $professions = Myclass::getMasterProfession();
+    $work_categories = Myclass::getMasterWorkCategory();
+    $right_types = Myclass::getMasterTypeRight();
+    $territories = Myclass::getMasterTerritory();
+    $managed_rights = Myclass::getMasterManagedRight();
+    $internal_positions = Myclass::getMasterInternalPosition();
     ?>
 
     <div class="col-lg-5">

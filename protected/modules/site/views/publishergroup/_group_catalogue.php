@@ -8,7 +8,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => false,
         ));
 echo $form->hiddenField($model, 'Pub_Group_Id', array('value' => $group_model->Pub_Group_Id));
-$territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(), 'Master_Territory_Id', 'Territory_Name');
+$territories = Myclass::getMasterTerritory();
 ?>
 <div class="box-body col-lg-12">
     <h4>Subcontracted Catalogue</h4>

@@ -122,7 +122,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'hierarchy_level', array('class' => ' control-label')); ?>
-                            <?php $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(), 'Master_Int_Post_Id', 'Int_Post_Name'); ?>
+                            <?php $internal_positions = Myclass::getMasterInternalPosition(); ?>
                             <?php echo $form->dropDownList($searchModel, 'hierarchy_level', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'hierarchy_level'); ?>
                         </div>

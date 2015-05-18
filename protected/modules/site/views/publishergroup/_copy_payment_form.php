@@ -40,7 +40,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Pub_Group_Pay_Copy_Pay_Method', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(), 'Master_Paymode_Id', 'Paymode_Name'); ?>
+                <?php $pay_methods = Myclass::getMasterPaymentMethod(); ?>
                 <?php echo $form->dropDownList($model, 'Pub_Group_Pay_Copy_Pay_Method', $pay_methods, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Pub_Group_Pay_Copy_Pay_Method'); ?>
             </div>

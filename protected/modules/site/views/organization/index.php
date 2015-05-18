@@ -25,9 +25,9 @@ $this->breadcrumbs = array(
                         'action' => array('/site/organization/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-                    $countries = CHtml::listData(MasterCountry::model()->findAll(), 'Master_Country_Id', 'Country_Name');
-                    $nationalities = CHtml::listData(MasterNationality::model()->findAll(), 'Master_Nation_Id', 'Nation_Name');
-                    $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(), 'Master_Crncy_Id', 'Currency_Name');
+                    $countries = Myclass::getMasterCountry(false);
+                    $nationalities = Myclass::getMasterNationality(false);
+                    $currencies = Myclass::getMasterCurrency();
                     ?>
 
                     <div class="col-lg-4 col-md-4">

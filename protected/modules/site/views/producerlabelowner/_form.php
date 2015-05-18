@@ -9,8 +9,8 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
-$labels = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
-$producers = CHtml::listData(ProducerAccount::model()->findAll(), 'Pro_Acc_Id', 'Pro_Corporate_Name');
+$labels = Myclass::getMasterLabel();
+$producers = Myclass::getProducer();
 ?>
 
 <div class="row">
