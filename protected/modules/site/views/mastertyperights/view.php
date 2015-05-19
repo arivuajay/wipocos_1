@@ -1,5 +1,5 @@
 <?php
-/* @var $this MastertyperightsController */
+/* @var $this MasterTypeRightsController */
 /* @var $model MasterTypeRights */
 
 $this->title = 'View #' . $model->Master_Type_Rights_Id;
@@ -8,28 +8,27 @@ $this->breadcrumbs = array(
     'View ' . 'MasterTypeRights',
 );
 ?>
-
 <div class="user-view">
     <p>
         <?php
         $this->widget(
                 'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Master_Type_Rights_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+            'label' => 'Update',
+            'url' => array('update', 'id' => $model->Master_Type_Rights_Id),
+            'buttonType' => 'link',
+            'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
                 'application.components.MyTbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Master_Type_Rights_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+            'label' => 'Delete',
+            'url' => array('delete', 'id' => $model->Master_Type_Rights_Id),
+            'buttonType' => 'link',
+            'context' => 'danger',
+            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+            'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         ?>
@@ -41,10 +40,24 @@ $this->breadcrumbs = array(
         'attributes' => array(
             'Master_Type_Rights_Id',
             'Type_Rights_Name',
+            'Type_Rights_Code',
+            'Type_Rights_Standard',
+            'Type_Rights_Rank',
             array(
-                'label' => MasterTypeRights::model()->getAttributeLabel('Active'),
+                'name' => 'Type_Rights_Occupation',
                 'type' => 'raw',
-                'value' => ($model->Active == 1) ? '<i class="fa fa-circle text-green" title="Active"></i>' : '<i title="In-Active" class="fa fa-circle text-red"></i>'
+                'value' => $model->getOccupationList($model->Type_Rights_Occupation)
+            ),
+            array(
+                'name' => 'Type_Rights_Domain',
+                'type' => 'raw',
+                'value' => $model->getDomainList($model->Type_Rights_Domain)
+            ),
+//            'Type_Right_Use',
+            array(
+                'name' => 'Active',
+                'type' => 'raw',
+                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
             ),
         ),
     ));

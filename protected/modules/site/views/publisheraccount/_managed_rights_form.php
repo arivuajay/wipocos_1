@@ -13,7 +13,7 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    $right_types = Myclass::getMasterTypeRight();
+    $right_types = Myclass::getMasterTypeRight('PU');
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
     $internal_positions = Myclass::getMasterInternalPosition();

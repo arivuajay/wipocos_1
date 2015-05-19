@@ -228,13 +228,6 @@ $legal_forms = Myclass::getMasterLegalForm();
                     }
                     ?>
                 </div>
-                <!--                <div class="tab-pane" id="tab_7">
-                <?php
-//                    if (!$model->isNewRecord) {
-//                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'publisher_model' => $model, 'regions' => $regions));
-//                    }
-                ?>
-                                </div>-->
                 <div class="tab-pane" id="tab_8">
                     <?php
                     if (!$model->isNewRecord && !$managed_model->isNewRecord) {

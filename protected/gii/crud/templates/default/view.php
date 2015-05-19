@@ -24,8 +24,27 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
 ?>
 <div class="user-view">
     <p>
-        <?php echo "<?php"; ?> echo CHtml::link('Update', array('update', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>), array('class' => 'btn btn-primary')); ?>
-        <?php echo "<?php"; ?> echo CHtml::link('Delete', array('delete', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>), array('confirm' => 'Are you sure you want to delete this item?', 'class' => 'btn btn-danger'));
+        <?php echo "<?php"; ?>
+        $this->widget(
+                'booster.widgets.TbButton', array(
+                    'label' => 'Update',
+                    'url' => array('update', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>),
+                    'buttonType' => 'link',
+                    'context' => 'primary',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'application.components.MyTbButton', array(
+                    'label' => 'Delete',
+                    'url' => array('delete', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>),
+                    'buttonType' => 'link',
+                    'context' => 'danger',
+                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
         ?>
     </p>
     <?php echo "<?php"; ?> $this->widget('zii.widgets.CDetailView', array(

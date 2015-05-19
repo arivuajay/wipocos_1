@@ -29,27 +29,69 @@ $this->breadcrumbs = array(
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Name', array('class' => ' control-label')); ?>
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Name', array('class' => 'control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Type_Rights_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 90)); ?>
                             <?php echo $form->error($searchModel, 'Type_Rights_Name'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => 'control-label')); ?>
+                            <?php
+                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
                             ;
                             ?>
-<?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Code', array('class' => 'control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Type_Rights_Code', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->error($searchModel, 'Type_Rights_Code'); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Standard', array('class' => 'control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Type_Rights_Standard', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->error($searchModel, 'Type_Rights_Standard'); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Rank', array('class' => 'control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Type_Rights_Rank', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Type_Rights_Rank'); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Occupation', array('class' => 'control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Type_Rights_Occupation', $model->OccupationList, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Type_Rights_Occupation'); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Type_Rights_Domain', array('class' => 'control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Type_Rights_Domain', $model->DomainList, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Type_Rights_Domain'); ?>
+                        </div>
+                    </div>
+
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-<?php $this->endWidget(); ?>
+                    <?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -68,6 +110,20 @@ $this->breadcrumbs = array(
                     'header' => '',
                 ),
                 'Type_Rights_Name',
+                array(
+                    'name' => 'Type_Rights_Occupation',
+                    'type' => 'raw',
+                    'value' => function($data) {
+                        echo $data->getOccupationList($data->Type_Rights_Occupation);
+                    },
+                ),
+                array(
+                    'name' => 'Type_Rights_Domain',
+                    'type' => 'raw',
+                    'value' => function($data) {
+                        echo $data->getDomainList($data->Type_Rights_Domain);
+                    },
+                ),
                 array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -100,7 +156,7 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create RightHolder Type', array('/site/mastertyperights/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create RightHolder Type', array('/site/mastertyperights/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
@@ -113,6 +169,20 @@ $this->breadcrumbs = array(
                 'header' => '',
             ),
             'Type_Rights_Name',
+            array(
+                'name' => 'Type_Rights_Occupation',
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->getOccupationList($data->Type_Rights_Occupation);
+                },
+            ),
+            array(
+                'name' => 'Type_Rights_Domain',
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->getDomainList($data->Type_Rights_Domain);
+                },
+            ),
             array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),

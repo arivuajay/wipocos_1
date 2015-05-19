@@ -13,7 +13,8 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    $right_types = Myclass::getMasterTypeRight();
+    $occ = $group_model->Pub_Group_Is_Publisher == '1' ? 'PU' : 'PR';
+    $right_types = Myclass::getMasterTypeRight($occ);
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
     $internal_positions = Myclass::getMasterInternalPosition();

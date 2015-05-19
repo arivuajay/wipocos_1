@@ -13,7 +13,8 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    $right_types = Myclass::getMasterTypeRight();
+    $occ = $group_model->Group_Is_Author == '1' ? 'AU' : 'PE';
+    $right_types = Myclass::getMasterTypeRight($occ);
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
     $internal_positions = Myclass::getMasterInternalPosition();
@@ -22,9 +23,6 @@
 
     <div class="col-lg-5">
         <div class="box-body">
-
-
-
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Mnge_Society_Id', array('class' => '')); ?>
                 <?php echo $form->dropDownList($model, 'Group_Mnge_Society_Id', $societies, array('class' => 'form-control')); ?>
