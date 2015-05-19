@@ -161,7 +161,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Perf_Ipi',
 //                'Perf_Identity_Number',
                 array(
-                    'header' => 'Pseudonym',
+                    'name' => 'Pseudonym',
                     'value' => function($data) {
                         if (!empty($data->performerPseudonyms))
                             echo $data->performerPseudonyms->Perf_Pseudo_Name;
@@ -177,7 +177,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             },
                 ),
                 array(
-                    'name' => 'Date of Birth',
+                    'name' => 'Perf_DOB',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
@@ -279,7 +279,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Perf_Ipi',
 //            'Perf_Identity_Number',
             array(
-                'header' => 'Pseudonym',
+                'name' => 'Pseudonym',
                 'value' => function($data) {
                     if (!empty($data->performerPseudonyms))
                         echo $data->performerPseudonyms->Perf_Pseudo_Name;
@@ -295,7 +295,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         },
             ),
             array(
-                'name' => 'Date of Birth',
+                'name' => 'Perf_DOB',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {

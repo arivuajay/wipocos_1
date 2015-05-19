@@ -164,7 +164,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Auth_Ipi',
 //                'Auth_Identity_Number',
                 array(
-                    'header' => 'Pseudonym',
+                    'name' => 'Pseudonym',
+                    'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->authorPseudonyms))
                             echo $data->authorPseudonyms->Auth_Pseudo_Name;
@@ -180,7 +181,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             },
                 ),
                 array(
-                    'name' => 'Date of Birth',
+                    'name' => 'Auth_DOB',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
@@ -189,7 +190,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             },
                 ),
                 array(
-                    'name' => 'Status',
+                    'name' => 'search_status',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
@@ -248,7 +249,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //            'Auth_Ipi_Base_Number',
 //            'Auth_Ipn_Number',
             array(
-                'header' => 'Pseudonym',
+                'name' => 'Pseudonym',
+                'type' => 'raw',
                 'value' => function($data) {
                     if (!empty($data->authorPseudonyms))
                         echo $data->authorPseudonyms->Auth_Pseudo_Name;
@@ -266,7 +268,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         },
             ),
             array(
-                'name' => 'Date of Birth',
+                'name' => 'Auth_DOB',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
@@ -275,7 +277,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         },
             ),
             array(
-                'name' => 'Status',
+                'name' => 'search_status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {

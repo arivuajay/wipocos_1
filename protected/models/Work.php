@@ -69,7 +69,7 @@ class Work extends CActiveRecord {
             array('duration_hours', 'numerical', 'min' => 0),
             array('Work_Instrumentation', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
-            array('Work_Internal_Code', 'unique'),
+            array('Work_Internal_Code, Work_Org_Title', 'unique'),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds', 'safe'),
             // The following rule is used by search().

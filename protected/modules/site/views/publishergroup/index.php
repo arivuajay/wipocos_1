@@ -267,7 +267,7 @@ $legal_forms = Myclass::getMasterLegalForm();
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',
             array(
-                'name' => 'Status',
+                'name' => 'search_status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {

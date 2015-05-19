@@ -140,7 +140,8 @@ $instruments = Myclass::getMasterInstrument();
 //                ),
                 'Work_Org_Title',
                 array(
-                    'header' => 'Language',
+                    'name' => 'Work_Language_Id',
+                    'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->workLanguage->Lang_Name))
                             echo $data->workLanguage->Lang_Name;
@@ -150,7 +151,8 @@ $instruments = Myclass::getMasterInstrument();
                 'Work_Iswc',
                 'Work_Wic_Code',
                 array(
-                    'header' => 'Type',
+                    'name' => 'Work_Type_Id',
+                    'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->workType->Type_Name))
                             echo $data->workType->Type_Name;
@@ -209,7 +211,8 @@ $instruments = Myclass::getMasterInstrument();
 //            ),
                 'Work_Org_Title',
                 array(
-                    'header' => 'Language',
+                    'name' => 'Work_Language_Id',
+                    'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->workLanguage->Lang_Name))
                             echo $data->workLanguage->Lang_Name;
@@ -219,7 +222,8 @@ $instruments = Myclass::getMasterInstrument();
                 'Work_Iswc',
                 'Work_Wic_Code',
                 array(
-                    'header' => 'Type',
+                    'name' => 'Work_Type_Id',
+                    'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->workType->Type_Name))
                             echo $data->workType->Type_Name;
