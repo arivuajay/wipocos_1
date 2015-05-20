@@ -147,8 +147,6 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_Language_Id'); ?>
                                 </div>
-
-
                             </div>
                         </div>
 

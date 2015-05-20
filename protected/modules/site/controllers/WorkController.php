@@ -67,7 +67,7 @@ class WorkController extends Controller {
 //                $model->save(false);
                 Myclass::addAuditTrail("Created Work successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Created Successfully. Please Fill Doucmentation!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/4'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/4'));
             }
         }
 
@@ -97,11 +97,10 @@ class WorkController extends Controller {
         $sub_publishing_exists = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
 
-        $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
-        $right_holder_model = empty($right_holder_exists) ? new WorkRightholder : $right_holder_exists;
-        
+        $right_holder_model = new WorkRightholder;
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model, 
+        $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
             $sub_publishing_model, $right_holder_model));
 
         if (isset($_POST['Work'])) {
@@ -109,46 +108,85 @@ class WorkController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Work successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Updated Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id));
             }
-        }elseif (isset($_POST['WorkSubtitle'])) {
+        } elseif (isset($_POST['WorkSubtitle'])) {
             $sub_title_model->attributes = $_POST['WorkSubtitle'];
             if ($sub_title_model->save()) {
                 Myclass::addAuditTrail("Saved Work Subtitle successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Subtitle Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/2'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/2'));
             }
-        }elseif (isset($_POST['WorkBiography'])) {
+        } elseif (isset($_POST['WorkBiography'])) {
             $biograph_model->attributes = $_POST['WorkBiography'];
             if ($biograph_model->save()) {
                 Myclass::addAuditTrail("Saved Work Biography successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Biography Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/3'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/3'));
             }
-        }elseif (isset($_POST['WorkDocumentation'])) {
+        } elseif (isset($_POST['WorkDocumentation'])) {
             $document_model->attributes = $_POST['WorkDocumentation'];
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Saved Work Documentation successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/4'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/4'));
             }
-        }elseif (isset($_POST['WorkPublishing'])) {
+        } elseif (isset($_POST['WorkPublishing'])) {
             $publishing_model->attributes = $_POST['WorkPublishing'];
             if ($publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Publishing Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/5'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/5'));
             }
-        }elseif (isset($_POST['WorkSubPublishing'])) {
+        } elseif (isset($_POST['WorkSubPublishing'])) {
             $sub_publishing_model->attributes = $_POST['WorkSubPublishing'];
             if ($sub_publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Sub Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Sub Publishing Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/'.$model->Work_Id.'/tab/6'));
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/6'));
             }
+        } elseif (isset($_POST['WorkRightholder'])) {
+            $right_holder_model->attributes = $_POST['WorkRightholder'];
+            if ($right_holder_model->save()) {
+                Myclass::addAuditTrail("Saved Work right holder successfully.", "sliders");
+                Yii::app()->user->setFlash('success', 'Work right holder Saved Successfully!!!');
+                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/7'));
+            }
+        } elseif (isset($_REQUEST['rght_holder'])) {
+            $criteria = new CDbCriteria();
+            $pubcriteria = new CDbCriteria();
+            if (!empty($_REQUEST['sur'])) {
+                $criteria->addCondition("Auth_Sur_Name = '{$_REQUEST['sur']}'");
+                $pubcriteria->addCondition("Pub_Corporate_Name = '{$_REQUEST['sur']}'");
+            }
+            if (!empty($_REQUEST['fn'])) {
+                $criteria->addCondition("Auth_First_Name = '{$_REQUEST['fn']}'");
+                $pubcriteria->addCondition("Pub_Corporate_Name = '{$_REQUEST['fn']}'");
+            }
+            if (!empty($_REQUEST['i_code'])) {
+                $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");
+                $pubcriteria->addCondition("Pub_Internal_Code = '{$_REQUEST['i_code']}'");
+            }
+            if (!empty($_REQUEST['i_name'])) {
+                $criteria->addCondition("Auth_Ipi = '{$_REQUEST['i_name']}'");
+                $pubcriteria->addCondition("Pub_Ipi = '{$_REQUEST['i_name']}'");
+            }
+            if (!empty($_REQUEST['i_base'])) {
+                $criteria->addCondition("Auth_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
+                $pubcriteria->addCondition("Pub_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
+            }
+
+            if ($_REQUEST['is_auth'] == '1') {
+                $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll($criteria);
+            }
+            if ($_REQUEST['is_publ'] == '1') {
+                $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll($pubcriteria);
+            }
+
+            $tab = 7;
         }
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 
-                'sub_publishing_model', 'right_holder_model'));
+
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'authusers', 'publusers'));
     }
 
     /**
@@ -229,12 +267,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form'
-                || $_POST['ajax'] === 'work-subtitle-form'
-                || $_POST['ajax'] === 'work-biography-form'
-                || $_POST['ajax'] === 'work-documentation-form'
-                || $_POST['ajax'] === 'work-publishing-form'
-                || $_POST['ajax'] === 'work-sub-publishing-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'work-rightholder-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

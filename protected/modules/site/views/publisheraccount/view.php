@@ -13,22 +13,22 @@ $this->breadcrumbs = array(
         <?php
         $this->widget(
                 'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Pub_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+            'label' => 'Update',
+            'url' => array('update', 'id' => $model->Pub_Acc_Id),
+            'buttonType' => 'link',
+            'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
                 'application.components.MyTbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Pub_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+            'label' => 'Delete',
+            'url' => array('delete', 'id' => $model->Pub_Acc_Id),
+            'buttonType' => 'link',
+            'context' => 'danger',
+            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+            'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         ?>
@@ -70,6 +70,44 @@ $this->breadcrumbs = array(
                 ),
             ),
         ));
+        ?>
+
+        <h4>Address</h4>
+        <?php
+        if (!empty($address_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $address_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    'Pub_Head_Address_1',
+                    'Pub_Head_Address_2',
+                    'Pub_Head_Address_3',
+                    'Pub_Head_Fax',
+                    'Pub_Head_Telephone',
+                    'Pub_Head_Email',
+                    'Pub_Head_Website',
+                    'Pub_Mailing_Address_1',
+                    'Pub_Mailing_Address_2',
+                    'Pub_Mailing_Address_3',
+                    'Pub_Mailing_Telephone',
+                    'Pub_Mailing_Fax',
+                    'Pub_Mailing_Email',
+                    'Pub_Mailing_Website',
+                    array(
+                        'name' => 'Pub_Unknown_Address',
+                        'type' => 'raw',
+                        'value' => $address_model->Pub_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+//        array(
+//                'name' => 'Active',
+//                'type' => 'raw',
+//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
+                ),
+            ));
+        } else {
+            echo 'Address Not Created';
+        }
         ?>
     </div>
 
@@ -135,54 +173,6 @@ $this->breadcrumbs = array(
             echo 'Liquidation and Inheritance Not Created';
         }
         ?>
-
-
-    </div>
-
-
-</div>
-
-<div class="row">
-    <div class="user-view col-lg-6">
-        <h4>Address</h4>
-        <?php
-        if (!empty($address_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $address_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-                    'Pub_Head_Address_1',
-                    'Pub_Head_Address_2',
-                    'Pub_Head_Address_3',
-                    'Pub_Head_Fax',
-                    'Pub_Head_Telephone',
-                    'Pub_Head_Email',
-                    'Pub_Head_Website',
-                    'Pub_Mailing_Address_1',
-                    'Pub_Mailing_Address_2',
-                    'Pub_Mailing_Address_3',
-                    'Pub_Mailing_Telephone',
-                    'Pub_Mailing_Fax',
-                    'Pub_Mailing_Email',
-                    'Pub_Mailing_Website',
-                    array(
-                        'name' => 'Pub_Unknown_Address',
-                        'type' => 'raw',
-                        'value' => $address_model->Pub_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-                    ),
-//        array(
-//                'name' => 'Active',
-//                'type' => 'raw',
-//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-//            ),
-                ),
-            ));
-        } else {
-            echo 'Address Not Created';
-        }
-        ?>
-    </div>
-    <div class="user-view col-lg-6">
         <h4>Related Rights</h4>
         <?php
         if (!empty($managed_model)) {
@@ -252,8 +242,9 @@ $this->breadcrumbs = array(
         <br />
         <?php
         $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Pub_Internal_Code));
-        if (!empty($members)) {?>
-        <div class="">
+        if (!empty($members)) {
+            ?>
+            <div class="">
                 <div class="box-header">
                     <h4 class="box-title">Assigned Groups</h4>
                 </div>
@@ -263,20 +254,44 @@ $this->breadcrumbs = array(
                                 <th>#</th>
                                 <th>Group Name</th>
                             </tr>
-                            <?php foreach ($members as $key => $member) { ?>
+    <?php foreach ($members as $key => $member) { ?>
                                 <tr>
                                     <td><?php echo $key + 1 ?>.</td>
                                     <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
                                 </tr>
-                            <?php } ?>
+    <?php } ?>
                         </tbody></table>
                 </div>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
+        <?php
+        $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Pub_Internal_Code));
+        if (!empty($works)) {
+            ?>
+            <h4 class="box-title">Assigned Works</h4>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Works Name</th>
+                            <th>Action</th>
+                        </tr>
+    <?php foreach ($works as $key => $work) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $work->work->Work_Org_Title ?></td>
+                                <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                            </tr>
+            <?php } ?>
+                    </tbody></table>
+            </div>
+<?php } else {
+    echo 'No works assigned';
+} ?>
 
     </div>
 </div>

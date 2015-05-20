@@ -56,3 +56,6 @@ and open the template in the editor.
 .form-horizontal .control-label {
   text-align: left;
 }
+
+table.selectable tbody tr td {cursor: pointer; }
+table.selectable tbody tr.highlight td { background-color: #f56954; cursor: pointer; color: #fff; }

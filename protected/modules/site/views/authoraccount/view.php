@@ -84,6 +84,49 @@ $this->breadcrumbs = array(
             ),
         ));
         ?>
+        <h4>Address</h4>
+        <?php
+        if (!empty($address_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $address_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    'Auth_Home_Address_1',
+                    'Auth_Home_Address_2',
+                    'Auth_Home_Address_3',
+                    'Auth_Home_Fax',
+                    'Auth_Home_Telephone',
+                    'Auth_Home_Email',
+                    'Auth_Home_Website',
+                    'Auth_Mailing_Address_1',
+                    'Auth_Mailing_Address_2',
+                    'Auth_Mailing_Address_3',
+                    'Auth_Mailing_Telephone',
+                    'Auth_Mailing_Fax',
+                    'Auth_Mailing_Email',
+                    'Auth_Mailing_Website',
+                    'Auth_Author_Account_1',
+                    'Auth_Author_Account_2',
+                    'Auth_Author_Account_3',
+                    'Auth_Performer_Account_1',
+                    'Auth_Performer_Account_2',
+                    'Auth_Performer_Account_3',
+                    array(
+                        'name' => 'Auth_Unknown_Address',
+                        'type' => 'raw',
+                        'value' => $address_model->Auth_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+//        array(
+//                'name' => 'Active',
+//                'type' => 'raw',
+//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
+                ),
+            ));
+        } else {
+            echo 'Address Not Created';
+        }
+        ?>
     </div>
 
     <div class="user-view col-lg-6">
@@ -148,60 +191,7 @@ $this->breadcrumbs = array(
         }
         ?>
 
-
-    </div>
-
-
-</div>
-
-<div class="row">
-    <div class="user-view col-lg-6">
-        <h4>Address</h4>
-        <?php
-        if (!empty($address_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $address_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-                    'Auth_Home_Address_1',
-                    'Auth_Home_Address_2',
-                    'Auth_Home_Address_3',
-                    'Auth_Home_Fax',
-                    'Auth_Home_Telephone',
-                    'Auth_Home_Email',
-                    'Auth_Home_Website',
-                    'Auth_Mailing_Address_1',
-                    'Auth_Mailing_Address_2',
-                    'Auth_Mailing_Address_3',
-                    'Auth_Mailing_Telephone',
-                    'Auth_Mailing_Fax',
-                    'Auth_Mailing_Email',
-                    'Auth_Mailing_Website',
-                    'Auth_Author_Account_1',
-                    'Auth_Author_Account_2',
-                    'Auth_Author_Account_3',
-                    'Auth_Performer_Account_1',
-                    'Auth_Performer_Account_2',
-                    'Auth_Performer_Account_3',
-                    array(
-                        'name' => 'Auth_Unknown_Address',
-                        'type' => 'raw',
-                        'value' => $address_model->Auth_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-                    ),
-//        array(
-//                'name' => 'Active',
-//                'type' => 'raw',
-//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-//            ),
-                ),
-            ));
-        } else {
-            echo 'Address Not Created';
-        }
-        ?>
-    </div>
-    <div class="user-view col-lg-6">
-        <h4>Managed Rights</h4>
+<h4>Managed Rights</h4>
         <?php
         if (!empty($managed_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -294,9 +284,31 @@ $this->breadcrumbs = array(
             echo 'No groups assigned';
         }
         ?>
-
+        <?php
+        $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
+        if (!empty($works)) {?>
+                <h4 class="box-title">Assigned Works</h4>
+                <div class="box-body no-padding">
+                    <table class="table table-condensed">
+                        <tbody><tr>
+                                <th>#</th>
+                                <th>Works Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <?php foreach ($works as $key => $work) { ?>
+                                <tr>
+                                    <td><?php echo $key + 1 ?>.</td>
+                                    <td><?php echo $work->work->Work_Org_Title ?></td>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>',array('/site/work/view','id'=>$work->Work_Id)); ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody></table>
+                </div>
+        <?php } else { echo 'No works assigned'; } ?>
     </div>
 </div>
+
+
 <div class="row">
     <div class="user-view col-lg-12">
         <?php

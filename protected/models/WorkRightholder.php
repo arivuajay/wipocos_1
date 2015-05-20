@@ -6,11 +6,7 @@
  * The followings are the available columns in table '{{work_rightholder}}':
  * @property integer $Work_Right_Id
  * @property integer $Work_Id
- * @property string $Work_Right_Surname
- * @property string $Work_Right_Firstname
- * @property string $Work_Right_Internal_Code
- * @property string $Work_Right_User_Type
- * @property integer $Work_Right_Role_Id
+ * @property string $Work_Member_Internal_Code
  * @property string $Work_Right_Broad_Share
  * @property string $Work_Right_Broad_Special
  * @property integer $Work_Right_Broad_Org_id
@@ -41,16 +37,16 @@ class WorkRightholder extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Right_Surname, Work_Right_Firstname, Work_Right_Internal_Code, Work_Right_User_Type, Work_Right_Role_Id, Work_Right_Broad_Share, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
-            array('Work_Id, Work_Right_Role_Id, Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
-            array('Work_Right_Surname, Work_Right_Internal_Code', 'length', 'max' => 100),
-            array('Work_Right_Firstname', 'length', 'max' => 255),
-            array('Work_Right_User_Type, Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
+            array('Work_Id, Work_Right_Broad_Share, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
+            array('Work_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
+            array('Work_Id, Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Member_Internal_Code', 'length', 'max' => 100),
+            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Broad_Special, Work_Right_Mech_Special', 'length', 'max' => 2),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Right_Id, Work_Id, Work_Right_Surname, Work_Right_Firstname, Work_Right_Internal_Code, Work_Right_User_Type, Work_Right_Role_Id, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Right_Id, Work_Id, Work_Member_Internal_Code, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,6 +59,8 @@ class WorkRightholder extends CActiveRecord {
         return array(
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
+            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_Internal_Code','foreignKey' => array('Work_Member_Internal_Code'=>'Auth_Internal_Code')),
+            'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_Internal_Code','foreignKey' => array('Work_Member_Internal_Code'=>'Pub_Internal_Code')),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
         );
     }
@@ -74,17 +72,13 @@ class WorkRightholder extends CActiveRecord {
         return array(
             'Work_Right_Id' => 'Work Right',
             'Work_Id' => 'Work',
-            'Work_Right_Surname' => 'Work Right Surname',
-            'Work_Right_Firstname' => 'Work Right Firstname',
-            'Work_Right_Internal_Code' => 'Work Right Internal Code',
-            'Work_Right_User_Type' => 'Work Right User Type',
-            'Work_Right_Role_Id' => 'Work Right Role',
-            'Work_Right_Broad_Share' => 'Work Right Broad Share',
-            'Work_Right_Broad_Special' => 'Work Right Broad Special',
-            'Work_Right_Broad_Org_id' => 'Work Right Broad Org',
-            'Work_Right_Mech_Share' => 'Work Right Mech Share',
-            'Work_Right_Mech_Special' => 'Work Right Mech Special',
-            'Work_Right_Mech_Org_Id' => 'Work Right Mech Org',
+            'Work_Member_Internal_Code' => 'Member Internal Code',
+            'Work_Right_Broad_Share' => 'Share',
+            'Work_Right_Broad_Special' => 'Special',
+            'Work_Right_Broad_Org_id' => 'Organization',
+            'Work_Right_Mech_Share' => 'Share',
+            'Work_Right_Mech_Special' => 'Special',
+            'Work_Right_Mech_Org_Id' => 'Organization',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );
@@ -109,11 +103,7 @@ class WorkRightholder extends CActiveRecord {
 
         $criteria->compare('Work_Right_Id', $this->Work_Right_Id);
         $criteria->compare('Work_Id', $this->Work_Id);
-        $criteria->compare('Work_Right_Surname', $this->Work_Right_Surname, true);
-        $criteria->compare('Work_Right_Firstname', $this->Work_Right_Firstname, true);
-        $criteria->compare('Work_Right_Internal_Code', $this->Work_Right_Internal_Code, true);
-        $criteria->compare('Work_Right_User_Type', $this->Work_Right_User_Type, true);
-        $criteria->compare('Work_Right_Role_Id', $this->Work_Right_Role_Id);
+        $criteria->compare('Work_Member_Internal_Code', $this->Work_Member_Internal_Code, true);
         $criteria->compare('Work_Right_Broad_Share', $this->Work_Right_Broad_Share, true);
         $criteria->compare('Work_Right_Broad_Special', $this->Work_Right_Broad_Special, true);
         $criteria->compare('Work_Right_Broad_Org_id', $this->Work_Right_Broad_Org_id);
@@ -147,6 +137,20 @@ class WorkRightholder extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public function getSpecialStatus($key = NULL) {
+        $status = array(
+            'DI' => 'Dispute',
+            'IN' => 'In',
+            'OT' => 'Out',
+            'PL' => 'Plagiat'
+        );
+
+        if ($key != NULL)
+            return $status[$key];
+
+        return $status;
     }
 
 }

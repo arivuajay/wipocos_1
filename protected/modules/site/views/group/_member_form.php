@@ -29,7 +29,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ?>
     <div class="box-body">
         <div class="form-group">
-            <label for="base_table_search" class="col-sm-2 control-label required">Search</label>                    
+            <label for="base_table_search" class="col-sm-2 control-label required">Search</label>
             <div class="col-sm-5">
                 <input type="text" id="base_table_search" class="form-control">
             </div>
@@ -47,22 +47,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <th>Internal Code</th>
                         </tr>
                     </thead>
-                    <?php
-                    if ($group_model->Group_Is_Author == '1') {
-                        foreach ($users as $key => $user) {
-                            ?>
-                            <tr>
-                                <?php $checked = (!empty($user_ids) && in_array($user->Auth_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Auth_Internal_Code ?>]" value="<?php echo $user->Auth_Internal_Code ?>" <?php echo $checked ?> /></td>
-                                <td><?php echo $user->Auth_First_Name ?></td>
-                                <td><?php echo $user->Auth_Sur_Name ?></td>
-                                <td><?php echo $user->Auth_Internal_Code ?></td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                    ?>
                     <tbody>
+                        <?php
+                        if ($group_model->Group_Is_Author == '1') {
+                            foreach ($users as $key => $user) {
+                                ?>
+                                <tr>
+                                    <?php $checked = (!empty($user_ids) && in_array($user->Auth_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
+                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Auth_Internal_Code ?>]" value="<?php echo $user->Auth_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                    <td><?php echo $user->Auth_First_Name ?></td>
+                                    <td><?php echo $user->Auth_Sur_Name ?></td>
+                                    <td><?php echo $user->Auth_Internal_Code ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
                         <?php
                         if ($group_model->Group_Is_Performer == '1') {
                             foreach ($users as $key => $user) {
@@ -78,7 +78,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             }
                         }
                         ?>
-
                     </tbody>
                 </table>
             </div>
