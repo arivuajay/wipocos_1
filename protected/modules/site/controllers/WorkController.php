@@ -96,9 +96,13 @@ class WorkController extends Controller {
 
         $sub_publishing_exists = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
+
+        $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
+        $right_holder_model = empty($right_holder_exists) ? new WorkRightholder : $right_holder_exists;
         
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model, $sub_publishing_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model, 
+            $sub_publishing_model, $right_holder_model));
 
         if (isset($_POST['Work'])) {
             $model->attributes = $_POST['Work'];
@@ -144,7 +148,7 @@ class WorkController extends Controller {
             }
         }
         $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 
-                'sub_publishing_model'));
+                'sub_publishing_model', 'right_holder_model'));
     }
 
     /**

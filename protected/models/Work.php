@@ -32,13 +32,14 @@
  * @property WorkSubtitle[] $workSubtitles
  */
 class Work extends CActiveRecord {
+
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->duration_hours = 0;
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
@@ -181,16 +182,18 @@ class Work extends CActiveRecord {
             )
         ));
     }
-    
+
     protected function beforeValidate() {
-        $this->Work_Duration = $this->duration_hours.':'.$this->duration_minutes.':'.$this->duration_seconds;
-        if(isset($this->Work_Instrumentation) && is_array($this->Work_Instrumentation)){
-            $this->Work_Instrumentation = implode(',', array_filter($this->Work_Instrumentation));
+        $this->Work_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
+        if (isset($this->Work_Instrumentation) && is_array($this->Work_Instrumentation)) {
+            $this->Work_Instrumentation = !empty($this->Work_Instrumentation) ? json_encode($this->Work_Instrumentation) : '';
+        }else{
+            $this->Work_Instrumentation = '';
         }
 
         return parent::beforeValidate();
     }
-    
+
     protected function afterSave() {
         if ($this->isNewRecord) {
             $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'W'));
@@ -199,22 +202,33 @@ class Work extends CActiveRecord {
             $gen_inter_model->save(false);
         }
     }
-    
+
     public function setDuration() {
         $time = explode(':', $this->Work_Duration);
         $this->duration_hours = $time[0];
         $this->duration_minutes = $time[1];
         $this->duration_seconds = $time[2];
     }
-    
+
     public function getInstrumentlist() {
         $inst = array();
         $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
-        $exp = explode(',', $this->Work_Instrumentation);
+        $exp = json_decode($this->Work_Instrumentation);
         foreach ($exp as $ex) {
             $inst[$ex] = $instruments[$ex];
         }
         return implode(', ', $inst);
+    }
+
+    public function getInstrumentselected() {
+        $selected = array();
+        if($this->Work_Instrumentation){
+            $exp = json_decode($this->Work_Instrumentation);
+            foreach ($exp as $ex) {
+                $selected[$ex] = array('selected' => 'selected');
+            }
+        }
+        return $selected;
     }
 
 }

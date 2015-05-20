@@ -27,6 +27,7 @@ $territories = Myclass::getMasterTerritory();
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
+                <li><a id="a_tab_6" href="#tab_7" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -101,13 +102,7 @@ $territories = Myclass::getMasterTerritory();
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Work_Instrumentation', array('class' => '')); ?>
                                     <?php
-                                    $selected = array();
-                                    if ($model->Work_Instrumentation != '') {
-                                        $exp = explode(',', $model->Work_Instrumentation);
-                                        foreach ($exp as $ex){
-                                            $selected[$ex] = array('selected' => 'selected');
-                                        }
-                                    }
+                                    $selected = $model->getInstrumentselected();
                                     ?>
                                     <?php echo $form->dropDownList($model, 'Work_Instrumentation', $instruments, array('class' => 'form-control', 'multiple' => true, 'prompt' => '', 'options' => $selected)); ?>
                                     <?php echo $form->error($model, 'Work_Instrumentation'); ?>
@@ -196,6 +191,13 @@ $territories = Myclass::getMasterTerritory();
                     <?php
                     if (!$model->isNewRecord && !$document_model->isNewRecord) {
                         $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_7">
+                    <?php
+                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model));
                     }
                     ?>
                 </div>

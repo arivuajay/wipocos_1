@@ -130,9 +130,21 @@ class WorkPublishing extends CActiveRecord {
     
     protected function beforeValidate() {
         if(isset($this->Work_Pub_Territories) && is_array($this->Work_Pub_Territories)){
-            $this->Work_Pub_Territories = implode(',', array_filter($this->Work_Pub_Territories));
+            $this->Work_Pub_Territories = !empty($this->Work_Pub_Territories) ? json_encode($this->Work_Pub_Territories) : '';
+        }else{
+            $this->Work_Pub_Territories = '';
         }
         return parent::beforeValidate();
     }
 
+    public function getTerritoryselected() {
+        $selected = array();
+        if($this->Work_Pub_Territories){
+            $exp = json_decode($this->Work_Pub_Territories);
+            foreach ($exp as $ex) {
+                $selected[$ex] = array('selected' => 'selected');
+            }
+        }
+        return $selected;
+    }
 }

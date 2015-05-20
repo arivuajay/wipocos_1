@@ -31,13 +31,7 @@
             <?php echo $form->labelEx($model, 'Work_Sub_Territories', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php
-                $selected = array();
-                if ($model->Work_Sub_Territories != '') {
-                    $exp = explode(',', $model->Work_Sub_Territories);
-                    foreach ($exp as $ex){
-                        $selected[$ex] = array('selected' => 'selected');
-                    }
-                }
+                $selected = $model->getTerritoryselected();
                 ?>
                 <?php echo $form->dropDownList($model, 'Work_Sub_Territories', $territories, array('class' => 'form-control', 'multiple' => true, 'options' => $selected)); ?>
                 <?php echo $form->error($model, 'Work_Sub_Territories'); ?>
