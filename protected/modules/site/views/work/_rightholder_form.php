@@ -271,10 +271,10 @@
                                                 <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                                 <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                                 <td><?php echo $member->Work_Right_Broad_Share; ?></td>
-                                                <td><?php echo $member->Work_Right_Broad_Special; ?></td>
+                                                <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
                                                 <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;    ?></td>-->
                                                 <td><?php echo $member->Work_Right_Mech_Share; ?></td>
-                                                <td><?php echo $member->Work_Right_Mech_Special; ?></td>
+                                                <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
                                                 <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;    ?></td>-->
                                                 <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
                                             </tr>
