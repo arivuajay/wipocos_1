@@ -254,12 +254,12 @@ $this->breadcrumbs = array(
                                 <th>#</th>
                                 <th>Group Name</th>
                             </tr>
-    <?php foreach ($members as $key => $member) { ?>
+                            <?php foreach ($members as $key => $member) { ?>
                                 <tr>
                                     <td><?php echo $key + 1 ?>.</td>
                                     <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
                                 </tr>
-    <?php } ?>
+                            <?php } ?>
                         </tbody></table>
                 </div>
             </div>
@@ -278,20 +278,24 @@ $this->breadcrumbs = array(
                     <tbody><tr>
                             <th>#</th>
                             <th>Works Name</th>
+                            <th>Internal Code</th>
                             <th>Action</th>
                         </tr>
-    <?php foreach ($works as $key => $work) { ?>
+                        <?php foreach ($works as $key => $work) { ?>
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $work->work->Work_Org_Title ?></td>
+                                <td><?php echo $work->work->Work_Internal_Code ?></td>
                                 <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
                             </tr>
-            <?php } ?>
+                        <?php } ?>
                     </tbody></table>
             </div>
-<?php } else {
-    echo 'No works assigned';
-} ?>
+        <?php
+        } else {
+            echo 'No works assigned';
+        }
+        ?>
 
     </div>
 </div>

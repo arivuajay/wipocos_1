@@ -7,6 +7,7 @@
  * @property integer $Work_Right_Id
  * @property integer $Work_Id
  * @property string $Work_Member_Internal_Code
+ * @property integer $Work_Right_Role
  * @property string $Work_Right_Broad_Share
  * @property string $Work_Right_Broad_Special
  * @property integer $Work_Right_Broad_Org_id
@@ -17,6 +18,7 @@
  * @property string $Rowversion
  *
  * The followings are the available model relations:
+ * @property MasterTypeRights $workRightRole
  * @property Organization $workRightBroadOrg
  * @property Organization $workRightMechOrg
  * @property Work $work
@@ -37,16 +39,16 @@ class WorkRightholder extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Right_Broad_Share, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
+            array('Work_Id, Work_Right_Broad_Share,Work_Right_Role, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
             array('Work_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
-            array('Work_Id, Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Id,Work_Right_Role,  Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
             array('Work_Member_Internal_Code', 'length', 'max' => 100),
             array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Broad_Special, Work_Right_Mech_Special', 'length', 'max' => 2),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Right_Id, Work_Id, Work_Member_Internal_Code, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Right_Id, Work_Id,Work_Right_Role,  Work_Member_Internal_Code, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -57,6 +59,7 @@ class WorkRightholder extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'workRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Role'),
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
             'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_Internal_Code','foreignKey' => array('Work_Member_Internal_Code'=>'Auth_Internal_Code')),
@@ -73,6 +76,7 @@ class WorkRightholder extends CActiveRecord {
             'Work_Right_Id' => 'Work Right',
             'Work_Id' => 'Work',
             'Work_Member_Internal_Code' => 'Member Internal Code',
+            'Work_Right_Role' => 'Role',
             'Work_Right_Broad_Share' => 'Share',
             'Work_Right_Broad_Special' => 'Special',
             'Work_Right_Broad_Org_id' => 'Organization',

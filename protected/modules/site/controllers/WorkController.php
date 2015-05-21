@@ -156,12 +156,12 @@ class WorkController extends Controller {
             $criteria = new CDbCriteria();
             $pubcriteria = new CDbCriteria();
             if (!empty($_REQUEST['sur'])) {
-                $criteria->addCondition("Auth_Sur_Name = '{$_REQUEST['sur']}'");
-                $pubcriteria->addCondition("Pub_Corporate_Name = '{$_REQUEST['sur']}'");
+                $criteria->addSearchCondition("Auth_Sur_Name",$_REQUEST['sur']);
+                $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['sur']);
             }
             if (!empty($_REQUEST['fn'])) {
-                $criteria->addCondition("Auth_First_Name = '{$_REQUEST['fn']}'");
-                $pubcriteria->addCondition("Pub_Corporate_Name = '{$_REQUEST['fn']}'");
+                $criteria->addSearchCondition("Auth_First_Name",$_REQUEST['fn']);
+                $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['fn']);
             }
             if (!empty($_REQUEST['i_code'])) {
                 $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");

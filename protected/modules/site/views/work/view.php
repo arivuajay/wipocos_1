@@ -81,6 +81,7 @@ $this->breadcrumbs = array(
                     <tbody><tr>
                             <th>#</th>
                             <th>Member Name</th>
+                            <th>Internal Code</th>
                             <th>Action</th>
                         </tr>
                         <?php
@@ -96,6 +97,7 @@ $this->breadcrumbs = array(
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $name; ?></td>
+                                <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                 <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
                             </tr>
                         <?php } ?>

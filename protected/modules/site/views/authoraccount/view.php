@@ -293,12 +293,14 @@ $this->breadcrumbs = array(
                         <tbody><tr>
                                 <th>#</th>
                                 <th>Works Name</th>
+                                <th>Internal Code</th>
                                 <th>Action</th>
                             </tr>
                             <?php foreach ($works as $key => $work) { ?>
                                 <tr>
                                     <td><?php echo $key + 1 ?>.</td>
                                     <td><?php echo $work->work->Work_Org_Title ?></td>
+                                    <td><?php echo $work->work->Work_Internal_Code ?></td>
                                     <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>',array('/site/work/view','id'=>$work->Work_Id)); ?></td>
                                 </tr>
                             <?php } ?>
