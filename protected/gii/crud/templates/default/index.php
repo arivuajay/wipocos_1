@@ -14,13 +14,20 @@ echo "\$this->title='$label';\n";
 echo "\$this->breadcrumbs=array(
 	'$label',
 );\n";
+
+echo "\$themeUrl = \$this->themeUrl;\n";
+echo "\$cs = Yii::app()->getClientScript();\n";
+echo "\$cs_pos_end = CClientScript::POS_END;\n\n";
+
+echo "\$cs->registerScriptFile(\$themeUrl . '/js/datatables/jquery.dataTables.js', \$cs_pos_end);\n";
+echo "\$cs->registerScriptFile(\$themeUrl . '/js/datatables/dataTables.bootstrap.js', \$cs_pos_end);\n";
 ?>
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php
         $search_icon = '<i class="fa fa-angle-right"></i>';
-        echo "<?php echo CHtml::link('{$search_icon} Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>" 
+        echo "<?php echo CHtml::link('{$search_icon} Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>"
         ?>
     </div>
     <div class="row" id="advance-search-form">
@@ -39,7 +46,7 @@ echo "\$this->breadcrumbs=array(
         'action' => array('/site/" . str_replace('-', '', $this->class2id($this->modelClass)) . "/index'),
         'htmlOptions' => array('role' => 'form')
 )); ?>\n"; ?>
-                    
+
                      <?php
                      $restrict = $this->giiGenerateHiddenFields();
                 foreach ($this->tableSchema->columns as $column) {
@@ -74,22 +81,8 @@ echo "\$this->breadcrumbs=array(
 <?php echo "<?php"; ?> if ($search) { ?>
     <div class="col-lg-12 col-md-12">
         <div class="row">
-        <?php
+<?php echo "<?php\n"; ?>
         $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
-        );
-
-        
-        ?>
-<?php echo "<?php"; ?> 
-        $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
 <?php
 $count=0;
 $activeFields = $this->giiGenerateActiveInActiveFields();
@@ -124,7 +117,7 @@ if($count>=7)
                 'template' => '{view}{update}{delete}',
             )
             );
-        
+
             $this->widget('booster.widgets.TbExtendedGridView', array(
             'type' => 'striped bordered',
             'dataProvider' => $searchModel->search(),
@@ -138,31 +131,22 @@ if($count>=7)
     </div>
 <?php echo "<?php"; ?> } ?>
 
-
 <div class="col-lg-12 col-md-12">
-    <div class="row mb10">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 row">
+            <div class="form-group">
+                <label class="control-label">Spotlight Search: </label>
+                <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
+            </div>
+        </div>
         <?php echo "<?php"; ?> echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create <?php echo $this->modelClass; ?>', array('/site/<?php echo strtolower($this->modelClass); ?>/create'), array('class' => 'btn btn-success pull-right')); ?>
     </div>
 </div>
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <?php
+<?php echo "<?php\n"; ?>
         $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
-        );
-
-        
-        ?>
-<?php echo "<?php"; ?> 
-        $gridColumns = array(
-            array(
-                'class' => 'IndexColumn',
-                'header' => '',
-            ),
 <?php
 $count=0;
 foreach($this->tableSchema->columns as $column)
@@ -196,9 +180,9 @@ if($count>=7)
                 'template' => '{view}{update}{delete}',
             )
             );
-        
+
             $this->widget('booster.widgets.TbExtendedGridView', array(
-            'type' => 'striped bordered',
+            'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
             'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  <?php echo $label?></h3></div><div class="panel-body">{items}{pager}</div></div>',
