@@ -128,6 +128,7 @@
         </div>
     <?php } ?>
 
+    <a name="role-foundation">&nbsp;</a>
     <div class="col-lg-12">
         <div class="box-body">
             <div class="form-group foundation">
@@ -140,9 +141,10 @@
                                 $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'Type_Rights_Name');
                                 $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'Type_Rights_Name');
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
-                                echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role','disabled'=>'disabled'));
-                                echo $form->dropDownList($model, 'Work_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role','disabled'=>'disabled')); ?>
-                                <?php echo $form->error($model, 'Work_Right_Role'); ?>
+                                echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Work_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role', 'disabled' => 'disabled'));
+                                ?>
+<?php echo $form->error($model, 'Work_Right_Role'); ?>
                             </div>
                         </div>
                     </div>
@@ -160,24 +162,24 @@
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Work_Right_Broad_Share', array('class' => '')); ?>
+                                <?php echo $form->labelEx($model, 'Work_Right_Broad_Share', array('class' => '')); ?>
                             <div class="input-group">
-                                <?php echo $form->textField($model, 'Work_Right_Broad_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+<?php echo $form->textField($model, 'Work_Right_Broad_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
                                 <span class="input-group-addon"> %</span>
                             </div>
-                            <?php echo $form->error($model, 'Work_Right_Broad_Share'); ?>
+<?php echo $form->error($model, 'Work_Right_Broad_Share'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Work_Right_Broad_Special', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Work_Right_Broad_Special', $model->getSpecialStatus(), array('class' => 'form-control')); ?>
-                            <?php echo $form->error($model, 'Work_Right_Broad_Special'); ?>
+<?php echo $form->error($model, 'Work_Right_Broad_Special'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Work_Right_Broad_Org_id', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Work_Right_Broad_Org_id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
-                            <?php echo $form->error($model, 'Work_Right_Broad_Org_id'); ?>
+<?php echo $form->error($model, 'Work_Right_Broad_Org_id'); ?>
                         </div>
 
                     </div>
@@ -195,24 +197,24 @@
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Work_Right_Mech_Share', array('class' => '')); ?>
+                                <?php echo $form->labelEx($model, 'Work_Right_Mech_Share', array('class' => '')); ?>
                             <div class="input-group">
-                                <?php echo $form->textField($model, 'Work_Right_Mech_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+<?php echo $form->textField($model, 'Work_Right_Mech_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
                                 <span class="input-group-addon"> %</span>
                             </div>
-                            <?php echo $form->error($model, 'Work_Right_Mech_Share'); ?>
+<?php echo $form->error($model, 'Work_Right_Mech_Share'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Work_Right_Mech_Special', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Work_Right_Mech_Special', $model->getSpecialStatus(), array('class' => 'form-control')); ?>
-                            <?php echo $form->error($model, 'Work_Right_Mech_Special'); ?>
+<?php echo $form->error($model, 'Work_Right_Mech_Special'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Work_Right_Mech_Org_Id', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Work_Right_Mech_Org_Id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
-                            <?php echo $form->error($model, 'Work_Right_Mech_Org_Id'); ?>
+<?php echo $form->error($model, 'Work_Right_Mech_Org_Id'); ?>
                         </div>
                     </div>
                 </div>
@@ -223,10 +225,10 @@
         <div class="form-group">
             <div class="col-lg-12">
                 <div class="col-lg-1">
-                    <?php echo CHtml::submitButton('Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+<?php echo CHtml::submitButton('Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
-                    <?php echo $form->error($model, 'Work_Member_Internal_Code'); ?>
+<?php echo $form->error($model, 'Work_Member_Internal_Code'); ?>
                 </div>
             </div>
         </div>
@@ -239,7 +241,7 @@
                             <h3 class="box-title">Linked Rightholders</h3>
                         </div>
                         <div class="box-body">
-                            <table class="table table-condensed">
+                            <table class="table table-condensed" id="linked-holders">
                                 <thead>
                                     <tr>
                                         <th>Member Name</th>
@@ -261,22 +263,28 @@
                                             if ($member->workAuthor) {
                                                 $name = $member->workAuthor->Auth_Sur_Name;
                                                 $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
+                                                $role = 'AU';
                                             } elseif ($member->workPublisher) {
                                                 $name = $member->workPublisher->Pub_Corporate_Name;
                                                 $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
+                                                $role = 'PU';
                                             }
                                             ?>
-                                            <tr>
+                                            <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_Internal_Code ?>">
                                                 <td><?php echo $name; ?></td>
                                                 <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                                 <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                                 <td><?php echo $member->Work_Right_Broad_Share; ?></td>
                                                 <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
-                                                <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;    ?></td>-->
+                                                <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;     ?></td>-->
                                                 <td><?php echo $member->Work_Right_Mech_Share; ?></td>
                                                 <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
-                                                <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;    ?></td>-->
-                                                <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                                <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;     ?></td>-->
+                                                <td>
+                                                    <?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?>&nbsp;&nbsp;
+                                                    <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit','data-brshare'=>$member->Work_Right_Broad_Share,'data-brspl'=>$member->Work_Right_Broad_Special,'data-mcshare'=>$member->Work_Right_Mech_Share,'data-mcspl'=>$member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
+        <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', array('/site/work/holderremove', 'id' => $member->Work_Right_Id)); ?>
+                                                </td>
                                             </tr>
                                             <?php
                                         }
@@ -292,7 +300,7 @@
             </div>
         </div>
     </div>
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
 
 
@@ -302,10 +310,24 @@
 <?php
 $js = <<< EOD
     $(document).ready(function() {
-        $("#search_result tr").click(function(){
+        $(document).on('click','.holder-edit',function(){
+            $(this).closest('tr').trigger('click');
+            _brshare = $(this).data('brshare');
+            _brspl =  $(this).data('brspl');
+            _mcshare =  $(this).data('mcshare');
+            _mcspl =  $(this).data('mcspl');
+
+            $('#WorkRightholder_Work_Right_Broad_Share').val(_brshare);
+            $('#WorkRightholder_Work_Right_Broad_Special').val(_brspl);
+            $('#WorkRightholder_Work_Right_Mech_Share').val(_mcshare);
+            $('#WorkRightholder_Work_Right_Mech_Special').val(_mcspl);
+        });
+
+        $("#search_result tr,#linked-holders tr").click(function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
             _urole =  $(this).data('urole');
+
             $('#WorkRightholder_Work_Member_Internal_Code').val(_uid);
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'AU'){

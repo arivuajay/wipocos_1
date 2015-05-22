@@ -28,7 +28,7 @@ class WorkController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete','holderremove'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -146,7 +146,11 @@ class WorkController extends Controller {
                 $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/6'));
             }
         } elseif (isset($_POST['WorkRightholder'])) {
+            $exist = WorkRightholder::model()->find("Work_Id = :Wid AND Work_Member_Internal_Code = :iCode",array(':Wid'=>$_POST['WorkRightholder']['Work_Id'],':iCode'=>$_POST['WorkRightholder']['Work_Member_Internal_Code']));
+            if($exist) $right_holder_model = $exist;
+
             $right_holder_model->attributes = $_POST['WorkRightholder'];
+
             if ($right_holder_model->save()) {
                 Myclass::addAuditTrail("Saved Work right holder successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work right holder Saved Successfully!!!');
@@ -215,6 +219,31 @@ class WorkController extends Controller {
     }
 
     /**
+     * Deletes a particular model.
+     * If deletion is successful, the browser will be redirected to the 'admin' page.
+     * @param integer $id the ID of the model to be deleted
+     */
+    public function actionHolderremove($id) {
+        try {
+            $model = $this->loadRightholderModel($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted RightHolder {$model->Work_Member_Internal_Code} at work {$model->work->Work_Org_Title}.", "sliders");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', 'RightHolder Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update','id'=>$model->Work_Id,'tab'=>'7'));
+        }
+    }
+
+    /**
      * Lists all models.
      */
     public function actionIndex() {
@@ -246,6 +275,20 @@ class WorkController extends Controller {
         ));
     }
 
+    /**
+     * Returns the data model based on the primary key given in the GET variable.
+     * If the data model is not found, an HTTP exception will be raised.
+     * @param integer $id the ID of the model to be loaded
+     * @return Work the loaded model
+     * @throws CHttpException
+     */
+    public function loadRightholderModel($id) {
+        $model = WorkRightholder::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+
+        return $model;
+    }
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
