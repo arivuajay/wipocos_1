@@ -162,4 +162,14 @@ class WorkSubPublishing extends CActiveRecord {
         }
         return $selected;
     }
+    
+    public function getTerritorylist() {
+        $terr = array();
+        $territories = CHtml::listData(MasterTerritories::model()->findAll(), 'Master_Territory_Id', 'Territory_Name');
+        $exp = json_decode($this->Work_Sub_Territories);
+        foreach ($exp as $ex) {
+            $terr[$ex] = $territories[$ex];
+        }
+        return implode(', ', $terr);
+    }
 }

@@ -60,12 +60,16 @@ if (!empty($sub_titles)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo $model->getAttributeLabel('Work_Subtitle_Name') ?></th>
+                        <th><?php echo $model->getAttributeLabel('Work_Subtitle_Type_Id') ?></th>
+                        <th><?php echo $model->getAttributeLabel('Work_Subtitle_Language_Id') ?></th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($sub_titles as $key => $sub_title) { ?>
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update/id/' . $work_model->Work_Id . '/tab/2/edit/' . $sub_title->Work_Subtitle_Id), array('title' => 'Edit'));

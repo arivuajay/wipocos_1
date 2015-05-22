@@ -22,11 +22,11 @@ $territories = Myclass::getMasterTerritory();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
@@ -161,14 +161,14 @@ $territories = Myclass::getMasterTerritory();
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
                         $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'work_model' => $model, 'languages' => $languages, 'types' => $types));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model));
                     }
                     ?>
@@ -182,14 +182,14 @@ $territories = Myclass::getMasterTerritory();
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
                         $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
                         $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>

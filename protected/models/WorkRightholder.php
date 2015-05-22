@@ -43,8 +43,9 @@ class WorkRightholder extends CActiveRecord {
             array('Work_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
             array('Work_Id,Work_Right_Role,  Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
             array('Work_Member_Internal_Code', 'length', 'max' => 100),
-            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
+//            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Broad_Special, Work_Right_Mech_Special', 'length', 'max' => 2),
+            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'numerical', 'integerOnly' => false, 'max' => 100),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

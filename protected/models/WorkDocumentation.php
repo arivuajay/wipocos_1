@@ -40,7 +40,7 @@ class WorkDocumentation extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id, Work_Doc_Sign_Date, Work_Doc_File', 'required'),
+            array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id, Work_Doc_Sign_Date', 'required'),
             array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id', 'numerical', 'integerOnly' => true),
             array('Work_Doc_Inclusion, Work_Doc_Dispute', 'length', 'max' => 1),
             array('Work_Doc_File', 'length', 'max' => 255),

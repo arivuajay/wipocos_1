@@ -28,7 +28,7 @@ class WorkController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete','holderremove'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete','holderremove', 'insertright', 'searchright'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -46,9 +46,16 @@ class WorkController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
+        $model = $this->loadModel($id);
+        $sub_title_model = WorkSubtitle::model()->findAllByAttributes(array('Work_Id' => $id));
+        $biograph_model = WorkBiography::model()->findByAttributes(array('Work_Id' => $id));
+        $document_model = WorkDocumentation::model()->findByAttributes(array('Work_Id' => $id));
+        $publishing_model = WorkPublishing::model()->findByAttributes(array('Work_Id' => $id));
+        $sub_publishing_model = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
+        $members = WorkRightholder::model()->findAll('Work_Id = :int_code', array(':int_code' => $model->Work_Id));
+        
+        $this->render('view', compact('model', 'sub_title_model', 'biograph_model', 'document_model', 'publishing_model',
+                'sub_publishing_model', 'members'));
     }
 
     /**
@@ -97,6 +104,8 @@ class WorkController extends Controller {
         $sub_publishing_exists = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
 
+        $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
+        
         $right_holder_model = new WorkRightholder;
 
         // Uncomment the following line if AJAX validation is needed
@@ -108,42 +117,46 @@ class WorkController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Work successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Updated Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '1'));
             }
         } elseif (isset($_POST['WorkSubtitle'])) {
             $sub_title_model->attributes = $_POST['WorkSubtitle'];
             if ($sub_title_model->save()) {
                 Myclass::addAuditTrail("Saved Work Subtitle successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Subtitle Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/2'));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '2'));
             }
         } elseif (isset($_POST['WorkBiography'])) {
             $biograph_model->attributes = $_POST['WorkBiography'];
             if ($biograph_model->save()) {
                 Myclass::addAuditTrail("Saved Work Biography successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Biography Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/3'));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '3'));
             }
         } elseif (isset($_POST['WorkDocumentation'])) {
             $document_model->attributes = $_POST['WorkDocumentation'];
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Saved Work Documentation successfully.", "sliders");
-                Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/4'));
+                if(empty($document_exists)){
+                    Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully. Please Fill Right Holders!!!');
+                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
+                }else{
+                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '4'));
+                }
             }
         } elseif (isset($_POST['WorkPublishing'])) {
             $publishing_model->attributes = $_POST['WorkPublishing'];
             if ($publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Publishing Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/5'));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '5'));
             }
         } elseif (isset($_POST['WorkSubPublishing'])) {
             $sub_publishing_model->attributes = $_POST['WorkSubPublishing'];
             if ($sub_publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Sub Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Sub Publishing Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/6'));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '6'));
             }
         } elseif (isset($_POST['WorkRightholder'])) {
             $exist = WorkRightholder::model()->find("Work_Id = :Wid AND Work_Member_Internal_Code = :iCode",array(':Wid'=>$_POST['WorkRightholder']['Work_Id'],':iCode'=>$_POST['WorkRightholder']['Work_Member_Internal_Code']));
@@ -154,43 +167,11 @@ class WorkController extends Controller {
             if ($right_holder_model->save()) {
                 Myclass::addAuditTrail("Saved Work right holder successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work right holder Saved Successfully!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/7'));
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
             }
-        } elseif (isset($_REQUEST['rght_holder'])) {
-            $criteria = new CDbCriteria();
-            $pubcriteria = new CDbCriteria();
-            if (!empty($_REQUEST['sur'])) {
-                $criteria->addSearchCondition("Auth_Sur_Name",$_REQUEST['sur']);
-                $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['sur']);
-            }
-            if (!empty($_REQUEST['fn'])) {
-                $criteria->addSearchCondition("Auth_First_Name",$_REQUEST['fn']);
-                $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['fn']);
-            }
-            if (!empty($_REQUEST['i_code'])) {
-                $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");
-                $pubcriteria->addCondition("Pub_Internal_Code = '{$_REQUEST['i_code']}'");
-            }
-            if (!empty($_REQUEST['i_name'])) {
-                $criteria->addCondition("Auth_Ipi = '{$_REQUEST['i_name']}'");
-                $pubcriteria->addCondition("Pub_Ipi = '{$_REQUEST['i_name']}'");
-            }
-            if (!empty($_REQUEST['i_base'])) {
-                $criteria->addCondition("Auth_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
-                $pubcriteria->addCondition("Pub_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
-            }
-
-            if ($_REQUEST['is_auth'] == '1') {
-                $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll($criteria);
-            }
-            if ($_REQUEST['is_publ'] == '1') {
-                $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll($pubcriteria);
-            }
-
-            $tab = 7;
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'authusers', 'publusers'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists'));
     }
 
     /**
@@ -316,5 +297,55 @@ class WorkController extends Controller {
             Yii::app()->end();
         }
     }
+    
+    public function actionInsertright() {
+        if(isset($_POST['WorkRightholder']) && !empty($_POST['WorkRightholder'])){
+            $work_id = $_POST['WorkRightholder'][0]['Work_Id'];
+            WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
+            $valid = true;
+            foreach ($_POST['WorkRightholder'] as $values) {
+                $model = new WorkRightholder;
+                $model->attributes = $values;
+                $valid = $valid && $model->save(false);
+                if($valid)
+                    Myclass::addAuditTrail("Created Right Holder saved for {$model->work->Work_Org_Title} successfully.", "fa fa-at");
+            }
+            if($valid)
+                Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
+                $this->redirect(array('/site/work/update','id' => $model->Work_Id, 'tab' => 7));
+        }
+    }
 
+    public function actionSearchright() {
+        $criteria = new CDbCriteria();
+        $pubcriteria = new CDbCriteria();
+        if (!empty($_REQUEST['sur'])) {
+            $criteria->addSearchCondition("Auth_Sur_Name",$_REQUEST['sur']);
+            $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['sur']);
+        }
+        if (!empty($_REQUEST['fn'])) {
+            $criteria->addSearchCondition("Auth_First_Name",$_REQUEST['fn']);
+            $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['fn']);
+        }
+        if (!empty($_REQUEST['i_code'])) {
+            $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");
+            $pubcriteria->addCondition("Pub_Internal_Code = '{$_REQUEST['i_code']}'");
+        }
+        if (!empty($_REQUEST['i_name'])) {
+            $criteria->addCondition("Auth_Ipi = '{$_REQUEST['i_name']}'");
+            $pubcriteria->addCondition("Pub_Ipi = '{$_REQUEST['i_name']}'");
+        }
+        if (!empty($_REQUEST['i_base'])) {
+            $criteria->addCondition("Auth_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
+            $pubcriteria->addCondition("Pub_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
+        }
+
+        if ($_REQUEST['is_auth'] == '1') {
+            $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll($criteria);
+        }
+        if ($_REQUEST['is_publ'] == '1') {
+            $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll($pubcriteria);
+        }
+        $this->renderPartial('_search_right', compact('authusers', 'publusers'));
+    }
 }

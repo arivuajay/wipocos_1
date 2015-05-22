@@ -212,7 +212,7 @@ class Work extends CActiveRecord {
 
     public function getInstrumentlist() {
         $inst = array();
-        $instruments = CHtml::listData(MasterInstrument::model()->isActive()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
+        $instruments = CHtml::listData(MasterInstrument::model()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
         $exp = json_decode($this->Work_Instrumentation);
         foreach ($exp as $ex) {
             $inst[$ex] = $instruments[$ex];
