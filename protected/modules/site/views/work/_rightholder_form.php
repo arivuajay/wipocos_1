@@ -218,7 +218,7 @@
                                 if ($work_model->workRightholders) {
                                     foreach ($work_model->workRightholders as $key => $member) {
                                         if ($member->workAuthor) {
-                                            $name = $member->workAuthor->Auth_Sur_Name;
+                                            $name = $member->workAuthor->Auth_First_Name;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
                                             $role = 'AU';
                                         } elseif ($member->workPublisher) {
