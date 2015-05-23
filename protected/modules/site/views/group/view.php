@@ -1,41 +1,58 @@
 <?php
 /* @var $this GroupController */
 /* @var $model Group */
-if($model->Group_Is_Author == '1'){
+
+if ($model->Group_Is_Author == '1') {
     $role = 'Author';
-}elseif($model->Group_Is_Performer == '1'){
+} elseif ($model->Group_Is_Performer == '1') {
     $role = 'Performer';
 }
 
 $this->title = 'View #' . $model->Group_Id;
 $this->breadcrumbs = array(
-    "{$role} Groups" => array('group/index/role/'.lcfirst($role)),
+    "{$role} Groups" => array('group/index/role/' . lcfirst($role)),
     'View ' . 'Group',
 );
 ?>
+<?php if ($export) { ?>
+    <h3 class="text-center"><?php echo "$role Group $this->title" ?></h3>
+<?php } ?>
+    
 <div class="user-view">
     <p>
         <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Group_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+        if ($export == false) {
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Group_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Group_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Group_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Group_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+        }
         ?>
     </p>
     <?php

@@ -7,33 +7,50 @@ $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'PerformerAccount',
 );
-?>
-<div class="user-view col-lg-12">
-    <p>
-        <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Pro_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+if ($export == false) {
+    ?>
+    <div class="user-view col-lg-12">
+        <p>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Pro_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Pro_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        ?>
-    </p>
-</div>
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Pro_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Pro_Acc_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            ?>
+        </p>
+    </div>
+<?php } ?>
+
+<?php if ($export) { ?>
+    <h3 class="text-center">Producer <?php echo $this->title ?></h3>
+<?php } ?>
+
 <div class="row">
     <div class="user-view col-lg-6">
         <h4>Basic Data</h4>

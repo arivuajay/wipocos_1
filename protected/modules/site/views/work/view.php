@@ -1,39 +1,55 @@
 <?php
 /* @var $this WorkController */
 /* @var $model Work */
-
 $this->title = 'View #' . $model->Work_Id;
 $this->breadcrumbs = array(
     'Works' => array('index'),
     'View ' . 'Work',
 );
-?>
-<div class="user-view col-lg-12">
-    <p>
-        <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-            'label' => 'Update',
-            'url' => array('update', 'id' => $model->Work_Id),
-            'buttonType' => 'link',
-            'context' => 'primary',
+if ($export == false) {
+    ?>
+    <div class="user-view col-lg-12">
+        <p>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Work_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'Delete',
-            'url' => array('delete', 'id' => $model->Work_Id),
-            'buttonType' => 'link',
-            'context' => 'danger',
-            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-            'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        ?>
-    </p>
-</div>
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Work_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Work_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            ?>
+        </p>
+    </div>
+<?php } ?>
+
+<?php if ($export) { ?>
+    <h3 class="text-center">Work <?php echo $this->title ?></h3>
+<?php } ?>
+
 <div class="row">
     <div class="user-view col-lg-7">
         <h4>Basic Data</h4>
@@ -80,7 +96,9 @@ $this->breadcrumbs = array(
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Name') ?></th>
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Type_Id') ?></th>
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Language_Id') ?></th>
-                        <th>Action</th>
+                        <?php if ($export == false) { ?>
+                            <th>Action</th>
+                        <?php } ?>
                     </tr>
                     <?php foreach ($sub_title_model as $key => $sub_title) { ?>
                         <tr>
@@ -88,13 +106,15 @@ $this->breadcrumbs = array(
                             <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
-                            <td>
-                                <?php
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update/id/' . $sub_title->Work_Id . '/tab/2/edit/' . $sub_title->Work_Subtitle_Id), array('title' => 'Edit'));
-                                echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/id/' . $sub_title->Work_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                ?>
-                            </td>
+                            <?php if ($export == false) { ?>
+                                <td>
+                                    <?php
+                                    echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update/id/' . $sub_title->Work_Id . '/tab/2/edit/' . $sub_title->Work_Subtitle_Id), array('title' => 'Edit'));
+                                    echo "&nbsp;&nbsp;";
+                                    echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/id/' . $sub_title->Work_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    ?>
+                                </td>
+                            <?php } ?>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -115,7 +135,9 @@ $this->breadcrumbs = array(
                             <th>Internal Code</th>
                             <th>Broadcasting Share (%)</th>
                             <th>Mechanical Share (%)</th>
-                            <th>Action</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
                         </tr>
                         <?php
                         foreach ($members as $key => $member) {
@@ -133,7 +155,9 @@ $this->breadcrumbs = array(
                                 <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                 <td><?php echo $member->Work_Right_Broad_Share; ?></td>
                                 <td><?php echo $member->Work_Right_Mech_Share; ?></td>
-                                <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     </tbody></table>
@@ -229,7 +253,7 @@ $this->breadcrumbs = array(
                     ),
                     array(
                         'name' => 'Work_Sub_Clause',
-                        'value' => Myclass::getGroupClause($sub_publishing_model->Work_Sub_Clause) 
+                        'value' => Myclass::getGroupClause($sub_publishing_model->Work_Sub_Clause)
                     ),
                     'Work_Sub_Sign_Date',
                     'Work_Sub_File',

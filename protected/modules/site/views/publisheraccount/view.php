@@ -7,33 +7,48 @@ $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'ProducerAccount',
 );
-?>
-<div class="user-view col-lg-12">
-    <p>
-        <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-            'label' => 'Update',
-            'url' => array('update', 'id' => $model->Pub_Acc_Id),
-            'buttonType' => 'link',
-            'context' => 'primary',
+if ($export == false) {
+    ?>
+    <div class="user-view col-lg-12">
+        <p>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Pub_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'Delete',
-            'url' => array('delete', 'id' => $model->Pub_Acc_Id),
-            'buttonType' => 'link',
-            'context' => 'danger',
-            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-            'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        ?>
-    </p>
-</div>
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Pub_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Pub_Acc_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            ?>
+        </p>
+    </div>
+<?php } ?>
+<?php if ($export) { ?>
+    <h3 class="text-center">Publisher <?php echo $this->title ?></h3>
+<?php } ?>
 <div class="row">
     <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
@@ -279,19 +294,23 @@ $this->breadcrumbs = array(
                             <th>#</th>
                             <th>Works Name</th>
                             <th>Internal Code</th>
-                            <th>Action</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
                         </tr>
                         <?php foreach ($works as $key => $work) { ?>
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $work->work->Work_Org_Title ?></td>
                                 <td><?php echo $work->work->Work_Internal_Code ?></td>
-                                <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     </tbody></table>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No works assigned';
         }

@@ -16,6 +16,12 @@ class WorkController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'pdf' => 'application.components.actions.pdf',
+        );
+    }
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -28,7 +34,7 @@ class WorkController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete','holderremove', 'insertright', 'searchright'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright', 'searchright', 'print', 'pdf'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -53,9 +59,18 @@ class WorkController extends Controller {
         $publishing_model = WorkPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $sub_publishing_model = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $members = WorkRightholder::model()->findAll('Work_Id = :int_code', array(':int_code' => $model->Work_Id));
-        
-        $this->render('view', compact('model', 'sub_title_model', 'biograph_model', 'document_model', 'publishing_model',
-                'sub_publishing_model', 'members'));
+
+        $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
+        $compact = compact('model', 'sub_title_model', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'members', 'export');
+        if ($export) {
+            $mPDF1 = Yii::app()->ePdf->mpdf();
+            $stylesheet = $this->pdfStyles();
+            $mPDF1->WriteHTML($stylesheet, 1);
+            $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
+            $mPDF1->Output("Work_view_$id.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+        } else {
+            $this->render('view', $compact);
+        }
     }
 
     /**
@@ -105,7 +120,7 @@ class WorkController extends Controller {
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
 
         $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
-        
+
         $right_holder_model = new WorkRightholder;
 
         // Uncomment the following line if AJAX validation is needed
@@ -137,10 +152,10 @@ class WorkController extends Controller {
             $document_model->attributes = $_POST['WorkDocumentation'];
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Saved Work Documentation successfully.", "sliders");
-                if(empty($document_exists)){
+                if (empty($document_exists)) {
                     Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully. Please Fill Right Holders!!!');
                     $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
-                }else{
+                } else {
                     $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '4'));
                 }
             }
@@ -159,8 +174,9 @@ class WorkController extends Controller {
                 $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '6'));
             }
         } elseif (isset($_POST['WorkRightholder'])) {
-            $exist = WorkRightholder::model()->find("Work_Id = :Wid AND Work_Member_Internal_Code = :iCode",array(':Wid'=>$_POST['WorkRightholder']['Work_Id'],':iCode'=>$_POST['WorkRightholder']['Work_Member_Internal_Code']));
-            if($exist) $right_holder_model = $exist;
+            $exist = WorkRightholder::model()->find("Work_Id = :Wid AND Work_Member_Internal_Code = :iCode", array(':Wid' => $_POST['WorkRightholder']['Work_Id'], ':iCode' => $_POST['WorkRightholder']['Work_Member_Internal_Code']));
+            if ($exist)
+                $right_holder_model = $exist;
 
             $right_holder_model->attributes = $_POST['WorkRightholder'];
 
@@ -220,7 +236,7 @@ class WorkController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'RightHolder Deleted Successfully!!!');
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update','id'=>$model->Work_Id,'tab'=>'7'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
         }
     }
 
@@ -270,6 +286,7 @@ class WorkController extends Controller {
 
         return $model;
     }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -297,9 +314,9 @@ class WorkController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
     public function actionInsertright() {
-        if(isset($_POST['WorkRightholder']) && !empty($_POST['WorkRightholder'])){
+        if (isset($_POST['WorkRightholder']) && !empty($_POST['WorkRightholder'])) {
             $work_id = $_POST['WorkRightholder'][0]['Work_Id'];
             WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
             $valid = true;
@@ -307,12 +324,12 @@ class WorkController extends Controller {
                 $model = new WorkRightholder;
                 $model->attributes = $values;
                 $valid = $valid && $model->save(false);
-                if($valid)
+                if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->work->Work_Org_Title} successfully.", "fa fa-at");
             }
-            if($valid)
+            if ($valid)
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
-                $this->redirect(array('/site/work/update','id' => $model->Work_Id, 'tab' => 7));
+            $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => 7));
         }
     }
 
@@ -320,12 +337,12 @@ class WorkController extends Controller {
         $criteria = new CDbCriteria();
         $pubcriteria = new CDbCriteria();
         if (!empty($_REQUEST['sur'])) {
-            $criteria->addSearchCondition("Auth_Sur_Name",$_REQUEST['sur']);
-            $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['sur']);
+            $criteria->addSearchCondition("Auth_Sur_Name", $_REQUEST['sur']);
+            $pubcriteria->addSearchCondition("Pub_Corporate_Name", $_REQUEST['sur']);
         }
         if (!empty($_REQUEST['fn'])) {
-            $criteria->addSearchCondition("Auth_First_Name",$_REQUEST['fn']);
-            $pubcriteria->addSearchCondition("Pub_Corporate_Name",$_REQUEST['fn']);
+            $criteria->addSearchCondition("Auth_First_Name", $_REQUEST['fn']);
+            $pubcriteria->addSearchCondition("Pub_Corporate_Name", $_REQUEST['fn']);
         }
         if (!empty($_REQUEST['i_code'])) {
             $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");
@@ -348,4 +365,5 @@ class WorkController extends Controller {
         }
         $this->renderPartial('_search_right', compact('authusers', 'publusers'));
     }
+
 }

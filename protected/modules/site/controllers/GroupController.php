@@ -55,9 +55,18 @@ class GroupController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
+        $model = $this->loadModel($id);
+        $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
+        $compact = compact('model', 'export');
+        if ($export) {
+            $mPDF1 = Yii::app()->ePdf->mpdf();
+            $stylesheet = $this->pdfStyles();
+            $mPDF1->WriteHTML($stylesheet, 1);
+            $mPDF1->Output("Group_view_$id.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+            $mPDF1->Output();
+        } else {
+            $this->render('view', $compact);
+        }
     }
 
     /**

@@ -80,9 +80,17 @@ class AuthoraccountController extends Controller {
         $biograph_exists = AuthorBiography::model()->findByAttributes(array('Auth_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
 
-
-
-        $this->render('view', compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model'));
+        $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
+        $compact = compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'export');
+        if ($export) {
+            $mPDF1 = Yii::app()->ePdf->mpdf();
+            $stylesheet = $this->pdfStyles();
+            $mPDF1->WriteHTML($stylesheet, 1);
+            $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
+            $mPDF1->Output("Author_view_$id.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+        } else {
+            $this->render('view', $compact);
+        }
     }
 
     /**

@@ -1,39 +1,55 @@
 <?php
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
-
 $this->title = 'View #' . $model->Auth_Acc_Id;
 $this->breadcrumbs = array(
     'Authors' => array('index'),
     'View ' . 'AuthorAccount',
 );
-?>
-<div class="user-view col-lg-12">
-    <p>
-        <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Auth_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+if ($export == false) {
+    ?>
+    <div class="user-view col-lg-12">
+        <p>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Auth_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Auth_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        ?>
-    </p>
-</div>
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Auth_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Auth_Acc_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            ?>
+        </p>
+    </div>
+<?php } ?>
+
+<?php if ($export) { ?>
+    <h3 class="text-center">Author <?php echo $this->title ?></h3>
+<?php } ?>
+
 <div class="row">
     <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
@@ -191,7 +207,7 @@ $this->breadcrumbs = array(
         }
         ?>
 
-<h4>Managed Rights</h4>
+        <h4>Managed Rights</h4>
         <?php
         if (!empty($managed_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -259,8 +275,9 @@ $this->breadcrumbs = array(
         ?>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
-        if (!empty($members)) {?>
-        <div class="">
+        if (!empty($members)) {
+            ?>
+            <div class="">
                 <div class="box-header">
                     <h4 class="box-title">Assigned Groups</h4>
                 </div>
@@ -279,34 +296,43 @@ $this->breadcrumbs = array(
                         </tbody></table>
                 </div>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
         <?php
         $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
-        if (!empty($works)) {?>
-                <h4 class="box-title">Assigned Works</h4>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th>#</th>
-                                <th>Works Name</th>
-                                <th>Internal Code</th>
+        if (!empty($works)) {
+            ?>
+            <h4 class="box-title">Assigned Works</h4>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Works Name</th>
+                            <th>Internal Code</th>
+                            <?php if ($export == false) { ?>
                                 <th>Action</th>
-                            </tr>
-                            <?php foreach ($works as $key => $work) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $work->work->Work_Org_Title ?></td>
-                                    <td><?php echo $work->work->Work_Internal_Code ?></td>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>',array('/site/work/view','id'=>$work->Work_Id)); ?></td>
-                                </tr>
                             <?php } ?>
-                        </tbody></table>
-                </div>
-        <?php } else { echo 'No works assigned'; } ?>
+                        </tr>
+                        <?php foreach ($works as $key => $work) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $work->work->Work_Org_Title ?></td>
+                                <td><?php echo $work->work->Work_Internal_Code ?></td>
+                                <?php if ($export) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+        <?php
+        } else {
+            echo 'No works assigned';
+        }
+        ?>
     </div>
 </div>
 
@@ -326,31 +352,35 @@ $this->breadcrumbs = array(
                         <tbody><tr>
                                 <th style="width: 10px">#</th>
                                 <th>Document Name</th>
-                                <th>Action</th>
+                                <?php if ($export) { ?>
+                                    <th>Action</th>
+                            <?php } ?>
                             </tr>
-                            <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
                                 <tr>
                                     <td><?php echo $key + 1 ?>.</td>
                                     <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
-                                    <td>
-                                        <?php
-                                        $file_path = $uploaded_file->getFilePath();
-                                        echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
-                                        echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
-                                        echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
-                                        echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                        ?>
-                                    </td>
+                                        <?php if ($export) { ?>
+                                        <td>
+                                            <?php
+                                            $file_path = $uploaded_file->getFilePath();
+                                            echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                            echo "&nbsp;&nbsp;";
+                                            echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                            echo "&nbsp;&nbsp;";
+                                            echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
+                                            echo "&nbsp;&nbsp;";
+                                            echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                            ?>
+                                        </td>
+                                <?php } ?>
                                 </tr>
-                            <?php } ?>
+    <?php } ?>
                         </tbody></table>
                 </div>
             </div>
-        <?php }
-        ?>
+<?php }
+?>
 
     </div>
 </div>
