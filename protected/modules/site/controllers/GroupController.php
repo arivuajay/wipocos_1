@@ -62,6 +62,7 @@ class GroupController extends Controller {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();
             $mPDF1->WriteHTML($stylesheet, 1);
+            $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
             $mPDF1->Output("Group_view_$id.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
             $mPDF1->Output();
         } else {
