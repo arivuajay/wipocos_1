@@ -141,8 +141,10 @@ class WorkPublishing extends CActiveRecord {
         $selected = array();
         if($this->Work_Pub_Territories){
             $exp = json_decode($this->Work_Pub_Territories);
-            foreach ($exp as $ex) {
-                $selected[$ex] = array('selected' => 'selected');
+            if($exp != NULL){
+                foreach ($exp as $ex) {
+                    $selected[$ex] = array('selected' => 'selected');
+                }
             }
         }
         return $selected;

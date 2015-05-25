@@ -21,10 +21,10 @@
  * @property Work $work
  */
 class WorkSubPublishing extends CActiveRecord {
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Work_Sub_Clause = 'M';
         }
     }
@@ -142,11 +142,11 @@ class WorkSubPublishing extends CActiveRecord {
             )
         ));
     }
-    
+
     protected function beforeValidate() {
-        if(isset($this->Work_Sub_Territories) && is_array($this->Work_Sub_Territories)){
+        if (isset($this->Work_Sub_Territories) && is_array($this->Work_Sub_Territories)) {
             $this->Work_Sub_Territories = !empty($this->Work_Sub_Territories) ? json_encode($this->Work_Sub_Territories) : '';
-        }else{
+        } else {
             $this->Work_Sub_Territories = '';
         }
         return parent::beforeValidate();
@@ -154,15 +154,17 @@ class WorkSubPublishing extends CActiveRecord {
 
     public function getTerritoryselected() {
         $selected = array();
-        if($this->Work_Sub_Territories){
+        if ($this->Work_Sub_Territories) {
             $exp = json_decode($this->Work_Sub_Territories);
-            foreach ($exp as $ex) {
-                $selected[$ex] = array('selected' => 'selected');
+            if ($exp != NULL) {
+                foreach ($exp as $ex) {
+                    $selected[$ex] = array('selected' => 'selected');
+                }
             }
         }
         return $selected;
     }
-    
+
     public function getTerritorylist() {
         $terr = array();
         $territories = CHtml::listData(MasterTerritories::model()->findAll(), 'Master_Territory_Id', 'Territory_Name');
@@ -172,4 +174,5 @@ class WorkSubPublishing extends CActiveRecord {
         }
         return implode(', ', $terr);
     }
+
 }
