@@ -183,12 +183,12 @@ if ($export == false) {
                     array(
                         'name' => 'Work_Doc_Inclusion',
                         'type' => 'raw',
-                        'value' => $document_model->Work_Doc_Inclusion == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'value' => $document_model->Work_Doc_Inclusion == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
                     ),
                     array(
                         'name' => 'Work_Doc_Dispute',
                         'type' => 'raw',
-                        'value' => $document_model->Work_Doc_Dispute == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'value' => $document_model->Work_Doc_Dispute == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
                     ),
                     array(
                         'name' => 'Work_Doc_Type_Id',
