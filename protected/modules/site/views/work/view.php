@@ -192,7 +192,7 @@ if ($export == false) {
                     ),
                     array(
                         'name' => 'Work_Doc_Type_Id',
-                        'value' => $document_model->workDocType->Doc_Type_Name
+                        'value' => $document_model->workDocType->Doc_Name
                     ),
                     'Work_Doc_Sign_Date',
                     'Work_Doc_File',

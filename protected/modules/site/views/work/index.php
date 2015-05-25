@@ -111,7 +111,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Work_Opus_Number'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
                             <?php
@@ -120,7 +120,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             ?>
                             <?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
@@ -146,23 +146,29 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                    'header' => '',
 //                ),
                 'Work_Org_Title',
-                array(
-                    'name' => 'Work_Language_Id',
-                    'type' => 'raw',
-                    'value' => function($data) {
-                        if (!empty($data->workLanguage->Lang_Name))
-                            echo $data->workLanguage->Lang_Name;
-                    },
-                ),
+//                array(
+//                    'name' => 'Work_Language_Id',
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                        if (!empty($data->workLanguage->Lang_Name))
+//                            echo $data->workLanguage->Lang_Name;
+//                    },
+//                ),
                 'Work_Internal_Code',
                 'Work_Iswc',
-                'Work_Wic_Code',
+//                'Work_Wic_Code',
+//                array(
+//                    'name' => 'Work_Type_Id',
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                        if (!empty($data->workType->Type_Name))
+//                            echo $data->workType->Type_Name;
+//                    },
+//                ),
                 array(
-                    'name' => 'Work_Type_Id',
-                    'type' => 'raw',
-                    'value' => function($data) {
-                        if (!empty($data->workType->Type_Name))
-                            echo $data->workType->Type_Name;
+                    'name' => 'matchingdetails',
+                    'value' => function($data,$row) use (&$model){
+                        echo $model->getMatchingdetails($data->Work_Id);
                     },
                 ),
                 /*
@@ -223,23 +229,29 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                'header' => '',
 //            ),
                 'Work_Org_Title',
-                array(
-                    'name' => 'Work_Language_Id',
-                    'type' => 'raw',
-                    'value' => function($data) {
-                        if (!empty($data->workLanguage->Lang_Name))
-                            echo $data->workLanguage->Lang_Name;
-                    },
-                ),
+//                array(
+//                    'name' => 'Work_Language_Id',
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                        if (!empty($data->workLanguage->Lang_Name))
+//                            echo $data->workLanguage->Lang_Name;
+//                    },
+//                ),
                 'Work_Internal_Code',
                 'Work_Iswc',
-                'Work_Wic_Code',
+//                'Work_Wic_Code',
+//                array(
+//                    'name' => 'Work_Type_Id',
+//                    'type' => 'raw',
+//                    'value' => function($data) {
+//                        if (!empty($data->workType->Type_Name))
+//                            echo $data->workType->Type_Name;
+//                    },
+//                ),
                 array(
-                    'name' => 'Work_Type_Id',
-                    'type' => 'raw',
-                    'value' => function($data) {
-                        if (!empty($data->workType->Type_Name))
-                            echo $data->workType->Type_Name;
+                    'name' => 'matchingdetails',
+                    'value' => function($data,$row) use (&$model){
+                        echo $model->getMatchingdetails($data->Work_Id);
                     },
                 ),
             /*

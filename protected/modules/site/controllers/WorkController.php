@@ -156,6 +156,7 @@ class WorkController extends Controller {
                     Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully. Please Fill Right Holders!!!');
                     $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
                 } else {
+                    Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully.');
                     $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '4'));
                 }
             }

@@ -59,7 +59,7 @@ class WorkDocumentation extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Work_Doc_Status_Id'),
-            'workDocType' => array(self::BELONGS_TO, 'MasterDocumentType', 'Work_Doc_Type_Id'),
+            'workDocType' => array(self::BELONGS_TO, 'MasterDocument', 'Work_Doc_Type_Id'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
         );
     }

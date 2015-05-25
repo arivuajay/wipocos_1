@@ -36,6 +36,7 @@ class Work extends CActiveRecord {
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
+    public $matchingdetails;
 
     public function init() {
         parent::init();
@@ -72,7 +73,7 @@ class Work extends CActiveRecord {
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code, Work_Org_Title', 'unique'),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -121,6 +122,7 @@ class Work extends CActiveRecord {
             'duration_hours' => 'Hours',
             'duration_minutes' => 'Minutes',
             'duration_seconds' => 'Seconds',
+            'matchingdetails' => 'Matching Details',
         );
     }
 
@@ -187,7 +189,7 @@ class Work extends CActiveRecord {
         $this->Work_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
         if (isset($this->Work_Instrumentation) && is_array($this->Work_Instrumentation)) {
             $this->Work_Instrumentation = !empty($this->Work_Instrumentation) ? json_encode($this->Work_Instrumentation) : '';
-        }else{
+        } else {
             $this->Work_Instrumentation = '';
         }
 
@@ -222,13 +224,36 @@ class Work extends CActiveRecord {
 
     public function getInstrumentselected() {
         $selected = array();
-        if($this->Work_Instrumentation){
+        if ($this->Work_Instrumentation) {
             $exp = json_decode($this->Work_Instrumentation);
             foreach ($exp as $ex) {
                 $selected[$ex] = array('selected' => 'selected');
             }
         }
         return $selected;
+    }
+
+    public function getMatchingdetails($work_id = NULL) {
+        $work = self::model()->with('workRightholders', 'workSubtitles')->findByAttributes(array('Work_Id' => $work_id));
+        $column = '';
+        $time = explode(':', $work->Work_Duration);
+        $column .= "$time[0]' $time[1]'' {$work->workType->Type_Name} {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
+        $column .= "<br />";
+        foreach ($work->workRightholders as $key => $rightholder) {
+            if ($rightholder->workAuthor) {
+                $name = $rightholder->workAuthor->Auth_Sur_Name . ' ' . $rightholder->workAuthor->Auth_First_Name;
+            } elseif ($rightholder->workPublisher) {
+                $name = $rightholder->workPublisher->Pub_Corporate_Name;
+            }
+
+            $column .= $key == 0 ? "$name" : " , {$name}";
+        }
+        $column .= "<br />";
+        foreach ($work->workSubtitles as $key => $subtitle) {
+            $name = $subtitle->workSubtitleLanguage->Lang_Name;
+            $column .= $key == 0 ? "$name" : " , {$name}";
+        }
+        return $column;
     }
 
 }

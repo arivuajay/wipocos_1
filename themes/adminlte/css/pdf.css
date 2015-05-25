@@ -17,5 +17,5 @@ and open the template in the editor.
 }
 
 .fa-circle::before {
-  content: "";
+  content: ✔;
 }
