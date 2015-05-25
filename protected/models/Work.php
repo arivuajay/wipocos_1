@@ -16,6 +16,7 @@
  * @property string $Work_Duration
  * @property string $Work_Creation
  * @property integer $Work_Opus_Number
+ * @property string $Work_Unknown
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -72,11 +73,11 @@ class Work extends CActiveRecord {
             array('Work_Instrumentation', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code, Work_Org_Title', 'unique'),
-            array('Active', 'length', 'max' => 1),
+            array('Work_Unknown, Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -123,6 +124,7 @@ class Work extends CActiveRecord {
             'duration_minutes' => 'Minutes',
             'duration_seconds' => 'Seconds',
             'matchingdetails' => 'Matching Details',
+            'Work_Unknown' => 'Unknown',
         );
     }
 

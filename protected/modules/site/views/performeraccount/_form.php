@@ -17,24 +17,35 @@ $regions = Myclass::getMasterRegion();
 ?>
 <div class="row pull-right" style="margin: 0 0 10px;">
     <div class="col-lg-12">
-        <?php $this->renderPartial('/default/_colors')?>
+        <?php $this->renderPartial('/default/_colors') ?>
     </div>
 </div>
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
 
+        <?php
+        $other_tab_validation = $doc_tab_validation = true;
+        if (!$model->isNewRecord) {
+            if($model->Perf_Non_Member == 'N'){
+                $other_tab_validation = !$model->isNewRecord && !$related_model->isNewRecord;
+                $doc_tab_validation = !$model->isNewRecord;
+            }
+        }else{
+            $other_tab_validation = $doc_tab_validation = false;
+        }
+        ?>
         <!-- Custom Tabs -->
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Address</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Payment</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if (!$model->isNewRecord && !$related_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Upload Documents</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload Documents</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -111,10 +122,10 @@ $regions = Myclass::getMasterRegion();
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Perf_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Perf_Non_Member', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->checkBox($model, 'Perf_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Perf_Non_Member'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
@@ -184,52 +195,52 @@ $regions = Myclass::getMasterRegion();
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_address_form', array('model' => $address_model, 'performer_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_payment_form', array('model' => $payment_model, 'performer_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'performer_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_pseudonym_form', array('model' => $psedonym_model, 'performer_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
-<?php
-if (!$model->isNewRecord) {
-    $this->renderPartial('_related_rights_form', array('model' => $related_model, 'performer_model' => $model, 'regions' => $regions));
-}
-?>
+                    <?php
+                    if ($doc_tab_validation) {
+                        $this->renderPartial('_related_rights_form', array('model' => $related_model, 'performer_model' => $model, 'regions' => $regions));
+                    }
+                    ?>
                 </div>
                 <div class="tab-pane" id="tab_7">
-<?php
-if (!$model->isNewRecord) {
-    $this->renderPartial('_death_form', array('model' => $death_model, 'performer_model' => $model));
-}
-?>
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_death_form', array('model' => $death_model, 'performer_model' => $model));
+                    }
+                    ?>
                 </div>
                 <div class="tab-pane" id="tab_8">
-<?php
-if (!$model->isNewRecord) {
-    $this->renderPartial('_upload_document_form', array('model' => $upload_model, 'performer_model' => $model));
-}
-?>
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_upload_document_form', array('model' => $upload_model, 'performer_model' => $model));
+                    }
+                    ?>
                 </div>
             </div>
         </div>

@@ -93,7 +93,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Group_Unknown_Address', array('class' => '')); ?><br />
-                <?php echo $form->checkBox($model, 'Pub_Group_Unknown_Address', array('class' => 'form-control', 'checked' => $model->Pub_Group_Unknown_Address == 'Y' ? true : false)); ?>
+                <?php echo $form->checkBox($model, 'Pub_Group_Unknown_Address', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
                 <?php echo $form->error($model, 'Pub_Group_Unknown_Address'); ?>
             </div>
 

@@ -223,7 +223,6 @@ class PublishergroupController extends Controller {
             }
         } elseif (isset($_POST['PublisherGroupRepresentative'])) {
             $address_model->attributes = $_POST['PublisherGroupRepresentative'];
-            $address_model->Pub_Group_Unknown_Address = $_POST['PublisherGroupRepresentative']['Pub_Group_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Publisher Group Address {$model->Pub_Group_Internal_Code} successfully.", "group");

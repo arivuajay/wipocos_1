@@ -152,7 +152,6 @@ class PublisheraccountController extends Controller {
             }
         } elseif (isset($_POST['PublisherAccountAddress'])) {
             $address_model->attributes = $_POST['PublisherAccountAddress'];
-            $address_model->Pub_Unknown_Address = $_POST['PublisherAccountAddress']['Pub_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Publisher Address {$model->Pub_Corporate_Name} successfully.", "microphone");

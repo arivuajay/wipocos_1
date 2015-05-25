@@ -106,7 +106,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Pub_Unknown_Address', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8" style="margin-top: 5px;">
-                        <?php echo $form->checkBox($model, 'Pub_Unknown_Address', array('class' => 'form-control', 'checked' => $model->Pub_Unknown_Address == 'Y' ? true : false)); ?>
+                        <?php echo $form->checkBox($model, 'Pub_Unknown_Address', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
                         <?php echo $form->error($model, 'Pub_Unknown_Address'); ?>
                     </div>
                 </div>

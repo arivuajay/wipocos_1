@@ -186,7 +186,6 @@ class GroupController extends Controller {
             }
         } elseif (isset($_POST['GroupRepresentative'])) {
             $address_model->attributes = $_POST['GroupRepresentative'];
-            $address_model->Group_Unknown_Address = $_POST['GroupRepresentative']['Group_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Address Saved on {$model->Group_Name} successfully.", "users");

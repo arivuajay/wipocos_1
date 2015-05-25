@@ -18,15 +18,26 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 <div class="row">
     <div class="col-lg-12">
 
+        <?php
+        $other_tab_validation = $doc_tab_validation = true;
+        if (!$model->isNewRecord) {
+            if($model->Group_Non_Member == 'N'){
+                $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                $doc_tab_validation = !$model->isNewRecord;
+            }
+        }else{
+            $other_tab_validation = $doc_tab_validation = false;
+        }
+        ?>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Members</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Payment</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Cross-references</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$managed_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Representatives</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Members</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Cross-references</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Representatives</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -164,42 +175,42 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_member_form', array('group_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_payment_form', array('model' => $payment_model, 'group_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
-                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'group_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
-                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_pseudonym_form', array('model' => $psedonym_model, 'group_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($doc_tab_validation) {
                         $this->renderPartial('_managed_rights_form', array('model' => $managed_model, 'group_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_7">
                     <?php
-                    if (!$model->isNewRecord && !$managed_model->isNewRecord) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_representative_form', array('model' => $address_model, 'group_model' => $model));
                     }
                     ?>

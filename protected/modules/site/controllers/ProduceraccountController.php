@@ -152,7 +152,6 @@ class ProduceraccountController extends Controller {
             }
         } elseif (isset($_POST['ProducerAccountAddress'])) {
             $address_model->attributes = $_POST['ProducerAccountAddress'];
-            $address_model->Pro_Unknown_Address = $_POST['ProducerAccountAddress']['Pro_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Producer Address {$model->Pro_Corporate_Name} successfully.", "money");

@@ -19,15 +19,27 @@ $territories = Myclass::getMasterTerritory();
 <div class="row">
     <div class="col-lg-12 col-xs-12">
 
+        <?php
+        $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = true;
+        if (!$model->isNewRecord) {
+            if($model->Work_Unknown == 'N'){
+                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
+                $doc_tab_validation = !$model->isNewRecord;
+                $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
+            }
+        }else{
+            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = false;
+        }
+        ?>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if (!$model->isNewRecord) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if (!$model->isNewRecord && !$document_model->isNewRecord) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -87,6 +99,12 @@ $territories = Myclass::getMasterTerritory();
                                     <?php echo $form->labelEx($model, 'Work_Type_Id', array('class' => '')); ?>
                                     <?php echo $form->dropDownList($model, 'Work_Type_Id', $types, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Work_Type_Id'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Work_Unknown', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->error($model, 'Work_Unknown'); ?>
                                 </div>
                             </div>
                         </div>
@@ -161,42 +179,42 @@ $territories = Myclass::getMasterTerritory();
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'work_model' => $model, 'languages' => $languages, 'types' => $types));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
-                    if (!$model->isNewRecord) {
+                    if ($doc_tab_validation) {
                         $this->renderPartial('_documentation_form', array('model' => $document_model, 'work_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord && !empty($right_holder_exists)) {
+                    if ($other_tab_validation) {
                         $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_7">
                     <?php
-                    if (!$model->isNewRecord && !$document_model->isNewRecord) {
+                    if ($rgt_tab_validation) {
                         $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model,'authusers'=>$authusers,'publusers'=>$publusers));
                     }
                     ?>

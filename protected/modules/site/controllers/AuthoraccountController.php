@@ -164,7 +164,6 @@ class AuthoraccountController extends Controller {
             }
         } elseif (isset($_POST['AuthorAccountAddress'])) {
             $address_model->attributes = $_POST['AuthorAccountAddress'];
-            $address_model->Auth_Unknown_Address = $_POST['AuthorAccountAddress']['Auth_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Address successfully.", "user");

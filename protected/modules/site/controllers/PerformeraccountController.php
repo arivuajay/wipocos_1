@@ -160,7 +160,6 @@ class PerformeraccountController extends Controller {
             }
         } elseif (isset($_POST['PerformerAccountAddress'])) {
             $address_model->attributes = $_POST['PerformerAccountAddress'];
-            $address_model->Perf_Unknown_Address = $_POST['PerformerAccountAddress']['Perf_Unknown_Address'] == 0 ? 'N' : 'Y';
 
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Address {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
