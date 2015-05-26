@@ -65,7 +65,7 @@ class Work extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Duration, duration_hours, duration_minutes, duration_seconds', 'required'),
+            array('Work_Org_Title, Work_Internal_Code, Work_Type_Id, Work_Factor_Id, Work_Duration, duration_hours, duration_minutes, duration_seconds', 'required'),
             array('Work_Language_Id, Work_Type_Id, Work_Factor_Id, Work_Opus_Number, duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
             array('Work_Org_Title, Work_Internal_Code, Work_Iswc, Work_Wic_Code', 'length', 'max' => 100),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),

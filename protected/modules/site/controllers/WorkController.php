@@ -318,7 +318,8 @@ class WorkController extends Controller {
 
     public function actionInsertright() {
         if (isset($_POST['WorkRightholder']) && !empty($_POST['WorkRightholder'])) {
-            $work_id = $_POST['WorkRightholder'][0]['Work_Id'];
+            $end = end($_POST['WorkRightholder']);
+            $work_id = $end['Work_Id'];
             WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
             $valid = true;
             foreach ($_POST['WorkRightholder'] as $values) {

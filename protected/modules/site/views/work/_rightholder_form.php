@@ -191,7 +191,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-right"><span>Note: Save button will be enabled after Broadcasting Share & Mechanical Share is 100 % </span></div>
+                <div class="text-right"><span>Note: Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % </span></div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/work/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -233,28 +233,32 @@
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;            ?></td>-->
+                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;             ?></td>-->
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;            ?></td>-->
+                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;             ?></td>-->
                                             <td>
                                                 <?php // echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
                                                 <?php // echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', array('/site/work/holderremove', 'id' => $member->Work_Right_Id), array('onclick' => 'return confirm("Are you sure to delete this Rightholder?")')); ?>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
+                                            <td class="hide">
+                                                <input type="hidden" value="<?php echo $member->Work_Member_Internal_Code ?>" name="WorkRightholder[<?php echo $key ?>][Work_Member_Internal_Code]">
+                                                <?php
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Id]", $member->Work_Id);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_Internal_Code]", $member->Work_Member_Internal_Code);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Role]", $member->Work_Right_Role);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Share]", $member->Work_Right_Broad_Share);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Special]", $member->Work_Right_Broad_Special);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Org_id]", $member->Work_Right_Broad_Org_id);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Share]", $member->Work_Right_Mech_Share);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Special]", $member->Work_Right_Mech_Special);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Org_Id]", $member->Work_Right_Mech_Org_Id);
+                                                ?>
+                                            </td>
                                         </tr>
-                                        <input type="hidden" value="<?php echo $member->Work_Member_Internal_Code?>" name="WorkRightholder[<?php echo $key?>][Work_Member_Internal_Code]">
                                         <?php
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Id]", $member->Work_Id);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_Internal_Code]", $member->Work_Member_Internal_Code);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Role]", $member->Work_Right_Role);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Share]", $member->Work_Right_Broad_Share);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Special]", $member->Work_Right_Broad_Special);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Org_id]", $member->Work_Right_Broad_Org_id);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Share]", $member->Work_Right_Mech_Share);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Special]", $member->Work_Right_Mech_Special);
-                                        echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Mech_Org_Id]", $member->Work_Right_Mech_Org_Id);
                                     }
                                 } else {
                                     echo "<tr id='norecord_tr'><td colspan='8'>No records found</td></tr>";
@@ -263,7 +267,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="box-footer">
+                    <div class="box-footer hide">
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <?php echo CHtml::submitButton('Save', array('class' => 'btn btn-primary', 'id' => 'right_ajax_submit', 'disabled' => true)) ?>
@@ -285,7 +289,6 @@ $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 
 $js = <<< EOD
     $(document).ready(function() {
-        checkShare();
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
@@ -329,13 +332,31 @@ $js = <<< EOD
                 data:data,
                 success:function(data){
                     $("#search_right_result").html(data);
-                },
+ 
+                    //again install datatable
+                    if($('.table-datatable').length > 0){
+                       var baseTable;
+                       baseTable = $(".table-datatable").dataTable({
+                           sDom: '<"search-box"r>ltip',
+                           "bPaginate": false,
+                           "bLengthChange": false,
+                           "bSort": true,
+                           "bInfo": false,
+                           "iDisplayLength": 100
+                       });
+
+                       $('#base_table_search').keyup(function(){
+                            baseTable.fnFilter( $(this).val() );
+                       });
+                   }
+               },
                 error: function(data) {
                     alert("Something went wrong. Try again");
                 },
                 dataType:'html'
             });
         });
+        
     });
     function InsertRightHolder(form, data, hasError) {
         if (hasError == false) {
@@ -360,30 +381,32 @@ $js = <<< EOD
             }
         
             $.each(form_data, function (key, value) {
-                var name = value['name'];
-                name = name.replace("[","[" + rowCount + "][");
-                //set hidden form values
-                tr += '<input type="hidden" name="' + name + '" value="' + value['value'] + '"/>';
+                if(value['name'] != "base_table_search"){
+                    var name = value['name'];
+                    name = name.replace("[","[" + rowCount + "][");
+                    //set hidden form values
+                    tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
 
-                if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){
-                    tr += '<td>';
-                }
-                var td_content = '';
-                if (value['name'] == "WorkRightholder[Work_Right_Broad_Share]"  || value['name'] == "WorkRightholder[Work_Right_Mech_Share]") {
-                    td_content = '<span class="badge share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
-                } else if (value['name'] == "WorkRightholder[Work_Right_Broad_Special]" || value['name'] == "WorkRightholder[Work_Right_Mech_Special]"
-                ) {
-                    td_content = $('select[name="' + value['name'] + '"] option:selected').text();
-                }else if(value['name'] == "WorkRightholder[Work_Right_Role]"){
-                    td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
-                }else if(value['name'] == "WorkRightholder[Work_Id]"){
-                    td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
-                }else if(value['name'] == "WorkRightholder[Work_Member_Internal_Code]"){
-                    td_content = chk_tr.length == 1 ? _uid : value['value'];
-                }
-                tr += td_content;
-                if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){
-                    tr += '</td>';
+                    if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){
+                        tr += '<td>';
+                    }
+                    var td_content = '';
+                    if (value['name'] == "WorkRightholder[Work_Right_Broad_Share]"  || value['name'] == "WorkRightholder[Work_Right_Mech_Share]") {
+                        td_content = '<span class="badge share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
+                    } else if (value['name'] == "WorkRightholder[Work_Right_Broad_Special]" || value['name'] == "WorkRightholder[Work_Right_Mech_Special]"
+                    ) {
+                        td_content = $('select[name="' + value['name'] + '"] option:selected').text();
+                    }else if(value['name'] == "WorkRightholder[Work_Right_Role]"){
+                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
+                    }else if(value['name'] == "WorkRightholder[Work_Id]"){
+                        td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
+                    }else if(value['name'] == "WorkRightholder[Work_Member_Internal_Code]"){
+                        td_content = chk_tr.length == 1 ? _uid : value['value'];
+                    }
+                    tr += td_content;
+                    if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){
+                        tr += '</td>';
+                    }
                 }
             });
             _mcspl = $("#WorkRightholder_Work_Right_Mech_Special").val();
@@ -403,11 +426,11 @@ $js = <<< EOD
                 $('#linked-holders tbody').append(tr);
             }
         
-            checkShare();
             $('#work-rightholder-form')[0].reset();
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
             $("#right_insert").val('Add');
+            checkShare();
         }
         return false;
     }
@@ -417,7 +440,11 @@ $js = <<< EOD
         $('.share_value').each(function(){
             _val += parseFloat($(this).data('share'));
         });
-        $("#right_ajax_submit").attr("disabled", _val != '200');
+        var not_auto_submit = _val != '200';
+        $("#right_ajax_submit").attr("disabled", not_auto_submit);
+        if(not_auto_submit == false){
+            $("#right_form").submit();
+        }
     }
         
 EOD;
