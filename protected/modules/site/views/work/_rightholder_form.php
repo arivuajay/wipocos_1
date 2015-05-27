@@ -84,13 +84,8 @@
     $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll();
     ?>
 
-    <div class="col-lg-12 row">
-        <div class="col-lg-12 col-md-12">
-            <label class="control-label">Spotlight Search: </label>
-            <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
-        </div>
-    </div>
-    <div class="col-lg-12" id="search_right_result">
+
+    <div id="search_right_result">
         <?php $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
     </div>
 
@@ -246,10 +241,10 @@
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;               ?></td>-->
+                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;                ?></td>-->
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;               ?></td>-->
+                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;                ?></td>-->
                                             <td>
                                                 <?php // echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
@@ -347,16 +342,19 @@ $js = <<< EOD
                     $("#search_right_result").html(data);
  
                     //again install datatable
+                    $('.table-datatable').dataTable().fnDestroy();
+        
                     if($('.table-datatable').length > 0){
-                       var baseTable;
-                       baseTable = $(".table-datatable").dataTable({
+                        var baseTable;
+                        baseTable = $(".table-datatable").dataTable({
                            sDom: '<"search-box"r>ltip',
                            "bPaginate": false,
                            "bLengthChange": false,
                            "bSort": true,
                            "bInfo": false,
-                           "iDisplayLength": 100
-                       });
+                           "iDisplayLength": 100,
+                           "bFilter": true
+                        });
 
                        $('#base_table_search').keyup(function(){
                             baseTable.fnFilter( $(this).val() );
