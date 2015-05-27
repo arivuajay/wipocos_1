@@ -8,11 +8,14 @@
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
     ?>
-    <div class="col-lg-12">
-        <div class="box-body">
+    <div class="col-lg-12" id="advance-search-block">
+        <div class="box-body mb10" id="advance-search-label">
+            <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
+        </div>
+        <div class="box-body" id="advance-search-form">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Rightholders</h3>
+                    <h3 class="box-title">Advanced Search</h3>
                 </div>
                 <div class="box-body">
                     <p class="help-inline">Enter the begin of the name or title,or one of the following criteria:</p>
@@ -77,9 +80,19 @@
     echo $form->hiddenField($model, 'Work_Member_Internal_Code');
 
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
+    $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll();
+    $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll();
     ?>
 
-    <div class="col-lg-12" id="search_right_result"></div>
+    <div class="col-lg-12 row">
+        <div class="col-lg-12 col-md-12">
+            <label class="control-label">Spotlight Search: </label>
+            <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
+        </div>
+    </div>
+    <div class="col-lg-12" id="search_right_result">
+        <?php $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
+    </div>
 
     <a name="role-foundation">&nbsp;</a>
     <div class="col-lg-12">
@@ -233,10 +246,10 @@
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;             ?></td>-->
+                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;               ?></td>-->
                                             <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;             ?></td>-->
+                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;               ?></td>-->
                                             <td>
                                                 <?php // echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
@@ -364,7 +377,7 @@ $js = <<< EOD
             $('.loader').show();
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
-            var rowCount = $('#linked-holders tbody tr').length;
+            var rowCount = $('#linked-holders tbody tr').length + 1;
         
             _uid = $(".highlight").data('uid');
             _role = $(".highlight").data('urole');

@@ -4,11 +4,7 @@
         <div class="form-group foundation">
             <div class="box-header">
                 <div class="col-lg-12 col-md-12">
-                    <h3 class="box-title">Search Results</h3>
-                </div>
-                <div class="col-lg-12 col-md-12">
-                    <label class="control-label">Spotlight Search: </label>
-                    <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
+                    <h3 class="box-title">Rightholders</h3>
                 </div>
             </div>
             <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
@@ -48,7 +44,8 @@
                             }
                             ?>
                         </tbody>
-                    </table>                </div>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
