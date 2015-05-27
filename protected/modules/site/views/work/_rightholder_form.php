@@ -8,55 +8,30 @@
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
     ?>
-    <div class="col-lg-12" id="advance-search-block">
-        <div class="box-body mb10" id="advance-search-label">
-            <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
-        </div>
-        <div class="box-body" id="advance-search-form">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Advanced Search</h3>
+                    <h3 class="box-title">Search</h3>
                 </div>
                 <div class="box-body">
-                    <p class="help-inline">Enter the begin of the name or title,or one of the following criteria:</p>
+                    <p class="help-inline">Enter the begin of the name or internal code or one of the following criteria:</p>
                     <div class="col-lg-6">
                         <div class="box-body">
                             <div class="form-group">
-                                <?php echo CHtml::label('Surname', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::textField('sur', $_REQUEST['sur'], array('class' => 'form-control')); ?>
+                                <?php echo CHtml::label('Author', '', array('class' => 'control-label')); ?>&nbsp;
+                                <?php echo CHtml::checkBox('is_auth', ($_REQUEST['is_auth'] == 1), array('class' => 'form-control', 'id' => 'is_auth')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::label('Publisher', '', array('class' => 'control-label')); ?>&nbsp;
+                                <?php echo CHtml::checkBox('is_publ', ($_REQUEST['is_publ'] == 1), array('class' => 'form-control', 'id' => 'is_publ')); ?>
+                                <div id="chkbox_err" class="errorMessage hide">Select Author or Publisher</div>
                             </div>
                             <div class="form-group">
-                                <?php echo CHtml::label('Firstname', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::textField('fn', $_REQUEST['fn'], array('class' => 'form-control')); ?>
-                            </div>
-                            <div class="form-group">
-                                <?php echo CHtml::label('Author', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::checkBox('is_auth', ($_REQUEST['is_auth'] == 1), array('class' => 'form-control')); ?>
-                            </div>
-                            <div class="form-group">
-                                <?php echo CHtml::label('Publisher', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::checkBox('is_publ', ($_REQUEST['is_publ'] == 1), array('class' => 'form-control')); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="box-body">
-                            <div class="form-group">
-                                <?php echo CHtml::label('Internal Code', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::textField('i_code', $_REQUEST['i_code'], array('class' => 'form-control')); ?>
-                            </div>
-                            <div class="form-group">
-                                <?php echo CHtml::label('IPI name number', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::textField('i_name', $_REQUEST['i_name'], array('class' => 'form-control')); ?>
-                            </div>
-                            <div class="form-group">
-                                <?php echo CHtml::label('IPI base number', '', array('class' => 'control-label')); ?>
-                                <?php echo CHtml::textField('i_base', $_REQUEST['i_base'], array('class' => 'form-control')); ?>
-
+                                <?php echo CHtml::label('Search', '', array('class' => 'control-label')); ?>
+                                <?php echo CHtml::textField('searach_text', $_REQUEST['fn'], array('class' => 'form-control')); ?>
                             </div>
                             <div class="form-group">
                                 <?php echo CHtml::button('Search', array('class' => 'btn btn-success', 'name' => 'rght_holder', 'id' => 'search_button')); ?>
-                                <?php echo CHtml::resetButton('Clear', array('class' => 'btn btn-primary')); ?>
+                                <?php // echo CHtml::resetButton('Clear', array('class' => 'btn btn-primary')); ?>
                             </div>
                         </div>
                     </div>
@@ -80,13 +55,13 @@
     echo $form->hiddenField($model, 'Work_Member_Internal_Code');
 
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
-    $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll();
-    $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll();
+//    $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll();
+//    $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll();
     ?>
 
 
     <div id="search_right_result">
-        <?php $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
+        <?php // $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
     </div>
 
     <a name="role-foundation">&nbsp;</a>
@@ -334,7 +309,15 @@ $js = <<< EOD
             checkShare();
         });
         
+        $('#is_auth, #is_publ').on('ifChecked', function(event){
+            $("#chkbox_err").addClass("hide");
+        });
+        
         $('#search_button').on("click", function(){
+            if($("#is_auth").is(':checked') == false && $("#is_publ").is(':checked') == false){
+                $("#chkbox_err").removeClass("hide");
+                return false;
+            }
             var data=$("#work-rightholder-search-form").serialize();
             $.ajax({
                 type: 'GET',
@@ -342,26 +325,6 @@ $js = <<< EOD
                 data:data,
                 success:function(data){
                     $("#search_right_result").html(data);
- 
-                    //again install datatable
-                    $('.table-datatable').dataTable().fnDestroy();
-        
-                    if($('.table-datatable').length > 0){
-                        var baseTable;
-                        baseTable = $(".table-datatable").dataTable({
-                           sDom: '<"search-box"r>ltip',
-                           "bPaginate": false,
-                           "bLengthChange": false,
-                           "bSort": true,
-                           "bInfo": false,
-                           "iDisplayLength": 100,
-                           "bFilter": true
-                        });
-
-                       $('#base_table_search').keyup(function(){
-                            baseTable.fnFilter( $(this).val() );
-                       });
-                   }
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");

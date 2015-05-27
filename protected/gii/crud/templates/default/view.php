@@ -23,6 +23,9 @@ $restrict = $this->giiGenerateHiddenFields();
 $activeFields = $this->giiGenerateActiveInActiveFields();
 ?>
 <div class="user-view">
+    <?php echo "<?php"; ?>
+    if ($export == false) {
+    ?>
     <p>
         <?php echo "<?php"; ?>
         $this->widget(
@@ -45,8 +48,26 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
                     'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'booster.widgets.TbButton', array(
+            'label' => 'Download',
+            'url' => array('view', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>, 'export' => 'PDF'),
+            'buttonType' => 'link',
+            'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                )
+        );
         ?>
     </p>
+    <?php echo "<?php"; ?>
+    }
+    ?>
+    <?php echo "<?php"; ?>
+    if ($export) {
+        <h3 class="text-center"><?php echo  "\$this->modelClass \$this->title";?></h3>
+    }
+    ?>
     <?php echo "<?php"; ?> $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),

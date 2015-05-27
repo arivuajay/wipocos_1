@@ -64,7 +64,10 @@ $producers = Myclass::getProducer();
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Label_Share', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Label_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 3)); ?>
+                        <div class="input-group">
+                            <?php echo $form->textField($model, 'Label_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 3)); ?>
+                            <span class="input-group-addon"> %</span>
+                        </div>
                         <?php echo $form->error($model, 'Label_Share'); ?>
                     </div>
                 </div>
@@ -109,7 +112,7 @@ $producers = Myclass::getProducer();
             <div class="box-footer">
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <?php echo CHtml::submitButton('Save', array('class' => 'btn btn-primary', 'id' => 'label_ajax_submit', 'disabled' => true))?>
+                        <?php echo CHtml::submitButton('Save', array('class' => 'btn btn-primary', 'id' => 'label_ajax_submit', 'disabled' => true)) ?>
                     </div>
                 </div>
             </div>

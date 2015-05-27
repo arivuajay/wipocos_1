@@ -57,9 +57,19 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+                $model = $this->loadModel($id);
+
+                $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
+                $compact = compact('model', 'export');
+                if ($export) {
+                    $mPDF1 = Yii::app()->ePdf->mpdf();
+                    $stylesheet = $this->pdfStyles();
+                    $mPDF1->WriteHTML($stylesheet, 1);
+                    $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
+                    $mPDF1->Output("<?php echo $this->modelClass; ?>_view.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+                } else {
+                    $this->render('view', $compact);
+                }
 	}
 
 	/**

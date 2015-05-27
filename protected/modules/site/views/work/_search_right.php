@@ -1,9 +1,9 @@
-<div class="col-lg-12 row">
+<!--<div class="col-lg-12 row">
     <div class="col-lg-12 col-md-12">
         <label class="control-label">Spotlight Search: </label>
         <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
     </div>
-</div>
+</div>-->
 <div class="col-lg-12">
     <?php if (!empty($authusers) || !empty($publusers)) { ?>
         <div class="box-body">

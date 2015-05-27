@@ -338,25 +338,18 @@ class WorkController extends Controller {
     public function actionSearchright() {
         $criteria = new CDbCriteria();
         $pubcriteria = new CDbCriteria();
-        if (!empty($_REQUEST['sur'])) {
-            $criteria->addSearchCondition("Auth_Sur_Name", $_REQUEST['sur']);
-            $pubcriteria->addSearchCondition("Pub_Corporate_Name", $_REQUEST['sur']);
-        }
-        if (!empty($_REQUEST['fn'])) {
-            $criteria->addSearchCondition("Auth_First_Name", $_REQUEST['fn']);
-            $pubcriteria->addSearchCondition("Pub_Corporate_Name", $_REQUEST['fn']);
-        }
-        if (!empty($_REQUEST['i_code'])) {
-            $criteria->addCondition("Auth_Internal_Code = '{$_REQUEST['i_code']}'");
-            $pubcriteria->addCondition("Pub_Internal_Code = '{$_REQUEST['i_code']}'");
-        }
-        if (!empty($_REQUEST['i_name'])) {
-            $criteria->addCondition("Auth_Ipi = '{$_REQUEST['i_name']}'");
-            $pubcriteria->addCondition("Pub_Ipi = '{$_REQUEST['i_name']}'");
-        }
-        if (!empty($_REQUEST['i_base'])) {
-            $criteria->addCondition("Auth_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
-            $pubcriteria->addCondition("Pub_Ipi_Base_Number = '{$_REQUEST['i_base']}'");
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Auth_Sur_Name',$search_txt,true,'OR');
+            $criteria->compare('Auth_First_Name',$search_txt,true,'OR');
+            $criteria->compare('Auth_Internal_Code',$search_txt,true,'OR');
+            $criteria->compare('Auth_Ipi',$search_txt,true,'OR');
+            $criteria->compare('Auth_Ipi_Base_Number',$search_txt,true,'OR');
+            
+            $pubcriteria->compare('Pub_Corporate_Name',$search_txt,true,'OR');
+            $pubcriteria->compare('Pub_Internal_Code',$search_txt,true,'OR');
+            $pubcriteria->compare('Pub_Ipi',$search_txt,true,'OR');
+            $pubcriteria->compare('Pub_Ipi_Base_Number',$search_txt,true,'OR');
         }
 
         if ($_REQUEST['is_auth'] == '1') {
