@@ -296,6 +296,7 @@
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 
 $js = <<< EOD
+    var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
@@ -329,6 +330,7 @@ $js = <<< EOD
         
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
+            rowCount++;
             checkShare();
         });
         
@@ -375,7 +377,6 @@ $js = <<< EOD
             $('.loader').show();
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
-            var rowCount = $('#linked-holders tbody tr').length + 1;
         
             _uid = $(".highlight").data('uid');
             _role = $(".highlight").data('urole');
@@ -436,6 +437,7 @@ $js = <<< EOD
                 tr += '</tr>';
                 $('#linked-holders tbody').append(tr);
             }
+            rowCount++;
         
             $('#work-rightholder-form')[0].reset();
             $('.loader').hide();
