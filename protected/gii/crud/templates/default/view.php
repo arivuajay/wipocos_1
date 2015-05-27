@@ -64,8 +64,9 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
     }
     ?>
     <?php echo "<?php"; ?>
-    if ($export) {
+    if ($export) { ?>
         <h3 class="text-center"><?php echo  "\$this->modelClass \$this->title";?></h3>
+    <?php echo "<?php"; ?>        
     }
     ?>
     <?php echo "<?php"; ?> $this->widget('zii.widgets.CDetailView', array(

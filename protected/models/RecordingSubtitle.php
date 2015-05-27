@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * This is the model class for table "{{recording_subtitle}}".
+ *
+ * The followings are the available columns in table '{{recording_subtitle}}':
+ * @property integer $Rcd_Subtitle_Id
+ * @property integer $Rcd_Id
+ * @property string $Rcd_Subtitle_Name
+ * @property integer $Rcd_Subtitle_Type_Id
+ * @property integer $Rcd_Subtitle_Language_Id
+ * @property string $Created_Date
+ * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property MasterLanguage $rcdSubtitleLanguage
+ * @property Recording $rcd
+ * @property MasterType $rcdSubtitleType
+ */
+class RecordingSubtitle extends CActiveRecord {
+
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{recording_subtitle}}';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id', 'required'),
+            array('Rcd_Id, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Subtitle_Name', 'length', 'max' => 255),
+            array('Created_Date, Rowversion', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('Rcd_Subtitle_Id, Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'rcdSubtitleLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Rcd_Subtitle_Language_Id'),
+            'rcd' => array(self::BELONGS_TO, 'Recording', 'Rcd_Id'),
+            'rcdSubtitleType' => array(self::BELONGS_TO, 'MasterType', 'Rcd_Subtitle_Type_Id'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'Rcd_Subtitle_Id' => 'Rcd Subtitle',
+            'Rcd_Id' => 'Rcd',
+            'Rcd_Subtitle_Name' => 'Title',
+            'Rcd_Subtitle_Type_Id' => 'Type',
+            'Rcd_Subtitle_Language_Id' => 'Language',
+            'Created_Date' => 'Created Date',
+            'Rowversion' => 'Rowversion',
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('Rcd_Subtitle_Id', $this->Rcd_Subtitle_Id);
+        $criteria->compare('Rcd_Id', $this->Rcd_Id);
+        $criteria->compare('Rcd_Subtitle_Name', $this->Rcd_Subtitle_Name, true);
+        $criteria->compare('Rcd_Subtitle_Type_Id', $this->Rcd_Subtitle_Type_Id);
+        $criteria->compare('Rcd_Subtitle_Language_Id', $this->Rcd_Subtitle_Language_Id);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return RecordingSubtitle the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function dataProvider() {
+        return new CActiveDataProvider($this, array(
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
+    }
+
+}

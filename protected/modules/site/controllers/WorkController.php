@@ -34,7 +34,8 @@ class WorkController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright', 'searchright', 'print', 'pdf'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright', 
+                    'searchright', 'print', 'pdf', 'subtitledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -120,7 +121,6 @@ class WorkController extends Controller {
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
 
         $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
-
         $right_holder_model = new WorkRightholder;
 
         // Uncomment the following line if AJAX validation is needed
@@ -361,4 +361,23 @@ class WorkController extends Controller {
         $this->renderPartial('_search_right', compact('authusers', 'publusers'));
     }
 
+    public function actionSubtitledelete($id) {
+        try {
+            $model = WorkSubtitle::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Work subtitle {$model->Work_Subtitle_Name} successfully.", "sliders");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Work subtitle {$model->Work_Subtitle_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->work->Work_Id, 'tab' => 2));
+        }
+    }
 }

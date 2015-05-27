@@ -174,6 +174,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
+                <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100</span> %</div>
+                <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100</span> %</div>
                 <div class="text-right"><span>Note: Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % </span></div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/work/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
@@ -214,16 +216,12 @@
                                             <td><?php echo $name; ?></td>
                                             <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
-                                            <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
+                                            <td><span class="badge share_value broad_share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightBroadOrg->Org_Abbrevation;                ?></td>-->
-                                            <td><span class="badge share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
+                                            <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
                                             <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
-                                            <!--<td><?php // echo $member->workRightMechOrg->Org_Abbrevation;                ?></td>-->
                                             <td>
-                                                <?php // echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
-                                                <?php // echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', array('/site/work/holderremove', 'id' => $member->Work_Right_Id), array('onclick' => 'return confirm("Are you sure to delete this Rightholder?")')); ?>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -366,8 +364,10 @@ $js = <<< EOD
                         tr += '<td>';
                     }
                     var td_content = '';
-                    if (value['name'] == "WorkRightholder[Work_Right_Broad_Share]"  || value['name'] == "WorkRightholder[Work_Right_Mech_Share]") {
-                        td_content = '<span class="badge share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
+                    if (value['name'] == "WorkRightholder[Work_Right_Broad_Share]") {
+                        td_content = '<span class="badge share_value broad_share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
+                    }else if(value['name'] == "WorkRightholder[Work_Right_Mech_Share]"){
+                        td_content = '<span class="badge share_value mech_share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
                     } else if (value['name'] == "WorkRightholder[Work_Right_Broad_Special]" || value['name'] == "WorkRightholder[Work_Right_Mech_Special]"
                     ) {
                         td_content = $('select[name="' + value['name'] + '"] option:selected').text();
@@ -413,9 +413,20 @@ $js = <<< EOD
         
     function checkShare(){
         _val = 0;
-        $('.share_value').each(function(){
-            _val += parseFloat($(this).data('share'));
+        _broad_share = 0;
+        _mech_share = 0;
+        
+        $('.broad_share_value').each(function(){
+            _broad_share += parseFloat($(this).data('share'));
         });
+        $('.mech_share_value').each(function(){
+            _mech_share += parseFloat($(this).data('share'));
+        });
+        $(".total_share").removeClass('hide');
+        $("#equal_total").html(_broad_share);
+        $("#blank_total").html(_mech_share);
+        _val = _broad_share + _mech_share;
+        
         var not_auto_submit = _val != '200';
         $("#right_ajax_submit").attr("disabled", not_auto_submit);
         if(not_auto_submit == false){

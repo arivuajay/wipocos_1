@@ -83,6 +83,7 @@
                         array('label' => '<i class="fa fa-money"></i> <span>Producer</span>', 'url' => array('/site/produceraccount/index')),
                         array('label' => '<i class="fa fa-group"></i> <span>Producer Group</span>', 'url' => array('/site/publishergroup/index/role/producer')),
                         array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index')),
+                        array('label' => '<i class="fa fa-volume-up"></i> <span>Recordings</span>', 'url' => array('/site/recording/index')),
                     ),
                 ),
 //                array('label' => '<i class="fa fa-th"></i> <span>Number Assignment</span>', 'url' => array('/site/numberassignment/index')),
