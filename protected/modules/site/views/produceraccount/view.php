@@ -88,6 +88,77 @@ if ($export == false) {
             ),
         ));
         ?>
+
+        <h4>Address</h4>
+        <?php
+        if (!empty($address_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $address_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    'Pub_Home_Address_1',
+                    'Pub_Home_Address_2',
+                    'Pub_Home_Address_3',
+                    'Pub_Home_Fax',
+                    'Pub_Home_Telephone',
+                    'Pub_Home_Email',
+                    'Pub_Home_Website',
+                    'Pro_Mailing_Address_1',
+                    'Pro_Mailing_Address_2',
+                    'Pro_Mailing_Address_3',
+                    'Pro_Mailing_Telephone',
+                    'Pro_Mailing_Fax',
+                    'Pro_Mailing_Email',
+                    'Pro_Mailing_Website',
+                    array(
+                        'name' => 'Pro_Unknown_Address',
+                        'type' => 'raw',
+                        'value' => $address_model->Pro_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+//        array(
+//                'name' => 'Active',
+//                'type' => 'raw',
+//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//            ),
+                ),
+            ));
+        } else {
+            echo 'Address Not Created';
+        }
+        ?>
+        <h4>Assigned Recordings</h4>
+        <?php
+        $recordings = RecordingRightholder::model()->findAll('Rcd_Member_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
+        if (!empty($recordings)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Recording Name</th>
+                            <th>Internal Code</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php foreach ($recordings as $key => $recording) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $recording->rcd->Rcd_Title ?></td>
+                                <td><?php echo $recording->rcd->Rcd_Internal_Code ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/recording/view', 'id' => $recording->Rcd_Id)); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No recordings assigned';
+        }
+        ?>
+
     </div>
 
     <div class="user-view col-lg-6">
@@ -153,53 +224,6 @@ if ($export == false) {
         }
         ?>
 
-
-    </div>
-
-
-</div>
-
-<div class="row">
-    <div class="user-view col-lg-6">
-        <h4>Address</h4>
-        <?php
-        if (!empty($address_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $address_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-                    'Pub_Home_Address_1',
-                    'Pub_Home_Address_2',
-                    'Pub_Home_Address_3',
-                    'Pub_Home_Fax',
-                    'Pub_Home_Telephone',
-                    'Pub_Home_Email',
-                    'Pub_Home_Website',
-                    'Pro_Mailing_Address_1',
-                    'Pro_Mailing_Address_2',
-                    'Pro_Mailing_Address_3',
-                    'Pro_Mailing_Telephone',
-                    'Pro_Mailing_Fax',
-                    'Pro_Mailing_Email',
-                    'Pro_Mailing_Website',
-                    array(
-                        'name' => 'Pro_Unknown_Address',
-                        'type' => 'raw',
-                        'value' => $address_model->Pro_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-                    ),
-//        array(
-//                'name' => 'Active',
-//                'type' => 'raw',
-//                'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
-//            ),
-                ),
-            ));
-        } else {
-            echo 'Address Not Created';
-        }
-        ?>
-    </div>
-    <div class="user-view col-lg-6">
         <h4>Related Rights</h4>
         <?php
         if (!empty($related_model)) {
@@ -266,35 +290,32 @@ if ($export == false) {
             echo 'Biography Not Created';
         }
         ?>
-        <br />
+        <h4>Assigned Groups</h4>
         <?php
         $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
         if (!empty($members)) {
             ?>
-            <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Assigned Groups</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th>#</th>
-                                <th>Group Name</th>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                        </tr>
+                        <?php foreach ($members as $key => $member) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
                             </tr>
-                            <?php foreach ($members as $key => $member) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody></table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
             <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
-
     </div>
 </div>
+

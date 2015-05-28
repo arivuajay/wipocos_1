@@ -51,7 +51,7 @@
 $sub_titles = RecordingSubtitle::model()->findAll('Rcd_Id = :recording_id', array(':recording_id' => $recording_model->Rcd_Id));
 if (!empty($sub_titles)) {
     ?>
-    <div class="box">
+    <div class="box box-success">
         <div class="box-header">
             <h4 class="box-title">Sub Titles</h4>
         </div>

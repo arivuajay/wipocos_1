@@ -254,40 +254,36 @@ if ($export == false) {
             echo 'Biography Not Created';
         }
         ?>
-        <br />
+        <h4>Assigned Groups</h4>
         <?php
         $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Pub_Internal_Code));
         if (!empty($members)) {
             ?>
-            <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Assigned Groups</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th>#</th>
-                                <th>Group Name</th>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                        </tr>
+                        <?php foreach ($members as $key => $member) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
                             </tr>
-                            <?php foreach ($members as $key => $member) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody></table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
             <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
+        <h4>Assigned Works</h4>
         <?php
         $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Pub_Internal_Code));
         if (!empty($works)) {
             ?>
-            <h4 class="box-title">Assigned Works</h4>
             <div class="box-body no-padding">
                 <table class="table table-condensed">
                     <tbody><tr>

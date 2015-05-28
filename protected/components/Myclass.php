@@ -353,6 +353,13 @@ class Myclass extends CController {
         return $producers;
     }
     
+    public static function getPerformer($key = NULL) {
+        $producers = CHtml::listData(PerformerAccount::model()->findAll(array('order' => 'Perf_First_Name')), 'Perf_Acc_Id', 'Perf_First_Name');
+        if($key != NULL)
+            return $producers[$key];
+        return $producers;
+    }
+    
     public static function getMasterDocumentType($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $document_types = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(array('order' => 'Doc_Type_Name')), 'Master_Doc_Type_Id', 'Doc_Type_Name');

@@ -51,7 +51,7 @@
 $sub_titles = WorkSubtitle::model()->findAll('Work_Id = :work_id', array(':work_id' => $work_model->Work_Id));
 if (!empty($sub_titles)) {
     ?>
-    <div class="box">
+    <div class="box box-success">
         <div class="box-header">
             <h4 class="box-title">Sub Titles</h4>
         </div>

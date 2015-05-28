@@ -273,39 +273,37 @@ if ($export == false) {
             echo 'Biography Not Created';
         }
         ?>
+        <h4>Assigned Groups</h4>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
         if (!empty($members)) {
             ?>
-            <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Assigned Groups</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th>#</th>
-                                <th>Group Name</th>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                        </tr>
+                        <?php foreach ($members as $key => $member) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->group->Group_Name ?></td>
                             </tr>
-                            <?php foreach ($members as $key => $member) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $member->group->Group_Name ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody></table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
             <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
+        <h4 class="box-title">Assigned Works</h4>
         <?php
         $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
         if (!empty($works)) {
             ?>
-            <h4 class="box-title">Assigned Works</h4>
             <div class="box-body no-padding">
                 <table class="table table-condensed">
                     <tbody><tr>
@@ -321,14 +319,14 @@ if ($export == false) {
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $work->work->Work_Org_Title ?></td>
                                 <td><?php echo $work->work->Work_Internal_Code ?></td>
-                                <?php if ($export) { ?>
+                                <?php if ($export == false) { ?>
                                     <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
                                 <?php } ?>
                             </tr>
                         <?php } ?>
                     </tbody></table>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No works assigned';
         }
@@ -339,48 +337,47 @@ if ($export == false) {
 
 <div class="row">
     <div class="user-view col-lg-12">
+        <h4 class="box-title">Uploaded Documents</h4>
         <?php
         $uploaded_files = AuthorUpload::model()->findAll('Auth_Acc_Id = :acc_id', array(':acc_id' => $model->Auth_Acc_Id));
         if (!empty($uploaded_files)) {
             ?>
-            <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Uploaded Documents</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th style="width: 10px">#</th>
-                                <th>Document Name</th>
-                                <?php if ($export) { ?>
-                                    <th>Action</th>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>Document Name</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
                             <?php } ?>
-                            </tr>
-    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
-                                        <?php if ($export) { ?>
-                                        <td>
-                                            <?php
-                                            $file_path = $uploaded_file->getFilePath();
-                                            echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
-                                            echo "&nbsp;&nbsp;";
-                                            echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
-                                            echo "&nbsp;&nbsp;";
-                                            echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
-                                            echo "&nbsp;&nbsp;";
-                                            echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                            ?>
-                                        </td>
+                        </tr>
+                        <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td>
+                                        <?php
+                                        $file_path = $uploaded_file->getFilePath();
+                                        echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Edit'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/filedelete/id/' . $uploaded_file->Auth_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                        ?>
+                                    </td>
                                 <?php } ?>
-                                </tr>
-    <?php } ?>
-                        </tbody></table>
-                </div>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
             </div>
-<?php }
-?>
+
+        <?php }else{
+            echo 'No Uplodads Found';
+        }
+        ?>
 
     </div>
 </div>

@@ -123,10 +123,11 @@ if ($export == false) {
         } else {
             echo 'No Subtitle Assigned';
         }
-
+        ?>
+        <h4>Assigned Right Holders</h4>
+        <?php
         if (!empty($members)) {
             ?>
-            <h4 class="box-title">Assigned Right Holders</h4>
             <div class="box-body no-padding">
                 <table class="table table-condensed">
                     <tbody><tr>

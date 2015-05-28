@@ -66,7 +66,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
                     $stylesheet = $this->pdfStyles();
                     $mPDF1->WriteHTML($stylesheet, 1);
                     $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
-                    $mPDF1->Output("<?php echo $this->modelClass; ?>_view.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+                    $mPDF1->Output("<?php echo $this->modelClass; ?>_view_{$id}.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
                 } else {
                     $this->render('view', $compact);
                 }

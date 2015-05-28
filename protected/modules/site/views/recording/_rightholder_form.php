@@ -184,11 +184,11 @@
                                         if ($member->recordingPerformer) {
                                             $name = $member->recordingPerformer->Perf_First_Name;
                                             $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
-                                            $role = 'AU';
+                                            $role = 'PE';
                                         } elseif ($member->recordingProducer) {
                                             $name = $member->recordingProducer->Pro_Corporate_Name;
                                             $url = array('/site/produceraccount/view', 'id' => $member->recordingProducer->Pro_Acc_Id);
-                                            $role = 'PU';
+                                            $role = 'PR';
                                         }
                                         ?>
                                         <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Rcd_Member_Internal_Code ?>" data-name="<?php echo $name ?>">

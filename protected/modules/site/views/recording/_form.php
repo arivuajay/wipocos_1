@@ -35,6 +35,7 @@ $labels = $model->getLabel();
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Artists - Producers</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -199,6 +200,13 @@ $labels = $model->getLabel();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'recording_model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_5">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_link_form', array('model' => $link_model, 'recording_model' => $model));
                     }
                     ?>
                 </div>

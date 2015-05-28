@@ -29,7 +29,7 @@ class RecordingController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'subtitledelete', 'searchright',
-                    'insertright'),
+                    'insertright', 'linkdelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -48,15 +48,19 @@ class RecordingController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
+        $sub_title_model = RecordingSubtitle::model()->findAllByAttributes(array('Rcd_Id' => $id));
+        $publication_model = RecordingPublication::model()->findByAttributes(array('Rcd_Id' => $id));
+        $members = RecordingRightholder::model()->findAllByAttributes(array('Rcd_Id' => $id));
+        $links = RecordingLink::model()->findAllByAttributes(array('Rcd_Id' => $id));
 
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export');
+        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'members', 'links');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();
             $mPDF1->WriteHTML($stylesheet, 1);
             $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
-            $mPDF1->Output("Recording_view.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+            $mPDF1->Output("Recording_view_{$id}.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
         } else {
             $this->render('view', $compact);
         }
@@ -77,7 +81,7 @@ class RecordingController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Recording successfully.", "volume-up");
                 Yii::app()->user->setFlash('success', 'Recording Created Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '1'));
             }
         }
 
@@ -91,25 +95,27 @@ class RecordingController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1, $edit = NULL) {
+    public function actionUpdate($id, $tab = 1, $edit = NULL, $edit_link = NULL) {
         $model = $this->loadModel($id);
         $sub_title_model = $edit == NULL ? new RecordingSubtitle : RecordingSubtitle::model()->findByAttributes(array('Rcd_Subtitle_Id' => $edit));
 
         $publication_exists = RecordingPublication::model()->findByAttributes(array('Rcd_Id' => $id));
         $publication_model = empty($publication_exists) ? new RecordingPublication : $publication_exists;
-        
+
         $right_holder_exists = RecordingRightholder::model()->findByAttributes(array('Rcd_Id' => $id));
         $right_holder_model = new RecordingRightholder;
-        
+
+        $link_model = $edit_link == NULL ? new RecordingLink : RecordingLink::model()->findByAttributes(array('Rcd_Link_Id' => $edit_link));
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model, $link_model));
 
         if (isset($_POST['Recording'])) {
             $model->attributes = $_POST['Recording'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Recording successfully.", "volume-up");
                 Yii::app()->user->setFlash('success', 'Recording Updated Successfully!!!');
-                $this->redirect(array('index'));
+                $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '1'));
             }
         } elseif (isset($_POST['RecordingSubtitle'])) {
             $sub_title_model->attributes = $_POST['RecordingSubtitle'];
@@ -125,9 +131,16 @@ class RecordingController extends Controller {
                 Yii::app()->user->setFlash('success', 'Recording Publication Saved Successfully!!!');
                 $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '3'));
             }
+        } elseif (isset($_POST['RecordingLink'])) {
+            $link_model->attributes = $_POST['RecordingLink'];
+            if ($link_model->save()) {
+                Myclass::addAuditTrail("Saved Recording Artist - Producer successfully.", "volume-up");
+                Yii::app()->user->setFlash('success', 'Recording Artist - Producer Saved Successfully!!!');
+                $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '5'));
+            }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 'link_model'));
     }
 
     /**
@@ -208,10 +221,7 @@ class RecordingController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'recording-form'
-                || $_POST['ajax'] === 'recording-subtitle-form'
-                || $_POST['ajax'] === 'recording-publication-form'
-                || $_POST['ajax'] === 'recording-rightholder-form'
+                $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'recording-subtitle-form' || $_POST['ajax'] === 'recording-publication-form' || $_POST['ajax'] === 'recording-rightholder-form' || $_POST['ajax'] === 'recording-link-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -237,22 +247,42 @@ class RecordingController extends Controller {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/recording/update', 'id' => $model->rcd->Rcd_Id, 'tab' => 2));
         }
     }
-    
+
+    public function actionLinkdelete($id) {
+        try {
+            $model = RecordingLink::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Recording Artist - Producer {$model->Rcd_Link_Title} successfully.", "volume-up");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Recording Artist - Producer {$model->Rcd_Link_Title} successfully");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/recording/update', 'id' => $model->rcd->Rcd_Id, 'tab' => 5));
+        }
+    }
+
     public function actionSearchright() {
         $criteria = new CDbCriteria();
         $procriteria = new CDbCriteria();
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
-            $criteria->compare('Perf_Sur_Name',$search_txt,true,'OR');
-            $criteria->compare('Perf_First_Name',$search_txt,true,'OR');
-            $criteria->compare('Perf_Internal_Code',$search_txt,true,'OR');
-            $criteria->compare('Perf_Ipi',$search_txt,true,'OR');
-            $criteria->compare('Perf_Ipi_Base_Number',$search_txt,true,'OR');
-            
-            $procriteria->compare('Pro_Corporate_Name',$search_txt,true,'OR');
-            $procriteria->compare('Pro_Internal_Code',$search_txt,true,'OR');
-            $procriteria->compare('Pro_Ipi',$search_txt,true,'OR');
-            $procriteria->compare('Pro_Ipi_Base_Number',$search_txt,true,'OR');
+            $criteria->compare('Perf_Sur_Name', $search_txt, true, 'OR');
+            $criteria->compare('Perf_First_Name', $search_txt, true, 'OR');
+            $criteria->compare('Perf_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Perf_Ipi', $search_txt, true, 'OR');
+            $criteria->compare('Perf_Ipi_Base_Number', $search_txt, true, 'OR');
+
+            $procriteria->compare('Pro_Corporate_Name', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Internal_Code', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi_Base_Number', $search_txt, true, 'OR');
         }
 
         if ($_REQUEST['is_perf'] == '1') {
@@ -263,7 +293,7 @@ class RecordingController extends Controller {
         }
         $this->renderPartial('_search_right', compact('perfusers', 'produsers'));
     }
-    
+
     public function actionInsertright() {
         if (isset($_POST['RecordingRightholder']) && !empty($_POST['RecordingRightholder'])) {
             $end = end($_POST['RecordingRightholder']);
@@ -282,4 +312,5 @@ class RecordingController extends Controller {
             $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => 4));
         }
     }
+
 }

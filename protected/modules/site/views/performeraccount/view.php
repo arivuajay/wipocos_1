@@ -7,33 +7,50 @@ $this->breadcrumbs = array(
     'Performers' => array('index'),
     'View ' . 'PerformerAccount',
 );
-?>
-<div class="user-view col-lg-12">
-    <p>
-        <?php
-        $this->widget(
-                'booster.widgets.TbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Perf_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+if ($export == false) {
+    ?>
+    <div class="user-view col-lg-12">
+        <p>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Update',
+                'url' => array('update', 'id' => $model->Perf_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'primary',
 //                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        echo "&nbsp;&nbsp;";
-        $this->widget(
-                'application.components.MyTbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Perf_Acc_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
-                )
-        );
-        ?>
-    </p>
-</div>
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Delete',
+                'url' => array('delete', 'id' => $model->Perf_Acc_Id),
+                'buttonType' => 'link',
+                'context' => 'danger',
+                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'Download',
+                'url' => array('view', 'id' => $model->Perf_Acc_Id, 'export' => 'PDF'),
+                'buttonType' => 'link',
+                'context' => 'warning',
+//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    )
+            );
+            ?>
+        </p>
+    </div>
+<?php } ?>
+
+<?php if ($export) { ?>
+    <h3 class="text-center">Performer <?php echo $this->title ?></h3>
+<?php } ?>
+
 <div class="row">
     <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
@@ -84,78 +101,7 @@ $this->breadcrumbs = array(
             ),
         ));
         ?>
-    </div>
 
-    <div class="user-view col-lg-6">
-        <h4>Payment</h4>
-        <?php
-        if (!empty($payment_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $payment_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Pay_Method_id',
-                    'Perf_Bank_Account_1',
-                    'Perf_Bank_Account_2',
-                    'Perf_Bank_Account_3',
-                ),
-            ));
-        } else {
-            echo 'Payment Not Created';
-        }
-        ?>
-        <h4>Pseudonyms</h4>
-        <?php
-        if (!empty($psedonym_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $psedonym_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Pseudo_Type_Id',
-                    array(
-                        'name' => 'Perf_Pseudo_Type_Id',
-                        'value' => isset($psedonym_model->perfPseudoType->Pseudo_Code) ? $psedonym_model->perfPseudoType->Pseudo_Code : 'Not Set'
-                    ),
-                    'Perf_Pseudo_Name',
-                ),
-            ));
-        } else {
-            echo 'Pseudonyms Not Created';
-        }
-        ?>
-
-
-        <h4>Death Inheritance</h4>
-        <?php
-        if (!empty($death_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $death_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Death_Inhrt_Id',
-                    'Perf_Death_Inhrt_Firstname',
-                    'Perf_Death_Inhrt_Surname',
-                    'Perf_Death_Inhrt_Email',
-                    'Perf_Death_Inhrt_Phone',
-                    'Perf_Death_Inhrt_Address_1',
-                    'Perf_Death_Inhrt_Address_2',
-                    'Perf_Death_Inhrt_Address_3',
-                    'Perf_Death_Inhrt_Addtion_Annotation',
-                ),
-            ));
-        } else {
-            echo 'Death Inheritance Not Created';
-        }
-        ?>
-
-
-    </div>
-
-
-</div>
-
-<div class="row">
-    <div class="user-view col-lg-6">
         <h4>Address</h4>
         <?php
         if (!empty($address_model)) {
@@ -200,7 +146,69 @@ $this->breadcrumbs = array(
         }
         ?>
     </div>
+
     <div class="user-view col-lg-6">
+        <h4>Payment</h4>
+        <?php
+        if (!empty($payment_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $payment_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Pay_Method_id',
+                    'Perf_Bank_Account_1',
+                    'Perf_Bank_Account_2',
+                    'Perf_Bank_Account_3',
+                ),
+            ));
+        } else {
+            echo 'Payment Not Created';
+        }
+        ?>
+
+        <h4>Pseudonyms</h4>
+        <?php
+        if (!empty($psedonym_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $psedonym_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Pseudo_Type_Id',
+                    array(
+                        'name' => 'Perf_Pseudo_Type_Id',
+                        'value' => isset($psedonym_model->perfPseudoType->Pseudo_Code) ? $psedonym_model->perfPseudoType->Pseudo_Code : 'Not Set'
+                    ),
+                    'Perf_Pseudo_Name',
+                ),
+            ));
+        } else {
+            echo 'Pseudonyms Not Created';
+        }
+        ?>
+
+        <h4>Death Inheritance</h4>
+        <?php
+        if (!empty($death_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $death_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Death_Inhrt_Id',
+                    'Perf_Death_Inhrt_Firstname',
+                    'Perf_Death_Inhrt_Surname',
+                    'Perf_Death_Inhrt_Email',
+                    'Perf_Death_Inhrt_Phone',
+                    'Perf_Death_Inhrt_Address_1',
+                    'Perf_Death_Inhrt_Address_2',
+                    'Perf_Death_Inhrt_Address_3',
+                    'Perf_Death_Inhrt_Addtion_Annotation',
+                ),
+            ));
+        } else {
+            echo 'Death Inheritance Not Created';
+        }
+        ?>
+
         <h4>Related Rights</h4>
         <?php
         if (!empty($related_model)) {
@@ -267,58 +275,89 @@ $this->breadcrumbs = array(
             echo 'Biography Not Created';
         }
         ?>
-        <br />
+        <h4>Assigned Groups</h4>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Perf_Internal_Code));
-        if (!empty($members)) {?>
-        <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Assigned Groups</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th>#</th>
-                                <th>Group Name</th>
+        if (!empty($members)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                        </tr>
+                        <?php foreach ($members as $key => $member) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->group->Group_Name ?></td>
                             </tr>
-                            <?php foreach ($members as $key => $member) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $member->group->Group_Name ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody></table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
-        <?php
+            <?php
         } else {
             echo 'No groups assigned';
         }
         ?>
-
+        <h4>Assigned Recordings</h4>
+        <?php
+        $recordings = RecordingRightholder::model()->findAll('Rcd_Member_Internal_Code = :int_code', array(':int_code' => $model->Perf_Internal_Code));
+        if (!empty($recordings)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Recording Name</th>
+                            <th>Internal Code</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php foreach ($recordings as $key => $recording) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $recording->rcd->Rcd_Title ?></td>
+                                <td><?php echo $recording->rcd->Rcd_Internal_Code ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/recording/view', 'id' => $recording->Rcd_Id)); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No recordings assigned';
+        }
+        ?>
     </div>
 </div>
+
 <div class="row">
     <div class="user-view col-lg-12">
+        <h4>Uploaded Documents</h4>
         <?php
         $uploaded_files = PerformerUpload::model()->findAll('Perf_Acc_Id = :acc_id', array(':acc_id' => $model->Perf_Acc_Id));
         if (!empty($uploaded_files)) {
             ?>
-            <div class="">
-                <div class="box-header">
-                    <h4 class="box-title">Uploaded Documents</h4>
-                </div>
-                <div class="box-body no-padding">
-                    <table class="table table-condensed">
-                        <tbody><tr>
-                                <th style="width: 10px">#</th>
-                                <th>Document Name</th>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Document Name</th>
+                            <?php if ($export == false) { ?>
                                 <th>Action</th>
-                            </tr>
-                            <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
-                                <tr>
-                                    <td><?php echo $key + 1 ?>.</td>
-                                    <td><?php echo $uploaded_file->Perf_Upl_Doc_Name ?></td>
+                            <?php } ?>
+                        </tr>
+                        <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $uploaded_file->Perf_Upl_Doc_Name ?></td>
+                                <?php if ($export == false) { ?>
                                     <td>
                                         <?php
                                         $file_path = $uploaded_file->getFilePath();
@@ -331,13 +370,14 @@ $this->breadcrumbs = array(
                                         echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/filedelete/id/' . $uploaded_file->Perf_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                         ?>
                                     </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody></table>
-                </div>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
-        <?php }
-        ?>
-
+        <?php }else{
+            echo 'No Uploads Found';
+        }?>
     </div>
 </div>
