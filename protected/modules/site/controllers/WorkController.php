@@ -89,8 +89,15 @@ class WorkController extends Controller {
             if ($model->save()) {
 //                $model->save(false);
                 Myclass::addAuditTrail("Created Work successfully.", "sliders");
-                Yii::app()->user->setFlash('success', 'Work Created Successfully. Please Fill Doucmentation!!!');
-                $this->redirect(array('/site/work/update/id/' . $model->Work_Id . '/tab/4'));
+                if($model->Work_Unknown == 'N'){
+                    $message =  'Work Created Successfully. Please Fill Doucmentation!!!';
+                    $tab = 4;
+                }else{
+                    $message =  'Work Created Successfully.';
+                    $tab = 1;
+                }
+                Yii::app()->user->setFlash('success', $message);
+                $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => $tab));
             }
         }
 
@@ -153,8 +160,15 @@ class WorkController extends Controller {
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Saved Work Documentation successfully.", "sliders");
                 if (empty($document_exists)) {
-                    Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully. Please Fill Right Holders!!!');
-                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
+                    if($model->Work_Unknown == 'N'){
+                        $message =  'Work Documentation Saved Successfully. Please Fill Right Holders!!!';
+                        $tab = 7;
+                    }else{
+                        $message =  'Work Documentation Saved Successfully.';
+                        $tab = 4;
+                    }
+                    Yii::app()->user->setFlash('success', $message);
+                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => $tab));
                 } else {
                     Yii::app()->user->setFlash('success', 'Work Documentation Saved Successfully.');
                     $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '4'));

@@ -111,6 +111,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Work_Opus_Number'); ?>
                         </div>
                     </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Work_Unknown', array('class' => ' control-label')); ?><br />
+                            <?php // echo $form->checkBox($searchModel, 'Work_Unknown', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Work_Unknown', array('Y' => 'Yes', 'N' => 'No'), array('class' => 'form-control', 'prompt'=>'')); ?>
+                            <?php echo $form->error($searchModel, 'Work_Unknown'); ?>
+                        </div>
+                    </div>
 <!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>

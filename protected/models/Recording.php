@@ -68,6 +68,7 @@ class Recording extends CActiveRecord {
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
             array('Rcd_Internal_Code', 'unique'),
+            array('duration_hours', 'durationValidate'),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -75,6 +76,13 @@ class Recording extends CActiveRecord {
         );
     }
 
+    public function durationValidate($attribute,$params) {
+        if($this->duration_hours == '0'){
+            if($this->duration_minutes == '0' && $this->duration_seconds == '0')
+                $this->addError($attribute, 'Duration should not be Zero');
+        }
+    }
+    
     /**
      * @return array relational rules.
      */

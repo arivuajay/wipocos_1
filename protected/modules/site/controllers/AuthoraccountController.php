@@ -107,8 +107,15 @@ class AuthoraccountController extends Controller {
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
             if ($model->save()) {
                 Myclass::addAuditTrail("Created a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
-                Yii::app()->user->setFlash('success', 'AuthorAccount Created Successfully, Please Fill Managed Rights!!!');
-                $this->redirect('update/id/' . $model->Auth_Acc_Id . '/tab/6');
+                if($model->Auth_Non_Member == 'N'){
+                    $message =  'AuthorAccount Created Successfully. Please Fill Managed Rights!!!';
+                    $tab = 6;
+                }else{
+                    $message =  'AuthorAccount Created Successfully';
+                    $tab = 1;
+                }
+                Yii::app()->user->setFlash('success', $message);
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => $tab));
             }
         }
 
@@ -160,7 +167,7 @@ class AuthoraccountController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} AuthorAccount successfully.", "user");
                 Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $model->Auth_Acc_Id . '/tab/1'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '1'));
             }
         } elseif (isset($_POST['AuthorAccountAddress'])) {
             $address_model->attributes = $_POST['AuthorAccountAddress'];
@@ -168,7 +175,7 @@ class AuthoraccountController extends Controller {
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Address successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $address_model->Auth_Acc_Id . '/tab/2'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '2'));
             }
         } elseif (isset($_POST['AuthorPaymentMethod'])) {
             $payment_model->attributes = $_POST['AuthorPaymentMethod'];
@@ -176,7 +183,7 @@ class AuthoraccountController extends Controller {
             if ($payment_model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Payment successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $payment_model->Auth_Acc_Id . '/tab/3'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '3'));
             }
         } elseif (isset($_POST['AuthorBiography'])) {
             $biograph_model->attributes = $_POST['AuthorBiography'];
@@ -193,7 +200,7 @@ class AuthoraccountController extends Controller {
                 }
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Biography successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $biograph_model->Auth_Acc_Id . '/tab/4'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '4'));
             }
         } elseif (isset($_POST['AuthorPseudonym'])) {
             $psedonym_model->attributes = $_POST['AuthorPseudonym'];
@@ -201,7 +208,7 @@ class AuthoraccountController extends Controller {
             if ($psedonym_model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Pseudonym successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $psedonym_model->Auth_Acc_Id . '/tab/5'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '5'));
             }
         } elseif (isset($_POST['AuthorManageRights'])) {
             $managed_model->attributes = $_POST['AuthorManageRights'];
@@ -210,7 +217,7 @@ class AuthoraccountController extends Controller {
                 if ($managed_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Managed Rights successfully.", "user");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
-                    $this->redirect(array('authoraccount/update/id/' . $managed_model->Auth_Acc_Id . '/tab/6'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
                 }
             }
         } elseif (isset($_POST['AuthorDeathInheritance'])) {
@@ -219,7 +226,7 @@ class AuthoraccountController extends Controller {
             if ($death_model->save()) {
                 Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Death Inheritance successfully.", "user");
                 Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
-                $this->redirect(array('authoraccount/update/id/' . $death_model->Auth_Acc_Id . '/tab/7'));
+                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '7'));
             }
         } elseif (isset($_POST['AuthorUpload'])) {
             $upload_model->attributes = $_POST['AuthorUpload'];
@@ -233,12 +240,12 @@ class AuthoraccountController extends Controller {
                 if ($upload_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Document saved successfully.", "user");
                     Yii::app()->user->setFlash('success', 'Document saved Successfully!!!');
-                    $this->redirect(array('authoraccount/update/id/' . $death_model->Auth_Acc_Id . '/tab/8'));
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '8'));
                 }
             } else {
                 Yii::app()->user->setFlash('danger', 'Failed to upload document.!!!');
                 if ($tab != '8')
-                    $this->redirect(array('authoraccount/update/id/' . $id . '/tab/8'));
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '8'));
             }
         }
 

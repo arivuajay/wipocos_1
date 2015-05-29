@@ -109,8 +109,15 @@ class PerformeraccountController extends Controller {
             $model->setAttribute('Perf_DOB', $_POST['PerformerAccount']['Perf_DOB']);
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Performer {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
-                Yii::app()->user->setFlash('success', 'PerformerAccount Created Successfully. Please fill related rights!!!');
-                $this->redirect('update/id/' . $model->Perf_Acc_Id . '/tab/6');
+                if($model->Perf_Non_Member == 'N'){
+                    $message =  'PerformerAccount Created Successfully. Please fill related rights!!!';
+                    $tab = 6;
+                }else{
+                    $message =  'PerformerAccount Created Successfully';
+                    $tab = 1;
+                }
+                Yii::app()->user->setFlash('success', $message);
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => $tab));
             }
         } else {
             $model->Perf_Birth_Country_Id = 2;
@@ -166,7 +173,7 @@ class PerformeraccountController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Performer {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'PerformerAccount Updated Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $model->Perf_Acc_Id . '/tab/1'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '1'));
             }
         } elseif (isset($_POST['PerformerAccountAddress'])) {
             $address_model->attributes = $_POST['PerformerAccountAddress'];
@@ -174,7 +181,7 @@ class PerformeraccountController extends Controller {
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Address {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $address_model->Perf_Acc_Id . '/tab/2'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '2'));
             }
         } elseif (isset($_POST['PerformerPaymentMethod'])) {
             $payment_model->attributes = $_POST['PerformerPaymentMethod'];
@@ -182,7 +189,7 @@ class PerformeraccountController extends Controller {
             if ($payment_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Payment Method {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $payment_model->Perf_Acc_Id . '/tab/3'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '3'));
             }
         } elseif (isset($_POST['PerformerBiography'])) {
             $biograph_model->attributes = $_POST['PerformerBiography'];
@@ -199,7 +206,7 @@ class PerformeraccountController extends Controller {
                     endforeach;
                 }
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $biograph_model->Perf_Acc_Id . '/tab/4'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '4'));
             }
         } elseif (isset($_POST['PerformerPseudonym'])) {
             $psedonym_model->attributes = $_POST['PerformerPseudonym'];
@@ -207,7 +214,7 @@ class PerformeraccountController extends Controller {
             if ($psedonym_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Pseudonym {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $psedonym_model->Perf_Acc_Id . '/tab/5'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '5'));
             }
         } elseif (isset($_POST['PerformerRelatedRights'])) {
             $related_model->attributes = $_POST['PerformerRelatedRights'];
@@ -216,7 +223,7 @@ class PerformeraccountController extends Controller {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Performer Related Rights {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                     Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
-                    $this->redirect(array('performeraccount/update/id/' . $related_model->Perf_Acc_Id . '/tab/6'));
+                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '6'));
                 }
             }
         } elseif (isset($_POST['PerformerDeathInheritance'])) {
@@ -225,7 +232,7 @@ class PerformeraccountController extends Controller {
             if ($death_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Death Inheritance {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                 Yii::app()->user->setFlash('success', 'Death Inheritance Saved Successfully!!!');
-                $this->redirect(array('performeraccount/update/id/' . $death_model->Perf_Acc_Id . '/tab/7'));
+                $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '7'));
             }
         } elseif (isset($_POST['PerformerUpload'])) {
             $upload_model->attributes = $_POST['PerformerUpload'];
@@ -239,12 +246,12 @@ class PerformeraccountController extends Controller {
                 if ($upload_model->save()) {
                     Myclass::addAuditTrail("Updated Performer Document {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
                     Yii::app()->user->setFlash('success', 'Document saved Successfully!!!');
-                    $this->redirect(array('performeraccount/update/id/' . $death_model->Perf_Acc_Id . '/tab/8'));
+                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '8'));
                 }
             } else {
                 Yii::app()->user->setFlash('danger', 'Failed to upload document.!!!');
                 if ($tab != '8')
-                    $this->redirect(array('performeraccount/update/id/' . $id . '/tab/8'));
+                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '8'));
             }
         }
 

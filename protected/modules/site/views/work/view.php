@@ -82,6 +82,11 @@ if ($export == false) {
                 'Work_Duration',
                 'Work_Creation',
                 'Work_Opus_Number',
+                array(
+                    'name' => 'Work_Unknown',
+                    'type' => 'raw',
+                    'value' => $model->Work_Unknown == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                ),
             ),
         ));
         ?>

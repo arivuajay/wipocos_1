@@ -19,6 +19,13 @@
  */
 class RecordingSubtitle extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Rcd_Subtitle_Type_Id = DEFAULT_TYPE_ID;
+            $this->Rcd_Subtitle_Language_Id = DEFAULT_LANGUAGE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

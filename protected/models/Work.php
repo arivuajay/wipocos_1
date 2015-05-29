@@ -74,11 +74,19 @@ class Work extends CActiveRecord {
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code, Work_Org_Title', 'unique'),
             array('Work_Unknown, Active', 'length', 'max' => 1),
+            array('duration_hours', 'durationValidate'),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
+    }
+    
+    public function durationValidate($attribute,$params) {
+        if($this->duration_hours == '0'){
+            if($this->duration_minutes == '0' && $this->duration_seconds == '0')
+                $this->addError($attribute, 'Duration should not be Zero');
+        }
     }
 
     /**
@@ -161,6 +169,8 @@ class Work extends CActiveRecord {
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
+        $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -254,7 +264,8 @@ class Work extends CActiveRecord {
         }
         $column .= "<br />";
         foreach ($work->workSubtitles as $key => $subtitle) {
-            $name = $subtitle->workSubtitleLanguage->Lang_Name;
+            $name = $subtitle->Work_Subtitle_Name;
+//            $name = $subtitle->workSubtitleLanguage->Lang_Name;
             $column .= $key == 0 ? "$name" : " , {$name}";
         }
         return $column;

@@ -9,6 +9,9 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
+$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
+
 $marital_status = Myclass::getMasterMaritalStatus();
 $countries = Myclass::getMasterCountry();
 $languages = Myclass::getMasterLanguage();
