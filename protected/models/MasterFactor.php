@@ -6,18 +6,12 @@
  * The followings are the available columns in table '{{master_factor}}':
  * @property integer $Master_Factor_Id
  * @property string $Factor
+ * @property string $Factor_Name
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  */
 class MasterFactor extends CActiveRecord {
-
-    /**
-     * @return string the associated database table name
-     */
-    public function tableName() {
-        return '{{master_factor}}';
-    }
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
@@ -25,6 +19,13 @@ class MasterFactor extends CActiveRecord {
             'isActive' => array('condition' => "$alias.Active = '1'"),
         );
     }
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{master_factor}}';
+    }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -34,11 +35,12 @@ class MasterFactor extends CActiveRecord {
         return array(
             array('Factor', 'required'),
             array('Factor', 'length', 'max' => 10),
+            array('Factor_Name', 'length', 'max' => 100),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Factor_Id, Factor, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Factor_Id, Factor, Factor_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,6 +61,7 @@ class MasterFactor extends CActiveRecord {
         return array(
             'Master_Factor_Id' => 'Master Factor',
             'Factor' => 'Factor',
+            'Factor_Name' => 'Factor Name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -84,6 +87,7 @@ class MasterFactor extends CActiveRecord {
 
         $criteria->compare('Master_Factor_Id', $this->Master_Factor_Id);
         $criteria->compare('Factor', $this->Factor, true);
+        $criteria->compare('Factor_Name', $this->Factor_Name, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);

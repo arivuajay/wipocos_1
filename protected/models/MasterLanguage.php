@@ -5,10 +5,24 @@
  *
  * The followings are the available columns in table '{{master_language}}':
  * @property integer $Master_Lang_Id
+ * @property string $Lang_Code
  * @property string $Lang_Name
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ *
+ * The followings are the available model relations:
+ * @property AuthorAccount[] $authorAccounts
+ * @property Group[] $groups
+ * @property PerformerAccount[] $performerAccounts
+ * @property ProducerAccount[] $producerAccounts
+ * @property PublisherAccount[] $publisherAccounts
+ * @property PublisherGroup[] $publisherGroups
+ * @property Recording[] $recordings
+ * @property RecordingSubtitle[] $recordingSubtitles
+ * @property Society[] $societies
+ * @property Work[] $works
+ * @property WorkSubtitle[] $workSubtitles
  */
 class MasterLanguage extends CActiveRecord {
 
@@ -34,12 +48,13 @@ class MasterLanguage extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Lang_Name', 'required'),
+            array('Lang_Code', 'length', 'max' => 10),
             array('Lang_Name', 'length', 'max' => 45),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Lang_Id, Lang_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Lang_Id, Lang_Code, Lang_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,6 +65,17 @@ class MasterLanguage extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorAccounts' => array(self::HAS_MANY, 'AuthorAccount', 'Auth_Language_Id'),
+            'groups' => array(self::HAS_MANY, 'Group', 'Group_Language_Id'),
+            'performerAccounts' => array(self::HAS_MANY, 'PerformerAccount', 'Perf_Language_Id'),
+            'producerAccounts' => array(self::HAS_MANY, 'ProducerAccount', 'Pro_Language_Id'),
+            'publisherAccounts' => array(self::HAS_MANY, 'PublisherAccount', 'Pub_Language_Id'),
+            'publisherGroups' => array(self::HAS_MANY, 'PublisherGroup', 'Pub_Group_Language_Id'),
+            'recordings' => array(self::HAS_MANY, 'Recording', 'Rcd_Language_Id'),
+            'recordingSubtitles' => array(self::HAS_MANY, 'RecordingSubtitle', 'Rcd_Subtitle_Language_Id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Language_Id'),
+            'works' => array(self::HAS_MANY, 'Work', 'Work_Language_Id'),
+            'workSubtitles' => array(self::HAS_MANY, 'WorkSubtitle', 'Work_Subtitle_Language_Id'),
         );
     }
 
@@ -59,6 +85,7 @@ class MasterLanguage extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_Lang_Id' => 'Master Lang',
+            'Lang_Code' => 'Lang Code',
             'Lang_Name' => 'Language Name',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
@@ -84,6 +111,7 @@ class MasterLanguage extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('Master_Lang_Id', $this->Master_Lang_Id);
+        $criteria->compare('Lang_Code', $this->Lang_Code, true);
         $criteria->compare('Lang_Name', $this->Lang_Name, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
