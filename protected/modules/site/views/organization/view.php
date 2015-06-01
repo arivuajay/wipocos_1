@@ -55,7 +55,7 @@ $this->breadcrumbs = array(
             ),
             array(
                 'name' => 'Org_Society_Type_Id',
-                'value' => isset($model->Org_Society_Type_Id) ? Myclass::getSocialType($model->Org_Society_Type_Id) : ''
+                'value' => isset($model->Org_Society_Type_Id) ? $model->getSocialType($model->Org_Society_Type_Id) : ''
             ),
             'Org_Address',
             'Org_Telephone',

@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Org_Society_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php $social_types = Myclass::getSocialType(); ?>
+                        <?php $social_types = $model->getSocialType(); ?>
                         <?php echo $form->dropDownList($model, 'Org_Society_Type_Id', $social_types, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Org_Society_Type_Id'); ?>
                     </div>

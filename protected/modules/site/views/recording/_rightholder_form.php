@@ -265,9 +265,9 @@ $js = <<< EOD
 
             $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_uid);
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
-            if(_urole == 'AU'){
+            if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
-            }else if(_urole == 'PU'){
+            }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
             }
         });
@@ -293,6 +293,7 @@ $js = <<< EOD
                 url: '$search_url',
                 data:data,
                 success:function(data){
+                    $('#RecordingRightholder_Rcd_Member_Internal_Code').val('');
                     $("#search_right_result").html(data);
                },
                 error: function(data) {

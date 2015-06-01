@@ -322,6 +322,7 @@ $js = <<< EOD
                 url: '$search_url',
                 data:data,
                 success:function(data){
+                    $('#WorkRightholder_Work_Member_Internal_Code').val('');
                     $("#search_right_result").html(data);
                },
                 error: function(data) {

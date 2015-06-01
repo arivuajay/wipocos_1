@@ -211,11 +211,11 @@ $this->breadcrumbs = array(
         }
         ?>
 
-        <h4 class="box-title">Artists - Producers</h4>
+        <!--<h4 class="box-title">Artists - Producers</h4>-->
         <?php
         if (!empty($links)) {
             ?>
-            <table class="table table-condensed">
+<!--            <table class="table table-condensed">
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Link_Title') ?></th>
@@ -242,10 +242,10 @@ $this->breadcrumbs = array(
                             <?php } ?>
                         </tr>
                     <?php } ?>
-                </tbody></table>
+                </tbody></table>-->
             <?php
         } else {
-            echo 'No Artists - Producers Assigned';
+//            echo 'No Artists - Producers Assigned';
         }
         ?>
     </div>

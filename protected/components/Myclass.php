@@ -76,21 +76,6 @@ class Myclass extends CController {
         return $status;
     }
 
-    public static function getSocialType($key = NULL) {
-        $types = array(
-            'Author' => 'Author',
-            'Performer' => 'Performer',
-            'Producer' => 'Producer',
-            'Multiple' => 'Multiple',
-            'Copyright' => 'Copyright',
-        );
-
-        if($key != NULL)
-            return $types[$key];
-
-        return $types;
-    }
-
     public static function getGender($key = NULL){
         $gender = array(
             'M' => 'Male',

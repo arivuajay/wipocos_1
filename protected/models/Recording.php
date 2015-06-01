@@ -22,6 +22,7 @@
  * @property string $Rcd_Iswc_Number
  *
  * The followings are the available model relations:
+ * @property MasterRecordType $rcdRecordType
  * @property MasterDocumentStatus $rcdDocStatus
  * @property MasterLanguage $rcdLanguage
  * @property MasterCountry $rcdProductCountry
@@ -40,10 +41,14 @@ class Recording extends CActiveRecord {
     public function init() {
         parent::init();
         if($this->isNewRecord){
+            $this->duration_hours = 0;
+            $this->duration_minutes = 0;
+            $this->duration_seconds = 0;
             $this->Rcd_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Rcd_Type_Id = DEFAULT_TYPE_ID;
             $this->Rcd_Record_Country_id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Product_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Rcd_Date = date('Y-m-d');
         }
     }
     /**
@@ -90,6 +95,7 @@ class Recording extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'rcdRecordType' => array(self::BELONGS_TO, 'MasterRecordType', 'Rcd_Record_Type_Id'),
             'rcdDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Rcd_Doc_Status_Id'),
             'rcdLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Rcd_Language_Id'),
             'rcdProductCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Rcd_Product_Country_Id'),
@@ -213,10 +219,7 @@ class Recording extends CActiveRecord {
     }
     
     public function getRecordingtype($key = NULL) {
-        $recording = array(
-            '1' => 'Normal',
-        );
-
+        $recording = CHtml::listData(MasterRecordType::model()->isActive()->findAll(), 'Master_Rec_Type_Id', 'Rec_Type_Name');
         if ($key != NULL)
             return $recording[$key];
 
@@ -224,10 +227,7 @@ class Recording extends CActiveRecord {
     }
     
     public function getLabel($key = NULL) {
-        $label = array(
-            '1' => 'No Label'
-        );
-
+        $label = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
         if ($key != NULL)
             return $label[$key];
 

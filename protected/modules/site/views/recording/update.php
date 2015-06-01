@@ -11,5 +11,5 @@ $this->breadcrumbs=array(
 
 <div class="user-create">
     <?php $this->renderPartial('_form', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model',
-            'link_model')); ?>
+            'link_model', 'right_holder_exists')); ?>
 </div>

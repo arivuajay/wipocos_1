@@ -80,8 +80,8 @@ class RecordingController extends Controller {
             $model->attributes = $_POST['Recording'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Recording successfully.", "volume-up");
-                Yii::app()->user->setFlash('success', 'Recording Created Successfully!!!');
-                $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '1'));
+                Yii::app()->user->setFlash('success', 'Recording Created Successfully!!! Please Fill Rightholders');
+                $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => '4'));
             }
         }
 
@@ -102,7 +102,7 @@ class RecordingController extends Controller {
         $publication_exists = RecordingPublication::model()->findByAttributes(array('Rcd_Id' => $id));
         $publication_model = empty($publication_exists) ? new RecordingPublication : $publication_exists;
 
-        $right_holder_exists = RecordingRightholder::model()->findByAttributes(array('Rcd_Id' => $id));
+        $right_holder_exists = RecordingRightholder::model()->findAllByAttributes(array('Rcd_Id' => $id));
         $right_holder_model = new RecordingRightholder;
 
         $link_model = $edit_link == NULL ? new RecordingLink : RecordingLink::model()->findByAttributes(array('Rcd_Link_Id' => $edit_link));
@@ -140,7 +140,8 @@ class RecordingController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 'link_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 
+                'link_model','right_holder_exists'));
     }
 
     /**

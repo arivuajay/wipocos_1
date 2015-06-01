@@ -24,9 +24,11 @@ $labels = $model->getLabel();
     <div class="col-lg-12 col-xs-12">
 
         <?php
-        $other_tab_validation = true;
-        if ($model->isNewRecord) {
-            $other_tab_validation = false;
+        $other_tab_validation = $rgt_tab_validation = true;
+        if (!$model->isNewRecord) {
+            $other_tab_validation = !empty($right_holder_exists);
+        }else{
+            $other_tab_validation = $rgt_tab_validation = false;
         }
         ?>
         <div class="nav-tabs-custom">
@@ -34,8 +36,8 @@ $labels = $model->getLabel();
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Artists - Producers</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
+                <!--<li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Artists - Producers</a></li>-->
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -198,18 +200,18 @@ $labels = $model->getLabel();
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
-                    if ($other_tab_validation) {
+                    if ($rgt_tab_validation) {
                         $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'recording_model' => $model));
                     }
                     ?>
                 </div>
-                <div class="tab-pane" id="tab_5">
+<!--                <div class="tab-pane" id="tab_5">
                     <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_link_form', array('model' => $link_model, 'recording_model' => $model));
-                    }
+//                    if ($other_tab_validation) {
+//                        $this->renderPartial('_link_form', array('model' => $link_model, 'recording_model' => $model));
+//                    }
                     ?>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
