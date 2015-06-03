@@ -215,6 +215,7 @@ class Work extends CActiveRecord {
             $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
             $gen_inter_model->save(false);
         }
+        return parent::afterSave();
     }
 
     public function setDuration() {

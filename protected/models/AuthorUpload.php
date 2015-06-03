@@ -13,6 +13,10 @@
  * @property AuthorAccount $authAcc
  */
 class AuthorUpload extends CActiveRecord {
+
+    public $after_save_disable = true;
+    public $after_delete_disable = true;
+
     const FILE_SIZE = 10;
 
     /**
@@ -33,7 +37,7 @@ class AuthorUpload extends CActiveRecord {
             array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Upl_Doc_Name', 'length', 'max' => 255),
             array('Auth_Upl_File', 'length', 'max' => 1000),
-            array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
+            array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB'),
             array('Auth_Upl_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
             // The following rule is used by search().
@@ -112,7 +116,7 @@ class AuthorUpload extends CActiveRecord {
             )
         ));
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(
@@ -120,6 +124,41 @@ class AuthorUpload extends CActiveRecord {
                 'fileField' => 'Auth_Upl_File',
             )
         );
+    }
+
+    protected function afterSave() {
+        if ($this->after_save_disable) {
+            $performer_m = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
+            if (!empty($performer_m)) {
+                $performer_exists = PerformerUpload::model()->findByAttributes(array('Perf_Upl_File' => $this->Auth_Upl_File));
+                if(!empty($performer_exists)){
+                    $performer_upload_model = $performer_exists;
+                }else{
+                    $performer_upload_model = new PerformerUpload;
+                    $performer_upload_model->Perf_Acc_Id = $performer_m->Perf_Acc_Id;
+                }
+                $ignore_list = Myclass::getAuthorconvertIgnorelist();
+                foreach ($this->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $performer_upload_model->setAttribute($attr_name, $value) : '';
+                }
+                $performer_upload_model->save(false);
+            }
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterDelete() {
+        if($this->after_delete_disable){
+            $performer = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code);
+            if ($performer) {
+                $performer_upload_model = PerformerUpload::model()->findByAttributes(array('Perf_Upl_File' => $this->Auth_Upl_File));
+                if(!empty($performer_upload_model)){
+                    $performer_upload_model->delete(); 
+                }
+            }
+        }
+        return parent::afterDelete();
     }
 
 }

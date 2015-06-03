@@ -45,15 +45,18 @@ class AuthorAccount extends CActiveRecord {
     public $hierarchy_level;
     public $record_search;
     public $search_status;
+    public $after_save_disable = true;
+    public $after_delete_disable = true;
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Auth_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Auth_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Auth_Language_Id = DEFAULT_LANGUAGE_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -90,7 +93,7 @@ class AuthorAccount extends CActiveRecord {
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
                 'message' => 'Only Alphabets are allowed ',
             ),
-            array('Auth_First_Name', 'UniqueAttributesValidator', 'with'=>'Auth_Sur_Name' , "message" => "This User Name already Exists"),
+            array('Auth_First_Name', 'UniqueAttributesValidator', 'with' => 'Auth_Sur_Name', "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member', 'safe', 'on' => 'search'),
@@ -198,15 +201,15 @@ class AuthorAccount extends CActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('authorManageRights.Auth_Mnge_Exit_Date', $this->expiry_date, true);
         $criteria->compare('authorManageRights.Auth_Mnge_Internal_Position_Id', $this->hierarchy_level, true);
-        
+
         $now = new CDbExpression("DATE(NOW())");
-        if($this->search_status == 'A'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= '.$now.' OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
+        if ($this->search_status == 'A') {
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date >= ' . $now . ' OR authorManageRights.Auth_Mnge_Exit_Date = "0000-00-00" OR authorManageRights.Auth_Mnge_Exit_Date is null');
             $criteria->compare('Auth_Non_Member', 'N', true);
-        }elseif($this->search_status == 'I'){
+        } elseif ($this->search_status == 'I') {
             $criteria->compare('Auth_Non_Member', 'Y', true);
-        }elseif($this->search_status == 'E'){
-            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date < '.$now.' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
+        } elseif ($this->search_status == 'E') {
+            $criteria->addCondition('authorManageRights.Auth_Mnge_Exit_Date < ' . $now . ' And authorManageRights.Auth_Mnge_Exit_Date != "0000-00-00"');
             $criteria->compare('Auth_Non_Member', 'N', true);
         }
 
@@ -268,7 +271,18 @@ class AuthorAccount extends CActiveRecord {
             $len = strlen($gen_inter_model->Gen_Inter_Code);
             $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
             $gen_inter_model->save(false);
+        } elseif ($this->after_save_disable && !$this->isNewRecord) {
+            $performer_model = $this->checkPerformer($this->Auth_Internal_Code, false);
+            if (!empty($performer_model)) {
+                $ignore_list = Myclass::getAuthorconvertIgnorelist();
+                foreach ($this->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
+                }
+                $performer_model->save(false);
+            }
         }
+        return parent::afterSave();
     }
 
     public function getAuthorsPseudoNames() {
@@ -289,18 +303,36 @@ class AuthorAccount extends CActiveRecord {
         }
         return $text;
     }
-    
+
     public function getStatus() {
-        if($this->Auth_Non_Member == 'Y'){
+        if ($this->Auth_Non_Member == 'Y') {
             $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
-        }else{
+        } else {
             $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00'){
-                if(strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+            if ($this->authorManageRights && $this->authorManageRights->Auth_Mnge_Exit_Date != '' && $this->authorManageRights->Auth_Mnge_Exit_Date != '0000-00-00') {
+                if (strtotime($this->authorManageRights->Auth_Mnge_Exit_Date) < strtotime(date('Y-m-d'))) {
                     $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
                 }
             }
         }
         return $status;
     }
+
+    public function checkPerformer($internal_code, $ret_sts = true) {
+        $performer = PerformerAccount::model()->findByAttributes(array('Perf_Internal_Code' => $internal_code));
+        if ($ret_sts)
+            return !empty($performer);
+        return $performer;
+    }
+
+    protected function afterDelete() {
+        if ($this->after_save_disable) {
+            $performer = $this->checkPerformer($this->Auth_Internal_Code, false);
+            if (!empty($performer)) {
+                $performer->delete();
+            }
+        }
+        return parent::afterDelete();
+    }
+
 }

@@ -48,12 +48,13 @@ class PerformerAccount extends CActiveRecord {
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Perf_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Perf_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Perf_Language_Id = DEFAULT_LANGUAGE_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -90,7 +91,7 @@ class PerformerAccount extends CActiveRecord {
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
                 'message' => 'Only Alphabets are allowed ',
             ),
-            array('Perf_First_Name', 'UniqueAttributesValidator', 'with'=>'Perf_Sur_Name' , "message" => "This User Name already Exists"),
+            array('Perf_First_Name', 'UniqueAttributesValidator', 'with' => 'Perf_Sur_Name', "message" => "This User Name already Exists"),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Perf_Non_Member, Active, Created_Date, Rowversion, expiry_date, hierarchy_level, record_search', 'safe', 'on' => 'search'),
@@ -200,13 +201,13 @@ class PerformerAccount extends CActiveRecord {
         $criteria->compare('performerRelatedRights.Perf_Rel_Internal_Position_Id', $this->hierarchy_level, true);
 
         $now = new CDbExpression("DATE(NOW())");
-        if($this->search_status == 'A'){
-            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= '.$now.' OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
+        if ($this->search_status == 'A') {
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date >= ' . $now . ' OR performerRelatedRights.Perf_Rel_Exit_Date = "0000-00-00" OR performerRelatedRights.Perf_Rel_Exit_Date is null');
             $criteria->compare('Perf_Non_Member', 'N', true);
-        }elseif($this->search_status == 'I'){
+        } elseif ($this->search_status == 'I') {
             $criteria->compare('Perf_Non_Member', 'Y', true);
-        }elseif($this->search_status == 'E'){
-            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date < '.$now.' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
+        } elseif ($this->search_status == 'E') {
+            $criteria->addCondition('performerRelatedRights.Perf_Rel_Exit_Date < ' . $now . ' And performerRelatedRights.Perf_Rel_Exit_Date != "0000-00-00"');
             $criteria->compare('Perf_Non_Member', 'N', true);
         }
 
@@ -269,20 +270,49 @@ class PerformerAccount extends CActiveRecord {
             $len = strlen($gen_inter_model->Gen_Inter_Code);
             $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
             $gen_inter_model->save(false);
+        } else {
+            $author_model = $this->checkAuthor($this->Perf_Internal_Code, false);
+            if (!empty($author_model)) {
+                $ignore_list = Myclass::getAuthorconvertIgnorelist();
+                foreach ($this->attributes as $key => $value) {
+                    $attr_name = str_replace('Perf_', 'Auth_', $key);
+                    !in_array($key, $ignore_list) ? $author_model->setAttribute($attr_name, $value) : '';
+                }
+                $author_model->after_save_disable = false;
+                $author_model->save(false);
+            }
         }
+        return parent::afterSave();
     }
 
     public function getStatus() {
-        if($this->Perf_Non_Member == 'Y'){
+        if ($this->Perf_Non_Member == 'Y') {
             $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
-        }else{
+        } else {
             $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00'){
-                if(strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))){
+            if ($this->performerRelatedRights && $this->performerRelatedRights->Perf_Rel_Exit_Date != '' && $this->performerRelatedRights->Perf_Rel_Exit_Date != '0000-00-00') {
+                if (strtotime($this->performerRelatedRights->Perf_Rel_Exit_Date) < strtotime(date('Y-m-d'))) {
                     $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
                 }
             }
         }
         return $status;
     }
+
+    public function checkAuthor($internal_code, $ret_sts = true) {
+        $author = AuthorAccount::model()->findByAttributes(array('Auth_Internal_Code' => $internal_code));
+        if ($ret_sts)
+            return !empty($author);
+        return $author;
+    }
+
+    protected function afterDelete() {
+        $author_model = $this->checkAuthor($this->Perf_Internal_Code, false);
+        if (!empty($author_model)) {
+            $author_model->after_delete_disable = false;
+            $author_model->delete();
+        }
+        return parent::afterDelete();
+    }
+
 }

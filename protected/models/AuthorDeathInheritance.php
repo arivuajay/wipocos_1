@@ -19,7 +19,9 @@
  * @property AuthorAccount $authAcc
  */
 class AuthorDeathInheritance extends CActiveRecord {
-
+    
+    public $after_save_disable = true;
+    
     /**
      * @return string the associated database table name
      */
@@ -128,6 +130,27 @@ class AuthorDeathInheritance extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    protected function afterSave() {
+        if($this->after_save_disable){
+            $performer_model = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
+            if (!empty($performer_model)) {
+                if(!empty($performer_model->performerDeathInheritances)){
+                    $death_model = $performer_model->performerDeathInheritances;
+                }else{
+                    $death_model = new PerformerDeathInheritance;
+                    $death_model->Perf_Acc_Id = $performer_model->Perf_Acc_Id;
+                }
+                $ignore_list = Myclass::getAuthorconvertIgnorelist();
+                foreach ($this->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $death_model->setAttribute($attr_name, $value) : '';
+                }
+                $death_model->save(false);
+            }
+        }
+        return parent::afterSave();
     }
 
 }

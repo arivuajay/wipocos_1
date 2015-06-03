@@ -18,6 +18,7 @@
  */
 class AuthorPseudonym extends CActiveRecord {
 
+    public $after_save_disable = true;
     /**
      * @return string the associated database table name
      */
@@ -119,6 +120,27 @@ class AuthorPseudonym extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    protected function afterSave() {
+        if($this->after_save_disable){
+            $performer_model = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
+            if (!empty($performer_model)) {
+                if(!empty($performer_model->performerPseudonyms)){
+                    $pseudo_model = $performer_model->performerPseudonyms;
+                }else{
+                    $pseudo_model = new PerformerPseudonym;
+                    $pseudo_model->Perf_Acc_Id = $performer_model->Perf_Acc_Id;
+                }
+                $ignore_list = Myclass::getAuthorconvertIgnorelist();
+                foreach ($this->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $pseudo_model->setAttribute($attr_name, $value) : '';
+                }
+                $pseudo_model->save(false);
+            }
+        }
+        return parent::afterSave();
     }
 
 }

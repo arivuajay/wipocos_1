@@ -413,4 +413,10 @@ class Myclass extends CController {
     }
     
     //end
+    
+    public static function getAuthorconvertIgnorelist() {
+        return array('Auth_Acc_Id', 'Created_Date', 'Auth_Addr_Id', 'Rowversion', 'Auth_Biogrph_Id', 'Auth_Death_Inhrt_Id', 
+            'Auth_Pay_Id', 'Auth_Pseudo_Id', 'Auth_Upl_Id', 'Perf_Acc_Id', 'Perf_Addr_Id', 'Perf_Biogrph_Id', 'Perf_Death_Inhrt_Id',
+            'Perf_Pay_Id', 'Perf_Pseudo_Id', 'Perf_Upl_Id');
+    }
 }

@@ -307,7 +307,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{update}{delete}',
+                'template' => '{convert}{view}{update}{delete}',
+                'buttons' => array(
+                    'convert' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-share-square-o"></i>',
+                        'options' => array(
+                            'title' => 'Convert To Performer',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/authoraccount/convert/id/".rawurlencode($data->Auth_Acc_Id)))',
+                        'click' => 'function(){return confirm("Are you sure to convert this author to perfromer ?")}',
+                        'visible' => '!AuthorAccount::checkPerformer($data->Auth_Internal_Code)'
+                    ),
+                ),
             )
         );
 

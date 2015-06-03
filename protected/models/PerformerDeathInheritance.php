@@ -121,4 +121,24 @@ class PerformerDeathInheritance extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        $author_model = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
+        if (!empty($author_model)) {
+            if(!empty($author_model->authorDeathInheritances)){
+                $death_model = $author_model->authorDeathInheritances;
+            }else{
+                $death_model = new AuthorDeathInheritance;
+                $death_model->Auth_Acc_Id = $author_model->Auth_Acc_Id;
+            }
+            $ignore_list = Myclass::getAuthorconvertIgnorelist();
+            foreach ($this->attributes as $key => $value) {
+                $attr_name = str_replace('Perf_', 'Auth_', $key);
+                !in_array($key, $ignore_list) ? $death_model->setAttribute($attr_name, $value) : '';
+            }
+            $death_model->after_save_disable = false;
+            $death_model->save(false);
+        }
+        parent::afterSave();
+    }
+
 }

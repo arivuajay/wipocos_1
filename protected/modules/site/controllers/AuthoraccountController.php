@@ -43,7 +43,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'convert'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -107,11 +107,11 @@ class AuthoraccountController extends Controller {
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
             if ($model->save()) {
                 Myclass::addAuditTrail("Created a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
-                if($model->Auth_Non_Member == 'N'){
-                    $message =  'AuthorAccount Created Successfully. Please Fill Managed Rights!!!';
+                if ($model->Auth_Non_Member == 'N') {
+                    $message = 'AuthorAccount Created Successfully. Please Fill Managed Rights!!!';
                     $tab = 6;
-                }else{
-                    $message =  'AuthorAccount Created Successfully';
+                } else {
+                    $message = 'AuthorAccount Created Successfully';
                     $tab = 1;
                 }
                 Yii::app()->user->setFlash('success', $message);
@@ -217,7 +217,7 @@ class AuthoraccountController extends Controller {
                 if ($managed_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Managed Rights successfully.", "user");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
-                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
                 }
             }
         } elseif (isset($_POST['AuthorDeathInheritance'])) {
@@ -370,6 +370,62 @@ class AuthoraccountController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionConvert($id) {
+        $author_model = $this->loadModel($id);
+        $check_exists = PerformerAccount::model()->findByAttributes(array('Perf_Internal_Code' => $author_model->Auth_Internal_Code));
+        if (!empty($check_exists)) {
+            Yii::app()->user->setFlash('danger', "This Author already act as performer. Can't convert !!!!");
+            $this->redirect(array('/site/authoraccount/index'));
+        }
+        $performer_model = new PerformerAccount;
+        $ignore_list = Myclass::getAuthorconvertIgnorelist();
+
+        //basic data
+        foreach ($author_model->attributes as $key => $value) {
+            $attr_name = str_replace('Auth_', 'Perf_', $key);
+            !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
+        }
+        $performer_model->save(false);
+        $perf_acc_id = $performer_model->Perf_Acc_Id;
+
+        $relModels = array(
+            'authorAccountAddresses' => 'PerformerAccountAddress',
+            'authorPaymentMethods' => 'PerformerPaymentMethod',
+            'authorBiographies' => 'PerformerBiography',
+            'authorPseudonyms' => 'PerformerPseudonym',
+            'authorDeathInheritances' => 'PerformerDeathInheritance',
+        );
+
+        foreach ($relModels as $k => $v) {
+            if (!empty($author_model->$k)) {
+                $perf_rel_model = new $v;
+                $perf_rel_model->Perf_Acc_Id = $perf_acc_id;
+                foreach ($author_model->$k->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
+                }
+                $perf_rel_model->save(false);
+            }
+        }
+
+        //Uploads
+        if (!empty($author_model->authorUploads)) {
+            foreach ($author_model->authorUploads as $upload) {
+                $performer_upload_model = new PerformerUpload();
+                $performer_upload_model->Perf_Acc_Id = $perf_acc_id;
+                foreach ($upload->attributes as $key => $value) {
+                    $attr_name = str_replace('Auth_', 'Perf_', $key);
+                    !in_array($key, $ignore_list) ? $performer_upload_model->setAttribute($attr_name, $value) : '';
+                }
+                $performer_upload_model->save(false);
+            }
+        }
+        $message = "{$author_model->Auth_First_Name} converted as performer successfully.";
+        Yii::app()->user->setFlash('success', "$message");
+        Myclass::addAuditTrail($message, "user");
+        $this->redirect(array('/site/performeraccount/update', 'id' => $perf_acc_id));
     }
 
 }

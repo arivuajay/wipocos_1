@@ -16,13 +16,12 @@ Yii::import('application.components.UserIdentity');
 class MyActionButtonColumn extends TbButtonColumn {
 
     protected function initDefaultButtons() {
-
-        $this->buttons = array(
+        $validate_buttons = array(
             'delete' => array(
                 'visible' => 'UserIdentity::checkAccess("'.Yii::app()->user->name.'")'
             )
         );
-        
+        $this->buttons = array_merge($this->buttons, $validate_buttons);
         parent::initDefaultButtons();
     }
 }

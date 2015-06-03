@@ -73,7 +73,8 @@ if (!empty($uploaded_files)) {
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();
-                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+//                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
                                 echo "&nbsp;&nbsp;";

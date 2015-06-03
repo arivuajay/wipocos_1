@@ -13,6 +13,7 @@
  * @property PerformerAccount $perfAcc
  */
 class PerformerUpload extends CActiveRecord {
+
     const FILE_SIZE = 10;
 
     /**
@@ -33,7 +34,7 @@ class PerformerUpload extends CActiveRecord {
             array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Perf_Upl_Doc_Name', 'length', 'max' => 255),
             array('Perf_Upl_File', 'length', 'max' => 1000),
-            array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
+            array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
             // The following rule is used by search().
@@ -112,7 +113,7 @@ class PerformerUpload extends CActiveRecord {
             )
         ));
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(
@@ -120,6 +121,39 @@ class PerformerUpload extends CActiveRecord {
                 'fileField' => 'Perf_Upl_File',
             )
         );
+    }
+
+    protected function afterSave() {
+        $author_m = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
+        if (!empty($author_m)) {
+            $author_exists = AuthorUpload::model()->findByAttributes(array('Auth_Upl_File' => $this->Perf_Upl_File));
+            if (!empty($author_exists)) {
+                $author_upload_model = $author_exists;
+            } else {
+                $author_upload_model = new AuthorUpload;
+                $author_upload_model->Auth_Acc_Id = $author_m->Auth_Acc_Id;
+            }
+            $ignore_list = Myclass::getAuthorconvertIgnorelist();
+            foreach ($this->attributes as $key => $value) {
+                $attr_name = str_replace('Perf_', 'Auth_', $key);
+                !in_array($key, $ignore_list) ? $author_upload_model->setAttribute($attr_name, $value) : '';
+            }
+            $author_upload_model->after_save_disable = false;
+            $author_upload_model->save(false);
+        }
+        parent::afterSave();
+    }
+
+    protected function afterDelete() {
+        $author_m = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
+        if (!empty($author_m)) {
+            $author_upload_model = AuthorUpload::model()->findByAttributes(array('Auth_Upl_File' => $this->Perf_Upl_File));
+            if (!empty($author_upload_model)) {
+                $author_upload_model->after_delete_disable = false;
+                $author_upload_model->delete();
+            }
+        }
+        return parent::afterDelete();
     }
 
 }
