@@ -2,7 +2,8 @@
 /* @var $this SharedefinitionperroleController */
 /* @var $model ShareDefinitionPerRole */
 /* @var $form CActiveForm */
-$roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
+$roles = MasterTypeRights::model()->getRolelist();
+//$roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
 ?>
 
 <div class="row">

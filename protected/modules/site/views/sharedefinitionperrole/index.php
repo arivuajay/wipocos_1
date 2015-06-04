@@ -25,7 +25,7 @@ $this->breadcrumbs = array(
                         'action' => array('/site/sharedefinitionperrole/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-                    $roles = CHtml::listData(MasterRole::model()->isActive()->findAll(), 'Master_Role_ID', 'Description');
+                    $roles = MasterTypeRights::model()->getRolelist();
                     ?>
 
                     <div class="col-lg-4 col-md-4">
@@ -101,7 +101,7 @@ $this->breadcrumbs = array(
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                     'value' => function($data) {
-                echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
+                echo isset($data->shrDefRole->Type_Rights_Name) ? $data->shrDefRole->Type_Rights_Name : '';
             },
                 ),
                 'Shr_Def_Equ_remn',
@@ -157,7 +157,7 @@ $this->breadcrumbs = array(
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
 //              'type' => 'raw',
                 'value' => function($data) {
-            echo isset($data->shrDefRole->Description) ? $data->shrDefRole->Description : '';
+            echo isset($data->shrDefRole->Type_Rights_Name) ? $data->shrDefRole->Type_Rights_Name : '';
         },
             ),
             'Shr_Def_Equ_remn',

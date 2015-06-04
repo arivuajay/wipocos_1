@@ -41,7 +41,7 @@ class RecordingRightholder extends CActiveRecord {
             array('Rcd_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
             array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Org_Id', 'numerical', 'integerOnly' => true),
             array('Rcd_Member_Internal_Code', 'length', 'max' => 100),
-            array('Rcd_Right_Equal_Share, Rcd_Right_Blank_Share', 'length', 'max' => 10),
+            array('Rcd_Right_Equal_Share, Rcd_Right_Blank_Share', 'numerical', 'min' => 1, 'max' => 10, 'integerOnly' => true),
             array('Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

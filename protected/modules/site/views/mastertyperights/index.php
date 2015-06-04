@@ -109,6 +109,8 @@ $this->breadcrumbs = array(
                     'class' => 'IndexColumn',
                     'header' => '',
                 ),
+                'Type_Rights_Code',
+                'Type_Rights_Standard',
                 'Type_Rights_Name',
                 array(
                     'name' => 'Type_Rights_Occupation',
@@ -168,6 +170,8 @@ $this->breadcrumbs = array(
                 'class' => 'IndexColumn',
                 'header' => '',
             ),
+            'Type_Rights_Code',
+            'Type_Rights_Standard',
             'Type_Rights_Name',
             array(
                 'name' => 'Type_Rights_Occupation',

@@ -35,6 +35,7 @@ class ShareDefinitionPerRole extends CActiveRecord {
         return array(
             array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'required'),
             array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'numerical', 'integerOnly' => true),
+            array('Shr_Def_Role', 'unique'),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
@@ -50,7 +51,7 @@ class ShareDefinitionPerRole extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'shrDefRole' => array(self::BELONGS_TO, 'MasterRole', 'Shr_Def_Role'),
+            'shrDefRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Shr_Def_Role'),
         );
     }
 

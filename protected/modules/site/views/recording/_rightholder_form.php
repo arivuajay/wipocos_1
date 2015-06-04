@@ -72,8 +72,8 @@
                                 $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'Type_Rights_Name');
                                 $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'Type_Rights_Name');
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', array(), array('class' => 'form-control default-role'));
-                                echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role', 'disabled' => 'disabled'));
-                                echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled'));
                                 ?>
                                 <?php echo $form->error($model, 'Rcd_Right_Role'); ?>
                             </div>
@@ -94,10 +94,7 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Rcd_Right_Equal_Share', array('class' => '')); ?>
-                            <div class="input-group">
-                                <?php echo $form->textField($model, 'Rcd_Right_Equal_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
-                                <span class="input-group-addon"> %</span>
-                            </div>
+                            <?php echo $form->textField($model, 'Rcd_Right_Equal_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
                             <?php echo $form->error($model, 'Rcd_Right_Equal_Share'); ?>
                         </div>
 
@@ -123,10 +120,7 @@
                     <div class="col-lg-12">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Rcd_Right_Blank_Share', array('class' => '')); ?>
-                            <div class="input-group">
-                                <?php echo $form->textField($model, 'Rcd_Right_Blank_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
-                                <span class="input-group-addon"> %</span>
-                            </div>
+                            <?php echo $form->textField($model, 'Rcd_Right_Blank_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
                             <?php echo $form->error($model, 'Rcd_Right_Blank_Share'); ?>
                         </div>
 
@@ -157,9 +151,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-left total_share hide">Equal Remuneration Share : <span id="equal_total">100</span> %</div>
-                <div class="text-left total_share hide">Blank Levy Share : <span id="blank_total">100</span> %</div>
-                <div class="text-right"><span>Note: Data will be automatically saved after Equal Remuneration Share & Blank Levy Share is 100 % </span></div>
+                <div class="text-right"><span>Note: Save button will be enabled after One producer & performer added </span></div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/recording/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -195,8 +187,8 @@
                                             <td><?php echo $name; ?></td>
                                             <td><?php echo $member->Rcd_Member_Internal_Code; ?></td>
                                             <td><?php echo $member->rcdRightRole->Type_Rights_Name; ?></td>
-                                            <td><span class="badge share_value equal_share_value" data-share="<?php echo $member->Rcd_Right_Equal_Share; ?>"><?php echo $member->Rcd_Right_Equal_Share; ?>%</span></td>
-                                            <td><span class="badge share_value blank_share_value" data-share="<?php echo $member->Rcd_Right_Blank_Share; ?>"><?php echo $member->Rcd_Right_Blank_Share; ?>%</span></td>
+                                            <td><?php echo $member->Rcd_Right_Equal_Share; ?></td>
+                                            <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
                                             <td>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Rcd_Right_Equal_Share, 'data-mcshare' => $member->Rcd_Right_Blank_Share)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
@@ -223,7 +215,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="box-footer hide">
+                    <div class="box-footer">
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <?php echo CHtml::submitButton('Save', array('class' => 'btn btn-primary', 'id' => 'right_ajax_submit', 'disabled' => true)) ?>
@@ -242,10 +234,12 @@
 
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/recording/searchright");
+$get_roles_point_url = Yii::app()->createAbsoluteUrl("site/sharedefinitionperrole/getpoint");
 
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
+        checkShare();
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
@@ -267,9 +261,12 @@ $js = <<< EOD
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
+                _roleid = $(".performer-role").val();
             }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
+                _roleid = $(".producer-role").val();
             }
+            getPoint(_roleid);
         });
         
         $('body').on('click','.row-delete', function(){
@@ -301,6 +298,10 @@ $js = <<< EOD
                 },
                 dataType:'html'
             });
+        });
+        
+        $(".roles_dd").on("change", function(){
+            getPoint($(this).val());
         });
         
     });
@@ -336,10 +337,8 @@ $js = <<< EOD
                         tr += '<td>';
                     }
                     var td_content = '';
-                    if (value['name'] == "RecordingRightholder[Rcd_Right_Equal_Share]") {
-                        td_content = '<span class="badge share_value equal_share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
-                    }else if(value['name'] == "RecordingRightholder[Rcd_Right_Blank_Share]"){
-                        td_content = '<span class="badge share_value blank_share_value" data-share="' + value['value'] + '">' + parseFloat(value['value']).toFixed(2) + '%</span>';
+                    if (value['name'] == "RecordingRightholder[Rcd_Right_Equal_Share]" || value['name'] == "RecordingRightholder[Rcd_Right_Blank_Share]") {
+                        td_content = value['value'];
                     }else if(value['name'] == "RecordingRightholder[Rcd_Right_Role]"){
                         td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
                     }else if(value['name'] == "RecordingRightholder[Rcd_Id]"){
@@ -379,26 +378,32 @@ $js = <<< EOD
     }
         
     function checkShare(){
-        _val = 0;
-        _equal_share = 0;
-        _blank_share = 0;
-        
-        $('.equal_share_value').each(function(){
-            _equal_share += parseFloat($(this).data('share'));
+        _tr = $("#linked-holders tbody tr");
+        var perf_inst = prod_inst = 0;
+        _tr.each(function(){
+            if($(this).data('urole') == 'PE'){
+                perf_inst = 1;
+            }else if($(this).data('urole') == 'PR'){
+                prod_inst = 1;
+            }
         });
-        $('.blank_share_value').each(function(){
-            _blank_share += parseFloat($(this).data('share'));
-        });
-        $(".total_share").removeClass('hide');
-        $("#equal_total").html(_equal_share);
-        $("#blank_total").html(_blank_share);
-        _val = _equal_share + _blank_share;
+        $("#right_ajax_submit").attr("disabled", !(perf_inst == 1 && prod_inst == 1));
+    }
         
-        var not_auto_submit = _val != '200';
-        $("#right_ajax_submit").attr("disabled", not_auto_submit);
-        if(not_auto_submit == false){
-            $("#right_form").submit();
-        }
+    function getPoint(_id){
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '$get_roles_point_url',
+            data:{id: _id},
+            success:function(data){
+                $("#RecordingRightholder_Rcd_Right_Equal_Share").val(data.equ_remn);
+                $("#RecordingRightholder_Rcd_Right_Blank_Share").val(data.blk_tp);
+           },
+            error: function(data) {
+                alert("Something went wrong. Try again");
+            },
+        });
     }
         
 EOD;

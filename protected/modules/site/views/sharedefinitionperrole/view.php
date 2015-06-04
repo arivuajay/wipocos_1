@@ -42,7 +42,7 @@ $this->breadcrumbs = array(
             array(
                 'name' => 'Shr_Def_Role',
                 'type' => 'raw',
-                'value' => $model->shrDefRole->Description
+                'value' => $model->shrDefRole->Type_Rights_Name
             ),
             'Shr_Def_Equ_remn',
             'Shr_Def_Blank_Tape_remn',

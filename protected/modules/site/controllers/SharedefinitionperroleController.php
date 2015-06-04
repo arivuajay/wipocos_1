@@ -28,7 +28,7 @@ class SharedefinitionperroleController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'getpoint'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -182,6 +182,23 @@ class SharedefinitionperroleController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionGetpoint() {
+        $points = array('equ_remn' => 0,'blk_tp' => 0,'neigh_remn' => 0,'excl_rgt' => 0);
+        if (isset($_POST['id'])) {
+            $right_holder = ShareDefinitionPerRole::model()->findByAttributes(array('Shr_Def_Role' => $_POST['id']));
+            if (!empty($right_holder)) {
+                $points = array(
+                    'equ_remn' => $right_holder->Shr_Def_Equ_remn,
+                    'blk_tp' => $right_holder->Shr_Def_Blank_Tape_remn,
+                    'neigh_remn' => $right_holder->Shr_Def_Neigh_Rgts,
+                    'excl_rgt' => $right_holder->Shr_Def_Excl_Rgts
+                );
+            }
+        }
+        echo json_encode($points);
+        exit;
     }
 
 }
