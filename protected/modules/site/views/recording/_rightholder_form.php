@@ -151,7 +151,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-right"><span>Note: Save button will be enabled after One producer & performer added </span></div>
+                <div class="text-right"><span>Note: Save button will be enabled after atleast one producer & performer added </span></div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/recording/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -198,7 +198,7 @@
                                                 <?php
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Id]", $member->Rcd_Id);
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Member_Internal_Code]", $member->Rcd_Member_Internal_Code);
-                                                echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Role]", $member->Rcd_Right_Role);
+                                                echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Role]", $member->Rcd_Right_Role, array('data-rcd' => $member->Rcd_Right_Role, 'class' => 'rcd'));
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Equal_Share]", $member->Rcd_Right_Equal_Share);
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Equal_Org_id]", $member->Rcd_Right_Equal_Org_id);
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Blank_Share]", $member->Rcd_Right_Blank_Share);
@@ -258,18 +258,22 @@ $js = <<< EOD
             _urole =  $(this).data('urole');
 
             $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_uid);
+        
+            _role = $(this).find('.rcd').data('rcd');
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
-                _roleid = $(".performer-role").val();
+                _role !== null ? $('.user-role-dropdown select.performer-role').val(_role) : '';
+//                _roleid = $(".performer-role").val();
             }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
-                _roleid = $(".producer-role").val();
+                _role !== null ? $('.user-role-dropdown select.producer-role').val(_role) : '';
+//                _roleid = $(".producer-role").val();
             }else{
                 $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
-                _roleid = $(".default-role").val();
+//                _roleid = $(".default-role").val();
             }
-            getPoint(_roleid);
+//            getPoint(_roleid);
         });
         
         $('body').on('click','.row-delete', function(){
@@ -327,7 +331,7 @@ $js = <<< EOD
             if(chk_tr.length == 1){
                 var tr = '';
             }else{
-                var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-name="'+_name+'">';
+                var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-urole-id="'+_role+'" data-name="'+_name+'" >';
             }
         
             $.each(form_data, function (key, value) {
@@ -335,14 +339,19 @@ $js = <<< EOD
                     var name = value['name'];
                     name = name.replace("[","[" + rowCount + "][");
                     //set hidden form values
-                    tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
+                    
+                    if(value['name'] == "RecordingRightholder[Rcd_Right_Role]"){
+                        tr += '<td class="hide"><input class="rcd" data-rcd = "' + value['value'] + '" type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
+                    }else{
+                        tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
+                    }
 
                     if(value['name'] != "RecordingRightholder[Rcd_Right_Equal_Org_id]" && value['name'] != "RecordingRightholder[Rcd_Right_Blank_Org_Id]"){
                         tr += '<td>';
                     }
                     var td_content = '';
                     if (value['name'] == "RecordingRightholder[Rcd_Right_Equal_Share]" || value['name'] == "RecordingRightholder[Rcd_Right_Blank_Share]") {
-                        td_content = value['value'];
+                        td_content = parseFloat(value['value']).toFixed(2);
                     }else if(value['name'] == "RecordingRightholder[Rcd_Right_Role]"){
                         td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
                     }else if(value['name'] == "RecordingRightholder[Rcd_Id]"){
