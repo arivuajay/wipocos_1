@@ -304,7 +304,10 @@ $js = <<< EOD
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
             rowCount++;
+            $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
+            $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             checkShare();
+            return false;
         });
         
         $('#is_auth, #is_publ').on('ifChecked', function(event){

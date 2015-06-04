@@ -265,6 +265,9 @@ $js = <<< EOD
             }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
                 _roleid = $(".producer-role").val();
+            }else{
+                $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
+                _roleid = $(".default-role").val();
             }
             getPoint(_roleid);
         });
@@ -273,6 +276,7 @@ $js = <<< EOD
             $(this).closest('tr').remove();
             rowCount++;
             checkShare();
+            return false;
         });
         
         $('#is_perf, #is_prod').on('ifChecked', function(event){

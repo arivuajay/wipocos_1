@@ -34,7 +34,7 @@ class ShareDefinitionPerRole extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'required'),
-            array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'numerical', 'integerOnly' => true),
+            array('Shr_Def_Role, Shr_Def_Equ_remn, Shr_Def_Blank_Tape_remn, Shr_Def_Neigh_Rgts, Shr_Def_Excl_Rgts', 'numerical', 'integerOnly' => false),
             array('Shr_Def_Role', 'unique'),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
