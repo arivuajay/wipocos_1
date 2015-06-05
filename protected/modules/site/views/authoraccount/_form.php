@@ -30,15 +30,21 @@ $regions = Myclass::getMasterRegion();
         <?php
         $other_tab_validation = $doc_tab_validation = true;
         if (!$model->isNewRecord) {
-            if($model->Auth_Non_Member == 'N'){
-                $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+            if ($model->Auth_Non_Member == 'N') {
+                switch ($model->Auth_Is_Performer) {
+                    case 'Y':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord && !$related_model->isNewRecord;
+                        break;
+                    case 'N':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                        break;
+                }
                 $doc_tab_validation = !$model->isNewRecord;
             }
-        }else{
+        } else {
             $other_tab_validation = $doc_tab_validation = false;
         }
         ?>
-        <!-- Custom Tabs -->
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
@@ -47,9 +53,11 @@ $regions = Myclass::getMasterRegion();
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <?php if ($model->Auth_Is_Performer == 'Y') { ?>
+                    <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
+                <?php } ?>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload Documents</a></li>
-                <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Auth_Is_Performer == 'Y' ? '<br />' : '';?> Documents</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -78,6 +86,18 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->labelEx($model, 'Auth_Internal_Code', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Auth_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
                                     <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
+                                </div>
+
+                                <div class="form-group" style="pointer-events: none">
+                                    <?php echo $form->labelEx($model, 'is_author', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'is_author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                    <?php echo $form->error($model, 'is_author'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Is_Performer', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Auth_Is_Performer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Auth_Is_Performer'); ?>
                                 </div>
 
                                 <div class="form-group">
@@ -121,17 +141,6 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->labelEx($model, 'Auth_Spouse_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Auth_Spouse_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                                     <?php echo $form->error($model, 'Auth_Spouse_Name'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Auth_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Auth_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Auth_Non_Member'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>
@@ -181,6 +190,16 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Auth_Language_Id'); ?>
                                 </div>
 
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Auth_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Auth_Non_Member'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
                             </div>
                         </div>
 
@@ -229,6 +248,15 @@ $regions = Myclass::getMasterRegion();
                     }
                     ?>
                 </div>
+                <?php if ($model->Auth_Is_Performer == 'Y') { ?>
+                    <div class="tab-pane" id="tab_9">
+                        <?php
+                        if ($doc_tab_validation) {
+                            $this->renderPartial('/performeraccount/_related_rights_form', array('model' => $related_model, 'performer_model' => $performer_model, 'regions' => $regions));
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
                 <div class="tab-pane" id="tab_7">
                     <?php
                     if ($other_tab_validation) {
@@ -262,6 +290,13 @@ $js = <<< EOD
         });
         $("#AuthorManageRights_Auth_Mnge_Exit_Date").on("change", function(){
             $("#AuthorManageRights_Auth_Mnge_Exit_Date_2").val($(this).val());
+        });
+        
+        $("#PerformerRelatedRights_Perf_Rel_Entry_Date").on("change", function(){
+            $("#PerformerRelatedRights_Perf_Rel_Entry_Date_2").val($(this).val());
+        });
+        $("#PerformerRelatedRights_Perf_Rel_Exit_Date").on("change", function(){
+            $("#PerformerRelatedRights_Perf_Rel_Exit_Date_2").val($(this).val());
         });
     });
 EOD;

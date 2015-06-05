@@ -8,7 +8,7 @@
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
     ?>
-    <div class="col-lg-10 col-lg-offset-1">
+    <div class="col-lg-12">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -410,6 +410,8 @@ $js = <<< EOD
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
             $("#right_insert").val('Add');
+            $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
+            $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             checkShare();
         }
         return false;

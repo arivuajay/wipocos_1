@@ -175,11 +175,17 @@ $(function() {
 
 function setHeight(){
     setTimeout(function(){
-        var right_height = $(".sidebar").outerHeight()+$(".header").outerHeight()+50;
-        if(right_height > 1000){
-            $(".right-side").height(right_height);
-        }else{
-            $(".right-side").height("auto");
+        _sidebar = $(".sidebar").outerHeight();
+        _right_sidebar = $(".right-side").outerHeight();
+        _header = $(".header").outerHeight();
+        
+        if(_right_sidebar < _sidebar){
+            var right_height = _sidebar + _header + 50;
+            if(right_height > 1000){
+                $(".right-side").height(right_height);
+            }else{
+                $(".right-side").height("auto");
+            }
         }
     }, 500);
 }

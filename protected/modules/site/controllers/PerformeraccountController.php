@@ -377,7 +377,15 @@ class PerformeraccountController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'performer-account-address-form' || $_POST['ajax'] === 'performer-payment-method-form' || $_POST['ajax'] === 'performer-pseudonym-form' || $_POST['ajax'] === 'performer-death-inheritance-form' || $_POST['ajax'] === 'performer-related-rights-form' || $_POST['ajax'] === 'performer-managed-rights-form' || $_POST['ajax'] === 'performer-biography-form' || $_POST['ajax'] === 'performer-upload-form'
+                $_POST['ajax'] === 'performer-account-form' 
+                || $_POST['ajax'] === 'performer-account-address-form' 
+                || $_POST['ajax'] === 'performer-payment-method-form' 
+                || $_POST['ajax'] === 'performer-pseudonym-form' 
+                || $_POST['ajax'] === 'performer-death-inheritance-form' 
+                || $_POST['ajax'] === 'performer-related-rights-form' 
+                || $_POST['ajax'] === 'performer-managed-rights-form' 
+                || $_POST['ajax'] === 'performer-biography-form' 
+                || $_POST['ajax'] === 'performer-upload-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

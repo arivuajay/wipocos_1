@@ -8,7 +8,7 @@
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
     ?>
-    <div class="col-lg-10 col-lg-offset-1">
+    <div class="col-lg-12">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -250,6 +250,15 @@ $js = <<< EOD
             $('#RecordingRightholder_Rcd_Right_Blank_Share').val(_mcshare);
         
             $("#search_result tr").removeClass('highlight');
+        
+            _tr = $(this).closest('tr');
+            _urole = _tr.data('urole');
+            _role = _tr.find('.rcd').data('rcd');
+            if(_urole == 'PE'){
+                _role !== null ? $('.user-role-dropdown select.performer-role').val(_role) : '';
+            }else if(_urole == 'PR'){
+                _role !== null ? $('.user-role-dropdown select.producer-role').val(_role) : '';
+            }
         });
         
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
@@ -259,21 +268,14 @@ $js = <<< EOD
 
             $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_uid);
         
-            _role = $(this).find('.rcd').data('rcd');
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
-                _role !== null ? $('.user-role-dropdown select.performer-role').val(_role) : '';
-//                _roleid = $(".performer-role").val();
             }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
-                _role !== null ? $('.user-role-dropdown select.producer-role').val(_role) : '';
-//                _roleid = $(".producer-role").val();
             }else{
                 $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
-//                _roleid = $(".default-role").val();
             }
-//            getPoint(_roleid);
         });
         
         $('body').on('click','.row-delete', function(){
@@ -385,6 +387,8 @@ $js = <<< EOD
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
             $("#right_insert").val('Add');
+            $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
+            $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             checkShare();
         }
         return false;

@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{author_account}}':
  * @property integer $Auth_Acc_Id
+ * @property string $Auth_Is_Performer
  * @property string $Auth_Sur_Name
  * @property string $Auth_First_Name
  * @property string $Auth_Internal_Code
@@ -47,6 +48,8 @@ class AuthorAccount extends CActiveRecord {
     public $search_status;
     public $after_save_disable = true;
     public $after_delete_disable = true;
+    public $is_author;
+    public $oldRecord;
 
     public function init() {
         parent::init();
@@ -85,7 +88,7 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search, Auth_Non_Member', 'safe'),
+            array('Created_Date, Rowversion,record_search, Auth_Non_Member, Auth_Is_Performer, is_author', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
             array('Auth_Internal_Code', 'unique'),
             array(
@@ -159,6 +162,8 @@ class AuthorAccount extends CActiveRecord {
             'hierarchy_level' => 'Internal Position',
             'search_status' => 'Status',
             'Auth_Non_Member' => 'Non Member',
+            'Auth_Is_Performer' => 'Performer',
+            'is_author' => 'Author',
         );
     }
 
@@ -271,17 +276,26 @@ class AuthorAccount extends CActiveRecord {
             $len = strlen($gen_inter_model->Gen_Inter_Code);
             $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
             $gen_inter_model->save(false);
+
+            if ($this->Auth_Is_Performer == 'Y') {
+                $this->convert($this->Auth_Acc_Id);
+            }
         } elseif ($this->after_save_disable && !$this->isNewRecord) {
             $performer_model = $this->checkPerformer($this->Auth_Internal_Code, false);
-            if (!empty($performer_model)) {
-                $ignore_list = Myclass::getAuthorconvertIgnorelist();
-                foreach ($this->attributes as $key => $value) {
-                    $attr_name = str_replace('Auth_', 'Perf_', $key);
-                    !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
-                }
-                $performer_model->save(false);
+
+            switch ($this->Auth_Is_Performer) {
+                case 'N':
+                    if (!empty($performer_model)) {
+                        $performer_model->after_delete_disable = false;
+                        $performer_model->delete();
+                    }
+                    break;
+                case 'Y':
+                    $this->convert($this->Auth_Acc_Id);
+                    break;
             }
         }
+
         return parent::afterSave();
     }
 
@@ -334,5 +348,63 @@ class AuthorAccount extends CActiveRecord {
         }
         return parent::afterDelete();
     }
+
+    public function convert($id) {
+        $author_model = self::model()->findByPk($id);
+        $check_exists = $this->checkPerformer($author_model->Auth_Internal_Code, false);
+        if (empty($check_exists)) {
+            $performer_model = new PerformerAccount;
+            $ignore_list = Myclass::getAuthorconvertIgnorelist();
+            //basic data
+            foreach ($author_model->attributes as $key => $value) {
+                $attr_name = str_replace('Auth_', 'Perf_', $key);
+                !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
+            }
+            $performer_model->save(false);
+            $perf_acc_id = $performer_model->Perf_Acc_Id;
+        } else {
+            $perf_acc_id = $check_exists->Perf_Acc_Id;
+        }
+        if (!$this->isNewRecord) {
+            $relModels = array(
+                'authorAccountAddresses' => 'PerformerAccountAddress',
+                'authorPaymentMethods' => 'PerformerPaymentMethod',
+                'authorBiographies' => 'PerformerBiography',
+                'authorPseudonyms' => 'PerformerPseudonym',
+                'authorDeathInheritances' => 'PerformerDeathInheritance',
+            );
+
+            foreach ($relModels as $k => $v) {
+                if (!empty($author_model->$k)) {
+                    $perf_rel_model = new $v;
+                    $perf_rel_model->Perf_Acc_Id = $perf_acc_id;
+                    foreach ($author_model->$k->attributes as $key => $value) {
+                        $attr_name = str_replace('Auth_', 'Perf_', $key);
+                        !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
+                    }
+                    $perf_rel_model->save(false);
+                }
+            }
+
+            //Uploads
+            if (!empty($author_model->authorUploads)) {
+                foreach ($author_model->authorUploads as $upload) {
+                    $performer_upload_model = new PerformerUpload();
+                    $performer_upload_model->Perf_Acc_Id = $perf_acc_id;
+                    foreach ($upload->attributes as $key => $value) {
+                        $attr_name = str_replace('Auth_', 'Perf_', $key);
+                        !in_array($key, $ignore_list) ? $performer_upload_model->setAttribute($attr_name, $value) : '';
+                    }
+                    $performer_upload_model->save(false);
+                }
+            }
+        }
+        return true;
+    }
+
+//    protected function afterFind() {
+//        $this->oldRecord = clone $this;
+//        return parent::afterFind();
+//    }
 
 }

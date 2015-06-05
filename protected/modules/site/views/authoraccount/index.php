@@ -15,7 +15,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
-<?php $this->renderPartial('/default/_colors')?>
+<?php $this->renderPartial('/default/_colors') ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -158,6 +158,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                    'class' => 'IndexColumn',
 //                    'header' => '',
 //                ),
+                array(
+                    'name' => 'Auth_is_Performer',
+                    'type' => 'raw',
+                    'value' => function($data) {
+                        echo $data->Auth_is_Performer == 'Y' ? '<i class="fa fa-check-square text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+                    },
+                ),
                 'Auth_Internal_Code',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
@@ -176,26 +183,26 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
-                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
-            },
+                        if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
+                            echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+                    },
                 ),
                 array(
                     'name' => 'Auth_DOB',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
-                    echo date('Y-m-d', strtotime($data->Auth_DOB));
-            },
+                        if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                            echo date('Y-m-d', strtotime($data->Auth_DOB));
+                    },
                 ),
                 array(
                     'name' => 'search_status',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                echo $data->status;
-            },
+                        echo $data->status;
+                    },
                 ),
                 array(
                     'header' => 'Actions',
@@ -212,7 +219,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'responsiveTable' => true,
                 'template' => "<div class='panel panel-primary'><div class='panel-heading'><div class='pull-right'>{summary}</div><h3 class='panel-title'><i class='glyphicon glyphicon-search'></i> Search Results</h3></div>\n<div class='panel-body'>{items}\n{pager}</div></div>",
                 'columns' => $gridColumns,
-                )
+                    )
             );
             ?>
         </div>
@@ -262,27 +269,34 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-
-            if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
-                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
-        },
+                    if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
+                        echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+                },
             ),
             array(
                 'name' => 'Auth_DOB',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
-                echo date('Y-m-d', strtotime($data->Auth_DOB));
-        },
+                    if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                        echo date('Y-m-d', strtotime($data->Auth_DOB));
+                },
             ),
             array(
                 'name' => 'search_status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-            echo $data->status;
-        },
+                    echo $data->status;
+                },
+            ),
+            array(
+                'name' => 'Auth_Is_Performer',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+                },
             ),
 //            array(
 //                'name' => 'Active',
@@ -307,18 +321,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{convert}{view}{update}{delete}',
-                'buttons' => array(
-                    'convert' => array(//the name {reply} must be same
-                        'label' => '<i class="fa fa-share-square-o"></i>',
-                        'options' => array(
-                            'title' => 'Convert To Performer',
-                        ),
-                        'url' => 'CHtml::normalizeUrl(array("/site/authoraccount/convert/id/".rawurlencode($data->Auth_Acc_Id)))',
-                        'click' => 'function(){return confirm("Are you sure to convert this author to perfromer ?")}',
-                        'visible' => '!AuthorAccount::checkPerformer($data->Auth_Internal_Code)'
-                    ),
-                ),
+                'template' => '{view}{update}{delete}',
             )
         );
 

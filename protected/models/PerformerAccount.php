@@ -45,6 +45,7 @@ class PerformerAccount extends CActiveRecord {
     public $hierarchy_level;
     public $record_search;
     public $search_status;
+    public $after_delete_disable = true;
 
     public function init() {
         parent::init();
@@ -308,7 +309,7 @@ class PerformerAccount extends CActiveRecord {
 
     protected function afterDelete() {
         $author_model = $this->checkAuthor($this->Perf_Internal_Code, false);
-        if (!empty($author_model)) {
+        if (!empty($author_model) && $this->after_delete_disable) {
             $author_model->after_delete_disable = false;
             $author_model->delete();
         }

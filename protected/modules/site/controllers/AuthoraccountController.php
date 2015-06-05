@@ -156,10 +156,14 @@ class AuthoraccountController extends Controller {
             $upload_model = empty($upload_exists) ? new AuthorUpload('create') : $upload_exists;
         }
 
+        $performer_model = AuthorAccount::model()->checkPerformer($model->Auth_Internal_Code, false);
+        $related_exists = PerformerRelatedRights::model()->with('perfAcc')->find('perfAcc.Perf_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
+        $related_model = empty($related_exists) ? new PerformerRelatedRights : $related_exists;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
             $model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model,
-            $biograph_model));
+            $biograph_model, $related_model));
 
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
@@ -247,10 +251,23 @@ class AuthoraccountController extends Controller {
                 if ($tab != '8')
                     $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '8'));
             }
+        } elseif (isset($_POST['PerformerRelatedRights'])) {
+            $related_model->attributes = $_POST['PerformerRelatedRights'];
+
+            if ($related_model->validate()) {
+                if ($related_model->save()) {
+                    Myclass::addAuditTrail("Updated Performer Related Rights {$performer_model->Perf_First_Name} {$performer_model->Perf_Sur_Name} successfully.", "music");
+                    Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
+                }
+            }else{
+                var_dump($related_model->getErrors());
+                exit;
+            }
         }
 
-        $this->render('update', compact(
-                        'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'upload_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 
+                'biograph_model', 'upload_model', 'performer_model', 'related_model'));
     }
 
     /**
@@ -365,67 +382,19 @@ class AuthoraccountController extends Controller {
      * @param AuthorAccount $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'author-account-address-form' || $_POST['ajax'] === 'author-payment-method-form' || $_POST['ajax'] === 'author-pseudonym-form' || $_POST['ajax'] === 'author-death-inheritance-form' || $_POST['ajax'] === 'author-related-rights-form' || $_POST['ajax'] === 'author-managed-rights-form' || $_POST['ajax'] === 'author-biography-form' || $_POST['ajax'] === 'author-upload-form'
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form' 
+                || $_POST['ajax'] === 'author-account-address-form' 
+                || $_POST['ajax'] === 'author-payment-method-form' 
+                || $_POST['ajax'] === 'author-pseudonym-form' 
+                || $_POST['ajax'] === 'author-death-inheritance-form' 
+                || $_POST['ajax'] === 'author-related-rights-form' 
+                || $_POST['ajax'] === 'author-managed-rights-form' 
+                || $_POST['ajax'] === 'author-biography-form' 
+                || $_POST['ajax'] === 'author-upload-form'
+                || $_POST['ajax'] === 'performer-related-rights-form' 
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
-
-    public function actionConvert($id) {
-        $author_model = $this->loadModel($id);
-        $check_exists = PerformerAccount::model()->findByAttributes(array('Perf_Internal_Code' => $author_model->Auth_Internal_Code));
-        if (!empty($check_exists)) {
-            Yii::app()->user->setFlash('danger', "This Author already act as performer. Can't convert !!!!");
-            $this->redirect(array('/site/authoraccount/index'));
-        }
-        $performer_model = new PerformerAccount;
-        $ignore_list = Myclass::getAuthorconvertIgnorelist();
-
-        //basic data
-        foreach ($author_model->attributes as $key => $value) {
-            $attr_name = str_replace('Auth_', 'Perf_', $key);
-            !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
-        }
-        $performer_model->save(false);
-        $perf_acc_id = $performer_model->Perf_Acc_Id;
-
-        $relModels = array(
-            'authorAccountAddresses' => 'PerformerAccountAddress',
-            'authorPaymentMethods' => 'PerformerPaymentMethod',
-            'authorBiographies' => 'PerformerBiography',
-            'authorPseudonyms' => 'PerformerPseudonym',
-            'authorDeathInheritances' => 'PerformerDeathInheritance',
-        );
-
-        foreach ($relModels as $k => $v) {
-            if (!empty($author_model->$k)) {
-                $perf_rel_model = new $v;
-                $perf_rel_model->Perf_Acc_Id = $perf_acc_id;
-                foreach ($author_model->$k->attributes as $key => $value) {
-                    $attr_name = str_replace('Auth_', 'Perf_', $key);
-                    !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
-                }
-                $perf_rel_model->save(false);
-            }
-        }
-
-        //Uploads
-        if (!empty($author_model->authorUploads)) {
-            foreach ($author_model->authorUploads as $upload) {
-                $performer_upload_model = new PerformerUpload();
-                $performer_upload_model->Perf_Acc_Id = $perf_acc_id;
-                foreach ($upload->attributes as $key => $value) {
-                    $attr_name = str_replace('Auth_', 'Perf_', $key);
-                    !in_array($key, $ignore_list) ? $performer_upload_model->setAttribute($attr_name, $value) : '';
-                }
-                $performer_upload_model->save(false);
-            }
-        }
-        $message = "{$author_model->Auth_First_Name} converted as performer successfully.";
-        Yii::app()->user->setFlash('success', "$message");
-        Myclass::addAuditTrail($message, "user");
-        $this->redirect(array('/site/performeraccount/update', 'id' => $perf_acc_id));
-    }
-
 }
