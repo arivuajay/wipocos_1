@@ -72,8 +72,8 @@
                                 $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', array(), array('class' => 'form-control default-role'));
-                                echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled'));
-                                echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
                                 <?php echo $form->error($model, 'Rcd_Right_Role'); ?>
                             </div>
