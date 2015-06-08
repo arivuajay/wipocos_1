@@ -147,8 +147,12 @@ class ProduceraccountController extends Controller {
         $biograph_exists = ProducerBiography::model()->findByAttributes(array('Pro_Acc_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new ProducerBiography : $biograph_exists;
 
+        $publisher_model = ProducerAccount::model()->checkPublisher($model->Pro_Internal_Code, false);
+        $managed_exists = PublisherManageRights::model()->with('pubAcc')->find('pubAcc.Pub_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
+        $managed_model = empty($managed_exists) ? new PublisherManageRights : $managed_exists;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $address_model, $related_model, $payment_model, $psedonym_model, $related_model, $succession_model, $biograph_model));
+        $this->performAjaxValidation(array($model, $address_model, $related_model, $payment_model, $psedonym_model, $related_model,
+            $succession_model, $biograph_model, $managed_model));
 
         if (isset($_POST['ProducerAccount'])) {
             $model->attributes = $_POST['ProducerAccount'];
@@ -228,9 +232,19 @@ class ProduceraccountController extends Controller {
                     $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '8'));
                 }
             }
+        } elseif (isset($_POST['PublisherManageRights'])) {
+            $managed_model->attributes = $_POST['PublisherManageRights'];
+
+            if ($managed_model->validate()) {
+                if ($managed_model->save()) {
+                    Myclass::addAuditTrail("Updated Publisher Managed Rights {$publisher_model->Pub_Corporate_Name} successfully.", "microphone");
+                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '9'));
+                }
+            }
         }
 
-        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 'biograph_model', 'related_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 'biograph_model', 'related_model', 'publisher_model', 'managed_model'));
     }
 
     /**
@@ -316,7 +330,7 @@ class ProduceraccountController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'producer-account-address-form' || $_POST['ajax'] === 'producer-managed-rights-form' || $_POST['ajax'] === 'producer-payment-method-form' || $_POST['ajax'] === 'producer-pseudonym-form' || $_POST['ajax'] === 'producer-related-rights-form' || $_POST['ajax'] === 'producer-succession-form' || $_POST['ajax'] === 'producer-biography-form'
+                $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'producer-account-address-form' || $_POST['ajax'] === 'producer-managed-rights-form' || $_POST['ajax'] === 'producer-payment-method-form' || $_POST['ajax'] === 'producer-pseudonym-form' || $_POST['ajax'] === 'producer-related-rights-form' || $_POST['ajax'] === 'producer-succession-form' || $_POST['ajax'] === 'producer-biography-form' || $_POST['ajax'] === 'publisher-managed-rights-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

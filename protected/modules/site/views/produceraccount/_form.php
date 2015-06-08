@@ -44,9 +44,12 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Marks, Series & <br />Cross-references</a></li>
+                <?php if ($model->Pro_Is_Publisher == 'Y') { ?>
+                    <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation and Inheritance</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pro_Is_Publisher == 'Y' ? '<br />' : '';?> and Inheritance</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -251,6 +254,15 @@ $legal_forms = Myclass::getMasterLegalForm();
                     }
                     ?>
                 </div>
+                <?php if ($model->Pro_Is_Publisher == 'Y') { ?>
+                    <div class="tab-pane" id="tab_9">
+                        <?php
+                        if ($doc_tab_validation) {
+                            $this->renderPartial('/publisheraccount/_managed_rights_form', array('model' => $managed_model, 'publisher_model' => $publisher_model, 'regions' => $regions));
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
                 <!--                <div class="tab-pane" id="tab_7">
                 <?php
 //                    if (!$model->isNewRecord) {
@@ -291,6 +303,20 @@ $js = <<< EOD
         });
         $("#ProducerRelatedRights_Pro_Rel_Exit_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Rel_Exit_Date_2").val($(this).val());
+        });
+        
+        $("#PublisherManageRights_Pub_Mnge_Entry_Date").on("change", function(){
+            $("#PublisherManageRights_Pub_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#PublisherManageRights_Pub_Mnge_Exit_Date").on("change", function(){
+            $("#PublisherManageRights_Pub_Mnge_Exit_Date_2").val($(this).val());
+        });
+        
+        $("#PublisherRelatedRights_Pub_Rel_Entry_Date").on("change", function(){
+             $("#PublisherRelatedRights_Pub_Rel_Entry_Date_2").val($(this).val());
+        });
+        $("#PublisherRelatedRights_Pub_Rel_Exit_Date").on("change", function(){
+            $("#PublisherRelatedRights_Pub_Rel_Exit_Date_2").val($(this).val());
         });
     });
 EOD;
