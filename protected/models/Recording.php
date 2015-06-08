@@ -96,7 +96,7 @@ class Recording extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'rcdRecordType' => array(self::BELONGS_TO, 'MasterRecordType', 'Rcd_Record_Type_Id'),
-            'rcdDocStatus' => array(self::BELONGS_TO, 'MasterDocument', 'Rcd_Doc_Status_Id'),
+            'rcdDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Rcd_Doc_Status_Id'),
             'rcdLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Rcd_Language_Id'),
             'rcdProductCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Rcd_Product_Country_Id'),
             'rcdRecordCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Rcd_Record_Country_id'),

@@ -15,7 +15,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 $languages = Myclass::getMasterLanguage();
 $types = Myclass::getMasterType();
 $countries = Myclass::getMasterCountry();
-$doc_status = Myclass::getMasterDocument();
+$doc_status = CHtml::listData(MasterDocumentStatus::model()->findAll(array('order' => 'Document_Sts_Code')), 'Master_Document_Sts_Id', 'Document_Sts_Name');
 //$doc_status = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(array('order' => 'Document_Sts_Code')), 'Master_Document_Sts_Id', 'Document_Sts_Name');
 $recording_types = $model->getRecordingtype();
 $labels = $model->getLabel();
