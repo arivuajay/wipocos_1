@@ -352,19 +352,16 @@ class AuthorAccount extends CActiveRecord {
     public function convert($id) {
         $author_model = self::model()->findByPk($id);
         $check_exists = $this->checkPerformer($author_model->Auth_Internal_Code, false);
-        if (empty($check_exists)) {
-            $performer_model = new PerformerAccount;
-            $ignore_list = Myclass::getAuthorconvertIgnorelist();
-            //basic data
-            foreach ($author_model->attributes as $key => $value) {
-                $attr_name = str_replace('Auth_', 'Perf_', $key);
-                !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
-            }
-            $performer_model->save(false);
-            $perf_acc_id = $performer_model->Perf_Acc_Id;
-        } else {
-            $perf_acc_id = $check_exists->Perf_Acc_Id;
+        $ignore_list = Myclass::getAuthorconvertIgnorelist();
+        $performer_model = empty($check_exists) ? new PerformerAccount : $check_exists;
+        //basic data
+        foreach ($author_model->attributes as $key => $value) {
+            $attr_name = str_replace('Auth_', 'Perf_', $key);
+            !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
         }
+        $performer_model->save(false);
+        $perf_acc_id = $performer_model->Perf_Acc_Id;
+        
         if (!$this->isNewRecord) {
             $relModels = array(
                 'authorAccountAddresses' => 'PerformerAccountAddress',
