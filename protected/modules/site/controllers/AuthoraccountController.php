@@ -260,9 +260,6 @@ class AuthoraccountController extends Controller {
                     Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
                     $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
                 }
-            }else{
-                var_dump($related_model->getErrors());
-                exit;
             }
         }
 

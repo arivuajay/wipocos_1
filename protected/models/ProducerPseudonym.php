@@ -18,6 +18,7 @@
  */
 class ProducerPseudonym extends CActiveRecord {
 
+    public $after_save_disable = true;
     /**
      * @return string the associated database table name
      */
@@ -126,4 +127,8 @@ class ProducerPseudonym extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        ProducerAccount::afterTabsave('PublisherPseudonym', 'publisherPseudonyms');
+        return parent::afterSave();
+    }
 }

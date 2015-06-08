@@ -419,4 +419,10 @@ class Myclass extends CController {
             'Auth_Pay_Id', 'Auth_Pseudo_Id', 'Auth_Upl_Id', 'Perf_Acc_Id', 'Perf_Addr_Id', 'Perf_Biogrph_Id', 'Perf_Death_Inhrt_Id',
             'Perf_Pay_Id', 'Perf_Pseudo_Id', 'Perf_Upl_Id');
     }
+    
+    public static function getPublisherconvertIgnorelist() {
+        return array('Pub_Acc_Id', 'Created_Date', 'Pub_Addr_Id', 'Rowversion', 'Pub_Biogrph_Id', 'Pub_Death_Inhrt_Id', 
+            'Pub_Pay_Id', 'Pub_Pseudo_Id', 'Pro_Acc_Id', 'Pro_Addr_Id', 'Pro_Biogrph_Id', 'Pro_Death_Inhrt_Id',
+            'Pro_Pay_Id', 'Pro_Pseudo_Id');
+    }
 }

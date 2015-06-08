@@ -29,7 +29,14 @@ $legal_forms = Myclass::getMasterLegalForm();
         $other_tab_validation = $doc_tab_validation = true;
         if (!$model->isNewRecord) {
             if($model->Pub_Non_Member == 'N'){
-                $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                switch ($model->Pub_Is_Producer) {
+                    case 'Y':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord && !$related_model->isNewRecord;
+                        break;
+                    case 'N':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                        break;
+                }
                 $doc_tab_validation = !$model->isNewRecord;
             }
         }else{
@@ -45,8 +52,11 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Marks, Series & <br />Cross-references</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <?php if ($model->Pub_Is_Producer == 'Y') { ?>
+                    <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
+                <?php } ?>
                 <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation and Inheritance</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pub_Is_Producer == 'Y' ? '<br />' : '';?> and Inheritance</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -77,6 +87,18 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->error($model, 'Pub_Internal_Code'); ?>
                                 </div>
 
+                                <div class="form-group" style="pointer-events: none">
+                                    <?php echo $form->labelEx($model, 'is_publisher', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'is_publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                    <?php echo $form->error($model, 'is_publisher'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Is_Producer', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pub_Is_Producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Pub_Is_Producer'); ?>
+                                </div>
+                                
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Corporate_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Pub_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -108,16 +130,9 @@ $legal_forms = Myclass::getMasterLegalForm();
                                 </div>
                                 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Pub_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Pub_Non_Member'); ?>
-                                </div>
-
-                                <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
                                 </div>
-
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -191,6 +206,12 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pub_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Pub_Non_Member'); ?>
+                                </div>
+
                             </div>
                         </div>
 
@@ -239,6 +260,15 @@ $legal_forms = Myclass::getMasterLegalForm();
                     }
                     ?>
                 </div>
+                <?php if ($model->Pub_Is_Producer == 'Y') { ?>
+                    <div class="tab-pane" id="tab_9">
+                        <?php
+                        if ($doc_tab_validation) {
+                            $this->renderPartial('/produceraccount/_related_rights_form', array('model' => $related_model, 'producer_model' => $producer_model, 'regions' => $regions));
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
                 <div class="tab-pane" id="tab_8">
                     <?php
                     if ($other_tab_validation) {
@@ -273,6 +303,20 @@ $js = <<< EOD
         });
         $("#PublisherRelatedRights_Pub_Rel_Exit_Date").on("change", function(){
             $("#PublisherRelatedRights_Pub_Rel_Exit_Date_2").val($(this).val());
+        });
+        
+        $("#ProducerRelatedRights_Pro_Mnge_Entry_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#ProducerRelatedRights_Pro_Mnge_Exit_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Mnge_Exit_Date_2").val($(this).val());
+        });
+        
+        $("#ProducerRelatedRights_Pro_Rel_Entry_Date").on("change", function(){
+             $("#ProducerRelatedRights_Pro_Rel_Entry_Date_2").val($(this).val());
+        });
+        $("#ProducerRelatedRights_Pro_Rel_Exit_Date").on("change", function(){
+            $("#ProducerRelatedRights_Pro_Rel_Exit_Date_2").val($(this).val());
         });
     });
 EOD;

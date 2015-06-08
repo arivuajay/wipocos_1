@@ -17,6 +17,7 @@
  */
 class ProducerBiography extends CActiveRecord {
 
+    public $after_save_disable = true;
     /**
      * @return string the associated database table name
      */
@@ -119,4 +120,8 @@ class ProducerBiography extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        ProducerAccount::afterTabsave('PublisherBiography', 'publisherBiographies');
+        return parent::afterSave();
+    }
 }

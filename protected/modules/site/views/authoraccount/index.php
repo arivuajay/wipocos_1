@@ -158,13 +158,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                    'class' => 'IndexColumn',
 //                    'header' => '',
 //                ),
-                array(
-                    'name' => 'Auth_is_Performer',
-                    'type' => 'raw',
-                    'value' => function($data) {
-                        echo $data->Auth_is_Performer == 'Y' ? '<i class="fa fa-check-square text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
-                    },
-                ),
                 'Auth_Internal_Code',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
@@ -202,6 +195,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'type' => 'raw',
                     'value' => function($data) {
                         echo $data->status;
+                    },
+                ),
+                array(
+                    'name' => 'Auth_Is_Performer',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                        echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
                     },
                 ),
                 array(

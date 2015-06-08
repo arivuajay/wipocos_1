@@ -171,6 +171,14 @@ $legal_forms = Myclass::getMasterLegalForm();
                 echo $data->status;
             },
                 ),
+                array(
+                    'name' => 'Pro_Is_Publisher',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->Pro_Is_Publisher == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+            },
+                ),
                 /*
                   'Pro_Country_Id',
                   'Pro_Legal_Form_id',
@@ -261,6 +269,14 @@ $legal_forms = Myclass::getMasterLegalForm();
               },
               ),
              */
+                array(
+                    'name' => 'Pro_Is_Publisher',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->Pro_Is_Publisher == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+            },
+                ),
             array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',

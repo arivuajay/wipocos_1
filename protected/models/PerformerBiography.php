@@ -116,22 +116,7 @@ class PerformerBiography extends CActiveRecord {
     }
 
     protected function afterSave() {
-        $author_model = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
-        if (!empty($author_model)) {
-            if (!empty($author_model->authorBiographies)) {
-                $biog_model = $author_model->authorBiographies;
-            } else {
-                $biog_model = new AuthorBiography();
-                $biog_model->Auth_Acc_Id = $author_model->Auth_Acc_Id;
-            }
-            $ignore_list = Myclass::getAuthorconvertIgnorelist();
-            foreach ($this->attributes as $key => $value) {
-                $attr_name = str_replace('Perf_', 'Auth_', $key);
-                !in_array($key, $ignore_list) ? $biog_model->setAttribute($attr_name, $value) : '';
-            }
-            $biog_model->after_save_disable = false;
-            $biog_model->save(false);
-        }
+        PerformerAccount::afterTabsave('AuthorBiography', 'authorBiographies');
         parent::afterSave();
     }
 

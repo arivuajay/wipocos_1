@@ -19,6 +19,7 @@
  */
 class ProducerSuccession extends CActiveRecord {
 
+    public $after_save_disable = true;
     /**
      * @return string the associated database table name
      */
@@ -130,4 +131,8 @@ class ProducerSuccession extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        ProducerAccount::afterTabsave('PublisherSuccession', 'publisherSuccessions');
+        return parent::afterSave();
+    }
 }

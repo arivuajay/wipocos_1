@@ -23,6 +23,7 @@
  */
 class ProducerPaymentMethod extends CActiveRecord {
 
+    public $after_save_disable = true;
     /**
      * @return string the associated database table name
      */
@@ -136,4 +137,8 @@ class ProducerPaymentMethod extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        ProducerAccount::afterTabsave('PublisherPaymentMethod', 'publisherPaymentMethods');
+        return parent::afterSave();
+    }
 }

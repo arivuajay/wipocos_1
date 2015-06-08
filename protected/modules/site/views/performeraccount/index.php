@@ -15,7 +15,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
-<?php $this->renderPartial('/default/_colors')?>
+<?php $this->renderPartial('/default/_colors') ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -193,6 +193,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 echo $data->status;
             },
                 ),
+                array(
+                    'name' => 'Perf_Is_Author',
+                    'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => function($data) {
+                echo $data->Perf_Is_Author == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+            },
+                ),
 //                'Perf_Ipi',
 //                'Perf_Ipi_Base_Number',
 //                'Perf_Ipn_Number',
@@ -309,6 +317,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'type' => 'raw',
                 'value' => function($data) {
             echo $data->status;
+        },
+            ),
+            array(
+                'name' => 'Perf_Is_Author',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+            echo $data->Perf_Is_Author == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
         },
             ),
 //            'Perf_Ipi',

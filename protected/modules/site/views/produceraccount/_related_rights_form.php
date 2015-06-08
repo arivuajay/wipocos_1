@@ -63,7 +63,7 @@
                 <?php
                 $exit_date_2 = '';
                 if (isset($model->Pro_Rel_Exit_Date_2)) {
-                    $exit_date = $model->Pro_Rel_Exit_Date_2 != "0000-00-00" ? $model->Pro_Rel_Exit_Date_2 : '';
+                    $exit_date_2 = $model->Pro_Rel_Exit_Date_2 != "0000-00-00" ? $model->Pro_Rel_Exit_Date_2 : '';
                 }
                 ?>
                 <?php echo $form->textField($model, 'Pro_Rel_Exit_Date_2', array('class' => 'form-control date', 'value' => $exit_date_2)); ?>

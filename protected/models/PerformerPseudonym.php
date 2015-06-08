@@ -122,22 +122,7 @@ class PerformerPseudonym extends CActiveRecord {
     }
 
     protected function afterSave() {
-        $author_model = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
-        if (!empty($author_model)) {
-            if(!empty($author_model->authorPseudonyms)){
-                $pseudo_model = $author_model->authorPseudonyms;
-            }else{
-                $pseudo_model = new AuthorPseudonym;
-                $pseudo_model->Auth_Acc_Id = $author_model->Auth_Acc_Id;
-            }
-            $ignore_list = Myclass::getAuthorconvertIgnorelist();
-            foreach ($this->attributes as $key => $value) {
-                $attr_name = str_replace('Perf_', 'Auth_', $key);
-                !in_array($key, $ignore_list) ? $pseudo_model->setAttribute($attr_name, $value) : '';
-            }
-            $pseudo_model->after_save_disable = false;
-            $pseudo_model->save(false);
-        }
+        PerformerAccount::afterTabsave('AuthorPseudonym', 'authorPseudonyms');
         parent::afterSave();
     }
 

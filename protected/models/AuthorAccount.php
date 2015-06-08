@@ -342,7 +342,7 @@ class AuthorAccount extends CActiveRecord {
     protected function afterDelete() {
         if ($this->after_save_disable) {
             $performer = $this->checkPerformer($this->Auth_Internal_Code, false);
-            if (!empty($performer)) {
+            if (!empty($performer) && $this->after_delete_disable) {
                 $performer->delete();
             }
         }
@@ -359,9 +359,11 @@ class AuthorAccount extends CActiveRecord {
             $attr_name = str_replace('Auth_', 'Perf_', $key);
             !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
         }
+        $performer_model->Perf_Is_Author = 'Y';
+        $performer_model->after_save_disable = false;
         $performer_model->save(false);
         $perf_acc_id = $performer_model->Perf_Acc_Id;
-        
+
         if (!$this->isNewRecord) {
             $relModels = array(
                 'authorAccountAddresses' => 'PerformerAccountAddress',
@@ -403,5 +405,23 @@ class AuthorAccount extends CActiveRecord {
 //        $this->oldRecord = clone $this;
 //        return parent::afterFind();
 //    }
+
+    public function afterTabsave($model, $relation) {
+        $performer_model = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
+        if (!empty($performer_model)) {
+            if (!empty($performer_model->$relation)) {
+                $dist_model = $performer_model->$relation;
+            } else {
+                $dist_model = new $model;
+                $dist_model->Perf_Acc_Id = $performer_model->Perf_Acc_Id;
+            }
+            $ignore_list = Myclass::getAuthorconvertIgnorelist();
+            foreach ($this->attributes as $key => $value) {
+                $attr_name = str_replace('Auth_', 'Perf_', $key);
+                !in_array($key, $ignore_list) ? $dist_model->setAttribute($attr_name, $value) : '';
+            }
+            $dist_model->save(false);
+        }
+    }
 
 }

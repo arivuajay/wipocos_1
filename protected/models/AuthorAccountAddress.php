@@ -184,23 +184,8 @@ class AuthorAccountAddress extends CActiveRecord {
     }
     
     protected function afterSave() {
-        if($this->after_save_disable){
-            $performer_model = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
-            if (!empty($performer_model)) {
-                if(!empty($performer_model->performerAccountAddresses)){
-                    $address_model = $performer_model->performerAccountAddresses;
-                }else{
-                    $address_model = new PerformerAccountAddress;
-                    $address_model->Perf_Acc_Id = $performer_model->Perf_Acc_Id;
-                }
-                $ignore_list = Myclass::getAuthorconvertIgnorelist();
-                foreach ($this->attributes as $key => $value) {
-                    $attr_name = str_replace('Auth_', 'Perf_', $key);
-                    !in_array($key, $ignore_list) ? $address_model->setAttribute($attr_name, $value) : '';
-                }
-                $address_model->save(false);
-            }
-        }
+        if($this->after_save_disable)
+            AuthorAccount::afterTabsave('PerformerAccountAddress', 'performerAccountAddresses');
         return parent::afterSave();
     }
 

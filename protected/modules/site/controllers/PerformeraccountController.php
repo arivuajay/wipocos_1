@@ -163,9 +163,13 @@ class PerformeraccountController extends Controller {
             $upload_model = empty($upload_exists) ? new PerformerUpload('create') : $upload_exists;
         }
 
+        $author_model = PerformerAccount::model()->checkAuthor($model->Perf_Internal_Code, false);
+        $managed_exists = AuthorManageRights::model()->with('authAcc')->find('authAcc.Auth_Internal_Code = :int_code', array(':int_code' => $model->Perf_Internal_Code));
+        $managed_model = empty($managed_exists) ? new AuthorManageRights : $managed_exists;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
-            $model, $address_model, $payment_model, $psedonym_model, $death_model, $related_model, $biograph_model));
+            $model, $address_model, $payment_model, $psedonym_model, $death_model, $related_model, $biograph_model, $managed_model));
 
         if (isset($_POST['PerformerAccount'])) {
             $model->attributes = $_POST['PerformerAccount'];
@@ -253,10 +257,26 @@ class PerformeraccountController extends Controller {
                 if ($tab != '8')
                     $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '8'));
             }
+        } elseif (isset($_POST['AuthorManageRights'])) {
+            $managed_model->attributes = $_POST['AuthorManageRights'];
+
+            if ($managed_model->validate()) {
+                echo 'in';
+                if ($managed_model->save()) {
+                    Myclass::addAuditTrail("Updated {$model->Perf_First_Name}  {$model->Perf_Sur_Name} Managed Rights successfully.", "user");
+                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '9'));
+                }
+            }  else {
+                echo '<pre>';
+                print_r($managed_model->getErrors());
+            }
+                exit;
         }
 
         $this->render('update', compact(
-                        'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 'biograph_model', 'upload_model'));
+                        'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'related_model', 
+                'biograph_model', 'upload_model', 'managed_model', 'author_model'));
     }
 
     /**
@@ -386,6 +406,7 @@ class PerformeraccountController extends Controller {
                 || $_POST['ajax'] === 'performer-managed-rights-form' 
                 || $_POST['ajax'] === 'performer-biography-form' 
                 || $_POST['ajax'] === 'performer-upload-form'
+                || $_POST['ajax'] === 'author-managed-rights-form' 
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();

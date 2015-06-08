@@ -27,8 +27,15 @@ $regions = Myclass::getMasterRegion();
         <?php
         $other_tab_validation = $doc_tab_validation = true;
         if (!$model->isNewRecord) {
-            if($model->Perf_Non_Member == 'N'){
-                $other_tab_validation = !$model->isNewRecord && !$related_model->isNewRecord;
+            if ($model->Perf_Non_Member == 'N') {
+                switch ($model->Perf_Is_Author) {
+                    case 'Y':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord && !$related_model->isNewRecord;
+                        break;
+                    case 'N':
+                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                        break;
+                }
                 $doc_tab_validation = !$model->isNewRecord;
             }
         }else{
@@ -43,9 +50,12 @@ $regions = Myclass::getMasterRegion();
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
+                <?php if ($model->Perf_Is_Author == 'Y') { ?>
+                    <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
+                <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload Documents</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Perf_Is_Author == 'Y' ? '<br />' : '';?> Documents</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -77,6 +87,18 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Perf_Internal_Code'); ?>
                                 </div>
 
+                                <div class="form-group" style="pointer-events: none">
+                                    <?php echo $form->labelEx($model, 'is_performer', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'is_performer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                    <?php echo $form->error($model, 'is_performer'); ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Perf_Is_Author', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Perf_Is_Author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Perf_Is_Author'); ?>
+                                </div>
+                                
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Perf_First_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Perf_First_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -221,6 +243,15 @@ $regions = Myclass::getMasterRegion();
                     }
                     ?>
                 </div>
+                <?php if ($model->Perf_Is_Author == 'Y') { ?>
+                    <div class="tab-pane" id="tab_9">
+                        <?php
+                        if ($doc_tab_validation) {
+                            $this->renderPartial('/authoraccount/_managed_rights_form', array('model' => $managed_model, 'author_model' => $author_model, 'regions' => $regions));
+                        }
+                        ?>
+                    </div>
+                <?php } ?>
                 <div class="tab-pane" id="tab_6">
                     <?php
                     if ($doc_tab_validation) {
@@ -256,12 +287,20 @@ $js = <<< EOD
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
         
-       $("#PerformerRelatedRights_Perf_Rel_Entry_Date").on("change", function(){
+        $("#PerformerRelatedRights_Perf_Rel_Entry_Date").on("change", function(){
             $("#PerformerRelatedRights_Perf_Rel_Entry_Date_2").val($(this).val());
         });
         $("#PerformerRelatedRights_Perf_Rel_Exit_Date").on("change", function(){
             $("#PerformerRelatedRights_Perf_Rel_Exit_Date_2").val($(this).val());
         });
+        
+        $("#AuthorManageRights_Auth_Mnge_Entry_Date").on("change", function(){
+            $("#AuthorManageRights_Auth_Mnge_Entry_Date_2").val($(this).val());
+        });
+        $("#AuthorManageRights_Auth_Mnge_Exit_Date").on("change", function(){
+            $("#AuthorManageRights_Auth_Mnge_Exit_Date_2").val($(this).val());
+        });
+
      });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

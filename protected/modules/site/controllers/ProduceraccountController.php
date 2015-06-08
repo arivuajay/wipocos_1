@@ -101,15 +101,15 @@ class ProduceraccountController extends Controller {
             $model->attributes = $_POST['ProducerAccount'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created Producer {$model->Pro_Corporate_Name} successfully.", "money");
-                if($model->Pro_Non_Member == 'N'){
-                    $message =  'ProducerAccount Created Successfully. Please Fill Related Rights!!!';
+                if ($model->Pro_Non_Member == 'N') {
+                    $message = 'ProducerAccount Created Successfully. Please Fill Related Rights!!!';
                     $tab = 6;
-                }else{
-                    $message =  'ProducerAccount Created Successfully';
+                } else {
+                    $message = 'ProducerAccount Created Successfully';
                     $tab = 1;
                 }
                 Yii::app()->user->setFlash('success', $message);
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => $tab));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => $tab));
             }
         }
 
@@ -155,7 +155,7 @@ class ProduceraccountController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Updated Producer {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'ProducerAccount Updated Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '1'));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '1'));
             }
         } elseif (isset($_POST['ProducerAccountAddress'])) {
             $address_model->attributes = $_POST['ProducerAccountAddress'];
@@ -163,7 +163,7 @@ class ProduceraccountController extends Controller {
             if ($address_model->save()) {
                 Myclass::addAuditTrail("Updated Producer Address {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'Address Saved Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '2'));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '2'));
             }
         } elseif (isset($_POST['ProducerPaymentMethod'])) {
             $payment_model->attributes = $_POST['ProducerPaymentMethod'];
@@ -171,7 +171,7 @@ class ProduceraccountController extends Controller {
             if ($payment_model->save()) {
                 Myclass::addAuditTrail("Updated Producer Payment Method {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'Payment Method Saved Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '3'));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '3'));
             }
         } elseif (isset($_POST['ProducerBiography'])) {
             $biograph_model->attributes = $_POST['ProducerBiography'];
@@ -188,7 +188,7 @@ class ProduceraccountController extends Controller {
                 }
                 Myclass::addAuditTrail("Updated Producer Biography {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '4'));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '4'));
             }
         } elseif (isset($_POST['ProducerPseudonym'])) {
             $psedonym_model->attributes = $_POST['ProducerPseudonym'];
@@ -196,7 +196,7 @@ class ProduceraccountController extends Controller {
             if ($psedonym_model->save()) {
                 Myclass::addAuditTrail("Updated Producer Pseudonym {$model->Pro_Corporate_Name} successfully.", "money");
                 Yii::app()->user->setFlash('success', 'Pseudonym Saved Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '5'));
+                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '5'));
             }
         } elseif (isset($_POST['ProducerRelatedRights'])) {
             $related_model->attributes = $_POST['ProducerRelatedRights'];
@@ -205,7 +205,7 @@ class ProduceraccountController extends Controller {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Producer Managed Rights {$model->Pro_Corporate_Name} successfully.", "money");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '6'));
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '6'));
                 }
             }
         } elseif (isset($_POST['ProducerRelatedRights'])) {
@@ -215,7 +215,7 @@ class ProduceraccountController extends Controller {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Producer Related Rights {$model->Pro_Corporate_Name} successfully.", "money");
                     Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '7'));
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '7'));
                 }
             }
         } elseif (isset($_POST['ProducerSuccession'])) {
@@ -225,14 +225,12 @@ class ProduceraccountController extends Controller {
                 if ($succession_model->save()) {
                     Myclass::addAuditTrail("Updated Producer Succession {$model->Pro_Corporate_Name} successfully.", "money");
                     Yii::app()->user->setFlash('success', 'Succession Saved Successfully!!!');
-                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id , 'tab' => '8'));
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '8'));
                 }
             }
         }
 
-        $this->render('update', compact(
-                        'tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 
-                'biograph_model', 'related_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 'biograph_model', 'related_model'));
     }
 
     /**

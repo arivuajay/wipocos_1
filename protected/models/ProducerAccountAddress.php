@@ -38,6 +38,8 @@
  */
 class ProducerAccountAddress extends CActiveRecord {
 
+    public $after_save_disable = true;
+    
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -192,4 +194,8 @@ class ProducerAccountAddress extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        ProducerAccount::afterTabsave('PublisherAccountAddress', 'publisherAccountAddresses');
+        return parent::afterSave();
+    }
 }

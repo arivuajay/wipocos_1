@@ -77,6 +77,18 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->error($model, 'Pro_Internal_Code'); ?>
                                 </div>
 
+                                <div class="form-group" style="pointer-events: none">
+                                    <?php echo $form->labelEx($model, 'is_producer', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'is_producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                    <?php echo $form->error($model, 'is_producer'); ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pro_Is_Publisher', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pro_Is_Publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Pro_Is_Publisher'); ?>
+                                </div>
+                                
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Corporate_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Pro_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>

@@ -244,6 +244,14 @@ $legal_forms = Myclass::getMasterLegalForm();
             echo $data->status;
         },
             ),
+            array(
+                'name' => 'Pub_Is_Producer',
+                'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
+                'type' => 'raw',
+                'value' => function($data) {
+                    echo $data->Pub_Is_Producer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+                },
+            ),
             /*
               'Pub_Country_Id',
               'Pub_Legal_Form_id',

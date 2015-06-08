@@ -128,22 +128,7 @@ class PerformerPaymentMethod extends CActiveRecord {
     }
 
     protected function afterSave() {
-        $author_model = PerformerAccount::checkAuthor($this->perfAcc->Perf_Internal_Code, false);
-        if (!empty($author_model)) {
-            if(!empty($author_model->authorPaymentMethods)){
-                $payment_model = $author_model->authorPaymentMethods;
-            }else{
-                $payment_model = new AuthorPaymentMethod;
-                $payment_model->Auth_Acc_Id = $author_model->Auth_Acc_Id;
-            }
-            $ignore_list = Myclass::getAuthorconvertIgnorelist();
-            foreach ($this->attributes as $key => $value) {
-                $attr_name = str_replace('Perf_', 'Auth_', $key);
-                !in_array($key, $ignore_list) ? $payment_model->setAttribute($attr_name, $value) : '';
-            }
-            $payment_model->after_save_disable = false;
-            $payment_model->save(false);
-        }
+        PerformerAccount::afterTabsave('AuthorPaymentMethod', 'authorPaymentMethods');
         parent::afterSave();
     }
 

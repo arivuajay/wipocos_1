@@ -37,6 +37,8 @@
  */
 class PublisherAccountAddress extends CActiveRecord {
 
+    public $after_save_disable = true;
+    
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -188,6 +190,12 @@ class PublisherAccountAddress extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    protected function afterSave() {
+        if($this->after_save_disable)
+            PublisherAccount::afterTabsave('ProducerAccountAddress', 'producerAccountAddresses');
+        return parent::afterSave();
     }
 
 }
