@@ -74,7 +74,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Mnge_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Pub_Mnge_Region_Id', $regions, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Pub_Mnge_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Pub_Mnge_Region_Id'); ?>
             </div>
 

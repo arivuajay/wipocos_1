@@ -36,7 +36,7 @@ $currencies = Myclass::getMasterCurrency();
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Abbr_Id', array('class' => '')); ?>
 
-                        <?php echo $form->dropDownList($model, 'Society_Abbr_Id', $organization, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Society_Abbr_Id', $organization, array('class' => 'form-control')); ?>
                         <?php echo $form->error($model, 'Society_Abbr_Id'); ?>
 
                     </div>

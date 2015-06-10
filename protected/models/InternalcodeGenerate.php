@@ -15,7 +15,9 @@ class InternalcodeGenerate extends CActiveRecord {
     public $fullcode;
 
     public function getFullcode() {
-        return $this->Gen_Prefix.$this->Gen_Inter_Code.$this->Gen_Suffix;
+        $soc = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
+        $soc_prefix = !empty($soc) ? "{$soc->Society_Code}-" : '';
+        return $soc_prefix.$this->Gen_Prefix.$this->Gen_Inter_Code.$this->Gen_Suffix;
     }
     /**
      * @return string the associated database table name

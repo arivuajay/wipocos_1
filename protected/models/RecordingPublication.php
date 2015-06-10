@@ -45,6 +45,7 @@ class RecordingPublication extends CActiveRecord {
             array('Rcd_Id, Rcd_Publ_Internal_Code, Rcd_Publ_Year', 'required'),
             array('Rcd_Id, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id', 'numerical', 'integerOnly' => true),
             array('Rcd_Publ_Internal_Code', 'length', 'max' => 100),
+            array('Rcd_Publ_Internal_Code', 'unique'),
             array('Rcd_Publ_Year', 'length', 'max' => 4),
             array('Created_Date, Rowversion', 'safe'),
             array('Rcd_Publ_Year', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),

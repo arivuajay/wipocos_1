@@ -235,4 +235,28 @@ class Recording extends CActiveRecord {
 
         return $label;
     }
+    
+    public function getMatchingdetails($recording_id = NULL) {
+        $recording = self::model()->with('recordingRightholders', 'recordingSubtitles')->findByAttributes(array('Rcd_Id' => $recording_id));
+        $column = '';
+        $time = explode(':', $recording->Rcd_Duration);
+        $column .= "$time[0]' $time[1]'' {$recording->rcdType->Type_Name} {$recording->rcdDocStatus->Document_Sts_Name}";
+        $column .= "<br />";
+        foreach ($recording->recordingRightholders as $key => $rightholder) {
+            if ($rightholder->recordingPerformer) {
+                $name = $rightholder->recordingPerformer->Perf_Sur_Name . ' ' . $rightholder->recordingPerformer->Perf_First_Name;
+            } elseif ($rightholder->recordingProducer) {
+                $name = $rightholder->recordingProducer->Pro_Corporate_Name;
+            }
+
+            $column .= $key == 0 ? "$name" : " , {$name}";
+        }
+        $column .= "<br />";
+        foreach ($recording->recordingSubtitles as $key => $subtitle) {
+            $name = $subtitle->Rcd_Subtitle_Name;
+//            $name = $subtitle->recordingSubtitleLanguage->Lang_Name;
+            $column .= $key == 0 ? "$name" : " , {$name}";
+        }
+        return $column;
+    }
 }

@@ -72,7 +72,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pro_Rel_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Pro_Rel_Region_Id', $regions, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Pro_Rel_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Pro_Rel_Region_Id'); ?>
             </div>
 

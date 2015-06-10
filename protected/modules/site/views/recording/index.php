@@ -169,28 +169,34 @@ $labels = $model->getLabel();
         <div class="row">
             <?php
             $gridColumns = array(
-            'Rcd_Title',
-            array(
-                'name' => 'Rcd_Language_Id',
-                'value' => function($data){
-                    echo $data->rcdLanguage->Lang_Name;
-                }
-            ),
-            'Rcd_Internal_Code',
-            array(
-                'name' => 'Rcd_Type_Id',
-                'value' => function($data){
-                    echo $data->rcdType->Type_Name;
-                }
-            ),
-            'Rcd_Date',
-            array(
-                'name' => 'Rcd_Duration',
-                'value' => function($data){
-                    $time = explode(':', $data->Rcd_Duration);
-                    echo "$time[0]' $time[1]''";
-                }
-            ),
+                'Rcd_Title',
+//                array(
+//                    'name' => 'Rcd_Language_Id',
+//                    'value' => function($data) {
+//                        echo $data->rcdLanguage->Lang_Name;
+//                    }
+//                ),
+                'Rcd_Internal_Code',
+//                array(
+//                    'name' => 'Rcd_Type_Id',
+//                    'value' => function($data) {
+//                        echo $data->rcdType->Type_Name;
+//                    }
+//                ),
+                'Rcd_Date',
+                array(
+                    'name' => 'matchingdetails',
+                    'value' => function($data, $row) use (&$searchModel) {
+                        echo $searchModel->getMatchingdetails($data->Rcd_Id);
+                    },
+                ),
+//                array(
+//                    'name' => 'Rcd_Duration',
+//                    'value' => function($data) {
+//                        $time = explode(':', $data->Rcd_Duration);
+//                        echo "$time[0]' $time[1]''";
+//                    }
+//                ),
                 /*
                   'Rcd_Record_Country_id',
                   'Rcd_Product_Country_Id',
@@ -240,27 +246,33 @@ $labels = $model->getLabel();
         <?php
         $gridColumns = array(
             'Rcd_Title',
-            array(
-                'name' => 'Rcd_Language_Id',
-                'value' => function($data){
-                    echo $data->rcdLanguage->Lang_Name;
-                }
-            ),
+//            array(
+//                'name' => 'Rcd_Language_Id',
+//                'value' => function($data){
+//                    echo $data->rcdLanguage->Lang_Name;
+//                }
+//            ),
             'Rcd_Internal_Code',
-            array(
-                'name' => 'Rcd_Type_Id',
-                'value' => function($data){
-                    echo $data->rcdType->Type_Name;
-                }
-            ),
+//            array(
+//                'name' => 'Rcd_Type_Id',
+//                'value' => function($data){
+//                    echo $data->rcdType->Type_Name;
+//                }
+//            ),
             'Rcd_Date',
             array(
-                'name' => 'Rcd_Duration',
-                'value' => function($data){
-                    $time = explode(':', $data->Rcd_Duration);
-                    echo "$time[0]' $time[1]''";
-                }
+                'name' => 'matchingdetails',
+                'value' => function($data, $row) use (&$model) {
+                    echo $model->getMatchingdetails($data->Rcd_Id);
+                },
             ),
+//            array(
+//                'name' => 'Rcd_Duration',
+//                'value' => function($data) {
+//                    $time = explode(':', $data->Rcd_Duration);
+//                    echo "$time[0]' $time[1]''";
+//                }
+//            ),
             /*
               'Rcd_Record_Country_id',
               'Rcd_Product_Country_Id',

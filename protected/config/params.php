@@ -52,5 +52,7 @@ return array(
     'DEFAULT_FACTOR_ID' => '1',
     'DEFAULT_TYPE_ID' => '4',
     'DEFAULT_RECORD_TYPE_ID' => '1',
+    
+    'DEFAULT_SOCIETY_ID' => '11',
 );
 
