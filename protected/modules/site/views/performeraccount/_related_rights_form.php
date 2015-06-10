@@ -74,7 +74,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Perf_Rel_Region_Id', $regions, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Perf_Rel_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Perf_Rel_Region_Id'); ?>
             </div>
 
@@ -85,11 +85,11 @@
     <div class="col-lg-5">
         <div class="box-body">
 
-            <div class="form-group">
+<!--            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Profession_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Perf_Rel_Profession_Id', $professions, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Perf_Rel_Profession_Id', $professions, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Perf_Rel_Profession_Id'); ?>
-            </div>
+            </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_File', array('class' => '')); ?>

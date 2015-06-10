@@ -302,6 +302,8 @@ $js = <<< EOD
                 success:function(data){
                     $('#RecordingRightholder_Rcd_Member_Internal_Code').val('');
                     $("#search_right_result").html(data);
+                    $('.user-role-dropdown select.performer-role').val('');
+                    $('.user-role-dropdown select.producer-role').val('');
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");

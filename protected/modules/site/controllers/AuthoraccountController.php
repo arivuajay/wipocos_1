@@ -220,8 +220,13 @@ class AuthoraccountController extends Controller {
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Managed Rights successfully.", "user");
-                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
+                    if($model->Auth_Is_Performer == 'Y' && $related_model->isNewRecord && $model->Auth_Non_Member == 'N'){
+                        Yii::app()->user->setFlash('success', 'Managed Rights saved Successfully. Please Fill Related Rights!!!');
+                        $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
+                    }else{
+                        Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                        $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
+                    }
                 }
             }
         } elseif (isset($_POST['AuthorDeathInheritance'])) {
@@ -257,8 +262,13 @@ class AuthoraccountController extends Controller {
             if ($related_model->validate()) {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Performer Related Rights {$performer_model->Perf_First_Name} {$performer_model->Perf_Sur_Name} successfully.", "music");
-                    Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
+                    if($model->Auth_Is_Performer == 'Y' && $managed_model->isNewRecord && $model->Auth_Non_Member == 'N'){
+                        Yii::app()->user->setFlash('success', 'Related Rights saved Successfully. Please Fill Managed Rights!!!');
+                        $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
+                    }else{
+                        Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
+                        $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
+                    }
                 }
             }
         }

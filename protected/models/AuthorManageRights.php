@@ -104,7 +104,7 @@ class AuthorManageRights extends CActiveRecord {
             'Auth_Mnge_Profession_Id' => 'Profession',
             'Auth_Mnge_File' => 'Physical File Location',
             'Auth_Mnge_Duration' => 'Duration',
-            'Auth_Mnge_Avl_Work_Cat_Id' => 'Work Categroy',
+            'Auth_Mnge_Avl_Work_Cat_Id' => 'Work Category',
             'Auth_Mnge_Type_Rght_Id' => 'RightHolder Type',
             'Auth_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Auth_Mnge_Territories_Id' => 'Territories',

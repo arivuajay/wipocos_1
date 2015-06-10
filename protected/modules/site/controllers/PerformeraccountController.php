@@ -226,8 +226,13 @@ class PerformeraccountController extends Controller {
             if ($related_model->validate()) {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Performer Related Rights {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
-                    Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '6'));
+                    if($model->Perf_Is_Author == 'Y' && $managed_model->isNewRecord && $model->Perf_Non_Member == 'N'){
+                        Yii::app()->user->setFlash('success', 'Related Rights saved Successfully. Please Fill Managed Rights!!!');
+                        $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '9'));
+                    }else{
+                        Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
+                        $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '6'));
+                    }
                 }
             }
         } elseif (isset($_POST['PerformerDeathInheritance'])) {
@@ -261,17 +266,17 @@ class PerformeraccountController extends Controller {
             $managed_model->attributes = $_POST['AuthorManageRights'];
 
             if ($managed_model->validate()) {
-                echo 'in';
                 if ($managed_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Perf_First_Name}  {$model->Perf_Sur_Name} Managed Rights successfully.", "user");
-                    Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
-                    $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '9'));
+                    if($model->Perf_Is_Author == 'Y' && $related_model->isNewRecord && $model->Perf_Non_Member == 'N'){
+                        Yii::app()->user->setFlash('success', 'Managed Rights saved Successfully. Please Fill Related Rights!!!');
+                        $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '6'));
+                    }else{
+                        Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
+                        $this->redirect(array('/site/performeraccount/update', 'id' => $model->Perf_Acc_Id, 'tab' => '9'));
+                    }
                 }
-            }  else {
-                echo '<pre>';
-                print_r($managed_model->getErrors());
             }
-                exit;
         }
 
         $this->render('update', compact(

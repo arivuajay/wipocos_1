@@ -72,7 +72,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Region_Id', $regions, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Region_Id'); ?>
             </div>
 
@@ -83,11 +83,11 @@
     <div class="col-lg-5">
         <div class="box-body">
 
-            <div class="form-group">
+<!--            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Profession_Id', array('class' => '')); ?>
                 <?php echo $form->dropDownList($model, 'Auth_Mnge_Profession_Id', $professions, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Profession_Id'); ?>
-            </div>
+            </div>-->
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_File', array('class' => '')); ?>
@@ -119,7 +119,7 @@
                             <?php echo $form->error($model, 'Auth_Mnge_Avl_Work_Cat_Id'); ?>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <?php echo $form->labelEx($model, 'Auth_Mnge_Type_Rght_Id', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Auth_Mnge_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
                             <?php echo $form->error($model, 'Auth_Mnge_Type_Rght_Id'); ?>

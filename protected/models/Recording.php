@@ -49,6 +49,7 @@ class Recording extends CActiveRecord {
             $this->Rcd_Record_Country_id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Product_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Date = date('Y-m-d');
+            $this->Rcd_Record_Type_Id = DEFAULT_RECORD_TYPE_ID;
         }
     }
     /**
@@ -220,7 +221,7 @@ class Recording extends CActiveRecord {
     }
     
     public function getRecordingtype($key = NULL) {
-        $recording = CHtml::listData(MasterRecordType::model()->isActive()->findAll(), 'Master_Rec_Type_Id', 'Rec_Type_Name');
+        $recording = CHtml::listData(MasterRecordType::model()->isActive()->findAll(array('order' => 'Rec_Type_Name')), 'Master_Rec_Type_Id', 'Rec_Type_Name');
         if ($key != NULL)
             return $recording[$key];
 
