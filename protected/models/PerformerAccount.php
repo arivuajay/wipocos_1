@@ -46,9 +46,15 @@ class PerformerAccount extends CActiveRecord {
     public $hierarchy_level;
     public $record_search;
     public $search_status;
-    public $after_save_disable = true;
-    public $after_delete_disable = true;
     public $is_performer;
+    
+    public $before_save_enable = true;
+    public $after_save_enable = true;
+    public $after_delete_disable = true;
+    
+    public $oldRecord;
+    
+    public $internal_increament = true;
 
     public function init() {
         parent::init();
@@ -270,17 +276,30 @@ class PerformerAccount extends CActiveRecord {
         ));
     }
 
+    protected function beforeSave() {
+        if ($this->Perf_Is_Author == 'Y' && $this->before_save_enable) {
+            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'AP'));
+            if ($this->isNewRecord) {
+                $this->Perf_Internal_Code = $gen_int_code->Fullcode;
+            }else{
+                if($this->oldRecord->Perf_Is_Author == 'N'){
+                    $this->Perf_Internal_Code = $gen_int_code->Fullcode;
+                }
+            }
+        }
+        return parent::beforeSave();
+    }
+    
     protected function afterSave() {
         if ($this->isNewRecord) {
-            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'P'));
-            $len = strlen($gen_inter_model->Gen_Inter_Code);
-            $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
-            $gen_inter_model->save(false);
-
-            if ($this->Perf_Is_Author == 'Y') {
-                $this->convert($this->Perf_Acc_Id);
+            if($this->internal_increament){
+                $type = $this->Perf_Is_Author == 'Y' ? 'AP' : 'P';
+                InternalcodeGenerate::model()->codeIncreament($type);
             }
-        } elseif ($this->after_save_disable && !$this->isNewRecord) {
+
+            if ($this->Perf_Is_Author == 'Y')
+                $this->convert($this->Perf_Acc_Id);
+        } elseif ($this->after_save_enable && !$this->isNewRecord) {
             $author_model = $this->checkAuthor($this->Perf_Internal_Code, false);
 
             switch ($this->Perf_Is_Author) {
@@ -288,9 +307,19 @@ class PerformerAccount extends CActiveRecord {
                     if (!empty($author_model)) {
                         $author_model->after_delete_disable = false;
                         $author_model->delete();
+                        
+                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'P'));
+                        $this->after_save_enable = false;
+                        $this->internal_increament = false;
+                        $this->Perf_Internal_Code = $gen_inter_model->Fullcode;
+                        $this->save(false);
+                        InternalcodeGenerate::model()->codeIncreament('P');
                     }
                     break;
                 case 'Y':
+                    if($this->oldRecord->Perf_Is_Author == 'N')
+                        InternalcodeGenerate::model()->codeIncreament('AP');
+                    
                     $this->convert($this->Perf_Acc_Id);
                     break;
             }
@@ -339,7 +368,10 @@ class PerformerAccount extends CActiveRecord {
             !in_array($key, $ignore_list) ? $author_model->setAttribute($attr_name, $value) : '';
         }
         $author_model->Auth_Is_Performer = 'Y';
-        $author_model->after_save_disable = false;
+        $author_model->before_save_enable = false;
+        $author_model->after_save_enable = false;
+        if($author_model->isNewRecord)
+            $author_model->internal_increament = false;
         $author_model->save(false);
         $auth_acc_id = $author_model->Auth_Acc_Id;
 
@@ -394,9 +426,13 @@ class PerformerAccount extends CActiveRecord {
                 $attr_name = str_replace('Perf_', 'Auth_', $key);
                 !in_array($key, $ignore_list) ? $dist_model->setAttribute($attr_name, $value) : '';
             }
-            $dist_model->after_save_disable = false;
+            $dist_model->after_save_enable = false;
             $dist_model->save(false);
         }
     }
 
+    protected function afterFind() {
+        $this->oldRecord = clone $this;
+        return parent::afterFind();
+    }
 }

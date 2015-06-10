@@ -46,10 +46,12 @@ class AuthorAccount extends CActiveRecord {
     public $hierarchy_level;
     public $record_search;
     public $search_status;
-    public $after_save_disable = true;
-    public $after_delete_disable = true;
     public $is_author;
+    public $before_save_enable = true;
+    public $after_save_enable = true;
+    public $after_delete_disable = true;
     public $oldRecord;
+    public $internal_increament = true;
 
     public function init() {
         parent::init();
@@ -270,17 +272,29 @@ class AuthorAccount extends CActiveRecord {
         ));
     }
 
+    protected function beforeSave() {
+        if ($this->Auth_Is_Performer == 'Y' && $this->before_save_enable) {
+            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'AP'));
+            if ($this->isNewRecord) {
+                $this->Auth_Internal_Code = $gen_int_code->Fullcode;
+            } else {
+                if ($this->oldRecord->Auth_Is_Performer == 'N') {
+                    $this->Auth_Internal_Code = $gen_int_code->Fullcode;
+                }
+            }
+        }
+        return parent::beforeSave();
+    }
+
     protected function afterSave() {
         if ($this->isNewRecord) {
-            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
-            $len = strlen($gen_inter_model->Gen_Inter_Code);
-            $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
-            $gen_inter_model->save(false);
-
-            if ($this->Auth_Is_Performer == 'Y') {
-                $this->convert($this->Auth_Acc_Id);
+            if ($this->internal_increament) {
+                $type = $this->Auth_Is_Performer == 'Y' ? 'AP' : 'A';
+                InternalcodeGenerate::model()->codeIncreament($type);
             }
-        } elseif ($this->after_save_disable && !$this->isNewRecord) {
+            if ($this->Auth_Is_Performer == 'Y')
+                $this->convert($this->Auth_Acc_Id);
+        } elseif ($this->after_save_enable && !$this->isNewRecord) {
             $performer_model = $this->checkPerformer($this->Auth_Internal_Code, false);
 
             switch ($this->Auth_Is_Performer) {
@@ -288,9 +302,19 @@ class AuthorAccount extends CActiveRecord {
                     if (!empty($performer_model)) {
                         $performer_model->after_delete_disable = false;
                         $performer_model->delete();
+
+                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
+                        $this->after_save_enable = false;
+                        $this->internal_increament = false;
+                        $this->Auth_Internal_Code = $gen_inter_model->Fullcode;
+                        $this->save(false);
+                        InternalcodeGenerate::model()->codeIncreament('A');
                     }
                     break;
                 case 'Y':
+                    if ($this->oldRecord->Auth_Is_Performer == 'N')
+                        InternalcodeGenerate::model()->codeIncreament('AP');
+
                     $this->convert($this->Auth_Acc_Id);
                     break;
             }
@@ -299,6 +323,7 @@ class AuthorAccount extends CActiveRecord {
         return parent::afterSave();
     }
 
+    //not used
     public function getAuthorsPseudoNames() {
         $text = 'no title yet';
 
@@ -340,7 +365,7 @@ class AuthorAccount extends CActiveRecord {
     }
 
     protected function afterDelete() {
-        if ($this->after_save_disable) {
+        if ($this->after_save_enable) {
             $performer = $this->checkPerformer($this->Auth_Internal_Code, false);
             if (!empty($performer) && $this->after_delete_disable) {
                 $performer->delete();
@@ -360,7 +385,10 @@ class AuthorAccount extends CActiveRecord {
             !in_array($key, $ignore_list) ? $performer_model->setAttribute($attr_name, $value) : '';
         }
         $performer_model->Perf_Is_Author = 'Y';
-        $performer_model->after_save_disable = false;
+        $performer_model->before_save_enable = false;
+        $performer_model->after_save_enable = false;
+        if ($performer_model->isNewRecord)
+            $performer_model->internal_increament = false;
         $performer_model->save(false);
         $perf_acc_id = $performer_model->Perf_Acc_Id;
 
@@ -401,10 +429,10 @@ class AuthorAccount extends CActiveRecord {
         return true;
     }
 
-//    protected function afterFind() {
-//        $this->oldRecord = clone $this;
-//        return parent::afterFind();
-//    }
+    protected function afterFind() {
+        $this->oldRecord = clone $this;
+        return parent::afterFind();
+    }
 
     public function afterTabsave($model, $relation) {
         $performer_model = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);

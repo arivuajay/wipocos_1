@@ -14,7 +14,7 @@
  */
 class AuthorUpload extends CActiveRecord {
 
-    public $after_save_disable = true;
+    public $after_save_enable = true;
     public $after_delete_disable = true;
 
     const FILE_SIZE = 10;
@@ -127,7 +127,7 @@ class AuthorUpload extends CActiveRecord {
     }
 
     protected function afterSave() {
-        if ($this->after_save_disable) {
+        if ($this->after_save_enable) {
             $performer_m = AuthorAccount::checkPerformer($this->authAcc->Auth_Internal_Code, false);
             if (!empty($performer_m)) {
                 $performer_exists = PerformerUpload::model()->findByAttributes(array('Perf_Upl_File' => $this->Auth_Upl_File));

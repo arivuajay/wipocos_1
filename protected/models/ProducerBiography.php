@@ -17,7 +17,7 @@
  */
 class ProducerBiography extends CActiveRecord {
 
-    public $after_save_disable = true;
+    public $after_save_enable = true;
     /**
      * @return string the associated database table name
      */

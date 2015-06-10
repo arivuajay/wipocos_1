@@ -38,7 +38,7 @@
  */
 class ProducerAccountAddress extends CActiveRecord {
 
-    public $after_save_disable = true;
+    public $after_save_enable = true;
     
     public function init() {
         parent::init();

@@ -220,12 +220,19 @@ class PublisherGroup extends CActiveRecord {
         ));
     }
 
+    protected function beforeSave() {
+        if($this->isNewRecord){
+            $type = $this->Pub_Group_Is_Producer == '1' ? 'GR' : 'GE';
+            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
+            $this->Pub_Group_Internal_Code = $gen_int_code->Fullcode;
+        }
+        return parent::beforeSave();
+    }
+    
     protected function afterSave() {
         if($this->isNewRecord){
-            $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'PG'));
-            $len = strlen($gen_inter_model->Gen_Inter_Code);
-            $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
-            $gen_inter_model->save(false);
+            $type = $this->Pub_Group_Is_Producer == '1' ? 'GR' : 'GE';
+            InternalcodeGenerate::model()->codeIncreament($type);
         }
         return parent::afterSave();
     }

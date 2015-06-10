@@ -138,7 +138,7 @@ class PerformerUpload extends CActiveRecord {
                 $attr_name = str_replace('Perf_', 'Auth_', $key);
                 !in_array($key, $ignore_list) ? $author_upload_model->setAttribute($attr_name, $value) : '';
             }
-            $author_upload_model->after_save_disable = false;
+            $author_upload_model->after_save_enable = false;
             $author_upload_model->save(false);
         }
         parent::afterSave();

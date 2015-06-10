@@ -37,7 +37,7 @@
  */
 class PublisherAccountAddress extends CActiveRecord {
 
-    public $after_save_disable = true;
+    public $after_save_enable = true;
     
     public function init() {
         parent::init();
@@ -193,7 +193,7 @@ class PublisherAccountAddress extends CActiveRecord {
     }
     
     protected function afterSave() {
-        if($this->after_save_disable)
+        if($this->after_save_enable)
             PublisherAccount::afterTabsave('ProducerAccountAddress', 'producerAccountAddresses');
         return parent::afterSave();
     }

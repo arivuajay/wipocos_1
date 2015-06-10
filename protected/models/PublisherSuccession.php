@@ -17,7 +17,7 @@
  */
 class PublisherSuccession extends CActiveRecord {
 
-    public $after_save_disable = true;
+    public $after_save_enable = true;
     /**
      * @return string the associated database table name
      */
@@ -126,7 +126,7 @@ class PublisherSuccession extends CActiveRecord {
     }
 
     protected function afterSave() {
-        if($this->after_save_disable)
+        if($this->after_save_enable)
             PublisherAccount::afterTabsave('ProducerSuccession', 'producerSuccessions');
         return parent::afterSave();
     }

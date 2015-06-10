@@ -81,7 +81,8 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'PG'));
+                                    $int_type = $type == 'publisher' ? 'GE' : 'GR';
+                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $int_type));
                                     $internal_code = $gen_int_code->Fullcode;
                                 } else {
                                     $internal_code = $model->Pub_Group_Internal_Code;
