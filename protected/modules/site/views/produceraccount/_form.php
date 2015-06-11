@@ -66,17 +66,9 @@ $legal_forms = Myclass::getMasterLegalForm();
                         ?>
                         <div class="col-lg-5">
                             <div class="box-body">
-                                <?php
-                                if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'PR'));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Pro_Internal_Code;
-                                }
-                                ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pro_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Pro_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Pro_Internal_Code'); ?>
                                 </div>
 
@@ -85,13 +77,13 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->checkBox($model, 'is_producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
                                     <?php echo $form->error($model, 'is_producer'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Is_Publisher', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Pro_Is_Publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pro_Is_Publisher'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Corporate_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Pro_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -290,28 +282,28 @@ $js = <<< EOD
     $(document).ready(function(){
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
-        
+
         $("#ProducerRelatedRights_Pro_Mnge_Entry_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Mnge_Entry_Date_2").val($(this).val());
         });
         $("#ProducerRelatedRights_Pro_Mnge_Exit_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Mnge_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#ProducerRelatedRights_Pro_Rel_Entry_Date").on("change", function(){
              $("#ProducerRelatedRights_Pro_Rel_Entry_Date_2").val($(this).val());
         });
         $("#ProducerRelatedRights_Pro_Rel_Exit_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Rel_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#PublisherManageRights_Pub_Mnge_Entry_Date").on("change", function(){
             $("#PublisherManageRights_Pub_Mnge_Entry_Date_2").val($(this).val());
         });
         $("#PublisherManageRights_Pub_Mnge_Exit_Date").on("change", function(){
             $("#PublisherManageRights_Pub_Mnge_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#PublisherRelatedRights_Pub_Rel_Entry_Date").on("change", function(){
              $("#PublisherRelatedRights_Pub_Rel_Entry_Date_2").val($(this).val());
         });

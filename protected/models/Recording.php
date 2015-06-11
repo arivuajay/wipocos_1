@@ -37,7 +37,7 @@ class Recording extends CActiveRecord {
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
-    
+
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -50,6 +50,8 @@ class Recording extends CActiveRecord {
             $this->Rcd_Product_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Date = date('Y-m-d');
             $this->Rcd_Record_Type_Id = DEFAULT_RECORD_TYPE_ID;
+
+            $this->Rcd_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::RECORDING_CODE))->Fullcode;
         }
     }
     /**
@@ -88,7 +90,7 @@ class Recording extends CActiveRecord {
                 $this->addError($attribute, 'Duration should not be Zero');
         }
     }
-    
+
     /**
      * @return array relational rules.
      */
@@ -202,21 +204,21 @@ class Recording extends CActiveRecord {
         $this->Rcd_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
         return parent::beforeValidate();
     }
-    
+
     protected function afterSave() {
         if ($this->isNewRecord) {
-            InternalcodeGenerate::model()->codeIncreament('R');
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::RECORDING_CODE);
         }
         return parent::afterSave();
     }
-    
+
     public function setDuration() {
         $time = explode(':', $this->Rcd_Duration);
         $this->duration_hours = $time[0];
         $this->duration_minutes = $time[1];
         $this->duration_seconds = $time[2];
     }
-    
+
     public function getRecordingtype($key = NULL) {
         $recording = CHtml::listData(MasterRecordType::model()->isActive()->findAll(array('order' => 'Rec_Type_Name')), 'Master_Rec_Type_Id', 'Rec_Type_Name');
         if ($key != NULL)
@@ -224,7 +226,7 @@ class Recording extends CActiveRecord {
 
         return $recording;
     }
-    
+
     public function getLabel($key = NULL) {
         $label = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
         if ($key != NULL)
@@ -232,7 +234,7 @@ class Recording extends CActiveRecord {
 
         return $label;
     }
-    
+
     public function getMatchingdetails($recording_id = NULL) {
         $recording = self::model()->with('recordingRightholders', 'recordingSubtitles')->findByAttributes(array('Rcd_Id' => $recording_id));
         $column = '';

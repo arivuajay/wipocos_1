@@ -59,6 +59,9 @@ class AuthorAccount extends CActiveRecord {
             $this->Auth_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Auth_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Auth_Language_Id = DEFAULT_LANGUAGE_ID;
+
+            $this->Auth_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
+                    array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode;
         }
     }
 
@@ -289,7 +292,7 @@ class AuthorAccount extends CActiveRecord {
     protected function afterSave() {
         if ($this->isNewRecord) {
             if ($this->internal_increament) {
-                $type = $this->Auth_Is_Performer == 'Y' ? 'AP' : 'A';
+                $type = $this->Auth_Is_Performer == 'Y' ? InternalcodeGenerate::AUTHOR_PERFORMER_CODE : InternalcodeGenerate::AUTHOR_CODE;
                 InternalcodeGenerate::model()->codeIncreament($type);
             }
             if ($this->Auth_Is_Performer == 'Y')
@@ -303,17 +306,17 @@ class AuthorAccount extends CActiveRecord {
                         $performer_model->after_delete_disable = false;
                         $performer_model->delete();
 
-                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
+                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_CODE));
                         $this->after_save_enable = false;
                         $this->internal_increament = false;
                         $this->Auth_Internal_Code = $gen_inter_model->Fullcode;
                         $this->save(false);
-                        InternalcodeGenerate::model()->codeIncreament('A');
+                        InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::AUTHOR_CODE);
                     }
                     break;
                 case 'Y':
                     if ($this->oldRecord->Auth_Is_Performer == 'N')
-                        InternalcodeGenerate::model()->codeIncreament('AP');
+                        InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::AUTHOR_PERFORMER_CODE);
 
                     $this->convert($this->Auth_Acc_Id);
                     break;
@@ -321,26 +324,6 @@ class AuthorAccount extends CActiveRecord {
         }
 
         return parent::afterSave();
-    }
-
-    //not used
-    public function getAuthorsPseudoNames() {
-        $text = 'no title yet';
-
-        if (!empty($this->authorPseudonyms)) { // if this Author has any related Posts
-            var_dump($this->authorPseudonyms);
-            exit;
-            $counter = 0;
-            foreach ($this->authorPseudonyms as $name) {
-                var_dump($name);
-                exit;
-                if ($counter == 0)
-                    $text = $name->Auth_Pseudo_Name;
-                else
-                    $text .= ', ' . $name->Auth_Pseudo_Name;
-            }
-        }
-        return $text;
     }
 
     public function getStatus() {

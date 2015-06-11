@@ -129,7 +129,7 @@ class Myclass extends CController {
         $obj->save();
         return;
     }
-    
+
     //drop down list
     public static function getMasterMaritalStatus($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
@@ -140,7 +140,7 @@ class Myclass extends CController {
             return $marital_status[$key];
         return $marital_status;
     }
-    
+
     public static function getMasterCountry($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $countries = CHtml::listData(MasterCountry::model()->isActive()->findAll(array('order' => 'Country_Name')), 'Master_Country_Id', 'Country_Name');
@@ -150,7 +150,7 @@ class Myclass extends CController {
             return $countries[$key];
         return $countries;
     }
-    
+
     public static function getMasterLanguage($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $languages = CHtml::listData(MasterLanguage::model()->isActive()->findAll(array('order' => 'Lang_Name')), 'Master_Lang_Id', 'Lang_Name');
@@ -160,7 +160,7 @@ class Myclass extends CController {
             return $languages[$key];
         return $languages;
     }
-    
+
     public static function getMasterNationality($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $nationalities = CHtml::listData(MasterNationality::model()->isActive()->findAll(array('order' => 'Nation_Name')), 'Master_Nation_Id', 'Nation_Name');
@@ -170,7 +170,7 @@ class Myclass extends CController {
             return $nationalities[$key];
         return $nationalities;
     }
-    
+
     public static function getMasterRegion($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $regions = CHtml::listData(MasterRegion::model()->isActive()->findAll(array('order' => 'Region_Name')), 'Master_Region_Id', 'Region_Name');
@@ -180,17 +180,17 @@ class Myclass extends CController {
             return $regions[$key];
         return $regions;
     }
-    
+
     public static function getSociety($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
-            $societies = CHtml::listData(Society::model()->with('socOrg')->isActive()->findAll(array('order' => 'Society_Code')), 'Society_Id', 'Society_Code');
+            $societies = CHtml::listData(Society::model()->with('socOrg')->isActive()->findAll(array('order' => 'Society_Code')), 'Society_Id', 'Societyname');
         else
-            $societies = CHtml::listData(Society::model()->with('socOrg')->findAll(array('order' => 'Society_Code')), 'Society_Id', 'Society_Code');
+            $societies = CHtml::listData(Society::model()->with('socOrg')->findAll(array('order' => 'Society_Code')), 'Society_Id', 'Societyname');
         if($key != NULL)
             return $societies[$key];
         return $societies;
     }
-    
+
     public static function getMasterProfession($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $professions = CHtml::listData(MasterProfession::model()->isActive()->findAll(array('order' => 'Profession_Name')), 'Master_Profession_Id', 'Profession_Name');
@@ -200,7 +200,7 @@ class Myclass extends CController {
             return $professions[$key];
         return $professions;
     }
-    
+
     public static function getMasterWorkCategory($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $work_categories = CHtml::listData(MasterWorksCategory::model()->isActive()->findAll(array('order' => 'Work_Category_Name')), 'Master_Work_Category_Id', 'Work_Category_Name');
@@ -210,7 +210,7 @@ class Myclass extends CController {
             return $work_categories[$key];
         return $work_categories;
     }
-    
+
     public static function getMasterTypeRight($occupation, $is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $right_types = CHtml::listData(MasterTypeRights::model()->isActive()->findAll(array(
@@ -226,7 +226,7 @@ class Myclass extends CController {
             return $right_types[$key];
         return $right_types;
     }
-    
+
     public static function getMasterTerritory($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $territories = CHtml::listData(MasterTerritories::model()->isActive()->findAll(array('order' => 'Territory_Name')), 'Master_Territory_Id', 'Territory_Name');
@@ -236,7 +236,7 @@ class Myclass extends CController {
             return $territories[$key];
         return $territories;
     }
-    
+
     public static function getMasterManagedRight($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $managed_rights = CHtml::listData(MasterManagedRights::model()->isActive()->findAll(array('order' => 'Mgd_Rights_Name')), 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name');
@@ -246,7 +246,7 @@ class Myclass extends CController {
             return $managed_rights[$key];
         return $managed_rights;
     }
-    
+
     public static function getMasterInternalPosition($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(array('order' => 'Int_Post_Name')), 'Master_Int_Post_Id', 'Int_Post_Name');
@@ -256,7 +256,7 @@ class Myclass extends CController {
             return $internal_positions[$key];
         return $internal_positions;
     }
-    
+
     public static function getMasterPaymentMethod($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $pay_methods = CHtml::listData(MasterPaymentMethod::model()->isActive()->findAll(array('order' => 'Paymode_Name')), 'Master_Paymode_Id', 'Paymode_Name');
@@ -266,7 +266,7 @@ class Myclass extends CController {
             return $pay_methods[$key];
         return $pay_methods;
     }
-    
+
     public static function getMasterPseudonym($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $psedonyms = CHtml::listData(MasterPseudonymTypes::model()->isActive()->findAll(array('order' => 'Pseudo_Code')), 'Pseudo_Id', 'Pseudo_Code');
@@ -276,21 +276,21 @@ class Myclass extends CController {
             return $psedonyms[$key];
         return $psedonyms;
     }
-    
+
     public static function getMasterRole($is_active = TRUE, $key = NULL) {
         $names = CHtml::listData(MasterRole::model()->findAll(array('order' => 'Role_Code')), 'Master_Role_ID', 'Description');
         if($key != NULL)
             return $names[$key];
         return $names;
     }
-    
+
     public static function getMasterModule($is_active = TRUE, $key = NULL) {
         $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
         if($key != NULL)
             return $modules[$key];
         return $modules;
     }
-    
+
     public static function getMasterLegalForm($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $legal_forms = CHtml::listData(MasterLegalForm::model()->isActive()->findAll(array('order' => 'Legal_Form_Name')), 'Master_Legal_Form_Id', 'Legal_Form_Name');
@@ -300,7 +300,7 @@ class Myclass extends CController {
             return $legal_forms[$key];
         return $legal_forms;
     }
-    
+
     public static function getMasterDocumentStatus($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $sts = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(array('order' => 'Document_Sts_Code')), 'Master_Document_Sts_Id', 'Document_Sts_Code');
@@ -310,7 +310,7 @@ class Myclass extends CController {
             return $sts[$key];
         return $sts;
     }
-    
+
     public static function getMasterCurrency($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $currencies = CHtml::listData(MasterCurrency::model()->isActive()->findAll(array('order' => 'Currency_Name')), 'Master_Crncy_Id', 'Currency_Name');
@@ -320,7 +320,7 @@ class Myclass extends CController {
             return $currencies[$key];
         return $currencies;
     }
-    
+
     public static function getMasterLabel($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $labels = CHtml::listData(MasterLabel::model()->isActive()->findAll(array('order' => 'Label_Name')), 'Master_Label_Id', 'Label_Name');
@@ -330,21 +330,21 @@ class Myclass extends CController {
             return $labels[$key];
         return $labels;
     }
-    
+
     public static function getProducer($key = NULL) {
         $producers = CHtml::listData(ProducerAccount::model()->findAll(array('order' => 'Pro_Corporate_Name')), 'Pro_Acc_Id', 'Pro_Corporate_Name');
         if($key != NULL)
             return $producers[$key];
         return $producers;
     }
-    
+
     public static function getPerformer($key = NULL) {
         $producers = CHtml::listData(PerformerAccount::model()->findAll(array('order' => 'Perf_First_Name')), 'Perf_Acc_Id', 'Perf_First_Name');
         if($key != NULL)
             return $producers[$key];
         return $producers;
     }
-    
+
     public static function getMasterDocumentType($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $document_types = CHtml::listData(MasterDocumentType::model()->isActive()->findAll(array('order' => 'Doc_Type_Name')), 'Master_Doc_Type_Id', 'Doc_Type_Name');
@@ -354,7 +354,7 @@ class Myclass extends CController {
             return $document_types[$key];
         return $document_types;
     }
-    
+
     public static function getMasterDocument($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $documents = CHtml::listData(MasterDocument::model()->isActive()->findAll(array('order' => 'Doc_Name')), 'Master_Doc_Id', 'Doc_Name');
@@ -364,14 +364,14 @@ class Myclass extends CController {
             return $documents[$key];
         return $documents;
     }
-    
+
     public static function getOrganization($key = NULL) {
         $organization = CHtml::listData(Organization::model()->findAll(array('order' => 'Org_Abbrevation')), 'Org_Id', 'Org_Abbrevation');
         if($key != NULL)
             return $organization[$key];
         return $organization;
     }
-    
+
     public static function getMasterHierarchy($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $hierarchy = CHtml::listData(MasterHierarchy::model()->isActive()->findAll(array('order' => 'Hierarchy_Name')), 'Master_Hierarchy_Id', 'Hierarchy_Name');
@@ -381,7 +381,7 @@ class Myclass extends CController {
             return $hierarchy[$key];
         return $hierarchy;
     }
-    
+
     public static function getMasterType($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $types = CHtml::listData(MasterType::model()->isActive()->findAll(array('order' => 'Type_Name')), 'Master_Type_Id', 'Type_Name');
@@ -391,7 +391,7 @@ class Myclass extends CController {
             return $types[$key];
         return $types;
     }
-    
+
     public static function getMasterFactor($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $factors = CHtml::listData(MasterFactor::model()->isActive()->findAll(array('order' => 'Factor')), 'Master_Factor_Id', 'Factor');
@@ -401,7 +401,7 @@ class Myclass extends CController {
             return $factors[$key];
         return $factors;
     }
-    
+
     public static function getMasterInstrument($is_active = TRUE, $key = NULL) {
         if($is_active && $key == NULL)
             $instruments = CHtml::listData(MasterInstrument::model()->isActive(array('order' => 'Instrument_Name'))->findAll(), 'Master_Inst_Id', 'Instrument_Name');
@@ -411,17 +411,17 @@ class Myclass extends CController {
             return $instruments[$key];
         return $instruments;
     }
-    
+
     //end
-    
+
     public static function getAuthorconvertIgnorelist() {
-        return array('Auth_Acc_Id', 'Created_Date', 'Auth_Addr_Id', 'Rowversion', 'Auth_Biogrph_Id', 'Auth_Death_Inhrt_Id', 
+        return array('Auth_Acc_Id', 'Created_Date', 'Auth_Addr_Id', 'Rowversion', 'Auth_Biogrph_Id', 'Auth_Death_Inhrt_Id',
             'Auth_Pay_Id', 'Auth_Pseudo_Id', 'Auth_Upl_Id', 'Perf_Acc_Id', 'Perf_Addr_Id', 'Perf_Biogrph_Id', 'Perf_Death_Inhrt_Id',
             'Perf_Pay_Id', 'Perf_Pseudo_Id', 'Perf_Upl_Id');
     }
-    
+
     public static function getPublisherconvertIgnorelist() {
-        return array('Pub_Acc_Id', 'Created_Date', 'Pub_Addr_Id', 'Rowversion', 'Pub_Biogrph_Id', 'Pub_Death_Inhrt_Id', 
+        return array('Pub_Acc_Id', 'Created_Date', 'Pub_Addr_Id', 'Rowversion', 'Pub_Biogrph_Id', 'Pub_Death_Inhrt_Id',
             'Pub_Pay_Id', 'Pub_Pseudo_Id', 'Pro_Acc_Id', 'Pro_Addr_Id', 'Pro_Biogrph_Id', 'Pro_Death_Inhrt_Id',
             'Pro_Pay_Id', 'Pro_Pseudo_Id');
     }

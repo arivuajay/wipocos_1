@@ -29,30 +29,30 @@ return array(
     'EMAILHEADERIMAGE' => '/themes/adminlte/img/header-logo.png',
 
     'PAGE_SIZE' => '10',
-    
+
     'SITENAME' => 'Wipocos',
     'EMAILHEADERIMAGE' => '',
-    
+
     'DEFAULT_COUNTRY_ID' => '2',
     'DEFAULT_NATIONALITY_ID' => '2',
     'DEFAULT_LANGUAGE_ID' => '5',
-    
+
     'DEFAULT_AUTHOR_RIGHT_HOLDER_ID' => '1',
     'DEFAULT_AUTHOR_GROUP_RIGHT_HOLDER_ID' => '1',
-    
+
     'DEFAULT_PERFORMER_RIGHT_HOLDER_ID' => '1',
     'DEFAULT_PERFORMER_GROUP_RIGHT_HOLDER_ID' => '1',
-    
+
     'DEFAULT_PUBLISHER_RIGHT_HOLDER_ID' => '2',
     'DEFAULT_PUBLISHER_GROUP_RIGHT_HOLDER_ID' => '2',
-    
+
     'DEFAULT_PRODUCER_RIGHT_HOLDER_ID' => '3',
     'DEFAULT_PRODUCER_GROUP_RIGHT_HOLDER_ID' => '3',
-    
+
     'DEFAULT_FACTOR_ID' => '1',
     'DEFAULT_TYPE_ID' => '4',
     'DEFAULT_RECORD_TYPE_ID' => '1',
-    
-    'DEFAULT_SOCIETY_ID' => '11',
+
+    'DEFAULT_SOCIETY_ID' => '10',
 );
 

@@ -57,7 +57,7 @@
                         array('label' => '<i class="fa fa-copyright"></i> <span>Managed rights</span>', 'url' => array('/site/mastermanagedrights/index')),
                         array('label' => '<i class="fa fa-female"></i> <span>Marital Status</span>', 'url' => array('/site/mastermaritalstatus/index')),
                         array('label' => '<i class="fa fa-flag"></i> <span>Nationalities</span>', 'url' => array('/site/masternationality/index')),
-                        array('label' => '<i class="fa fa-building"></i> <span>Society Master</span>', 'url' => array('/site/organization/index')),
+                        array('label' => '<i class="fa fa-building"></i> <span>Organization</span>', 'url' => array('/site/organization/index')),
                         array('label' => '<i class="fa fa-tty"></i> <span>Pseudonym Types</span>', 'url' => array('/site/masterpseudonymtypes/index')),
                         array('label' => '<i class="fa fa-paypal"></i> <span>Payment Methods</span>', 'url' => array('/site/masterpaymentmethod/index')),
                         array('label' => '<i class="fa fa-male"></i> <span>Profession</span>', 'url' => array('/site/masterprofession/index')),

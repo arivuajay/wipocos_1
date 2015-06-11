@@ -55,17 +55,9 @@ $labels = $model->getLabel();
                         ?>
                         <div class="col-lg-5">
                             <div class="box-body">
-                                <?php
-                                if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'R'));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Rcd_Internal_Code;
-                                }
-                                ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Rcd_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Rcd_Internal_Code'); ?>
                                 </div>
 
@@ -92,7 +84,7 @@ $labels = $model->getLabel();
                                     <?php echo $form->textField($model, 'Rcd_Date', array('class' => 'form-control date')); ?>
                                     <?php echo $form->error($model, 'Rcd_Date'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Record_Country_id', array('class' => '')); ?>
                                     <?php echo $form->dropDownList($model, 'Rcd_Record_Country_id', $countries, array('class' => 'form-control')); ?>
@@ -115,19 +107,19 @@ $labels = $model->getLabel();
                                     <?php echo $form->dropDownList($model, 'Rcd_Doc_Status_Id', $doc_status, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Rcd_Doc_Status_Id'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Record_Type_Id', array('class' => '')); ?>
                                     <?php echo $form->dropDownList($model, 'Rcd_Record_Type_Id', $recording_types, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Rcd_Record_Type_Id'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Label_Id', array('class' => '')); ?>
                                     <?php echo $form->dropDownList($model, 'Rcd_Label_Id', $labels, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Rcd_Label_Id'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Duration', array('class' => '')) . ' (H : m : s)'; ?>
                                     <?php echo $form->hiddenField($model, 'Rcd_Duration'); ?>

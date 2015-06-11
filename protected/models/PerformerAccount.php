@@ -47,13 +47,13 @@ class PerformerAccount extends CActiveRecord {
     public $record_search;
     public $search_status;
     public $is_performer;
-    
+
     public $before_save_enable = true;
     public $after_save_enable = true;
     public $after_delete_disable = true;
-    
+
     public $oldRecord;
-    
+
     public $internal_increament = true;
 
     public function init() {
@@ -62,6 +62,9 @@ class PerformerAccount extends CActiveRecord {
             $this->Perf_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Perf_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Perf_Language_Id = DEFAULT_LANGUAGE_ID;
+
+            $this->Perf_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
+                    array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode;
         }
     }
 
@@ -278,7 +281,7 @@ class PerformerAccount extends CActiveRecord {
 
     protected function beforeSave() {
         if ($this->Perf_Is_Author == 'Y' && $this->before_save_enable) {
-            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'AP'));
+            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_PERFORMER_CODE));
             if ($this->isNewRecord) {
                 $this->Perf_Internal_Code = $gen_int_code->Fullcode;
             }else{
@@ -289,11 +292,11 @@ class PerformerAccount extends CActiveRecord {
         }
         return parent::beforeSave();
     }
-    
+
     protected function afterSave() {
         if ($this->isNewRecord) {
             if($this->internal_increament){
-                $type = $this->Perf_Is_Author == 'Y' ? 'AP' : 'P';
+                $type = $this->Perf_Is_Author == 'Y' ? InternalcodeGenerate::AUTHOR_PERFORMER_CODE : InternalcodeGenerate::PERFORMER_CODE;
                 InternalcodeGenerate::model()->codeIncreament($type);
             }
 
@@ -307,19 +310,19 @@ class PerformerAccount extends CActiveRecord {
                     if (!empty($author_model)) {
                         $author_model->after_delete_disable = false;
                         $author_model->delete();
-                        
-                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'P'));
+
+                        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PERFORMER_CODE));
                         $this->after_save_enable = false;
                         $this->internal_increament = false;
                         $this->Perf_Internal_Code = $gen_inter_model->Fullcode;
                         $this->save(false);
-                        InternalcodeGenerate::model()->codeIncreament('P');
+                        InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::PERFORMER_CODE);
                     }
                     break;
                 case 'Y':
                     if($this->oldRecord->Perf_Is_Author == 'N')
-                        InternalcodeGenerate::model()->codeIncreament('AP');
-                    
+                        InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::AUTHOR_PERFORMER_CODE);
+
                     $this->convert($this->Perf_Acc_Id);
                     break;
             }

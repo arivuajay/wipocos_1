@@ -81,16 +81,13 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
-                                    $int_type = $type == 'publisher' ? 'GE' : 'GR';
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $int_type));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Pub_Group_Internal_Code;
+                                   $int_type = $type == 'publisher' ? InternalcodeGenerate::PUBLISHER_GROUP_CODE :InternalcodeGenerate::PRODUCER_GROUP_CODE;
+                                    $model->Pub_Group_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $int_type))->Fullcode;
                                 }
                                 ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Group_Internal_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Pub_Group_Internal_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Internal_Code'); ?>
                                 </div>
 

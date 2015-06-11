@@ -57,7 +57,7 @@ $regions = Myclass::getMasterRegion();
                     <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <?php } ?>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Auth_Is_Performer == 'Y' ? '<br />' : '';?> Documents</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Auth_Is_Performer == 'Y' ? '<br />' : ''; ?> Documents</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -74,17 +74,9 @@ $regions = Myclass::getMasterRegion();
                         ?>
                         <div class="col-lg-5">
                             <div class="box-body">
-                                <?php
-                                if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'A'));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Auth_Internal_Code;
-                                }
-                                ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Auth_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Auth_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
                                 </div>
 
@@ -284,14 +276,14 @@ $js = <<< EOD
         $('#AuthorAccount_Auth_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
-        
+
         $("#AuthorManageRights_Auth_Mnge_Entry_Date").on("change", function(){
             $("#AuthorManageRights_Auth_Mnge_Entry_Date_2").val($(this).val());
         });
         $("#AuthorManageRights_Auth_Mnge_Exit_Date").on("change", function(){
             $("#AuthorManageRights_Auth_Mnge_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#PerformerRelatedRights_Perf_Rel_Entry_Date").on("change", function(){
             $("#PerformerRelatedRights_Perf_Rel_Entry_Date_2").val($(this).val());
         });

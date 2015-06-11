@@ -65,6 +65,10 @@ class Society extends CActiveRecord {
         );
     }
 
+    public function getSocietyname() {
+        return "{$this->Society_Code}-{$this->socOrg->Org_Abbrevation}";
+    }
+
     /**
      * @return array validation rules for model attributes.
      */

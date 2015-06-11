@@ -48,6 +48,9 @@ class Work extends CActiveRecord {
             $this->Work_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Work_Factor_Id = DEFAULT_FACTOR_ID;
             $this->Work_Type_Id = DEFAULT_TYPE_ID;
+
+            $this->Work_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::WORK_CODE))->Fullcode;
+
         }
     }
 
@@ -81,7 +84,7 @@ class Work extends CActiveRecord {
             array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
-    
+
     public function durationValidate($attribute,$params) {
         if($this->duration_hours == '0'){
             if($this->duration_minutes == '0' && $this->duration_seconds == '0')
@@ -170,7 +173,7 @@ class Work extends CActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -210,7 +213,7 @@ class Work extends CActiveRecord {
 
     protected function afterSave() {
         if ($this->isNewRecord) {
-            InternalcodeGenerate::model()->codeIncreament('W');
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::WORK_CODE);
         }
         return parent::afterSave();
     }

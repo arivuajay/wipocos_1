@@ -73,17 +73,9 @@ $legal_forms = Myclass::getMasterLegalForm();
                         ?>
                         <div class="col-lg-5">
                             <div class="box-body">
-                                <?php
-                                if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'PU'));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Pub_Internal_Code;
-                                }
-                                ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Pub_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Pub_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Pub_Internal_Code'); ?>
                                 </div>
 
@@ -98,7 +90,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->checkBox($model, 'Pub_Is_Producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Is_Producer'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Corporate_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Pub_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -128,7 +120,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->dropDownList($model, 'Pub_Legal_Form_id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
                                     <?php echo $form->error($model, 'Pub_Legal_Form_id'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
@@ -165,7 +157,7 @@ $legal_forms = Myclass::getMasterLegalForm();
 
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group foundation">
                                     <div class="box-header">
                                         <h3 class="box-title">Commercial Register</h3>
@@ -290,28 +282,28 @@ $js = <<< EOD
         $('#PublisherAccount_Pub_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
-        
+
         $("#PublisherManageRights_Pub_Mnge_Entry_Date").on("change", function(){
             $("#PublisherManageRights_Pub_Mnge_Entry_Date_2").val($(this).val());
         });
         $("#PublisherManageRights_Pub_Mnge_Exit_Date").on("change", function(){
             $("#PublisherManageRights_Pub_Mnge_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#PublisherRelatedRights_Pub_Rel_Entry_Date").on("change", function(){
              $("#PublisherRelatedRights_Pub_Rel_Entry_Date_2").val($(this).val());
         });
         $("#PublisherRelatedRights_Pub_Rel_Exit_Date").on("change", function(){
             $("#PublisherRelatedRights_Pub_Rel_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#ProducerRelatedRights_Pro_Mnge_Entry_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Mnge_Entry_Date_2").val($(this).val());
         });
         $("#ProducerRelatedRights_Pro_Mnge_Exit_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Mnge_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#ProducerRelatedRights_Pro_Rel_Entry_Date").on("change", function(){
              $("#ProducerRelatedRights_Pro_Rel_Entry_Date_2").val($(this).val());
         });

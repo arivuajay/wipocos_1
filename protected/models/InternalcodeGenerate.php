@@ -11,13 +11,39 @@
  * @property string $Gen_Suffix
  */
 class InternalcodeGenerate extends CActiveRecord {
+    const AUTHOR_CODE = 'A';
+    const PERFORMER_CODE = 'P';
+    const GROUP_CODE = 'G';
+    const SOCIETY_CODE = 'SOC';
+    const AUTHOR_PERFORMER_CODE = 'AP';
+    const PUBLISHER_CODE = 'PU';
+    const PRODUCER_CODE = 'PR';
+    const PUBLISHER_PRODUCER_CODE = 'EP';
+
+    const PUBLISHER_GROUP_CODE = 'GE';
+    const PRODUCER_GROUP_CODE = 'GR';
+
+    const WORK_CODE = 'W';
+    const RECORDING_CODE = 'R';
 
     public $fullcode;
 
     public function getFullcode() {
         $soc = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
-        $soc_prefix = !empty($soc) ? "{$soc->Society_Code}-" : '';
-        return $soc_prefix.$this->Gen_Prefix.$this->Gen_Inter_Code.$this->Gen_Suffix;
+        $soc_prefix = !empty($soc) ? "{$soc->Society_Code}" : '';
+        $role_prefix = $this->Gen_Prefix;
+        $int_code = str_pad($this->Gen_Inter_Code,$this->Gen_Code_Pad,'0',STR_PAD_LEFT);
+//        $role_suffix = $this->Gen_Suffix;
+
+        return "{$soc_prefix}-{$role_prefix}-{$int_code}";
+    }
+
+    public function getSocietyfullcode() {
+        $role_prefix = $this->Gen_Prefix;
+        $int_code = str_pad($this->Gen_Inter_Code,$this->Gen_Code_Pad,'0',STR_PAD_LEFT);
+//        $role_suffix = $this->Gen_Suffix;
+
+        return "{$role_prefix}{$int_code}";
     }
     /**
      * @return string the associated database table name
@@ -116,9 +142,6 @@ class InternalcodeGenerate extends CActiveRecord {
     }
 
     public function codeIncreament($type) {
-        $gen_inter_model = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
-        $len = strlen($gen_inter_model->Gen_Inter_Code);
-        $gen_inter_model->Gen_Inter_Code = str_pad(($gen_inter_model->Gen_Inter_Code + 1), $len, "0", STR_PAD_LEFT);
-        $gen_inter_model->save(false);
+        InternalcodeGenerate::model()->updateCounters(array('Gen_Inter_Code' => 1),array( 'condition' => "Gen_User_Type = '{$type}'"));
     }
 }

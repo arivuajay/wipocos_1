@@ -43,7 +43,7 @@ class PublisherGroup extends CActiveRecord {
         if($this->isNewRecord){
             $this->Pub_Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Pub_Group_Language_Id = DEFAULT_LANGUAGE_ID;
-        }
+            }
     }
     /**
      * @return string the associated database table name
@@ -183,7 +183,7 @@ class PublisherGroup extends CActiveRecord {
         }elseif($this->is_pub_producer == 'producer'){
             $criteria->compare('Pub_Group_Is_Producer', '1', true);
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => false
@@ -210,7 +210,7 @@ class PublisherGroup extends CActiveRecord {
         }elseif($this->is_pub_producer == 'producer'){
             $criteria->compare('Pub_Group_Is_Producer', '1', true);
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => false
@@ -222,16 +222,16 @@ class PublisherGroup extends CActiveRecord {
 
     protected function beforeSave() {
         if($this->isNewRecord){
-            $type = $this->Pub_Group_Is_Producer == '1' ? 'GR' : 'GE';
+            $type = $this->Pub_Group_Is_Producer == '1' ? InternalcodeGenerate::PRODUCER_GROUP_CODE : InternalcodeGenerate::PUBLISHER_GROUP_CODE;
             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
             $this->Pub_Group_Internal_Code = $gen_int_code->Fullcode;
         }
         return parent::beforeSave();
     }
-    
+
     protected function afterSave() {
         if($this->isNewRecord){
-            $type = $this->Pub_Group_Is_Producer == '1' ? 'GR' : 'GE';
+            $type = $this->Pub_Group_Is_Producer == '1' ? InternalcodeGenerate::PRODUCER_GROUP_CODE : InternalcodeGenerate::PUBLISHER_GROUP_CODE;
             InternalcodeGenerate::model()->codeIncreament($type);
         }
         return parent::afterSave();

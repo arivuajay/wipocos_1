@@ -25,7 +25,7 @@
                         <?php
                         if ($model->isNewRecord) {
                             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'O'));
-                            $internal_code = $gen_int_code->Fullcode;
+                            $internal_code = $gen_int_code->Societyfullcode;
                         } else {
                             $internal_code = $model->Org_Code;
                         }

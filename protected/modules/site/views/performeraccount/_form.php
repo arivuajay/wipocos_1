@@ -73,17 +73,9 @@ $regions = Myclass::getMasterRegion();
                         ?>
                         <div class="col-lg-5">
                             <div class="box-body">
-                                <?php
-                                if ($model->isNewRecord) {
-                                    $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'P'));
-                                    $internal_code = $gen_int_code->Fullcode;
-                                } else {
-                                    $internal_code = $model->Perf_Internal_Code;
-                                }
-                                ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Perf_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Perf_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true, 'value' => $internal_code)); ?>
+                                    <?php echo $form->textField($model, 'Perf_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                     <?php echo $form->error($model, 'Perf_Internal_Code'); ?>
                                 </div>
 
@@ -92,13 +84,13 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->checkBox($model, 'is_performer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
                                     <?php echo $form->error($model, 'is_performer'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Perf_Is_Author', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Perf_Is_Author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Perf_Is_Author'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Perf_First_Name', array('class' => '')); ?>
                                     <?php echo $form->textField($model, 'Perf_First_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -286,14 +278,14 @@ $js = <<< EOD
         $('#PerformerAccount_Perf_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $("#a_tab_{$tab}").trigger('click');
-        
+
         $("#PerformerRelatedRights_Perf_Rel_Entry_Date").on("change", function(){
             $("#PerformerRelatedRights_Perf_Rel_Entry_Date_2").val($(this).val());
         });
         $("#PerformerRelatedRights_Perf_Rel_Exit_Date").on("change", function(){
             $("#PerformerRelatedRights_Perf_Rel_Exit_Date_2").val($(this).val());
         });
-        
+
         $("#AuthorManageRights_Auth_Mnge_Entry_Date").on("change", function(){
             $("#AuthorManageRights_Auth_Mnge_Entry_Date_2").val($(this).val());
         });
