@@ -120,7 +120,7 @@ $this->breadcrumbs = array(
                         <?php
                         foreach ($members as $key => $member) {
                             if ($member->recordingPerformer) {
-                                $name = $member->recordingPerformer->Perf_First_Name;
+                                $name = $member->recordingPerformer->Perf_First_Name.' '.$member->recordingPerformer->Perf_Sur_Name;
                                 $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
                             } elseif ($member->recordingProducer) {
                                 $name = $member->recordingProducer->Pro_Corporate_Name;

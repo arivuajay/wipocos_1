@@ -29,7 +29,7 @@
                                 if ($authusers) {
                                     foreach ($authusers as $key => $user) {
                                         ?>
-                                        <tr data-urole="AU" data-uid="<?php echo $user->Auth_Internal_Code ?>" data-name="<?php echo $user->Auth_First_Name; ?>">
+                                        <tr data-urole="AU" data-uid="<?php echo $user->Auth_Internal_Code ?>" data-name="<?php echo $user->Auth_First_Name.' '.$user->Auth_Sur_Name; ?>">
                                             <td><?php echo $user->Auth_First_Name ?></td>
                                             <td><?php echo $user->Auth_Sur_Name ?></td>
                                             <td><?php echo $user->Auth_Internal_Code ?></td>

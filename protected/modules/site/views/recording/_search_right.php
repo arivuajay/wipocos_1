@@ -29,7 +29,7 @@
                                 if ($perfusers) {
                                     foreach ($perfusers as $key => $user) {
                                         ?>
-                                        <tr data-urole="PE" data-uid="<?php echo $user->Perf_Internal_Code ?>" data-name="<?php echo $user->Perf_First_Name; ?>">
+                                        <tr data-urole="PE" data-uid="<?php echo $user->Perf_Internal_Code ?>" data-name="<?php echo $user->Perf_First_Name.' '.$user->Perf_Sur_Name; ?>">
                                             <td><?php echo $user->Perf_First_Name ?></td>
                                             <td><?php echo $user->Perf_Sur_Name ?></td>
                                             <td><?php echo $user->Perf_Internal_Code ?></td>

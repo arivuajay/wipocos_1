@@ -203,7 +203,7 @@
                                 if ($work_model->workRightholders) {
                                     foreach ($work_model->workRightholders as $key => $member) {
                                         if ($member->workAuthor) {
-                                            $name = $member->workAuthor->Auth_First_Name;
+                                            $name = $member->workAuthor->Auth_First_Name.' '.$member->workAuthor->Auth_Sur_Name;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
                                             $role = 'AU';
                                         } elseif ($member->workPublisher) {
@@ -217,9 +217,9 @@
                                             <td><?php echo $member->Work_Member_Internal_Code; ?></td>
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value broad_share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
-                                            <td><?php echo $member->getSpecialStatus($member->Work_Right_Broad_Special); ?></td>
+                                            <td><?php echo $member->Work_Right_Broad_Special != '' ? $member->getSpecialStatus($member->Work_Right_Broad_Special) : ''; ?></td>
                                             <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
-                                            <td><?php echo $member->getSpecialStatus($member->Work_Right_Mech_Special); ?></td>
+                                            <td><?php echo $member->Work_Right_Mech_Special != '' ? $member->getSpecialStatus($member->Work_Right_Mech_Special) : ''; ?></td>
                                             <td>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>

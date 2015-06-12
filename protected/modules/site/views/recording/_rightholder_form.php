@@ -174,7 +174,7 @@
                                 if ($recording_model->recordingRightholders) {
                                     foreach ($recording_model->recordingRightholders as $key => $member) {
                                         if ($member->recordingPerformer) {
-                                            $name = $member->recordingPerformer->Perf_First_Name;
+                                            $name = $member->recordingPerformer->Perf_First_Name. ' '.$member->recordingPerformer->Perf_Sur_Name;
                                             $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
                                             $role = 'PE';
                                         } elseif ($member->recordingProducer) {
