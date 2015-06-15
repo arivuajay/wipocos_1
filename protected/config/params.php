@@ -49,7 +49,7 @@ return array(
     'DEFAULT_PRODUCER_RIGHT_HOLDER_ID' => '3',
     'DEFAULT_PRODUCER_GROUP_RIGHT_HOLDER_ID' => '3',
 
-    'DEFAULT_FACTOR_ID' => '1',
+    'DEFAULT_FACTOR_ID' => '5',
     'DEFAULT_TYPE_ID' => '4',
     'DEFAULT_RECORD_TYPE_ID' => '1',
 

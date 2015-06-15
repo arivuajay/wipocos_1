@@ -6,7 +6,7 @@
  * The followings are the available columns in table '{{work_rightholder}}':
  * @property integer $Work_Right_Id
  * @property integer $Work_Id
- * @property string $Work_Member_Internal_Code
+ * @property string $Work_Member_GUID
  * @property integer $Work_Right_Role
  * @property string $Work_Right_Broad_Share
  * @property string $Work_Right_Broad_Special
@@ -25,6 +25,7 @@
  */
 class WorkRightholder extends CActiveRecord {
 
+    public $Work_Member_Internal_Code;
     /**
      * @return string the associated database table name
      */
@@ -40,16 +41,16 @@ class WorkRightholder extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Right_Broad_Share,Work_Right_Role, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
-            array('Work_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
+            array('Work_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             array('Work_Id,Work_Right_Role,  Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
-            array('Work_Member_Internal_Code', 'length', 'max' => 100),
+            array('Work_Member_GUID', 'length', 'max' => 100),
 //            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Broad_Special, Work_Right_Mech_Special', 'length', 'max' => 2),
             array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'numerical', 'integerOnly' => false, 'max' => 100),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Work_Member_Internal_Code', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Right_Id, Work_Id,Work_Right_Role,  Work_Member_Internal_Code, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Right_Id, Work_Id,Work_Right_Role,  Work_Member_GUID, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,8 +64,8 @@ class WorkRightholder extends CActiveRecord {
             'workRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Role'),
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
-            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_Internal_Code','foreignKey' => array('Work_Member_Internal_Code'=>'Auth_Internal_Code')),
-            'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_Internal_Code','foreignKey' => array('Work_Member_Internal_Code'=>'Pub_Internal_Code')),
+            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID','foreignKey' => array('Work_Member_GUID'=>'Auth_GUID')),
+            'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_GUID','foreignKey' => array('Work_Member_GUID'=>'Pub_GUID')),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
         );
     }
@@ -108,7 +109,7 @@ class WorkRightholder extends CActiveRecord {
 
         $criteria->compare('Work_Right_Id', $this->Work_Right_Id);
         $criteria->compare('Work_Id', $this->Work_Id);
-        $criteria->compare('Work_Member_Internal_Code', $this->Work_Member_Internal_Code, true);
+        $criteria->compare('Work_Member_GUID', $this->Work_Member_GUID, true);
         $criteria->compare('Work_Right_Broad_Share', $this->Work_Right_Broad_Share, true);
         $criteria->compare('Work_Right_Broad_Special', $this->Work_Right_Broad_Special, true);
         $criteria->compare('Work_Right_Broad_Org_id', $this->Work_Right_Broad_Org_id);

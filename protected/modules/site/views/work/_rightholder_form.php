@@ -52,6 +52,7 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
+    echo $form->hiddenField($model, 'Work_Member_GUID');
     echo $form->hiddenField($model, 'Work_Member_Internal_Code');
 
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
@@ -93,7 +94,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Broadcasting and performance Shares</h3>
+                    <h3 class="box-title">Public Performance & Broadcasting Shares</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -164,7 +165,7 @@
                     <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-primary', 'id' => 'right_insert')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
-                    <?php echo $form->error($model, 'Work_Member_Internal_Code'); ?>
+                    <?php echo $form->error($model, 'Work_Member_GUID'); ?>
                 </div>
             </div>
         </div>
@@ -206,15 +207,17 @@
                                             $name = $member->workAuthor->Auth_First_Name.' '.$member->workAuthor->Auth_Sur_Name;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
                                             $role = 'AU';
+                                            $internal_code = $member->workAuthor->Auth_Internal_Code;
                                         } elseif ($member->workPublisher) {
                                             $name = $member->workPublisher->Pub_Corporate_Name;
                                             $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
                                             $role = 'PU';
+                                            $internal_code = $member->workPublisher->Pub_Internal_Code;
                                         }
                                         ?>
-                                        <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_Internal_Code ?>" data-name="<?php echo $name ?>">
+                                        <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
                                             <td><?php echo $name; ?></td>
-                                            <td><?php echo $member->Work_Member_Internal_Code; ?></td>
+                                            <td><?php echo $internal_code; ?></td>
                                             <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value broad_share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->Work_Right_Broad_Special != '' ? $member->getSpecialStatus($member->Work_Right_Broad_Special) : ''; ?></td>
@@ -225,10 +228,11 @@
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
-                                                <input type="hidden" value="<?php echo $member->Work_Member_Internal_Code ?>" name="WorkRightholder[<?php echo $key ?>][Work_Member_Internal_Code]">
+                                                <input type="hidden" value="<?php echo $member->Work_Member_GUID ?>" name="WorkRightholder[<?php echo $key ?>][Work_Member_GUID]">
                                                 <?php
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Id]", $member->Work_Id);
-                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_Internal_Code]", $member->Work_Member_Internal_Code);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_GUID]", $member->Work_Member_GUID);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_Internal_Code]", $internal_code);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Role]", $member->Work_Right_Role);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Share]", $member->Work_Right_Broad_Share);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Special]", $member->Work_Right_Broad_Special);
@@ -290,9 +294,11 @@ $js = <<< EOD
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
+            _intcode = $(this).data('intcode');
             _urole =  $(this).data('urole');
 
-            $('#WorkRightholder_Work_Member_Internal_Code').val(_uid);
+            $('#WorkRightholder_Work_Member_GUID').val(_uid);
+            $('#WorkRightholder_Work_Member_Internal_Code').val(_intcode);
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'AU'){
                 $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide');
@@ -325,7 +331,7 @@ $js = <<< EOD
                 url: '$search_url',
                 data:data,
                 success:function(data){
-                    $('#WorkRightholder_Work_Member_Internal_Code').val('');
+                    $('#WorkRightholder_Work_Member_GUID').val('');
                     $("#search_right_result").html(data);
                },
                 error: function(data) {
@@ -364,7 +370,7 @@ $js = <<< EOD
                     //set hidden form values
                     tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
 
-                    if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){
+                    if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]" && value['name'] != "WorkRightholder[Work_Member_GUID]"){
                         tr += '<td>';
                     }
                     var td_content = '';
@@ -380,7 +386,7 @@ $js = <<< EOD
                     }else if(value['name'] == "WorkRightholder[Work_Id]"){
                         td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
                     }else if(value['name'] == "WorkRightholder[Work_Member_Internal_Code]"){
-                        td_content = chk_tr.length == 1 ? _uid : value['value'];
+                        td_content = chk_tr.length == 1 ? _intcode : value['value'];
                     }
                     tr += td_content;
                     if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]"){

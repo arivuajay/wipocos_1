@@ -37,12 +37,12 @@ $territories = Myclass::getMasterTerritory();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -172,6 +172,20 @@ $territories = Myclass::getMasterTerritory();
                         <?php $this->endWidget(); ?>
                     </div>
                 </div>
+                <div class="tab-pane" id="tab_4">
+                    <?php
+                    if ($doc_tab_validation) {
+                        $this->renderPartial('_documentation_form', array('model' => $document_model, 'work_model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_7">
+                    <?php
+                    if ($rgt_tab_validation) {
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model,'authusers'=>$authusers,'publusers'=>$publusers));
+                    }
+                    ?>
+                </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
                     if ($other_tab_validation) {
@@ -186,13 +200,6 @@ $territories = Myclass::getMasterTerritory();
                     }
                     ?>
                 </div>
-                <div class="tab-pane" id="tab_4">
-                    <?php
-                    if ($doc_tab_validation) {
-                        $this->renderPartial('_documentation_form', array('model' => $document_model, 'work_model' => $model));
-                    }
-                    ?>
-                </div>
                 <div class="tab-pane" id="tab_5">
                     <?php
                     if ($other_tab_validation) {
@@ -204,13 +211,6 @@ $territories = Myclass::getMasterTerritory();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_7">
-                    <?php
-                    if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model,'authusers'=>$authusers,'publusers'=>$publusers));
                     }
                     ?>
                 </div>

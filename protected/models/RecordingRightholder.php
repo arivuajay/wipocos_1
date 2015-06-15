@@ -6,7 +6,7 @@
  * The followings are the available columns in table '{{recording_rightholder}}':
  * @property integer $Rcd_Right_Id
  * @property integer $Rcd_Id
- * @property string $Rcd_Member_Internal_Code
+ * @property string $Rcd_Member_GUID
  * @property integer $Rcd_Right_Role
  * @property string $Rcd_Right_Equal_Share
  * @property integer $Rcd_Right_Equal_Org_id
@@ -23,6 +23,7 @@
  */
 class RecordingRightholder extends CActiveRecord {
 
+    public $Rcd_Member_Internal_Code;
     /**
      * @return string the associated database table name
      */
@@ -38,14 +39,14 @@ class RecordingRightholder extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Share, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Share, Rcd_Right_Blank_Org_Id, Created_Date', 'required'),
-            array('Rcd_Member_Internal_Code', 'required', 'message' => 'Seacrh & select user before you save'),
+            array('Rcd_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Org_Id', 'numerical', 'integerOnly' => true),
-            array('Rcd_Member_Internal_Code', 'length', 'max' => 100),
+            array('Rcd_Member_GUID', 'length', 'max' => 100),
             array('Rcd_Right_Equal_Share, Rcd_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 10, 'integerOnly' => false),
             array('Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Rcd_Right_Id, Rcd_Id, Rcd_Member_Internal_Code, Rcd_Right_Role, Rcd_Right_Equal_Share, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Share, Rcd_Right_Blank_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Rcd_Right_Id, Rcd_Id, Rcd_Member_GUID, Rcd_Right_Role, Rcd_Right_Equal_Share, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Share, Rcd_Right_Blank_Org_Id, Created_Date, Rowversion, Rcd_Member_Internal_Code', 'safe', 'on' => 'search'),
         );
     }
 
@@ -60,8 +61,8 @@ class RecordingRightholder extends CActiveRecord {
             'rcdRightEqualOrg' => array(self::BELONGS_TO, 'Organization', 'Rcd_Right_Equal_Org_id'),
             'rcd' => array(self::BELONGS_TO, 'Recording', 'Rcd_Id'),
             'rcdRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Rcd_Right_Role'),
-            'recordingPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Member_Internal_Code','foreignKey' => array('Rcd_Member_Internal_Code'=>'Perf_Internal_Code')),
-            'recordingProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Rcd_Member_Internal_Code','foreignKey' => array('Rcd_Member_Internal_Code'=>'Pro_Internal_Code')),
+            'recordingPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Perf_GUID')),
+            'recordingProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Pro_GUID')),
         );
     }
 
@@ -72,7 +73,7 @@ class RecordingRightholder extends CActiveRecord {
         return array(
             'Rcd_Right_Id' => 'Rcd Right',
             'Rcd_Id' => 'Rcd',
-            'Rcd_Member_Internal_Code' => 'Internal Code',
+            'Rcd_Member_GUID' => 'Internal Code',
             'Rcd_Right_Role' => 'Role',
             'Rcd_Right_Equal_Share' => 'Share',
             'Rcd_Right_Equal_Org_id' => 'Organization',
@@ -102,7 +103,7 @@ class RecordingRightholder extends CActiveRecord {
 
         $criteria->compare('Rcd_Right_Id', $this->Rcd_Right_Id);
         $criteria->compare('Rcd_Id', $this->Rcd_Id);
-        $criteria->compare('Rcd_Member_Internal_Code', $this->Rcd_Member_Internal_Code, true);
+        $criteria->compare('Rcd_Member_GUID', $this->Rcd_Member_GUID, true);
         $criteria->compare('Rcd_Right_Role', $this->Rcd_Right_Role);
         $criteria->compare('Rcd_Right_Equal_Share', $this->Rcd_Right_Equal_Share, true);
         $criteria->compare('Rcd_Right_Equal_Org_id', $this->Rcd_Right_Equal_Org_id);

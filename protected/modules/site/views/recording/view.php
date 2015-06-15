@@ -2,7 +2,7 @@
 /* @var $this RecordingController */
 /* @var $model Recording */
 
-$this->title = 'View #' . $model->Rcd_Id;
+$this->title = "View #{$model->Rcd_Id} : {$model->Rcd_Title}";
 $this->breadcrumbs = array(
     'Recordings' => array('index'),
     'View ' . 'Recording',
@@ -100,50 +100,6 @@ $this->breadcrumbs = array(
                 'Rcd_Iswc_Number',
             ),
         ));
-        ?>
-        <h4 class="box-title">Assigned Right Holders</h4>
-        <?php
-        if (!empty($members)) {
-            ?>
-            <div class="box-body no-padding">
-                <table class="table table-condensed">
-                    <tbody><tr>
-                            <th>#</th>
-                            <th>Right Holder name</th>
-                            <th>Internal Code</th>
-                            <th>Equal Remuneration Share (%)</th>
-                            <th>Blank Levy Share (%)</th>
-                            <?php if ($export == false) { ?>
-                                <th>Action</th>
-                            <?php } ?>
-                        </tr>
-                        <?php
-                        foreach ($members as $key => $member) {
-                            if ($member->recordingPerformer) {
-                                $name = $member->recordingPerformer->Perf_First_Name.' '.$member->recordingPerformer->Perf_Sur_Name;
-                                $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
-                            } elseif ($member->recordingProducer) {
-                                $name = $member->recordingProducer->Pro_Corporate_Name;
-                                $url = array('/site/produceraccount/view', 'id' => $member->recordingProducer->Pro_Acc_Id);
-                            }
-                            ?>
-                            <tr>
-                                <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $name; ?></td>
-                                <td><?php echo $member->Rcd_Member_Internal_Code; ?></td>
-                                <td><?php echo $member->Rcd_Right_Equal_Share; ?></td>
-                                <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
-                                <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
-                                <?php } ?>
-                            </tr>
-                        <?php } ?>
-                    </tbody></table>
-            </div>
-            <?php
-        } else {
-            echo 'No Right Holders assigned';
-        }
         ?>
     </div>
 
@@ -246,6 +202,61 @@ $this->breadcrumbs = array(
             <?php
         } else {
 //            echo 'No Artists - Producers Assigned';
+        }
+        ?>
+    </div>
+    
+    <div class="user-view col-lg-12">
+        <h4 class="box-title">Right Holders</h4>
+        <?php
+        if (!empty($members)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Right Holder name</th>
+                            <th>Internal Code</th>
+                            <th>Role</th>
+                            <th>Equal Remuneration Share (%)</th>
+                            <th>Organization</th>
+                            <th>Blank Levy Share (%)</th>
+                            <th>Organization</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php
+                        foreach ($members as $key => $member) {
+                            if ($member->recordingPerformer) {
+                                $name = $member->recordingPerformer->Perf_First_Name.' '.$member->recordingPerformer->Perf_Sur_Name;
+                                $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
+                                $internal_code = $member->recordingPerformer->Perf_Internal_Code;
+                            } elseif ($member->recordingProducer) {
+                                $name = $member->recordingProducer->Pro_Corporate_Name;
+                                $url = array('/site/produceraccount/view', 'id' => $member->recordingProducer->Pro_Acc_Id);
+                                $internal_code = $member->recordingProducer->Pro_Internal_Code;
+                            }
+                            ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $name; ?></td>
+                                <td><?php echo $internal_code; ?></td>
+                                <td><?php echo $member->rcdRightRole->Type_Rights_Name; ?></td>
+                                <td><?php echo $member->Rcd_Right_Equal_Share; ?></td>
+                                <td><?php echo $member->rcdRightBlankOrg->Org_Abbrevation; ?></td>
+                                <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
+                                <td><?php echo $member->rcdRightEqualOrg->Org_Abbrevation; ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No Right Holders assigned';
         }
         ?>
     </div>

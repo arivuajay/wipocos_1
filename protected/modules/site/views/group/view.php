@@ -8,7 +8,7 @@ if ($model->Group_Is_Author == '1') {
     $role = 'Performer';
 }
 
-$this->title = 'View #' . $model->Group_Id;
+$this->title = "View #{$model->Group_Id} : {$model->Group_Name}";
 $this->breadcrumbs = array(
     "{$role} Groups" => array('group/index/role/' . lcfirst($role)),
     'View ' . 'Group',

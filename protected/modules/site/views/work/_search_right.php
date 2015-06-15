@@ -29,7 +29,7 @@
                                 if ($authusers) {
                                     foreach ($authusers as $key => $user) {
                                         ?>
-                                        <tr data-urole="AU" data-uid="<?php echo $user->Auth_Internal_Code ?>" data-name="<?php echo $user->Auth_First_Name.' '.$user->Auth_Sur_Name; ?>">
+                                        <tr data-urole="AU" data-uid="<?php echo $user->Auth_GUID ?>" data-name="<?php echo $user->Auth_First_Name.' '.$user->Auth_Sur_Name; ?>" data-intcode = "<?php echo $user->Auth_Internal_Code ?>">
                                             <td><?php echo $user->Auth_First_Name ?></td>
                                             <td><?php echo $user->Auth_Sur_Name ?></td>
                                             <td><?php echo $user->Auth_Internal_Code ?></td>
@@ -41,7 +41,7 @@
                                 if ($publusers) {
                                     foreach ($publusers as $key => $user) {
                                         ?>
-                                        <tr data-urole="PU" data-uid="<?php echo $user->Pub_Internal_Code ?>" data-name="<?php echo $user->Pub_Corporate_Name; ?>">
+                                        <tr data-urole="PU" data-uid="<?php echo $user->Pub_GUID ?>" data-name="<?php echo $user->Pub_Corporate_Name; ?>" data-intcode = "<?php echo $user->Pub_Internal_Code ?>">
                                             <td><?php echo $user->Pub_Corporate_Name ?></td>
                                             <td><?php echo $user->Pub_Ipi_Base_Number ?></td>
                                             <td><?php echo $user->Pub_Internal_Code ?></td>

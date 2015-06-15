@@ -62,6 +62,7 @@ class PerformerAccount extends CActiveRecord {
             $this->Perf_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Perf_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Perf_Language_Id = DEFAULT_LANGUAGE_ID;
+            $this->Perf_GUID = Myclass::guid(false);
 
             $this->Perf_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
                     array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode;
@@ -96,8 +97,8 @@ class PerformerAccount extends CActiveRecord {
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
             array('Perf_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search, Perf_Non_Member, Perf_Is_Author, is_performer', 'safe'),
-            array('Perf_Internal_Code', 'unique'),
+            array('Created_Date, Rowversion,record_search, Perf_Non_Member, Perf_Is_Author, is_performer, Perf_GUID', 'safe'),
+            array('Perf_Internal_Code, Perf_GUID', 'unique'),
             array('Perf_Sur_Name', 'nameUnique'),
             array(
                 'Perf_First_Name, Perf_Sur_Name, Perf_Spouse_Name',

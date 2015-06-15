@@ -75,7 +75,7 @@
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
                         array('label' => '<i class="fa fa-group"></i> <span>Members</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
-                            'itemOptions' => array('class' => 'treeview'),
+                            'itemOptions' => array('class' => 'treeview innertree'),
                             'submenuOptions' => array('class' => 'treeview-menu'),
                             'items' => array(
                                 array('label' => '<i class="fa fa-book"></i> <span>Author</span>', 'url' => array('/site/authoraccount/index')),

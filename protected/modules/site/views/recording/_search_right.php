@@ -29,7 +29,7 @@
                                 if ($perfusers) {
                                     foreach ($perfusers as $key => $user) {
                                         ?>
-                                        <tr data-urole="PE" data-uid="<?php echo $user->Perf_Internal_Code ?>" data-name="<?php echo $user->Perf_First_Name.' '.$user->Perf_Sur_Name; ?>">
+                                        <tr data-urole="PE" data-uid="<?php echo $user->Perf_GUID ?>" data-name="<?php echo $user->Perf_First_Name.' '.$user->Perf_Sur_Name; ?>" data-intcode = "<?php echo $user->Perf_Internal_Code ?>">
                                             <td><?php echo $user->Perf_First_Name ?></td>
                                             <td><?php echo $user->Perf_Sur_Name ?></td>
                                             <td><?php echo $user->Perf_Internal_Code ?></td>
@@ -41,7 +41,7 @@
                                 if ($produsers) {
                                     foreach ($produsers as $key => $user) {
                                         ?>
-                                        <tr data-urole="PR" data-uid="<?php echo $user->Pro_Internal_Code ?>" data-name="<?php echo $user->Pro_Corporate_Name; ?>">
+                                        <tr data-urole="PR" data-uid="<?php echo $user->Pro_GUID ?>" data-name="<?php echo $user->Pro_Corporate_Name; ?>" data-intcode = "<?php echo $user->Pro_Internal_Code ?>">
                                             <td><?php echo $user->Pro_Corporate_Name ?></td>
                                             <td><?php echo $user->Pro_Ipi_Base_Number ?></td>
                                             <td><?php echo $user->Pro_Internal_Code ?></td>

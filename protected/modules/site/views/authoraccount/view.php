@@ -1,7 +1,7 @@
 <?php
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
-$this->title = 'View #' . $model->Auth_Acc_Id;
+$this->title = "View #{$model->Auth_Acc_Id} : {$model->Auth_First_Name}";
 $this->breadcrumbs = array(
     'Authors' => array('index'),
     'View ' . 'AuthorAccount',
@@ -301,7 +301,7 @@ if ($export == false) {
         ?>
         <h4 class="box-title">Assigned Works</h4>
         <?php
-        $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
+        $works = WorkRightholder::model()->findAll('Work_Member_GUID = :int_code', array(':int_code' => $model->Auth_GUID));
         if (!empty($works)) {
             ?>
             <div class="box-body no-padding">

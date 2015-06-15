@@ -1,7 +1,7 @@
 <?php
 /* @var $this WorkController */
 /* @var $model Work */
-$this->title = 'View #' . $model->Work_Id;
+$this->title = "View #{$model->Work_Id} : {$model->Work_Org_Title}";
 $this->breadcrumbs = array(
     'Works' => array('index'),
     'View ' . 'Work',
@@ -129,50 +129,6 @@ if ($export == false) {
             echo 'No Subtitle Assigned';
         }
         ?>
-        <h4>Assigned Right Holders</h4>
-        <?php
-        if (!empty($members)) {
-            ?>
-            <div class="box-body no-padding">
-                <table class="table table-condensed">
-                    <tbody><tr>
-                            <th>#</th>
-                            <th>Right Holder name</th>
-                            <th>Internal Code</th>
-                            <th>Broadcasting Share (%)</th>
-                            <th>Mechanical Share (%)</th>
-                            <?php if ($export == false) { ?>
-                                <th>Action</th>
-                            <?php } ?>
-                        </tr>
-                        <?php
-                        foreach ($members as $key => $member) {
-                            if ($member->workAuthor) {
-                                $name = $member->workAuthor->Auth_First_Name . ' ' . $member->workAuthor->Auth_Sur_Name;
-                                $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
-                            } elseif ($member->workPublisher) {
-                                $name = $member->workPublisher->Pub_Corporate_Name;
-                                $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
-                            }
-                            ?>
-                            <tr>
-                                <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $name; ?></td>
-                                <td><?php echo $member->Work_Member_Internal_Code; ?></td>
-                                <td><?php echo $member->Work_Right_Broad_Share; ?></td>
-                                <td><?php echo $member->Work_Right_Mech_Share; ?></td>
-                                <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
-                                <?php } ?>
-                            </tr>
-                        <?php } ?>
-                    </tbody></table>
-            </div>
-            <?php
-        } else {
-            echo 'No works assigned';
-        }
-        ?>
     </div>
     <div class="user-view col-lg-5">
         <h4>Documentation</h4>
@@ -271,6 +227,61 @@ if ($export == false) {
             echo 'No Sub Publishing Created';
         }
         ?>
+    </div>
+    <div class="user-view col-lg-12">
+                <h4>Right Holders</h4>
+        <?php
+        if (!empty($members)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-condensed">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Right Holder name</th>
+                            <th>Internal Code</th>
+                            <th>Role</th>
+                            <th>Public Performance &<br /> Broadcasting Share (%)</th>
+                            <th>Organization</th>
+                            <th>Mechanical Share (%)</th>
+                            <th>Organization</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php
+                        foreach ($members as $key => $member) {
+                            if ($member->workAuthor) {
+                                $name = $member->workAuthor->Auth_First_Name . ' ' . $member->workAuthor->Auth_Sur_Name;
+                                $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
+                                $internal_code = $member->workAuthor->Auth_Internal_Code;
+                            } elseif ($member->workPublisher) {
+                                $name = $member->workPublisher->Pub_Corporate_Name;
+                                $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
+                                $internal_code = $member->workPublisher->Pub_Internal_Code;
+                            }
+                            ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $name; ?></td>
+                                <td><?php echo $internal_code; ?></td>
+                                <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
+                                <td align="center"><?php echo $member->Work_Right_Broad_Share; ?></td>
+                                <td><?php echo $member->workRightBroadOrg->Org_Abbrevation; ?></td>
+                                <td align="center"><?php echo $member->Work_Right_Mech_Share; ?></td>
+                                <td><?php echo $member->workRightMechOrg->Org_Abbrevation; ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No works assigned';
+        }
+        ?>
+
     </div>
 </div>
 

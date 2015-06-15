@@ -7,7 +7,7 @@ if ($model->Pub_Group_Is_Publisher == '1') {
     $role = 'Producer';
 }
 
-$this->title = 'View #' . $model->Pub_Group_Id;
+$this->title = "View #{$model->Pub_Group_Id} : {$model->Pub_Group_Name}";
 $this->breadcrumbs = array(
     "{$role} Groups" => array('publishergroup/index/role/' . lcfirst($role)),
     "View {$role} Group",

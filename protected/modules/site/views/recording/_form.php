@@ -35,9 +35,9 @@ $labels = $model->getLabel();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Artists - Producers</a></li>-->
             </ul>
             <div class="tab-content">
@@ -177,6 +177,13 @@ $labels = $model->getLabel();
                         <?php $this->endWidget(); ?>
                     </div>
                 </div>
+                <div class="tab-pane" id="tab_4">
+                    <?php
+                    if ($rgt_tab_validation) {
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'recording_model' => $model));
+                    }
+                    ?>
+                </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
                     if ($other_tab_validation) {
@@ -188,13 +195,6 @@ $labels = $model->getLabel();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_publication_form', array('model' => $publication_model, 'recording_model' => $model, 'countries' => $countries));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_4">
-                    <?php
-                    if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'recording_model' => $model));
                     }
                     ?>
                 </div>

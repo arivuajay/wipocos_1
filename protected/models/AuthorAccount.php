@@ -59,6 +59,7 @@ class AuthorAccount extends CActiveRecord {
             $this->Auth_Birth_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Auth_Nationality_Id = DEFAULT_NATIONALITY_ID;
             $this->Auth_Language_Id = DEFAULT_LANGUAGE_ID;
+            $this->Auth_GUID = Myclass::guid(false);
 
             $this->Auth_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
                     array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode;
@@ -93,9 +94,9 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search, Auth_Non_Member, Auth_Is_Performer, is_author', 'safe'),
+            array('Created_Date, Rowversion,record_search, Auth_Non_Member, Auth_Is_Performer, is_author, Auth_GUID', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
-            array('Auth_Internal_Code', 'unique'),
+            array('Auth_Internal_Code, Auth_GUID', 'unique'),
             array(
                 'Auth_First_Name, Auth_Sur_Name, Auth_Spouse_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',

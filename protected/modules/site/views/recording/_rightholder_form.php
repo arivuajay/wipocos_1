@@ -53,6 +53,7 @@
     ));
     echo $form->hiddenField($model, 'Rcd_Id', array('value' => $recording_model->Rcd_Id));
     echo $form->hiddenField($model, 'Rcd_Member_Internal_Code');
+    echo $form->hiddenField($model, 'Rcd_Member_GUID');
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
 
@@ -141,7 +142,7 @@
                     <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-primary', 'id' => 'right_insert')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
-                    <?php echo $form->error($model, 'Rcd_Member_Internal_Code'); ?>
+                    <?php echo $form->error($model, 'Rcd_Member_GUID'); ?>
                 </div>
             </div>
         </div>
@@ -177,15 +178,17 @@
                                             $name = $member->recordingPerformer->Perf_First_Name. ' '.$member->recordingPerformer->Perf_Sur_Name;
                                             $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
                                             $role = 'PE';
+                                            $internal_code = $member->recordingPerformer->Perf_Internal_Code;
                                         } elseif ($member->recordingProducer) {
                                             $name = $member->recordingProducer->Pro_Corporate_Name;
                                             $url = array('/site/produceraccount/view', 'id' => $member->recordingProducer->Pro_Acc_Id);
                                             $role = 'PR';
+                                            $internal_code = $member->recordingProducer->Pro_Internal_Code;
                                         }
                                         ?>
-                                        <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Rcd_Member_Internal_Code ?>" data-name="<?php echo $name ?>">
+                                        <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Rcd_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
                                             <td><?php echo $name; ?></td>
-                                            <td><?php echo $member->Rcd_Member_Internal_Code; ?></td>
+                                            <td><?php echo $internal_code; ?></td>
                                             <td><?php echo $member->rcdRightRole->Type_Rights_Name; ?></td>
                                             <td><?php echo $member->Rcd_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
@@ -194,10 +197,11 @@
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
-                                                <input type="hidden" value="<?php echo $member->Rcd_Member_Internal_Code ?>" name="RecordingRightholder[<?php echo $key ?>][Rcd_Member_Internal_Code]">
+                                                <input type="hidden" value="<?php echo $member->Rcd_Member_GUID ?>" name="RecordingRightholder[<?php echo $key ?>][Rcd_Member_GUID]">
                                                 <?php
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Id]", $member->Rcd_Id);
-                                                echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Member_Internal_Code]", $member->Rcd_Member_Internal_Code);
+                                                echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Member_GUID]", $member->Rcd_Member_GUID);
+                                                echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Member_Internal_Code]", $internal_code);
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Role]", $member->Rcd_Right_Role, array('data-rcd' => $member->Rcd_Right_Role, 'class' => 'rcd'));
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Equal_Share]", $member->Rcd_Right_Equal_Share);
                                                 echo CHtml::hiddenField("RecordingRightholder[{$key}][Rcd_Right_Equal_Org_id]", $member->Rcd_Right_Equal_Org_id);
@@ -265,8 +269,10 @@ $js = <<< EOD
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
             _urole =  $(this).data('urole');
+            _intcode =  $(this).data('intcode');
 
-            $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_uid);
+            $('#RecordingRightholder_Rcd_Member_GUID').val(_uid);
+            $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_intcode);
         
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
@@ -300,7 +306,7 @@ $js = <<< EOD
                 url: '$search_url',
                 data:data,
                 success:function(data){
-                    $('#RecordingRightholder_Rcd_Member_Internal_Code').val('');
+                    $('#RecordingRightholder_Rcd_Member_GUID').val('');
                     $("#search_right_result").html(data);
                     $('.user-role-dropdown select.performer-role').val('');
                     $('.user-role-dropdown select.producer-role').val('');
@@ -325,6 +331,7 @@ $js = <<< EOD
             $('#norecord_tr').remove();
         
             _uid = $(".highlight").data('uid');
+            _intcode = $(".highlight").data('intcode');
             _role = $(".highlight").data('urole');
             _name = $('.highlight').data('name');
 
@@ -350,7 +357,7 @@ $js = <<< EOD
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }
 
-                    if(value['name'] != "RecordingRightholder[Rcd_Right_Equal_Org_id]" && value['name'] != "RecordingRightholder[Rcd_Right_Blank_Org_Id]"){
+                    if(value['name'] != "RecordingRightholder[Rcd_Right_Equal_Org_id]" && value['name'] != "RecordingRightholder[Rcd_Right_Blank_Org_Id]" && value['name'] != "RecordingRightholder[Rcd_Member_GUID]"){
                         tr += '<td>';
                     }
                     var td_content = '';
@@ -361,7 +368,7 @@ $js = <<< EOD
                     }else if(value['name'] == "RecordingRightholder[Rcd_Id]"){
                         td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
                     }else if(value['name'] == "RecordingRightholder[Rcd_Member_Internal_Code]"){
-                        td_content = chk_tr.length == 1 ? _uid : value['value'];
+                        td_content = chk_tr.length == 1 ? _intcode : value['value'];
                     }
                     tr += td_content;
                     if(value['name'] != "RecordingRightholder[Rcd_Right_Equal_Org_id]" && value['name'] != "RecordingRightholder[Rcd_Right_Blank_Org_Id]"){

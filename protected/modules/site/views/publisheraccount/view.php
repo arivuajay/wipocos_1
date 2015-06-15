@@ -2,7 +2,7 @@
 /* @var $this ProduceraccountController */
 /* @var $model ProducerAccount */
 
-$this->title = 'View #' . $model->Pub_Acc_Id;
+$this->title = "View #{$model->Pub_Acc_Id} : {$model->Pub_Corporate_Name}";
 $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'ProducerAccount',
@@ -281,7 +281,7 @@ if ($export == false) {
         ?>
         <h4>Assigned Works</h4>
         <?php
-        $works = WorkRightholder::model()->findAll('Work_Member_Internal_Code = :int_code', array(':int_code' => $model->Pub_Internal_Code));
+        $works = WorkRightholder::model()->findAll('Work_Member_GUID = :int_code', array(':int_code' => $model->Pub_GUID));
         if (!empty($works)) {
             ?>
             <div class="box-body no-padding">

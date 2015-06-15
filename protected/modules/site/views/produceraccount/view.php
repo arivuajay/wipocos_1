@@ -2,7 +2,7 @@
 /* @var $this PerformeraccountController */
 /* @var $model PerformerAccount */
 
-$this->title = 'View #' . $model->Pro_Acc_Id;
+$this->title = "View #{$model->Pro_Acc_Id} : {$model->Pro_Corporate_Name}";
 $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'PerformerAccount',
@@ -128,7 +128,7 @@ if ($export == false) {
         ?>
         <h4>Assigned Recordings</h4>
         <?php
-        $recordings = RecordingRightholder::model()->findAll('Rcd_Member_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
+        $recordings = RecordingRightholder::model()->findAll('Rcd_Member_GUID = :int_code', array(':int_code' => $model->Pro_GUID));
         if (!empty($recordings)) {
             ?>
             <div class="box-body no-padding">
