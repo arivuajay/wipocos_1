@@ -25,7 +25,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         $users = PerformerAccount::model()->with('performerRelatedRights')->isStatusActive()->findAll();
     }
 
-    $user_ids = CHtml::listData($group_model->groupMembers, 'Group_Member_Id', 'Group_Member_Internal_Code');
+    $user_ids = CHtml::listData($group_model->groupMembers, 'Group_Member_Id', 'Group_Member_GUID');
     ?>
     <div class="box-body">
         <div class="form-group">
@@ -53,8 +53,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             foreach ($users as $key => $user) {
                                 ?>
                                 <tr>
-                                    <?php $checked = (!empty($user_ids) && in_array($user->Auth_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Auth_Internal_Code ?>]" value="<?php echo $user->Auth_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                    <?php $checked = (!empty($user_ids) && in_array($user->Auth_GUID, $user_ids)) ? 'checked' : ''; ?>
+                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Auth_GUID ?>]" value="<?php echo $user->Auth_GUID ?>" <?php echo $checked ?> /></td>
                                     <td><?php echo $user->Auth_First_Name ?></td>
                                     <td><?php echo $user->Auth_Sur_Name ?></td>
                                     <td><?php echo $user->Auth_Internal_Code ?></td>
@@ -68,8 +68,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             foreach ($users as $key => $user) {
                                 ?>
                                 <tr>
-                                    <?php $checked = (!empty($user_ids) && in_array($user->Perf_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_Internal_Code ?>]" value="<?php echo $user->Perf_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                    <?php $checked = (!empty($user_ids) && in_array($user->Perf_GUID, $user_ids)) ? 'checked' : ''; ?>
+                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Perf_GUID ?>]" value="<?php echo $user->Perf_GUID ?>" <?php echo $checked ?> /></td>
                                     <td><?php echo $user->Perf_First_Name ?></td>
                                     <td><?php echo $user->Perf_Sur_Name ?></td>
                                     <td><?php echo $user->Perf_Internal_Code ?></td>

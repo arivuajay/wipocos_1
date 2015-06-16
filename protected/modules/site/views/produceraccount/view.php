@@ -292,7 +292,7 @@ if ($export == false) {
         ?>
         <h4>Assigned Groups</h4>
         <?php
-        $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
+        $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_GUID = :int_code', array(':int_code' => $model->Pro_GUID));
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">

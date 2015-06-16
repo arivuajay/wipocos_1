@@ -143,7 +143,7 @@ class GroupController extends Controller {
                 foreach ($_POST['user_ids'] as $uid):
                     $group = new GroupMembers;
                     $group->Group_Id = $model->Group_Id;
-                    $group->Group_Member_Internal_Code = $uid;
+                    $group->Group_Member_GUID = $uid;
                     $group->save(false);
                 endforeach;
             }

@@ -9,6 +9,7 @@
  * @property string $Group_Is_Author
  * @property string $Group_Is_Performer
  * @property string $Group_Internal_Code
+ * @property string $Group_GUID
  * @property integer $Group_IPI_Name_Number
  * @property integer $Group_IPN_Base_Number
  * @property integer $Group_IPN_Number
@@ -35,6 +36,7 @@ class Group extends CActiveRecord {
     public function init() {
         parent::init();
         if($this->isNewRecord){
+            $this->Group_GUID = Myclass::guid(false);
             $this->Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Group_Language_Id = DEFAULT_LANGUAGE_ID;
         }
@@ -67,7 +69,7 @@ class Group extends CActiveRecord {
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
-            array('Created_Date, Rowversion, Group_Non_Member', 'safe'),
+            array('Created_Date, Rowversion, Group_Non_Member, Group_GUID', 'safe'),
             array('Group_Internal_Code', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

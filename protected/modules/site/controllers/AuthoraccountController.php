@@ -193,12 +193,12 @@ class AuthoraccountController extends Controller {
             $biograph_model->attributes = $_POST['AuthorBiography'];
 
             if ($biograph_model->save()) {
-                GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Auth_Internal_Code}'");
+                GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Auth_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
-                        $group->Group_Member_Internal_Code = $model->Auth_Internal_Code;
+                        $group->Group_Member_GUID = $model->Auth_GUID;
                         $group->save(false);
                     endforeach;
                 }

@@ -135,7 +135,7 @@ class AuthorAccount extends CActiveRecord {
             'authorPseudonyms' => array(self::HAS_ONE, 'AuthorPseudonym', 'Auth_Acc_id'),
             'authorUploads' => array(self::HAS_MANY, 'AuthorUpload', 'Auth_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
-                'foreignKey' => array('Group_Member_Internal_Code' => 'Auth_Internal_Code')
+                'foreignKey' => array('Group_Member_GUID' => 'Auth_GUID')
             ),
         );
     }
@@ -278,7 +278,7 @@ class AuthorAccount extends CActiveRecord {
 
     protected function beforeSave() {
         if ($this->Auth_Is_Performer == 'Y' && $this->before_save_enable) {
-            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => 'AP'));
+            $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_PERFORMER_CODE));
             if ($this->isNewRecord) {
                 $this->Auth_Internal_Code = $gen_int_code->Fullcode;
             } else {

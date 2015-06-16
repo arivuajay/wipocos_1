@@ -65,8 +65,10 @@ class Myclass extends CController {
             $perf_guid = PerformerAccount::model()->countByAttributes(array('Perf_GUID' => $new_guid));
             $pub_guid = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $new_guid));
             $pro_guid = ProducerAccount::model()->countByAttributes(array('Pro_GUID' => $new_guid));
+            $group_guid = Group::model()->countByAttributes(array('Group_GUID' => $new_guid));
+            $pub_group_guid = PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
             
-            if ($auth_guid != 0 || $perf_guid != 0 || $pub_guid != 0 || $pro_guid != 0) {
+            if ($auth_guid != 0 || $perf_guid != 0 || $pub_guid != 0 || $pro_guid != 0 || $group_guid != 0 || $pub_group_guid != 0) {
                 $check_guid = $new_guid;
                 $new_guid = Myclass::create_guid($opt);
             } else {

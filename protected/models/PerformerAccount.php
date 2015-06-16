@@ -139,7 +139,7 @@ class PerformerAccount extends CActiveRecord {
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
             'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Perf_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
-                'foreignKey' => array('Group_Member_Internal_Code' => 'Perf_Internal_Code')
+                'foreignKey' => array('Group_Member_GUID' => 'Perf_GUID')
             ),
         );
     }

@@ -182,12 +182,12 @@ class PublisheraccountController extends Controller {
             $biograph_model->attributes = $_POST['PublisherBiography'];
 
             if ($biograph_model->save()) {
-                PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_Internal_Code = '{$model->Pub_Internal_Code}'");
+                PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_GUID = '{$model->Pub_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
                         $group = new PublisherGroupMembers;
                         $group->Pub_Group_Id = $gid;
-                        $group->Pub_Group_Member_Internal_Code = $model->Pub_Internal_Code;
+                        $group->Pub_Group_Member_GUID = $model->Pub_GUID;
                         $group->save(false);
                     endforeach;
                 }

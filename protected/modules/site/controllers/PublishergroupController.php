@@ -172,7 +172,7 @@ class PublishergroupController extends Controller {
                 foreach ($_POST['user_ids'] as $uid):
                     $group = new PublisherGroupMembers;
                     $group->Pub_Group_Id = $model->Pub_Group_Id;
-                    $group->Pub_Group_Member_Internal_Code = $uid;
+                    $group->Pub_Group_Member_GUID = $uid;
                     $group->save(false);
                 endforeach;
             }

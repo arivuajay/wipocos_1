@@ -9,6 +9,7 @@
  * @property string $Pub_Group_Is_Publisher
  * @property string $Pub_Group_Is_Producer
  * @property string $Pub_Group_Internal_Code
+ * @property string $Pub_Group_GUID
  * @property integer $Pub_Group_IPI_Name_Number
  * @property integer $Pub_Group_IPN_Base_Number
  * @property integer $Pub_Group_IPD_Number
@@ -41,9 +42,10 @@ class PublisherGroup extends CActiveRecord {
     public function init() {
         parent::init();
         if($this->isNewRecord){
+            $this->Pub_Group_GUID = Myclass::guid(false);
             $this->Pub_Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Pub_Group_Language_Id = DEFAULT_LANGUAGE_ID;
-            }
+        }
     }
     /**
      * @return string the associated database table name
@@ -73,7 +75,7 @@ class PublisherGroup extends CActiveRecord {
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
             array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
-            array('Rowversion, Pub_Group_Non_Member', 'safe'),
+            array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID', 'safe'),
 //            array(
 //                'Pub_Group_Name',
 //                'match', 'pattern' => '/^[a-zA-Z\s]+$/',

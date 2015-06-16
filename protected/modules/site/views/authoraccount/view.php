@@ -275,7 +275,7 @@ if ($export == false) {
         ?>
         <h4>Assigned Groups</h4>
         <?php
-        $members = GroupMembers::model()->findAll('Group_Member_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
+        $members = GroupMembers::model()->findAll('Group_Member_GUID = :int_code', array(':int_code' => $model->Auth_GUID));
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">

@@ -200,12 +200,12 @@ class PerformeraccountController extends Controller {
 
             if ($biograph_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Biography {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
-                GroupMembers::model()->deleteAll("Group_Member_Internal_Code = '{$model->Perf_Internal_Code}'");
+                GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Perf_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
-                        $group->Group_Member_Internal_Code = $model->Perf_Internal_Code;
+                        $group->Group_Member_GUID = $model->Perf_GUID;
                         $group->save(false);
                     endforeach;
                 }

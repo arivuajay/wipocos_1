@@ -25,7 +25,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         $users = ProducerAccount::model()->with('producerRelatedRights')->isStatusActive()->findAll();
     }
 
-    $user_ids = CHtml::listData($group_model->publisherGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Member_Internal_Code');
+    $user_ids = CHtml::listData($group_model->publisherGroupMembers, 'Pub_Group_Member_Id', 'Pub_Group_Member_GUID');
     ?>
     <div class="box-body">
         <div class="form-group">
@@ -51,8 +51,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         foreach ($users as $key => $user) {
                             ?>
                             <tr>
-                                <?php $checked = (!empty($user_ids) && in_array($user->Pub_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Pub_Internal_Code ?>]" value="<?php echo $user->Pub_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                <?php $checked = (!empty($user_ids) && in_array($user->Pub_GUID, $user_ids)) ? 'checked' : ''; ?>
+                                <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Pub_GUID ?>]" value="<?php echo $user->Pub_GUID ?>" <?php echo $checked ?> /></td>
                                 <td><?php echo $user->Pub_Corporate_Name ?></td>
                                 <td><?php echo $user->Pub_Internal_Code ?></td>
                             </tr>
@@ -66,8 +66,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             foreach ($users as $key => $user) {
                                 ?>
                                 <tr>
-                                    <?php $checked = (!empty($user_ids) && in_array($user->Pro_Internal_Code, $user_ids)) ? 'checked' : ''; ?>
-                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Pro_Internal_Code ?>]" value="<?php echo $user->Pro_Internal_Code ?>" <?php echo $checked ?> /></td>
+                                    <?php $checked = (!empty($user_ids) && in_array($user->Pro_GUID, $user_ids)) ? 'checked' : ''; ?>
+                                    <td><input type="checkbox" class="user_ids" name="user_ids[<?php echo $user->Pro_GUID ?>]" value="<?php echo $user->Pro_GUID ?>" <?php echo $checked ?> /></td>
                                     <td><?php echo $user->Pro_Corporate_Name ?></td>
                                     <td><?php echo $user->Pro_Internal_Code ?></td>
                                 </tr>
