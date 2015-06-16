@@ -61,20 +61,20 @@ class Myclass extends CController {
     public static function guid($opt = true) {
         $new_guid = Myclass::create_guid($opt);
         do {
-            $auth_guid = AuthorAccount::model()->countByAttributes(array('Auth_GUID' => $new_guid));
-            $perf_guid = PerformerAccount::model()->countByAttributes(array('Perf_GUID' => $new_guid));
-            $pub_guid = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $new_guid));
-            $pro_guid = ProducerAccount::model()->countByAttributes(array('Pro_GUID' => $new_guid));
-            $group_guid = Group::model()->countByAttributes(array('Group_GUID' => $new_guid));
-            $pub_group_guid = PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
+            $exist_count = AuthorAccount::model()->countByAttributes(array('Auth_GUID' => $new_guid));
+            $exist_count += PerformerAccount::model()->countByAttributes(array('Perf_GUID' => $new_guid));
+            $exist_count += PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $new_guid));
+            $exist_count += ProducerAccount::model()->countByAttributes(array('Pro_GUID' => $new_guid));
+            $exist_count += Group::model()->countByAttributes(array('Group_GUID' => $new_guid));
+            $exist_count += PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
             
-            if ($auth_guid != 0 || $perf_guid != 0 || $pub_guid != 0 || $pro_guid != 0 || $group_guid != 0 || $pub_group_guid != 0) {
-                $check_guid = $new_guid;
+            if ($exist_count > 0) {
+                $old_guid = $new_guid;
                 $new_guid = Myclass::create_guid($opt);
             } else {
                 break;
             }
-        } while ($check_guid != $new_guid);
+        } while ($old_guid != $new_guid);
         return $new_guid;
     }
 

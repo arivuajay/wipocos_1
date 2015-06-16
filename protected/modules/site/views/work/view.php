@@ -94,7 +94,7 @@ if ($export == false) {
         if (!empty($sub_title_model)) {
             ?>
             <h4 class="box-title">Sub Titles</h4>
-            <table class="table table-condensed">
+            <table class="table table-striped table-bordered">
                 <tbody>
                     <tr>
                         <th style="width: 10px">#</th>
@@ -234,7 +234,7 @@ if ($export == false) {
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
                             <th>Right Holder name</th>

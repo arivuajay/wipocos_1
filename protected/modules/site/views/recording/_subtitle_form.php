@@ -56,7 +56,7 @@ if (!empty($sub_titles)) {
             <h4 class="box-title">Sub Titles</h4>
         </div>
         <div class="box-body no-padding">
-            <table class="table table-condensed">
+            <table class="table table-striped table-bordered">
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo $model->getAttributeLabel('Rcd_Subtitle_Name') ?></th>

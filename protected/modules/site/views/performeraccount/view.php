@@ -281,7 +281,7 @@ if ($export == false) {
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody>
                         <tr>
                             <th>#</th>
@@ -307,7 +307,7 @@ if ($export == false) {
         if (!empty($recordings)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
                             <th>Recording Name</th>
@@ -344,7 +344,7 @@ if ($export == false) {
         if (!empty($uploaded_files)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody>
                         <tr>
                             <th style="width: 10px">#</th>

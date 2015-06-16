@@ -184,7 +184,7 @@
                         <h3 class="box-title">Linked Rightholders</h3>
                     </div>
                     <div class="box-body">
-                        <table class="table table-condensed" id="linked-holders">
+                        <table class="table table-striped table-bordered" id="linked-holders">
                             <thead>
                                 <tr>
                                     <th>Rightholder Name</th>

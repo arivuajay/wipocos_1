@@ -60,7 +60,7 @@ if (!empty($uploaded_files)) {
             <h4 class="box-title">Uploaded Files</h4>
         </div>
         <div class="box-body no-padding">
-            <table class="table table-condensed">
+            <table class="table table-striped table-bordered">
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th>Document Name</th>

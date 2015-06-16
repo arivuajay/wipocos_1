@@ -279,7 +279,7 @@ if ($export == false) {
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody>
                         <tr>
                             <th>#</th>
@@ -305,7 +305,7 @@ if ($export == false) {
         if (!empty($works)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
                             <th>Works Name</th>
@@ -343,7 +343,7 @@ if ($export == false) {
         if (!empty($uploaded_files)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th style="width: 10px">#</th>
                             <th>Document Name</th>

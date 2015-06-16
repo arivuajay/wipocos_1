@@ -108,7 +108,7 @@ $this->breadcrumbs = array(
         <?php
         if (!empty($sub_title_model)) {
             ?>
-            <table class="table table-condensed">
+            <table class="table table-striped table-bordered">
                 <tbody>
                     <tr>
                         <th style="width: 10px">#</th>
@@ -171,7 +171,7 @@ $this->breadcrumbs = array(
         <?php
         if (!empty($links)) {
             ?>
-<!--            <table class="table table-condensed">
+<!--            <table class="table table-striped table-bordered">
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Link_Title') ?></th>
@@ -212,7 +212,7 @@ $this->breadcrumbs = array(
         if (!empty($members)) {
             ?>
             <div class="box-body no-padding">
-                <table class="table table-condensed">
+                <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
                             <th>Right Holder name</th>
