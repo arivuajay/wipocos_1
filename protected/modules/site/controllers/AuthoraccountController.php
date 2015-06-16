@@ -347,8 +347,10 @@ class AuthoraccountController extends Controller {
             $searchModel->search_status = $_GET['AuthorAccount']['search_status'];
             $searchModel->search();
         }
-
+        
+        
         if ($this->isExportRequest()) {
+            $model->unsetAttributes();
             $this->exportCSV(array('Authors Accounts:'), null, false);
             $this->exportCSV($model->search(), array('Auth_Internal_Code', 'Auth_First_Name', 'Auth_Sur_Name', 'Auth_Ipi'));
         }

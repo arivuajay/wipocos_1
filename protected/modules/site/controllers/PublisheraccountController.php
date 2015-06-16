@@ -291,6 +291,7 @@ class PublisheraccountController extends Controller {
         }
 
         if ($this->isExportRequest()) {
+            $model->unsetAttributes();
             $this->exportCSV(array('Publisher Accounts:'), null, false);
             $this->exportCSV($model->search(), array('Pub_Internal_Code', 'Pub_Corporate_Name', 'Pub_Ipi'));
         }

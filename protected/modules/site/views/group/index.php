@@ -2,9 +2,10 @@
 /* @var $this GroupController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = ucfirst($role).' Groups';
+$g_type = ucfirst($role);
+$this->title = $g_type.' Groups';
 $this->breadcrumbs = array(
-    'Groups',
+$g_type.' Groups',
 );
 
 $themeUrl = $this->themeUrl;
@@ -304,7 +305,7 @@ $legal_forms = Myclass::getMasterLegalForm();
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> '.$g_type.'  Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

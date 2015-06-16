@@ -247,6 +247,7 @@ class GroupController extends Controller {
         $model->is_auth_performer = $role;
 
         if ($this->isExportRequest()) {
+            $model->unsetAttributes();
             $this->exportCSV(array('Groups:'), null, false);
             $this->exportCSV($model->search(), array('Group_Internal_Code', 'Group_Name'));
         }

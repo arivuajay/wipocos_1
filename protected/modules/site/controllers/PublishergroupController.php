@@ -332,8 +332,9 @@ class PublishergroupController extends Controller {
         $model->is_pub_producer = $role;
         
         if ($this->isExportRequest()) {
+            $model->unsetAttributes();
             $this->exportCSV(array('Groups:'), null, false);
-            $this->exportCSV($model->search(), array('Pub_Group_Internal_Code', 'Pub_Group_Corporate_Name'));
+            $this->exportCSV($model->search(), array('Pub_Group_Internal_Code', 'Pub_Group_Name'));
         }
 
         $this->render('index', compact('searchModel', 'search', 'model', 'role'));

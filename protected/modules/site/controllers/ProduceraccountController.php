@@ -289,6 +289,7 @@ class ProduceraccountController extends Controller {
         }
 
         if ($this->isExportRequest()) {
+            $model->unsetAttributes();
             $this->exportCSV(array('Producers Accounts:'), null, false);
             $this->exportCSV($model->search(), array('Pro_Internal_Code', 'Pro_Corporate_Name'));
         }

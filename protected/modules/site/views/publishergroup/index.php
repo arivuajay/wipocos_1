@@ -300,6 +300,7 @@ $legal_forms = Myclass::getMasterLegalForm();
 
         $export_btn = $this->renderExportGridButton('pub-group-base-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));
         $this->widget('booster.widgets.TbExtendedGridView', array(
+            'id' => 'pub-group-base-grid',
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
