@@ -127,7 +127,7 @@ class WorkController extends Controller {
         $sub_publishing_exists = WorkSubPublishing::model()->findByAttributes(array('Work_Id' => $id));
         $sub_publishing_model = empty($sub_publishing_exists) ? new WorkSubPublishing : $sub_publishing_exists;
 
-        $right_holder_exists = WorkRightholder::model()->findByAttributes(array('Work_Id' => $id));
+        $right_holder_exists = WorkRightholder::model()->findAllByAttributes(array('Work_Id' => $id));
         $right_holder_model = new WorkRightholder;
 
         // Uncomment the following line if AJAX validation is needed
@@ -200,9 +200,32 @@ class WorkController extends Controller {
                 Yii::app()->user->setFlash('success', 'Work right holder Saved Successfully!!!');
                 $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
             }
+        }else{
+            $publish_validate = $sub_publish_validate = false;
+            if(!empty($right_holder_exists)){
+                $ids = array();
+                foreach ($right_holder_exists as $right_holder_exist) {
+                    $ids[$right_holder_exist->Work_Member_GUID] = $right_holder_exist->Work_Member_GUID;
+                }
+                $count = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $ids));
+                if($count >= 1){
+                    if($publishing_model->isNewRecord){
+                        $publish_validate = true;
+                        $tab = 5;
+                    }else{
+                        if($count >= 2){
+                            if($sub_publishing_model->isNewRecord){
+                                $publish_validate = false;
+                                $sub_publish_validate = true;
+                                $tab = 6;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate'));
     }
 
     /**

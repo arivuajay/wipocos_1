@@ -399,7 +399,7 @@ $js = <<< EOD
             _brspl = $("#WorkRightholder_Work_Right_Broad_Special").val();
             _brshare = $("#WorkRightholder_Work_Right_Broad_Share").val();
         
-            tr += '<td>&nbsp;&nbsp;&nbsp;';
+            tr += '<td>';
             tr += '<a href="#role-foundation" data-mcspl="'+_mcspl+'" data-mcshare="'+_mcshare+'" data-brspl="'+_brspl+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';

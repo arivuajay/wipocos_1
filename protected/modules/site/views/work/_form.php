@@ -19,19 +19,31 @@ $instruments = Myclass::getMasterInstrument();
 $territories = Myclass::getMasterTerritory();
 ?>
 
+<?php if($publish_validate || $sub_publish_validate){?>
+<div class="alert alert-info fade in">
+    <button type="button" class="close close-sm" data-dismiss="alert">
+        <i class="fa fa-times"></i>
+    </button>
+    <?php echo $publish_validate ? 'Work is not published !' : 'Work is not subpublished !'?>
+</div>
+<?php }?>
+
 <div class="row">
     <div class="col-lg-12 col-xs-12">
 
         <?php
         $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = true;
         if (!$model->isNewRecord) {
-            if($model->Work_Unknown == 'N'){
-                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
+            if ($model->Work_Unknown == 'N') {
                 $doc_tab_validation = !$model->isNewRecord;
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
+                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate;
+                
+                $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
+                $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate;
             }
-        }else{
-            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = false;
+        } else {
+            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $pub_tab_validation = $sub_pub_tab_validation = false;
         }
         ?>
         <div class="nav-tabs-custom">
@@ -39,10 +51,10 @@ $territories = Myclass::getMasterTerritory();
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($pub_tab_validation) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($sub_pub_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Publishing</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -98,7 +110,7 @@ $territories = Myclass::getMasterTerritory();
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Work_Unknown', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                                    <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Work_Unknown'); ?>
                                 </div>
                             </div>
@@ -182,7 +194,21 @@ $territories = Myclass::getMasterTerritory();
                 <div class="tab-pane" id="tab_7">
                     <?php
                     if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model,'authusers'=>$authusers,'publusers'=>$publusers));
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'work_model' => $model, 'authusers' => $authusers, 'publusers' => $publusers));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_5">
+                    <?php
+                    if ($pub_tab_validation) {
+                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_6">
+                    <?php
+                    if ($sub_pub_tab_validation) {
+                        $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>
@@ -197,20 +223,6 @@ $territories = Myclass::getMasterTerritory();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_5">
-                    <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_6">
-                    <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
                     }
                     ?>
                 </div>

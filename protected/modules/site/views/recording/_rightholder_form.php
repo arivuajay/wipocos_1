@@ -379,7 +379,7 @@ $js = <<< EOD
             _mcshare = $("#RecordingRightholder_Rcd_Right_Blank_Share").val();
             _brshare = $("#RecordingRightholder_Rcd_Right_Equal_Share").val();
         
-            tr += '<td>&nbsp;&nbsp;&nbsp;';
+            tr += '<td>';
             tr += '<a href="#role-foundation" data-mcshare="'+_mcshare+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
