@@ -24,7 +24,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Society_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control','disabled'=>'disabled')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Society_Id'); ?>
             </div>
 
@@ -83,11 +83,11 @@
     <div class="col-lg-5">
         <div class="box-body">
 
-<!--            <div class="form-group">
+            <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Profession_Id', array('class' => '')); ?>
                 <?php echo $form->dropDownList($model, 'Auth_Mnge_Profession_Id', $professions, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Profession_Id'); ?>
-            </div>-->
+            </div>
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_File', array('class' => '')); ?>
