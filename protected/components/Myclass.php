@@ -67,7 +67,7 @@ class Myclass extends CController {
             $exist_count += ProducerAccount::model()->countByAttributes(array('Pro_GUID' => $new_guid));
             $exist_count += Group::model()->countByAttributes(array('Group_GUID' => $new_guid));
             $exist_count += PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
-            
+
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
                 $new_guid = Myclass::create_guid($opt);
@@ -260,7 +260,7 @@ class Myclass extends CController {
             $right_types = CHtml::listData(MasterTypeRights::model()->isActive()->findAll(array(
                                 'condition' => 'Type_Rights_Occupation = :occ',
                                 'params' => array(':occ' => $occupation),
-                            )), 'Master_Type_Rights_Id', 'Type_Rights_Name');
+                            )), 'Master_Type_Rights_Id', 'namewithcode');
         else
             $right_types = CHtml::listData(MasterTypeRights::model()->findAll(array(
                                 'condition' => 'Type_Rights_Occupation = :occ',
