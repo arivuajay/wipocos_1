@@ -75,7 +75,7 @@
                             <?php echo $form->labelEx($model, 'Work_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->AuthException()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
@@ -276,11 +276,12 @@
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 $mainPublisher = $model->getMainPublisher();
 $subPublishers = json_encode($model->getSubPublisher());
+$def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
 
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
-        
+
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
@@ -293,13 +294,13 @@ $js = <<< EOD
             $('#WorkRightholder_Work_Right_Broad_Special').val(_brspl);
             $('#WorkRightholder_Work_Right_Mech_Share').val(_mcshare);
             $('#WorkRightholder_Work_Right_Mech_Special').val(_mcspl);
-        
+
             $("#search_result tr").removeClass('highlight');
-        
+
             _tr = $(this).closest('tr');
             _urole = _tr.data('urole');
             _role = _tr.find('.rightrole').data('wrkrole');
-        
+
             console.log(_urole);
             console.log(_role);
             if(_urole == 'AU'){
@@ -308,11 +309,11 @@ $js = <<< EOD
                 _role !== null ? $('.user-role-dropdown select.publisher-role').val(_role) : '';
             }
         });
-        
+
         $('body').on('click','#search_result tr', function(){
             $("#right_insert").val('Add');
         });
-        
+
         $('body').on('click','#linked-holders tr', function(){
             $("#right_insert").val('Edit');
             _workrole =  $(this).find('.rightrole').data('wrkrole');
@@ -320,7 +321,7 @@ $js = <<< EOD
                 $("#main_pub").val(1);
             }
         });
-        
+
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
@@ -331,12 +332,12 @@ $js = <<< EOD
             $('#WorkRightholder_Work_Member_Internal_Code').val(_intcode);
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'AU'){
-                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide');
+                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide').val('$def_auth_role');
             }else if(_urole == 'PU'){
                 $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide');
             }
         });
-        
+
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
             rowCount++;
@@ -345,11 +346,11 @@ $js = <<< EOD
             checkShare();
             return false;
         });
-        
+
         $('#is_auth, #is_publ').on('ifChecked', function(event){
             $("#chkbox_err").addClass("hide");
         });
-        
+
         $('#search_button').on("click", function(){
             if($("#is_auth").is(':checked') == false && $("#is_publ").is(':checked') == false){
                 $("#chkbox_err").removeClass("hide");
@@ -370,7 +371,7 @@ $js = <<< EOD
                 dataType:'html'
             });
         });
-        
+
     });
     function InsertRightHolder(form, data, hasError) {
         if (hasError == false) {
@@ -378,7 +379,7 @@ $js = <<< EOD
             _role = $(".highlight").data('urole');
             _name = $('.highlight').data('name');
             _intcode = $('.highlight').data('intcode');
-        
+
             selectedRole = $('select[name="WorkRightholder[Work_Right_Role]"] option:selected').filter(':visible:first').val();
             if($("#main_pub").val() == 0){
                 _stopContinue = mainPublishervalidate(selectedRole);
@@ -390,12 +391,12 @@ $js = <<< EOD
                     return false;
                 }
             }
-        
+
             $("#right_insert").attr("disabled", true);
             $('.loader').show();
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
-        
+
 
             if(_name === 'undefined'){
                 _name = $("#linked-holders").find("[data-uid='" + _uid + "']").data('name');
@@ -406,12 +407,12 @@ $js = <<< EOD
             }else{
                 var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-name="'+_name+'" data-intcode="'+_intcode+'">';
             }
-        
+
             $.each(form_data, function (key, value) {
                 if(value['name'] != "base_table_search"){
                     var name = value['name'];
                     name = name.replace("[","[" + rowCount + "][");
-        
+
                     //set hidden form values
                     if(value['name'] == "WorkRightholder[Work_Right_Role]"){
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '" class="rightrole" data-wrkrole = "' + value['value'] + '" /></td>';
@@ -447,12 +448,12 @@ $js = <<< EOD
             _mcshare = $("#WorkRightholder_Work_Right_Mech_Share").val();
             _brspl = $("#WorkRightholder_Work_Right_Broad_Special").val();
             _brshare = $("#WorkRightholder_Work_Right_Broad_Share").val();
-        
+
             tr += '<td>';
             tr += '<a href="#role-foundation" data-mcspl="'+_mcspl+'" data-mcshare="'+_mcshare+'" data-brspl="'+_brspl+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
-        
+
             if(chk_tr.length == 1){
                 chk_tr.html(tr);
             }else{
@@ -460,7 +461,7 @@ $js = <<< EOD
                 $('#linked-holders tbody').append(tr);
             }
             rowCount++;
-        
+
             $('#work-rightholder-form')[0].reset();
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
@@ -474,12 +475,12 @@ $js = <<< EOD
         }
         return false;
     }
-        
+
     function checkShare(){
         _val = 0;
         _broad_share = 0;
         _mech_share = 0;
-        
+
         $('.broad_share_value').each(function(){
             _broad_share += parseFloat($(this).data('share'));
         });
@@ -490,10 +491,10 @@ $js = <<< EOD
         $("#equal_total").html(_broad_share);
         $("#blank_total").html(_mech_share);
         _val = _broad_share + _mech_share;
-        
+
         var not_auto_submit = _val != '200';
         $("#right_ajax_submit").attr("disabled", not_auto_submit);
-        
+
         _isMainPubAdded = false;
         rightrole = $('.rightrole');
         if(rightrole.length > 0){
@@ -508,7 +509,7 @@ $js = <<< EOD
             $("#right_form").submit();
         }
     }
-        
+
     function mainPublishervalidate(selectedRole){
         _isMainPubAdded = false;
         _MainPubCount = 0;
@@ -536,10 +537,10 @@ $js = <<< EOD
             alert("Main Publisher already Added. You can't Add more than one Main publisher");
             _stopContinue = true;
         }
-        
+
         return _stopContinue;
     }
-        
+
 EOD;
 Yii::app()->clientScript->registerScript('_right_form', $js);
 ?>
