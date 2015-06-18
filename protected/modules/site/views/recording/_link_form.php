@@ -70,7 +70,7 @@ if (!empty($links)) {
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $link->Rcd_Link_Title ?></td>
-                            <td><?php echo $link->rcdPerf->Perf_First_Name.' '.$link->rcdPerf->Perf_Sur_Name ?></td>
+                            <td><?php echo $link->rcdPerf->fullname ?></td>
                             <td><?php echo $link->rcdProd->Pro_Corporate_Name ?></td>
                             <td>
                                 <?php

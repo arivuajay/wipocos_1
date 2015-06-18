@@ -2,7 +2,7 @@
 /* @var $this MastermoduleController */
 /* @var $model MasterModule */
 
-$this->title = 'View #' . $model->Master_Module_ID;
+$this->title = 'View Master Module: ' . $model->Module_Code;
 $this->breadcrumbs = array(
     'Master Modules' => array('index'),
     'View ' . 'MasterModule',

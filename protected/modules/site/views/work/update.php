@@ -2,7 +2,7 @@
 /* @var $this WorkController */
 /* @var $model Work */
 
-$this->title='Update Works: '. $model->Work_Id;
+$this->title='Update Work: '. $model->Work_Org_Title;
 $this->breadcrumbs=array(
 	'Works'=>array('index'),
 	'Update Works',

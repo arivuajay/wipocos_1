@@ -2,7 +2,7 @@
 /* @var $this MastertypeController */
 /* @var $model MasterType */
 
-$this->title = 'View #' . $model->Master_Type_Id;
+$this->title = 'View Master Type: ' . $model->Type_Name;
 $this->breadcrumbs = array(
     'Master Types' => array('index'),
     'View ' . 'MasterType',

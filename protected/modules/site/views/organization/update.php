@@ -2,7 +2,7 @@
 /* @var $this OrganizationController */
 /* @var $model Organization */
 
-$this->title = 'Update Organizations: ' . $model->Org_Id;
+$this->title = 'Update Organization: ' . $model->Org_Abbrevation;
 $this->breadcrumbs = array(
     'Organizations' => array('index'),
     'Update Organizations',

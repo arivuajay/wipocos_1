@@ -2,7 +2,7 @@
 /* @var $this MasterinternationalnumberController */
 /* @var $model MasterInternationalNumber */
 
-$this->title = 'Update Master International Numbers: ' . $model->Master_International_Id;
+$this->title = 'Update Master International Number: ' . $model->International_Number_Type;
 $this->breadcrumbs = array(
     'Master International Numbers' => array('index'),
     'Update Master International Numbers',

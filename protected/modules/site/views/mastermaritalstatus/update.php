@@ -2,7 +2,7 @@
 /* @var $this MastermaritalstatusController */
 /* @var $model MasterMaritalStatus */
 
-$this->title = 'Update Master Marital Statuses: ' . $model->Master_Marital_State_Id;
+$this->title = 'Update Master Marital Status: ' . $model->Marital_State;
 $this->breadcrumbs = array(
     'Master Marital Statuses' => array('index'),
     'Update Master Marital Statuses',

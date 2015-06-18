@@ -2,7 +2,7 @@
 /* @var $this MasterprofessionController */
 /* @var $model MasterProfession */
 
-$this->title = 'View #' . $model->Master_Profession_Id;
+$this->title = 'View Master Profession: ' . $model->Profession_Name;
 $this->breadcrumbs = array(
     'Master Professions' => array('index'),
     'View ' . 'MasterProfession',

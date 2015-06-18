@@ -2,7 +2,7 @@
 /* @var $this SocietyController */
 /* @var $model Society */
 
-$this->title = 'Update Societies: ' . $model->Society_Id;
+$this->title = 'Update Society: ' . $model->Society_Code;
 $this->breadcrumbs = array(
     'Societies' => array('index'),
     'Update Societies',

@@ -1,7 +1,7 @@
 <?php
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
-$this->title = "View #{$model->Auth_Acc_Id} : {$model->Auth_First_Name}";
+$this->title = "View Author: {$model->fullname}";
 $this->breadcrumbs = array(
     'Authors' => array('index'),
     'View ' . 'AuthorAccount',
@@ -140,7 +140,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Address Not Created';
+            echo 'No data created';
         }
         ?>
     </div>
@@ -160,7 +160,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Payment Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Pseudonyms</h4>
@@ -179,7 +179,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Pseudonyms Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -203,7 +203,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Death Inheritance Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -253,7 +253,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Mmanaged Rights Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -270,7 +270,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Biography Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Assigned Groups</h4>
@@ -296,7 +296,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No groups assigned';
+            echo 'No data created';
         }
         ?>
         <h4 class="box-title">Assigned Works</h4>
@@ -328,7 +328,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No works assigned';
+            echo 'No data created';
         }
         ?>
     </div>
@@ -375,7 +375,7 @@ if ($export == false) {
             </div>
 
         <?php }else{
-            echo 'No Uplodads Found';
+            echo 'No data created';
         }
         ?>
 

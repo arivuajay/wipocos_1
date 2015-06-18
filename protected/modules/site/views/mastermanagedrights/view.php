@@ -2,7 +2,7 @@
 /* @var $this MastermanagedrightsController */
 /* @var $model MasterManagedRights */
 
-$this->title = 'View #' . $model->Master_Mgd_Rights_Id;
+$this->title = 'View Master Managed Rights: ' . $model->Mgd_Rights_Name;
 $this->breadcrumbs = array(
     'Master Managed Rights' => array('index'),
     'View ' . 'MasterManagedRights',

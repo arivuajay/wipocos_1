@@ -2,7 +2,7 @@
 /* @var $this MasterroleController */
 /* @var $model MasterRole */
 
-$this->title = 'View #' . $model->Master_Role_ID;
+$this->title = 'View Master Role: ' . $model->Role_Code;
 $this->breadcrumbs = array(
     'Master Roles' => array('index'),
     'View ' . 'MasterRole',

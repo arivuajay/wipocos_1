@@ -2,7 +2,7 @@
 /* @var $this MasterlanguageController */
 /* @var $model MasterLanguage */
 
-$this->title = 'Update Master Languages: ' . $model->Master_Lang_Id;
+$this->title = 'Update Master Language: ' . $model->Lang_Name;
 $this->breadcrumbs = array(
     'Master Languages' => array('index'),
     'Update Master Languages',

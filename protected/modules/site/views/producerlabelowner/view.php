@@ -2,7 +2,7 @@
 /* @var $this ProducerLabelOwnerController */
 /* @var $model ProducerLabelOwner */
 
-$this->title = 'View #' . $model->Label_Owner_Id;
+$this->title = 'View ProducerLabelOwner: ' . $model->Label_Owner_Id;
 $this->breadcrumbs = array(
     'Producer Label Ownerships' => array('index'),
     'View ' . 'ProducerLabelOwner',

@@ -2,7 +2,7 @@
 /* @var $this MastercurrencyController */
 /* @var $model MasterCurrency */
 
-$this->title = 'View #' . $model->Master_Crncy_Id;
+$this->title = 'View Master Currency: ' . $model->Master_Crncy_Id;
 $this->breadcrumbs = array(
     'Master Currencies' => array('index'),
     'View ' . 'MasterCurrency',

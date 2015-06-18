@@ -2,7 +2,7 @@
 /* @var $this RecordingController */
 /* @var $model Recording */
 
-$this->title='Update Recordings: '. $model->Rcd_Id;
+$this->title='Update Recording: '. $model->Rcd_Title;
 $this->breadcrumbs=array(
 	'Recordings'=>array('index'),
 	'Update Recordings',

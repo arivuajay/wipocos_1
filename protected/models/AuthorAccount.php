@@ -61,9 +61,12 @@ class AuthorAccount extends CActiveRecord {
             $this->Auth_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Auth_GUID = Myclass::guid(false);
 
-            $this->Auth_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
-                    array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode;
+            $this->Auth_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode;
         }
+    }
+
+    public function getFullName() {
+        return $this->Auth_First_Name . " " . $this->Auth_Sur_Name;
     }
 
     /**

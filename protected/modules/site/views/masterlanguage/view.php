@@ -2,7 +2,7 @@
 /* @var $this MasterlanguageController */
 /* @var $model MasterLanguage */
 
-$this->title = 'View #' . $model->Master_Lang_Id;
+$this->title = 'View Master Language: ' . $model->Lang_Name;
 $this->breadcrumbs = array(
     'Master Languages' => array('index'),
     'View ' . 'MasterLanguage',

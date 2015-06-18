@@ -2,7 +2,7 @@
 /* @var $this PerformeraccountController */
 /* @var $model PerformerAccount */
 
-$this->title = 'Update Performer: ' . $model->Perf_Acc_Id;
+$this->title = 'Update Performer: ' . $model->fullname;
 $this->breadcrumbs = array(
     'Performers' => array('index'),
     'Update Performers',

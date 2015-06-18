@@ -2,7 +2,7 @@
 /* @var $this MasterdocumentstatusController */
 /* @var $model MasterDocumentStatus */
 
-$this->title = 'View #' . $model->Master_Document_Sts_Id;
+$this->title = 'View Master Document Status: ' . $model->Document_Sts_Name;
 $this->breadcrumbs = array(
     'Master Document Status' => array('index'),
     'View ' . 'MasterDocumentStatus',

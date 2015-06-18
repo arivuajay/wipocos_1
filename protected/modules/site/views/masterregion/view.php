@@ -2,7 +2,7 @@
 /* @var $this MasterregionController */
 /* @var $model MasterRegion */
 
-$this->title = 'View #' . $model->Master_Region_Id;
+$this->title = 'View Master Region: ' . $model->Region_Name;
 $this->breadcrumbs = array(
     'Master Regions' => array('index'),
     'View ' . 'MasterRegion',

@@ -2,7 +2,7 @@
 /* @var $this PerformeraccountController */
 /* @var $model PerformerAccount */
 
-$this->title = "View #{$model->Pro_Acc_Id} : {$model->Pro_Corporate_Name}";
+$this->title = "View Producer: {$model->Pro_Corporate_Name}";
 $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'PerformerAccount',
@@ -123,7 +123,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Address Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Assigned Recordings</h4>
@@ -155,7 +155,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No recordings assigned';
+            echo 'No data created';
         }
         ?>
 
@@ -181,7 +181,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Payment Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Pseudonyms</h4>
@@ -200,7 +200,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Pseudonyms Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -220,7 +220,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Liquidation and Inheritance Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -270,7 +270,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Related Rights Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -287,7 +287,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Biography Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Assigned Groups</h4>
@@ -313,7 +313,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No groups assigned';
+            echo 'No data created';
         }
         ?>
     </div>

@@ -1,5 +1,5 @@
 <?php
-$this->title = 'View User #' . $model->name;
+$this->title = 'View User: ' . $model->name;
 $this->breadcrumbs = array(
     'Users' => array('index'),
     'View User',

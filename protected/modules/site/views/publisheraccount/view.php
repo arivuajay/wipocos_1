@@ -2,7 +2,7 @@
 /* @var $this ProduceraccountController */
 /* @var $model ProducerAccount */
 
-$this->title = "View #{$model->Pub_Acc_Id} : {$model->Pub_Corporate_Name}";
+$this->title = "View Publisher: {$model->Pub_Corporate_Name}";
 $this->breadcrumbs = array(
     'Producers' => array('index'),
     'View ' . 'ProducerAccount',
@@ -121,7 +121,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Address Not Created';
+            echo 'No data created';
         }
         ?>
     </div>
@@ -146,7 +146,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Payment Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Pseudonyms</h4>
@@ -165,7 +165,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Pseudonyms Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -185,7 +185,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Liquidation and Inheritance Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Related Rights</h4>
@@ -234,7 +234,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Releted Rights Not Created';
+            echo 'No data created';
         }
         ?>
 
@@ -251,7 +251,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'Biography Not Created';
+            echo 'No data created';
         }
         ?>
         <h4>Assigned Groups</h4>
@@ -276,7 +276,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No groups assigned';
+            echo 'No data created';
         }
         ?>
         <h4>Assigned Works</h4>
@@ -308,7 +308,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No works assigned';
+            echo 'No data created';
         }
         ?>
 

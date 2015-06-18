@@ -75,7 +75,7 @@
                             <?php echo $form->labelEx($model, 'Work_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->AuthException()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
@@ -162,6 +162,7 @@
         <div class="form-group">
             <div class="col-lg-12">
                 <div class="col-lg-1">
+                    <input id="main_pub" value="0" type="hidden" />
                     <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-primary', 'id' => 'right_insert')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
@@ -177,7 +178,9 @@
             <div class="box-body">
                 <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100</span> %</div>
                 <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100</span> %</div>
-                <div class="text-right"><span>Note: Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % </span></div>
+                <div class="text-right">
+                    <span>Note: Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % and One main publisher is added</span>
+                </div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/work/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -204,7 +207,7 @@
                                 if ($work_model->workRightholders) {
                                     foreach ($work_model->workRightholders as $key => $member) {
                                         if ($member->workAuthor) {
-                                            $name = $member->workAuthor->Auth_First_Name.' '.$member->workAuthor->Auth_Sur_Name;
+                                            $name = $member->workAuthor->fullname;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
                                             $role = 'AU';
                                             $internal_code = $member->workAuthor->Auth_Internal_Code;
@@ -218,7 +221,7 @@
                                         <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
                                             <td><?php echo $name; ?></td>
                                             <td><?php echo $internal_code; ?></td>
-                                            <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
+                                            <td><?php echo $member->workRightRole->Type_Rights_Code.' - '.$member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value broad_share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->Work_Right_Broad_Special != '' ? $member->getSpecialStatus($member->Work_Right_Broad_Special) : ''; ?></td>
                                             <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
@@ -233,7 +236,7 @@
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Id]", $member->Work_Id);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_GUID]", $member->Work_Member_GUID);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Member_Internal_Code]", $internal_code);
-                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Role]", $member->Work_Right_Role);
+                                                echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Role]", $member->Work_Right_Role, array('class' => 'rightrole', 'data-wrkrole' => $member->Work_Right_Role));
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Share]", $member->Work_Right_Broad_Share);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Special]", $member->Work_Right_Broad_Special);
                                                 echo CHtml::hiddenField("WorkRightholder[{$key}][Work_Right_Broad_Org_id]", $member->Work_Right_Broad_Org_id);
@@ -246,7 +249,7 @@
                                         <?php
                                     }
                                 } else {
-                                    echo "<tr id='norecord_tr'><td colspan='8'>No records found</td></tr>";
+                                    echo "<tr id='norecord_tr'><td colspan='8'>No data created</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -271,10 +274,13 @@
 
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
+$mainPublisher = $model->getMainPublisher();
+$subPublishers = json_encode($model->getSubPublisher());
 
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
+        
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
@@ -289,6 +295,30 @@ $js = <<< EOD
             $('#WorkRightholder_Work_Right_Mech_Special').val(_mcspl);
         
             $("#search_result tr").removeClass('highlight');
+        
+            _tr = $(this).closest('tr');
+            _urole = _tr.data('urole');
+            _role = _tr.find('.rightrole').data('wrkrole');
+        
+            console.log(_urole);
+            console.log(_role);
+            if(_urole == 'AU'){
+                _role !== null ? $('.user-role-dropdown select.author-role').val(_role) : '';
+            }else if(_urole == 'PU'){
+                _role !== null ? $('.user-role-dropdown select.publisher-role').val(_role) : '';
+            }
+        });
+        
+        $('body').on('click','#search_result tr', function(){
+            $("#right_insert").val('Add');
+        });
+        
+        $('body').on('click','#linked-holders tr', function(){
+            $("#right_insert").val('Edit');
+            _workrole =  $(this).find('.rightrole').data('wrkrole');
+            if(_workrole == $mainPublisher){
+                $("#main_pub").val(1);
+            }
         });
         
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
@@ -344,14 +374,28 @@ $js = <<< EOD
     });
     function InsertRightHolder(form, data, hasError) {
         if (hasError == false) {
+            _uid = $(".highlight").data('uid');
+            _role = $(".highlight").data('urole');
+            _name = $('.highlight').data('name');
+            _intcode = $('.highlight').data('intcode');
+        
+            selectedRole = $('select[name="WorkRightholder[Work_Right_Role]"] option:selected').filter(':visible:first').val();
+            if($("#main_pub").val() == 0){
+                _stopContinue = mainPublishervalidate(selectedRole);
+                if(_stopContinue)
+                    return false;
+            }else{
+                if(selectedRole != $mainPublisher){
+                    alert("You can't change Main publisher to Sub Publisher");
+                    return false;
+                }
+            }
+        
             $("#right_insert").attr("disabled", true);
             $('.loader').show();
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
         
-            _uid = $(".highlight").data('uid');
-            _role = $(".highlight").data('urole');
-            _name = $('.highlight').data('name');
 
             if(_name === 'undefined'){
                 _name = $("#linked-holders").find("[data-uid='" + _uid + "']").data('name');
@@ -360,15 +404,20 @@ $js = <<< EOD
             if(chk_tr.length == 1){
                 var tr = '';
             }else{
-                var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-name="'+_name+'">';
+                var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-name="'+_name+'" data-intcode="'+_intcode+'">';
             }
         
             $.each(form_data, function (key, value) {
                 if(value['name'] != "base_table_search"){
                     var name = value['name'];
                     name = name.replace("[","[" + rowCount + "][");
+        
                     //set hidden form values
-                    tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
+                    if(value['name'] == "WorkRightholder[Work_Right_Role]"){
+                        tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '" class="rightrole" data-wrkrole = "' + value['value'] + '" /></td>';
+                    }else{
+                        tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '" /></td>';
+                    }
 
                     if(value['name'] != "WorkRightholder[Work_Right_Broad_Org_id]" && value['name'] != "WorkRightholder[Work_Right_Mech_Org_Id]" && value['name'] != "WorkRightholder[Work_Member_GUID]"){
                         tr += '<td>';
@@ -418,6 +467,9 @@ $js = <<< EOD
             $("#right_insert").val('Add');
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
+
+            $("#search_result tr[data-uid='"+_uid+"']").remove();
+            $("#main_pub").val(0);
             checkShare();
         }
         return false;
@@ -441,9 +493,51 @@ $js = <<< EOD
         
         var not_auto_submit = _val != '200';
         $("#right_ajax_submit").attr("disabled", not_auto_submit);
-        if(not_auto_submit == false){
+        
+        _isMainPubAdded = false;
+        rightrole = $('.rightrole');
+        if(rightrole.length > 0){
+            rightrole.each(function() {
+                if($mainPublisher == $(this).val()){
+                    _isMainPubAdded = true;
+                    return false;
+                }
+            });
+        }
+        if(not_auto_submit == false && _isMainPubAdded){
             $("#right_form").submit();
         }
+    }
+        
+    function mainPublishervalidate(selectedRole){
+        _isMainPubAdded = false;
+        _MainPubCount = 0;
+        rightrole = $('.rightrole');
+        if(rightrole.length > 0){
+            rightrole.each(function() {
+                if($mainPublisher == $(this).val()){
+                    _isMainPubAdded = true;
+                    return false;
+                }
+            });
+        }
+        _stopContinue = false;
+        $.each($subPublishers, function(sub_id,sub_role) {
+            if(selectedRole == sub_id){
+                if(_isMainPubAdded == false){
+                    alert("Please Add Main Publisher. Then add Sub publisher");
+                    _stopContinue = true;
+                    return false;
+                }
+            }
+        });
+
+        if(selectedRole == $mainPublisher && _isMainPubAdded){
+            alert("Main Publisher already Added. You can't Add more than one Main publisher");
+            _stopContinue = true;
+        }
+        
+        return _stopContinue;
     }
         
 EOD;

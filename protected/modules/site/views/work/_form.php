@@ -19,7 +19,8 @@ $instruments = Myclass::getMasterInstrument();
 $territories = Myclass::getMasterTerritory();
 ?>
 
-<?php if($publish_validate || $sub_publish_validate){?>
+<?php 
+if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages))*/ ){?>
 <div class="alert alert-info fade in">
     <button type="button" class="close close-sm" data-dismiss="alert">
         <i class="fa fa-times"></i>

@@ -2,7 +2,7 @@
 /* @var $this MasterdocumentController */
 /* @var $model MasterDocument */
 
-$this->title = 'Update Master Documents: ' . $model->Master_Doc_Id;
+$this->title = 'Update Master Document: ' . $model->Doc_Name;
 $this->breadcrumbs = array(
     'Master Documents' => array('index'),
     'Update Master Documents',

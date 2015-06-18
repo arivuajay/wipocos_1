@@ -2,7 +2,7 @@
 /* @var $this SocietyController */
 /* @var $model Society */
 
-$this->title = 'View #' . $model->Society_Id;
+$this->title = 'View Society: ' . $model->Society_Code;
 $this->breadcrumbs = array(
     'Societies' => array('index'),
     'View ' . 'Society',

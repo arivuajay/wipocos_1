@@ -26,6 +26,27 @@
 
         <?php
         $_controller = Yii::app()->controller->id;
+        
+        if($_controller=='group'){
+            if(isset($_REQUEST['role'])){
+                $auth_group = $_REQUEST['role'] == 'author';
+                $perf_group = $_REQUEST['role'] == 'performer';
+            }elseif(isset($_REQUEST['id'])){
+                $group = Group::model()->findByPk($_REQUEST['id']);
+                $auth_group = $group->Group_Is_Author == '1';
+                $perf_group = $group->Group_Is_Performer == '1';
+            }
+        }elseif($_controller=='publishergroup'){
+            if(isset($_REQUEST['role'])){
+                $pub_group = $_REQUEST['role'] == 'publisher';
+                $pro_group = $_REQUEST['role'] == 'producer';
+            }elseif(isset($_REQUEST['id'])){
+                $group = PublisherGroup::model()->findByPk($_REQUEST['id']);
+                $pub_group = $group->Pub_Group_Is_Publisher == '1';
+                $pro_group = $group->Pub_Group_Is_Producer == '1';
+            }
+        }
+        
         $this->widget('zii.widgets.CMenu', array(
             'activateParents' => true,
             'encodeLabel' => false,
@@ -83,10 +104,10 @@
                                 array('label' => '<i class="fa fa-music"></i> <span>Performer</span>', 'url' => array('/site/performeraccount/index'), 'active' => $_controller=='performeraccount'),
                                 array('label' => '<i class="fa fa-microphone"></i> <span>Publisher</span>', 'url' => array('/site/publisheraccount/index'), 'active' => $_controller=='publisheraccount'),
                                 array('label' => '<i class="fa fa-money"></i> <span>Producer</span>', 'url' => array('/site/produceraccount/index'), 'active' => $_controller=='produceraccount'),
-                                array('label' => '<i class="fa fa-book"></i> <span>Authors Group</span>', 'url' => array('/site/group/index/role/author'), 'active' => $_controller=='group'),
-                                array('label' => '<i class="fa fa-music"></i> <span>Performers Group</span>', 'url' => array('/site/group/index/role/performer'), 'active' => $_controller=='group'),
-                                array('label' => '<i class="fa fa-microphone"></i> <span>Publishers Group</span>', 'url' => array('/site/publishergroup/index/role/publisher'), 'active' => $_controller=='publishergroup'),
-                                array('label' => '<i class="fa fa-money"></i> <span>Producers Group</span>', 'url' => array('/site/publishergroup/index/role/producer'), 'active' => $_controller=='publishergroup'),
+                                array('label' => '<i class="fa fa-book"></i> <span>Authors Group</span>', 'url' => array('/site/group/index/role/author'), 'active' => $auth_group),
+                                array('label' => '<i class="fa fa-music"></i> <span>Performers Group</span>', 'url' => array('/site/group/index/role/performer'), 'active' => $perf_group),
+                                array('label' => '<i class="fa fa-microphone"></i> <span>Publishers Group</span>', 'url' => array('/site/publishergroup/index/role/publisher'), 'active' => $pub_group),
+                                array('label' => '<i class="fa fa-money"></i> <span>Producers Group</span>', 'url' => array('/site/publishergroup/index/role/producer'), 'active' => $pro_group),
                             ),
                         ),
                         array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'active' => $_controller=='work'),

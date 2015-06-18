@@ -2,7 +2,7 @@
 /* @var $this MastermoduleController */
 /* @var $model MasterModule */
 
-$this->title = 'Update Master Modules: ' . $model->Master_Module_ID;
+$this->title = 'Update Master Module: ' . $model->Module_Code;
 $this->breadcrumbs = array(
     'Master Modules' => array('index'),
     'Update Master Modules',

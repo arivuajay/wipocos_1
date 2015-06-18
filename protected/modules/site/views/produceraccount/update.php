@@ -2,7 +2,7 @@
 /* @var $this ProduceraccountController */
 /* @var $model ProducerAccount */
 
-$this->title = 'Update Producer: ' . $model->Pro_Acc_Id;
+$this->title = 'Update Producer: ' . $model->Pro_Corporate_Name;
 $this->breadcrumbs = array(
     'Producers' => array('index'),
     'Update Producer',

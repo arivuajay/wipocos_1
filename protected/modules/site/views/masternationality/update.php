@@ -2,7 +2,7 @@
 /* @var $this MasternationalityController */
 /* @var $model MasterNationality */
 
-$this->title = 'Update Master Nationalities: ' . $model->Master_Nation_Id;
+$this->title = 'Update Master Nationality: ' . $model->Nation_Name;
 $this->breadcrumbs = array(
     'Master Nationalities' => array('index'),
     'Update Master Nationalities',

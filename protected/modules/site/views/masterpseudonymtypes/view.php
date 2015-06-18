@@ -2,7 +2,7 @@
 /* @var $this MasterpseudonymtypesController */
 /* @var $model MasterPseudonymTypes */
 
-$this->title = 'View #' . $model->Pseudo_Id;
+$this->title = 'View Master Pseudonym Type: ' . $model->Pseudo_Code;
 $this->breadcrumbs = array(
     'Master Pseudonym Types' => array('index'),
     'View ' . 'MasterPseudonymTypes',

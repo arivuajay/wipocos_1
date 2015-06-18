@@ -2,7 +2,7 @@
 /* @var $this MasterdocumenttypeController */
 /* @var $model MasterDocumentType */
 
-$this->title = 'View #' . $model->Master_Doc_Type_Id;
+$this->title = 'View Master Document Type: ' . $model->Doc_Type_Name;
 $this->breadcrumbs = array(
     'Master Document Types' => array('index'),
     'View ' . 'MasterDocumentType',

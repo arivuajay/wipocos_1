@@ -2,7 +2,7 @@
 /* @var $this MasterLabelController */
 /* @var $model MasterLabel */
 
-$this->title='View #'.$model->Master_Label_Id;
+$this->title='View Master Label: '.$model->Label_Name;
 $this->breadcrumbs=array(
 	'Master Labels'=>array('index'),
 	'View '.'MasterLabel',

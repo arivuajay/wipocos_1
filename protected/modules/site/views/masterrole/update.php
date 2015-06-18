@@ -2,7 +2,7 @@
 /* @var $this MasterroleController */
 /* @var $model MasterRole */
 
-$this->title = 'Update Master Roles: ' . $model->Master_Role_ID;
+$this->title = 'Update Master Role: ' . $model->Role_Code;
 $this->breadcrumbs = array(
     'Master Roles' => array('index'),
     'Update Master Roles',

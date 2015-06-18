@@ -1,7 +1,7 @@
 <?php
 /* @var $this WorkController */
 /* @var $model Work */
-$this->title = "View #{$model->Work_Id} : {$model->Work_Org_Title}";
+$this->title = "View Work: {$model->Work_Org_Title}";
 $this->breadcrumbs = array(
     'Works' => array('index'),
     'View ' . 'Work',
@@ -126,7 +126,7 @@ if ($export == false) {
             </table>
             <?php
         } else {
-            echo 'No Subtitle Assigned';
+            echo 'No data created';
         }
         ?>
     </div>
@@ -161,7 +161,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Biogrpahy Assigned';
+            echo 'No data created';
         }
         ?>
         <h4>Biography</h4>
@@ -175,7 +175,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Biogrpahy Assigned';
+            echo 'No data created';
         }
         ?>
         <h4>Publishing</h4>
@@ -197,7 +197,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Publishing Created';
+            echo 'No data created';
         }
         ?>
         <h4>Sub Publishing</h4>
@@ -224,7 +224,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Sub Publishing Created';
+            echo 'No data created';
         }
         ?>
     </div>
@@ -251,7 +251,7 @@ if ($export == false) {
                         <?php
                         foreach ($members as $key => $member) {
                             if ($member->workAuthor) {
-                                $name = $member->workAuthor->Auth_First_Name . ' ' . $member->workAuthor->Auth_Sur_Name;
+                                $name = $member->workAuthor->fullname;
                                 $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
                                 $internal_code = $member->workAuthor->Auth_Internal_Code;
                             } elseif ($member->workPublisher) {
@@ -278,7 +278,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No works assigned';
+            echo 'No data created';
         }
         ?>
 

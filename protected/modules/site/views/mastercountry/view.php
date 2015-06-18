@@ -2,7 +2,7 @@
 /* @var $this MastercountryController */
 /* @var $model MasterCountry */
 
-$this->title = 'View #' . $model->Master_Country_Id;
+$this->title = 'View Master Country: ' . $model->Country_Name;
 $this->breadcrumbs = array(
     'Master Countries' => array('index'),
     'View ' . 'MasterCountry',

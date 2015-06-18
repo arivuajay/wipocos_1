@@ -69,3 +69,8 @@ table.selectable tbody tr.highlight td { background-color: #f56954; cursor: poin
 .treeview.innertree a{
     color: #3C8DBC !important;
 }
+
+.skin-green .treeview-menu > li.active > a{
+    color: #3C763D !important;
+    font-weight: bold;
+}

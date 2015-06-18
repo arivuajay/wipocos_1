@@ -2,7 +2,7 @@
 /* @var $this MasterLabelController */
 /* @var $model MasterLabel */
 
-$this->title='Update Master Labels: '. $model->Master_Label_Id;
+$this->title='Update Master Label: '. $model->Label_Name;
 $this->breadcrumbs=array(
 	'Master Labels'=>array('index'),
 	'Update Master Labels',

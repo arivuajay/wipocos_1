@@ -39,6 +39,7 @@ class WorkPublishing extends CActiveRecord {
             array('Work_Pub_Territories', 'length', 'max' => 500),
             array('Work_Pub_File', 'length', 'max' => 255),
             array('Created_Date, Rowversion', 'safe'),
+            array('Work_Pub_Contact_End', 'compare', 'compareAttribute'=>'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Pub_Id, Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References, Created_Date, Rowversion', 'safe', 'on' => 'search'),

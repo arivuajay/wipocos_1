@@ -2,7 +2,7 @@
 /* @var $this PublisheraccountController */
 /* @var $model PublisherAccount */
 
-$this->title = 'Update Publisher: ' . $model->Pub_Acc_Id;
+$this->title = 'Update Publisher: ' . $model->Pub_Corporate_Name;
 $this->breadcrumbs = array(
     'Publishers' => array('index'),
     'Update Publisher',

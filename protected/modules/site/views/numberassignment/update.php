@@ -2,7 +2,7 @@
 /* @var $this NumberassignmentController */
 /* @var $model NumberAssignment */
 
-$this->title = 'Update Number Assignments: ' . $model->Num_Assgn_Id;
+$this->title = 'Update Number Assignment: ' . $model->Num_Assgn_Id;
 $this->breadcrumbs = array(
     'Number Assignments' => array('index'),
     'Update Number Assignments',

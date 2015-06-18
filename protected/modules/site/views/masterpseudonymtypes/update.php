@@ -2,7 +2,7 @@
 /* @var $this MasterpseudonymtypesController */
 /* @var $model MasterPseudonymTypes */
 
-$this->title = 'Update Master Pseudonym Types: ' . $model->Pseudo_Id;
+$this->title = 'Update Master Pseudonym Type: ' . $model->Pseudo_Code;
 $this->breadcrumbs = array(
     'Master Pseudonym Types' => array('index'),
     'Update Master Pseudonym Types',

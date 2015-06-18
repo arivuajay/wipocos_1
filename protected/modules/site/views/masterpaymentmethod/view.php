@@ -2,7 +2,7 @@
 /* @var $this MasterpaymentmethodController */
 /* @var $model MasterPaymentMethod */
 
-$this->title = 'View #' . $model->Master_Paymode_Id;
+$this->title = 'View Master Payment Method: ' . $model->Paymode_Name;
 $this->breadcrumbs = array(
     'Master Payment Methods' => array('index'),
     'View ' . 'MasterPaymentMethod',

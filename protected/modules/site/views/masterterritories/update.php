@@ -2,7 +2,7 @@
 /* @var $this MasterterritoriesController */
 /* @var $model MasterTerritories */
 
-$this->title = 'Update Master Territories: ' . $model->Master_Territory_Id;
+$this->title = 'Update Master Territory: ' . $model->Territory_Name;
 $this->breadcrumbs = array(
     'Master Territories' => array('index'),
     'Update Master Territories',

@@ -2,7 +2,7 @@
 /* @var $this MasterhierarchyController */
 /* @var $model MasterHierarchy */
 
-$this->title = 'View #' . $model->Master_Hierarchy_Id;
+$this->title = 'View Master Hierarchy: ' . $model->Hierarchy_Name;
 $this->breadcrumbs = array(
     'Master Hierarchies' => array('index'),
     'View ' . 'MasterHierarchy',

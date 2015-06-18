@@ -50,6 +50,7 @@ class WorkSubPublishing extends CActiveRecord {
             array('Work_Sub_File', 'length', 'max' => 255),
             array('Work_Sub_Catelog_Number', 'length', 'max' => 100),
             array('Created_Date, Rowversion', 'safe'),
+            array('Work_Sub_Contact_End', 'compare', 'compareAttribute'=>'Work_Sub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Sub_Id, Work_Id, Work_Sub_Contact_Start, Work_Sub_Contact_End, Work_Sub_Territories, Work_Sub_Clause, Work_Sub_Sign_Date, Work_Sub_File, Work_Sub_References, Work_Sub_Catelog_Number, Created_Date, Rowversion', 'safe', 'on' => 'search'),

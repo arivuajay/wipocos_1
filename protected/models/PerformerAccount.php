@@ -69,6 +69,10 @@ class PerformerAccount extends CActiveRecord {
         }
     }
 
+    public function getFullName() {
+        return $this->Perf_First_Name . " " . $this->Perf_Sur_Name;
+    }
+    
     /**
      * @return string the associated database table name
      */

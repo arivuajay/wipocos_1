@@ -175,7 +175,7 @@
                                 if ($recording_model->recordingRightholders) {
                                     foreach ($recording_model->recordingRightholders as $key => $member) {
                                         if ($member->recordingPerformer) {
-                                            $name = $member->recordingPerformer->Perf_First_Name. ' '.$member->recordingPerformer->Perf_Sur_Name;
+                                            $name = $member->recordingPerformer->fullname;
                                             $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
                                             $role = 'PE';
                                             $internal_code = $member->recordingPerformer->Perf_Internal_Code;
@@ -213,7 +213,7 @@
                                         <?php
                                     }
                                 } else {
-                                    echo "<tr id='norecord_tr'><td colspan='8'>No records found</td></tr>";
+                                    echo "<tr id='norecord_tr'><td colspan='8'>No data created</td></tr>";
                                 }
                                 ?>
                             </tbody>

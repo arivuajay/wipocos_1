@@ -2,7 +2,7 @@
 /* @var $this MastertypeController */
 /* @var $model MasterType */
 
-$this->title = 'Update Master Types: ' . $model->Master_Type_Id;
+$this->title = 'Update Master Type: ' . $model->Type_Name;
 $this->breadcrumbs = array(
     'Master Types' => array('index'),
     'Update Master Types',

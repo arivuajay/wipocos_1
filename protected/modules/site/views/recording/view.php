@@ -2,7 +2,7 @@
 /* @var $this RecordingController */
 /* @var $model Recording */
 
-$this->title = "View #{$model->Rcd_Id} : {$model->Rcd_Title}";
+$this->title = "View Recording: {$model->Rcd_Title}";
 $this->breadcrumbs = array(
     'Recordings' => array('index'),
     'View ' . 'Recording',
@@ -140,7 +140,7 @@ $this->breadcrumbs = array(
             </table>
             <?php
         } else {
-            echo 'No Subtitle Assigned';
+            echo 'No data created';
         }
         ?>
         <h4>Publication</h4>
@@ -163,7 +163,7 @@ $this->breadcrumbs = array(
                 ),
             ));
         } else {
-            echo 'No Publication Found';
+            echo 'No data created';
         }
         ?>
 
@@ -201,7 +201,7 @@ $this->breadcrumbs = array(
                 </tbody></table>-->
             <?php
         } else {
-//            echo 'No Artists - Producers Assigned';
+//            echo 'No data created';
         }
         ?>
     </div>
@@ -229,7 +229,7 @@ $this->breadcrumbs = array(
                         <?php
                         foreach ($members as $key => $member) {
                             if ($member->recordingPerformer) {
-                                $name = $member->recordingPerformer->Perf_First_Name.' '.$member->recordingPerformer->Perf_Sur_Name;
+                                $name = $member->recordingPerformer->fullname;
                                 $url = array('/site/performeraccount/view', 'id' => $member->recordingPerformer->Perf_Acc_Id);
                                 $internal_code = $member->recordingPerformer->Perf_Internal_Code;
                             } elseif ($member->recordingProducer) {
@@ -256,7 +256,7 @@ $this->breadcrumbs = array(
             </div>
             <?php
         } else {
-            echo 'No Right Holders assigned';
+            echo 'No data created';
         }
         ?>
     </div>

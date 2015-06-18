@@ -2,7 +2,7 @@
 /* @var $this MasterregionController */
 /* @var $model MasterRegion */
 
-$this->title = 'Update Master Regions: ' . $model->Master_Region_Id;
+$this->title = 'Update Master Region: ' . $model->Region_Name;
 $this->breadcrumbs = array(
     'Master Regions' => array('index'),
     'Update Master Regions',

@@ -2,7 +2,7 @@
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
 
-$this->title = 'Update Author: ' . $model->Auth_Acc_Id;
+$this->title = 'Update Author: ' . $model->fullname;
 $this->breadcrumbs = array(
     'Authors' => array('index'),
     'Update Authors',

@@ -2,7 +2,7 @@
 /* @var $this MasterinternalpositionController */
 /* @var $model MasterInternalPosition */
 
-$this->title = 'View #' . $model->Master_Int_Post_Id;
+$this->title = 'View Master Internal Position' . $model->Master_Int_Post_Id;
 $this->breadcrumbs = array(
     'Master Internal Positions' => array('index'),
     'View ' . 'MasterInternalPosition',

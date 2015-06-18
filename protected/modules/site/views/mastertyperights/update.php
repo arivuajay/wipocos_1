@@ -2,7 +2,7 @@
 /* @var $this MastertyperightsController */
 /* @var $model MasterTypeRights */
 
-$this->title = 'Update Right Holder Type: ' . $model->Master_Type_Rights_Id;
+$this->title = 'Update Right Holder Type: ' . $model->Type_Rights_Name;
 $this->breadcrumbs = array(
     'Right Holder Types' => array('index'),
     'Update Right Holder Type',

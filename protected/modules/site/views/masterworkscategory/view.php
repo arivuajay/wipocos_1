@@ -2,7 +2,7 @@
 /* @var $this MasterworkscategoryController */
 /* @var $model MasterWorksCategory */
 
-$this->title = 'View #' . $model->Master_Work_Category_Id;
+$this->title = 'View Master Works Category: ' . $model->Work_Category_Name;
 $this->breadcrumbs = array(
     'Master Works Categories' => array('index'),
     'View ' . 'MasterWorksCategory',

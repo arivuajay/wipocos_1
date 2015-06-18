@@ -2,7 +2,7 @@
 /* @var $this SharedefinitionperroleController */
 /* @var $model ShareDefinitionPerRole */
 
-$this->title = 'View #' . $model->Shr_Def_Id;
+$this->title = 'View ShareDefinitionPerRole: ' . $model->Shr_Def_Id;
 $this->breadcrumbs = array(
     'Share Definition Per Roles' => array('index'),
     'View ' . 'ShareDefinitionPerRole',

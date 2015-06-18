@@ -2,7 +2,7 @@
 /* @var $this MasterTypeRightsController */
 /* @var $model MasterTypeRights */
 
-$this->title = 'View #' . $model->Master_Type_Rights_Id;
+$this->title = 'View Master Type Rights: ' . $model->Type_Rights_Code;
 $this->breadcrumbs = array(
     'Master Type Rights' => array('index'),
     'View ' . 'MasterTypeRights',

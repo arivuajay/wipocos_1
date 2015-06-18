@@ -2,7 +2,7 @@
 /* @var $this MastermaritalstatusController */
 /* @var $model MasterMaritalStatus */
 
-$this->title = 'View #' . $model->Master_Marital_State_Id;
+$this->title = 'View Master Marital Status: ' . $model->Marital_State;
 $this->breadcrumbs = array(
     'Master Marital Statuses' => array('index'),
     'View ' . 'MasterMaritalStatus',

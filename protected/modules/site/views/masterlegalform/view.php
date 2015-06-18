@@ -2,7 +2,7 @@
 /* @var $this MasterlegalformController */
 /* @var $model MasterLegalForm */
 
-$this->title = 'View #' . $model->Master_Legal_Form_Id;
+$this->title = 'View Master Legal Form: ' . $model->Legal_Form_Name;
 $this->breadcrumbs = array(
     'Master Legal Forms' => array('index'),
     'View ' . 'MasterLegalForm',
