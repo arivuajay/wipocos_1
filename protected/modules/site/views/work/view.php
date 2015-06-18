@@ -126,7 +126,7 @@ if ($export == false) {
             </table>
             <?php
         } else {
-            echo 'No data created';
+            echo 'No Sub Titles created';
         }
         ?>
     </div>
@@ -161,7 +161,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No data created';
+            echo 'No Documentation created';
         }
         ?>
         <h4>Biography</h4>
@@ -175,7 +175,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No data created';
+            echo 'No Biography created';
         }
         ?>
         <h4>Publishing</h4>
@@ -197,7 +197,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No data created';
+            echo 'No Publishing created';
         }
         ?>
         <h4>Sub Publishing</h4>
@@ -224,7 +224,7 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No data created';
+            echo 'No Sub Publishing created';
         }
         ?>
     </div>
@@ -276,7 +276,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No data created';
+            echo 'No Right Holders created';
         }
         ?>
 

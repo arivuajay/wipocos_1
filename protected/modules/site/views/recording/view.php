@@ -140,7 +140,7 @@ $this->breadcrumbs = array(
             </table>
             <?php
         } else {
-            echo 'No data created';
+            echo 'No Sub Titles created';
         }
         ?>
         <h4>Publication</h4>
@@ -163,7 +163,7 @@ $this->breadcrumbs = array(
                 ),
             ));
         } else {
-            echo 'No data created';
+            echo 'No Publication created';
         }
         ?>
 
@@ -205,7 +205,7 @@ $this->breadcrumbs = array(
         }
         ?>
     </div>
-    
+
     <div class="user-view col-lg-12">
         <h4 class="box-title">Right Holders</h4>
         <?php
@@ -256,7 +256,7 @@ $this->breadcrumbs = array(
             </div>
             <?php
         } else {
-            echo 'No data created';
+            echo 'No Right Holders created';
         }
         ?>
     </div>
