@@ -75,8 +75,8 @@
                             <?php echo $form->labelEx($model, 'Work_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
-                                $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role', 'disabled' => 'disabled'));
@@ -277,6 +277,7 @@ $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 $mainPublisher = $model->getMainPublisher();
 $subPublishers = json_encode($model->getSubPublisher());
 $def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
+$def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
 
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
@@ -334,7 +335,7 @@ $js = <<< EOD
             if(_urole == 'AU'){
                 $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide').val('$def_auth_role');
             }else if(_urole == 'PU'){
-                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide');
+                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide').val('$def_perf_role');
             }
         });
 
