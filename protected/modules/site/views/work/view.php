@@ -241,7 +241,6 @@ if ($export == false) {
                             <th>Internal Code</th>
                             <th>Role</th>
                             <th>Public Performance &<br /> Broadcasting Share (%)</th>
-                            <th>Organization</th>
                             <th>Mechanical Share (%)</th>
                             <th>Organization</th>
                             <?php if ($export == false) { ?>
@@ -266,7 +265,6 @@ if ($export == false) {
                                 <td><?php echo $internal_code; ?></td>
                                 <td><?php echo $member->workRightRole->Type_Rights_Name; ?></td>
                                 <td align="center"><?php echo $member->Work_Right_Broad_Share; ?></td>
-                                <td><?php echo $member->workRightBroadOrg->Org_Abbrevation; ?></td>
                                 <td align="center"><?php echo $member->Work_Right_Mech_Share; ?></td>
                                 <td><?php echo $member->workRightMechOrg->Org_Abbrevation; ?></td>
                                 <?php if ($export == false) { ?>
