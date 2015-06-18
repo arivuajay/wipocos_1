@@ -14,6 +14,17 @@
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
     $right_types = Myclass::getMasterTypeRight('AU');
+    //Hard cord
+    $r = array();
+    $need = array(1,9);
+    foreach($right_types as $k => $v){
+        if(in_array($k, $need)){
+            $r[$k] = $v;
+        }
+    }
+    $right_types = $r;
+    //Hard cord
+
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
     $internal_positions = Myclass::getMasterInternalPosition();
@@ -119,7 +130,7 @@
                             <?php echo $form->error($model, 'Auth_Mnge_Avl_Work_Cat_Id'); ?>
                         </div>
 
-                        <div class="form-group hide">
+                        <div class="form-group">
                             <?php echo $form->labelEx($model, 'Auth_Mnge_Type_Rght_Id', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Auth_Mnge_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
                             <?php echo $form->error($model, 'Auth_Mnge_Type_Rght_Id'); ?>
