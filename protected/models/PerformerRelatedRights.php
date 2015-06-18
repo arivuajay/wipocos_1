@@ -38,6 +38,8 @@ class PerformerRelatedRights extends CActiveRecord {
         parent::init();
         if($this->isNewRecord){
             $this->Perf_Rel_Type_Rght_Id = DEFAULT_PERFORMER_RIGHT_HOLDER_ID;
+            $this->Perf_Rel_Society_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_SOCIETY_ID;
+            $this->Perf_Rel_Territories_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID;
         }
     }
     /**
