@@ -38,7 +38,7 @@ class PublisherManageRights extends CActiveRecord {
         parent::init();
         if($this->isNewRecord){
             $this->Pub_Mnge_Type_Rght_Id = DEFAULT_PUBLISHER_RIGHT_HOLDER_ID;
-            $this->Pub_Mnge_Society_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_SOCIETY_ID;
+            $this->Pub_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Pub_Mnge_Territories_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID;
         }
     }

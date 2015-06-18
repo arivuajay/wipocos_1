@@ -26,6 +26,7 @@ class WorkSubPublishing extends CActiveRecord {
         parent::init();
         if ($this->isNewRecord) {
             $this->Work_Sub_Clause = 'M';
+            $this->Work_Sub_Territories = CJSON::encode(array(DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID));
         }
     }
 

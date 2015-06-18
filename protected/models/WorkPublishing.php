@@ -19,7 +19,12 @@
  * @property Work $work
  */
 class WorkPublishing extends CActiveRecord {
-
+public function init() {
+        parent::init();
+        if ($this->isNewRecord) {
+            $this->Work_Pub_Territories = CJSON::encode(array(DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID));
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -128,7 +133,7 @@ class WorkPublishing extends CActiveRecord {
             )
         ));
     }
-    
+
     protected function beforeValidate() {
         if(isset($this->Work_Pub_Territories) && is_array($this->Work_Pub_Territories)){
             $this->Work_Pub_Territories = !empty($this->Work_Pub_Territories) ? json_encode($this->Work_Pub_Territories) : '';
@@ -150,7 +155,7 @@ class WorkPublishing extends CActiveRecord {
         }
         return $selected;
     }
-    
+
     public function getTerritorylist() {
         $terr = array();
         $territories = CHtml::listData(MasterTerritories::model()->findAll(), 'Master_Territory_Id', 'Territory_Name');
