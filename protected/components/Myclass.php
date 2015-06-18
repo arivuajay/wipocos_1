@@ -265,7 +265,7 @@ class Myclass extends CController {
             $right_types = CHtml::listData(MasterTypeRights::model()->findAll(array(
                                 'condition' => 'Type_Rights_Occupation = :occ',
                                 'params' => array(':occ' => $occupation),
-                            )), 'Master_Type_Rights_Id', 'Type_Rights_Name');
+                            )), 'Master_Type_Rights_Id', 'namewithcode');
         if ($key != NULL)
             return $right_types[$key];
         return $right_types;
