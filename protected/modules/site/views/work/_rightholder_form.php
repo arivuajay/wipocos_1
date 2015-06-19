@@ -221,7 +221,7 @@
                                         <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
                                             <td><?php echo $name; ?></td>
                                             <td><?php echo $internal_code; ?></td>
-                                            <td><?php echo $member->workRightRole->Type_Rights_Code.' - '.$member->workRightRole->Type_Rights_Name; ?></td>
+                                            <td><?php echo $member->workRightRole->Type_Rights_Code . ' - ' . $member->workRightRole->Type_Rights_Name; ?></td>
                                             <td><span class="badge share_value broad_share_value" data-share="<?php echo $member->Work_Right_Broad_Share; ?>"><?php echo $member->Work_Right_Broad_Share; ?>%</span></td>
                                             <td><?php echo $member->Work_Right_Broad_Special != '' ? $member->getSpecialStatus($member->Work_Right_Broad_Special) : ''; ?></td>
                                             <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
@@ -275,7 +275,7 @@
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 $mainPublisher = $model->getMainPublisher();
-$subPublishers = json_encode($model->getSubPublisher());
+$subPublisher = $model->getSubPublisher();
 $def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
 $def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
 
@@ -497,12 +497,15 @@ $js = <<< EOD
         $("#right_ajax_submit").attr("disabled", not_auto_submit);
 
         _isMainPubAdded = false;
+        _isSubPubAdded = false;
         rightrole = $('.rightrole');
         if(rightrole.length > 0){
             rightrole.each(function() {
-                if($mainPublisher == $(this).val()){
+                if(!_isMainPubAdded && $mainPublisher == $(this).val()){
                     _isMainPubAdded = true;
-                    return false;
+                }
+                if(!_isSubPubAdded && $subPublisher == $(this).val()){
+                    _isSubPubAdded = true;
                 }
             });
         }
@@ -513,18 +516,22 @@ $js = <<< EOD
 
     function mainPublishervalidate(selectedRole){
         _isMainPubAdded = false;
+        _isSubPubAdded = false;
+
         _MainPubCount = 0;
         rightrole = $('.rightrole');
         if(rightrole.length > 0){
             rightrole.each(function() {
-                if($mainPublisher == $(this).val()){
+                if(!_isMainPubAdded && $mainPublisher == $(this).val()){
                     _isMainPubAdded = true;
-                    return false;
+                }
+                if(!_isSubPubAdded && $subPublisher == $(this).val()){
+                    _isSubPubAdded = true;
                 }
             });
         }
         _stopContinue = false;
-        $.each($subPublishers, function(sub_id,sub_role) {
+        $.each($subPublisher, function(sub_id,sub_role) {
             if(selectedRole == sub_id){
                 if(_isMainPubAdded == false){
                     alert("Please Add Main Publisher. Then add Sub publisher");
@@ -536,6 +543,11 @@ $js = <<< EOD
 
         if(selectedRole == $mainPublisher && _isMainPubAdded){
             alert("Main Publisher already Added. You can't Add more than one Main publisher");
+            _stopContinue = true;
+        }
+
+        if(selectedRole == $subPublisher && _isSubPubAdded){
+            alert("Sub-Publisher already Added. You can't Add more than one Sub-publisher");
             _stopContinue = true;
         }
 
