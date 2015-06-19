@@ -158,7 +158,7 @@ class WorkRightholder extends CActiveRecord {
 
         return $status;
     }
-    
+
     public function getMainPublisher() {
         //now hard cord for get main publisher
         $right_holders = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Occupation' => 'PU', 'Type_Rights_Code' => 'E'));
@@ -169,8 +169,10 @@ class WorkRightholder extends CActiveRecord {
 
     public function getSubPublisher() {
         //now hard cord for get main publisher
-        $right_holders = CHtml::listData(MasterTypeRights::model()->findAll("Type_Rights_Occupation = :occ And Type_Rights_Code != :code", array(':occ' => 'PU', ':code' => 'E')), 'Master_Type_Rights_Id', 'Type_Rights_Name');
-        return $right_holders;
+        $right_holders = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Occupation' => 'PU', 'Type_Rights_Code' => 'SE'));
+        if(!empty($right_holders))
+            return $right_holders->Master_Type_Rights_Id;
+        return FALSE;
     }
 
 }
