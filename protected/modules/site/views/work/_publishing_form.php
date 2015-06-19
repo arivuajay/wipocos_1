@@ -9,9 +9,28 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
+
+    $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => '8', 'Work_Id' => $work_model->Work_Id));
     ?>
     <div class="box-body">
-
+        <div class="form-group">
+            <label class="col-sm-3 control-label required">Original Publisher</label>
+            <div class="col-sm-5">
+                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Internal_Code;  ?>" class="col-sm-4" disabled="disabled">
+                <div class="col-sm-1"></div>
+                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Corporate_Name;  ?>" class="col-sm-7" disabled="disabled">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label required">Performance/Broadcast</label>
+            <div class="col-sm-5">
+                <input type="text" value="<?php echo $main_publisher->Work_Right_Broad_Share;  ?>" class="col-sm-4" disabled="disabled">
+                <div class="col-sm-1"></div>
+                <label class="col-sm-3">Mechanical</label>
+                <input type="text" value="<?php echo $main_publisher->Work_Right_Mech_Share;  ?>" class="col-sm-4" disabled="disabled">
+            </div>
+        </div>
+        <hr />
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Pub_Contact_Start', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
