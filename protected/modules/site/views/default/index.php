@@ -155,52 +155,28 @@ $this->breadcrumbs = array(
 
 
 
-    </section><!-- /.Left col -->
-    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+    </section>
     <section class="col-lg-5 connectedSortable">
-        <!-- Calendar -->
-        <!-- TO DO List -->
         <div class="box box-primary">
             <div class="box-header">
                 <i class="ion ion-clipboard"></i>
-                <h3 class="box-title">Announcements</h3>
-                <div class="box-tools pull-right">
-                    <ul class="pagination pagination-sm inline">
-                        <li><a href="#">&laquo;</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">&raquo;</a></li>
-                    </ul>
-                </div>
-            </div><!-- /.box-header -->
+                <h3 class="box-title">Contract period Expiry</h3>
+            </div>
             <div class="box-body">
+                <?php 
+                $publisher_expiry_count = WorkPublishing::model()->expiry()->count();
+                $sub_publisher_expiry_count = WorkSubPublishing::model()->expiry()->count();
+                ?>
                 <ul class="todo-list">
                     <li>
-                        <!-- drag handle -->
-                        <span class="handle">
-                            <i class="fa fa-ellipsis-v"></i>
-                            <i class="fa fa-ellipsis-v"></i>
-                        </span>
-                        <!-- checkbox -->
-                        <input type="checkbox" value="" name=""/>
-                        <!-- todo text -->
-                        <span class="text">Discussion about new album registration</span>
-                        <!-- Emphasis label -->
-                        <small class="label label-danger"><i class="fa fa-clock-o"></i> 20 mins</small>
-                        <!-- General tools such as edit or delete-->
-                        <div class="tools">
-                            <i class="fa fa-edit"></i>
-                            <i class="fa fa-trash-o"></i>
-                        </div>
+                        <span class="text">No. of Publisher contract expiry: </span>&nbsp;<small class="badge bg-red"><?php echo $publisher_expiry_count;?></small>
+                        <!--<small class="label label-danger"><i class="fa fa-clock-o"></i> 20 mins</small>-->
                     </li>
-
+                    <li>
+                        <span class="text">No. of Sub-Publisher contract expiry: </span>&nbsp;<small class="badge bg-red"><?php echo $sub_publisher_expiry_count;?></small>
+                    </li>
                 </ul>
-            </div><!-- /.box-body -->
-            <div class="box-footer clearfix no-border">
-                <button class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
             </div>
-        </div><!-- /.box -->
-
-    </section><!-- right col -->
-</div><!-- /.row (main row) -->
+        </div>
+    </section>
+</div>

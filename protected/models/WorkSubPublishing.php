@@ -30,6 +30,14 @@ class WorkSubPublishing extends CActiveRecord {
         }
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $expiry_date = date('Y-m-d', strtotime("+2 months"));
+        return array(
+            'expiry' => array('condition' => "$alias.Work_Sub_Contact_End <= '{$expiry_date}'"),
+        );
+    }
+    
     /**
      * @return string the associated database table name
      */

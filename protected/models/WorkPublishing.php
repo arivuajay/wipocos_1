@@ -19,12 +19,22 @@
  * @property Work $work
  */
 class WorkPublishing extends CActiveRecord {
-public function init() {
+
+    public function init() {
         parent::init();
         if ($this->isNewRecord) {
             $this->Work_Pub_Territories = CJSON::encode(array(DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID));
         }
     }
+
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $expiry_date = date('Y-m-d', strtotime("+2 months"));
+        return array(
+            'expiry' => array('condition' => "$alias.Work_Pub_Contact_End <= '{$expiry_date}'"),
+        );
+    }
+    
     /**
      * @return string the associated database table name
      */
@@ -44,7 +54,7 @@ public function init() {
             array('Work_Pub_Territories', 'length', 'max' => 500),
             array('Work_Pub_File', 'length', 'max' => 255),
             array('Created_Date, Rowversion', 'safe'),
-            array('Work_Pub_Contact_End', 'compare', 'compareAttribute'=>'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Work_Pub_Contact_End', 'compare', 'compareAttribute' => 'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Pub_Id, Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -135,9 +145,9 @@ public function init() {
     }
 
     protected function beforeValidate() {
-        if(isset($this->Work_Pub_Territories) && is_array($this->Work_Pub_Territories)){
+        if (isset($this->Work_Pub_Territories) && is_array($this->Work_Pub_Territories)) {
             $this->Work_Pub_Territories = !empty($this->Work_Pub_Territories) ? json_encode($this->Work_Pub_Territories) : '';
-        }else{
+        } else {
             $this->Work_Pub_Territories = '';
         }
         return parent::beforeValidate();
@@ -145,9 +155,9 @@ public function init() {
 
     public function getTerritoryselected() {
         $selected = array();
-        if($this->Work_Pub_Territories){
+        if ($this->Work_Pub_Territories) {
             $exp = json_decode($this->Work_Pub_Territories);
-            if($exp != NULL){
+            if ($exp != NULL) {
                 foreach ($exp as $ex) {
                     $selected[$ex] = array('selected' => 'selected');
                 }
@@ -165,4 +175,5 @@ public function init() {
         }
         return implode(', ', $terr);
     }
+
 }
