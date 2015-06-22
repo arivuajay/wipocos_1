@@ -9,8 +9,8 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
-
-    $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => '8', 'Work_Id' => $work_model->Work_Id));
+    $main_pub_code = (new WorkRightholder)->getMainPublisher();
+    $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $work_model->Work_Id));
     ?>
     <div class="box-body">
         <div class="form-group">

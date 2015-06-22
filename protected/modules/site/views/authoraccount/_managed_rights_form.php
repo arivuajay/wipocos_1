@@ -112,11 +112,11 @@
                                 </div>-->
             <?php } ?>
 
-            <!--            <div class="form-group">
+                       <div class="form-group">
             <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
             <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
             <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
-                        </div>-->
+                       </div>
 
             <div class="form-group foundation">
                 <div class="box-header">

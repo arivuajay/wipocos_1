@@ -34,7 +34,7 @@ class WorkController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright', 
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
                     'searchright', 'print', 'pdf', 'subtitledelete'),
                 'users' => array('@'),
             ),
@@ -207,21 +207,21 @@ class WorkController extends Controller {
                 foreach ($right_holder_exists as $right_holder_exist) {
                     $ids[$right_holder_exist->Work_Member_GUID] = $right_holder_exist->Work_Member_GUID;
                 }
+                $rgt_hold = new WorkRightholder();
+                $main_pub_code = $rgt_hold->getMainPublisher();
+                $sub_pub_code = $rgt_hold->getSubPublisher();
+                $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $model->Work_Id));
+                $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_pub_code, 'Work_Id' => $model->Work_Id));
+
                 $count = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $ids));
-                if($count >= 1){
-                    if($publishing_model->isNewRecord){
+//                if($count >= 1){
+                    if($main_publisher && $publishing_model->isNewRecord){
                         $publish_validate = true;
                         $tab = 5;
-                    }else{
-                        if($count >= 2){
-                            if($sub_publishing_model->isNewRecord){
-                                $publish_validate = false;
-                                $sub_publish_validate = true;
-                                $tab = 6;
-                            }
-                        }
+                    }else if($sub_publisher && $sub_publishing_model->isNewRecord){
+                        $sub_publish_validate = true;
+                        $tab = 6;
                     }
-                }
             }
         }
 
@@ -382,7 +382,7 @@ class WorkController extends Controller {
             $criteria->compare('Auth_Internal_Code',$search_txt,true,'OR');
             $criteria->compare('Auth_Ipi',$search_txt,true,'OR');
             $criteria->compare('Auth_Ipi_Base_Number',$search_txt,true,'OR');
-            
+
             $pubcriteria->compare('Pub_Corporate_Name',$search_txt,true,'OR');
             $pubcriteria->compare('Pub_Internal_Code',$search_txt,true,'OR');
             $pubcriteria->compare('Pub_Ipi',$search_txt,true,'OR');

@@ -19,7 +19,7 @@ $instruments = Myclass::getMasterInstrument();
 $territories = Myclass::getMasterTerritory();
 ?>
 
-<?php 
+<?php
 if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages))*/ ){?>
 <div class="alert alert-info fade in">
     <button type="button" class="close close-sm" data-dismiss="alert">
@@ -39,7 +39,7 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
                 $doc_tab_validation = !$model->isNewRecord;
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
                 $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate;
-                
+
                 $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
                 $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate;
             }
