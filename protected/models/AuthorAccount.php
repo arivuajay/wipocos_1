@@ -22,6 +22,7 @@
  * @property string $Auth_Spouse_Name
  * @property string $Auth_Gender
  * @property string $Auth_Non_Member
+ * @property string $Auth_Photo
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -53,6 +54,8 @@ class AuthorAccount extends CActiveRecord {
     public $oldRecord;
     public $internal_increament = true;
 
+    const PHOTO_SIZE = 1;
+    
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -97,7 +100,7 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search, Auth_Non_Member, Auth_Is_Performer, is_author, Auth_GUID', 'safe'),
+            array('Created_Date, Rowversion,record_search, Auth_Non_Member, Auth_Is_Performer, is_author, Auth_GUID, Auth_Photo', 'safe'),
             array('Auth_Sur_Name', 'nameUnique'),
             array('Auth_Internal_Code, Auth_GUID', 'unique'),
             array(
@@ -106,6 +109,7 @@ class AuthorAccount extends CActiveRecord {
                 'message' => 'Only Alphabets are allowed ',
             ),
             array('Auth_First_Name', 'UniqueAttributesValidator', 'with' => 'Auth_Sur_Name', "message" => "This User Name already Exists"),
+            array('Auth_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member', 'safe', 'on' => 'search'),
@@ -173,6 +177,7 @@ class AuthorAccount extends CActiveRecord {
             'Auth_Non_Member' => 'Non Member',
             'Auth_Is_Performer' => 'Performer',
             'is_author' => 'Author',
+            'Auth_Photo' => 'Profile Picture',
         );
     }
 
@@ -439,4 +444,12 @@ class AuthorAccount extends CActiveRecord {
         }
     }
 
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Auth_Photo',
+            )
+        );
+    }
 }

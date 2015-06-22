@@ -17,7 +17,7 @@ $this->breadcrumbs = array(
 <?php if ($export) { ?>
     <h3 class="text-center"><?php echo "$role Group $this->title" ?></h3>
 <?php } ?>
-    
+
 <div class="user-view">
     <p>
         <?php
@@ -71,6 +71,11 @@ $this->breadcrumbs = array(
 //                'type' => 'raw',
 //                'value' => ($model->Group_Is_Performer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
 //            ),
+            array(
+                'name' => 'Group_Photo',
+                'type' => 'raw',
+                'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+            ),
             'Group_Internal_Code',
             'Group_IPN_Base_Number',
             'Group_IPI_Name_Number',

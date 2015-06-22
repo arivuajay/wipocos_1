@@ -21,11 +21,11 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
         <?php
         $other_tab_validation = $doc_tab_validation = true;
         if (!$model->isNewRecord) {
-            if($model->Group_Non_Member == 'N'){
+            if ($model->Group_Non_Member == 'N') {
                 $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
                 $doc_tab_validation = !$model->isNewRecord;
             }
-        }else{
+        } else {
             $other_tab_validation = $doc_tab_validation = false;
         }
         ?>
@@ -45,7 +45,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'group-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -105,11 +105,10 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Group_Non_Member'); ?>
+                                    <?php echo $form->labelEx($model, 'Group_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Group_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Group_Photo'); ?>
                                 </div>
-
                                 <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>
@@ -159,6 +158,12 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_Language_Id'); ?>
                                 </div>
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Group_Non_Member'); ?>
+                                </div>
+
                             </div>
                         </div>
 

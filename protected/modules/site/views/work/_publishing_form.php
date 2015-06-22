@@ -16,18 +16,18 @@
         <div class="form-group">
             <label class="col-sm-3 control-label required">Original Publisher</label>
             <div class="col-sm-5">
-                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Internal_Code;  ?>" class="col-sm-4" disabled="disabled">
+                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Internal_Code; ?>" class="col-sm-4" disabled="disabled">
                 <div class="col-sm-1"></div>
-                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Corporate_Name;  ?>" class="col-sm-7" disabled="disabled">
+                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Corporate_Name; ?>" class="col-sm-7" disabled="disabled">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label required">Performance/Broadcast</label>
             <div class="col-sm-5">
-                <input type="text" value="<?php echo $main_publisher->Work_Right_Broad_Share;  ?>" class="col-sm-4" disabled="disabled">
+                <input type="text" value="<?php echo $main_publisher->Work_Right_Broad_Share; ?>" class="col-sm-4" disabled="disabled">
                 <div class="col-sm-1"></div>
                 <label class="col-sm-3">Mechanical</label>
-                <input type="text" value="<?php echo $main_publisher->Work_Right_Mech_Share;  ?>" class="col-sm-4" disabled="disabled">
+                <input type="text" value="<?php echo $main_publisher->Work_Right_Mech_Share; ?>" class="col-sm-4" disabled="disabled">
             </div>
         </div>
         <hr />
@@ -62,9 +62,9 @@
             <?php echo $form->labelEx($model, 'Work_Pub_Sign_Date', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php
-                if($model->isNewRecord){
+                if ($model->isNewRecord) {
                     $sign_date = date('Y-m-d');
-                }else{
+                } else {
                     $sign_date = $model->Work_Pub_Sign_Date;
                 }
                 ?>
@@ -99,3 +99,98 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+<?php
+if (!$model->isNewRecord) {
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'publishing-upload-form',
+        'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+        ),
+        'enableAjaxValidation' => false,
+    ));
+    echo $form->hiddenField($upload_model, 'Work_Pub_Id', array('value' => $model->Work_Pub_Id));
+    ?>
+
+    <div class="box box-primary">
+        <div class="box-header">
+            <h4 class="box-title">Contract Upload</h4>
+        </div>
+        <div class="box-body">
+            <?php if (!$upload_model->isNewRecord) { ?>
+                <div class="col-lg-12 col-md-12">
+                    <div class="row mb10">
+                        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New upload', array("/site/work/update/id/{$work_model->Work_Id}/tab/5"), array('class' => 'btn btn-success pull-right')) ?>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <div class="form-group">
+                <?php echo $form->labelEx($upload_model, 'Work_Pub_Upl_Name', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->textField($upload_model, 'Work_Pub_Upl_Name', array('class' => 'form-control')); ?>
+                    <?php echo $form->error($upload_model, 'Work_Pub_Upl_Name'); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->labelEx($upload_model, 'Work_Pub_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->fileField($upload_model, 'Work_Pub_Upl_File', array()); ?>
+                    <?php echo $form->error($upload_model, 'Work_Pub_Upl_File'); ?>
+                </div>
+            </div>
+
+        </div>
+        <div class="box-footer">
+            <div class="form-group">
+                <div class="col-sm-0 col-sm-offset-2">
+                    <?php echo CHtml::submitButton($upload_model->isNewRecord ? 'Create' : 'Update', array('class' => $upload_model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    $this->endWidget();
+}
+?>
+
+<?php
+$uploaded_files = WorkPublishingUploads::model()->findAll('Work_Pub_Id = :pub_id', array(':pub_id' => $model->Work_Pub_Id));
+if (!empty($uploaded_files)) {
+    ?>
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">Contract Files</h4>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name ?></td>
+                            <td>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update' , 'id' => $work_model->Work_Id , 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+        </div>
+    </div>
+<?php }
+?>

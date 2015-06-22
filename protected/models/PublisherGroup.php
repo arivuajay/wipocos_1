@@ -19,6 +19,7 @@
  * @property integer $Pub_Group_Legal_Form_Id
  * @property integer $Pub_Group_Language_Id
  * @property string $Pub_Group_Non_Member
+ * @property string $Pub_Group_Photo
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -39,6 +40,8 @@ class PublisherGroup extends CActiveRecord {
     public $search_status;
     public $is_pub_producer;
 
+    const PHOTO_SIZE = 1;
+    
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -75,7 +78,8 @@ class PublisherGroup extends CActiveRecord {
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
             array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
-            array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID', 'safe'),
+            array('Pub_Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID, Pub_Group_Photo', 'safe'),
 //            array(
 //                'Pub_Group_Name',
 //                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -131,6 +135,7 @@ class PublisherGroup extends CActiveRecord {
             'search_status' => 'Status',
             'is_pub_producer' => 'Publisher/Producer',
             'Pub_Group_Non_Member' => 'Non Member',
+            'Pub_Group_Photo' => 'Profile Picture',
         );
     }
 
@@ -251,5 +256,14 @@ class PublisherGroup extends CActiveRecord {
             }
         }
         return $status;
+    }
+    
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Pub_Group_Photo',
+            )
+        );
     }
 }

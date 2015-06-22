@@ -82,10 +82,18 @@ class GroupController extends Controller {
 
         if (isset($_POST['Group'])) {
             $model->attributes = $_POST['Group'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Created a {$model->Group_Name} successfully.", "users");
-                Yii::app()->user->setFlash('success', 'Group Created Successfully. Please Fill Managed Rights!!!');
-                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/6'));
+            $model->setAttribute('Group_Photo', isset($_FILES['Group']['name']['Group_Photo']) ? $_FILES['Group']['name']['Group_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created a {$model->Group_Name} successfully.", "users");
+                    Yii::app()->user->setFlash('success', 'Group Created Successfully. Please Fill Managed Rights!!!');
+                    $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/6'));
+                }
+            } else {
+                $tab = '1';
             }
         }
 
@@ -105,14 +113,14 @@ class GroupController extends Controller {
         $payment_model = empty($payment_exists) ? new GroupPaymentMethod : $payment_exists;
 
         $managed_exists = GroupManageRights::model()->findByAttributes(array('Group_Id' => $id));
-        if(empty($managed_exists)){
+        if (empty($managed_exists)) {
             $managed_model = new GroupManageRights;
-            if($model->Group_Is_Author == '1'){
+            if ($model->Group_Is_Author == '1') {
                 $managed_model->Group_Mnge_Type_Rght_Id = DEFAULT_AUTHOR_GROUP_RIGHT_HOLDER_ID;
-            }elseif($model->Group_Is_Performer == '1'){
+            } elseif ($model->Group_Is_Performer == '1') {
                 $managed_model->Group_Mnge_Type_Rght_Id = DEFAULT_PERFORMER_GROUP_RIGHT_HOLDER_ID;
             }
-        }else{
+        } else {
             $managed_model = $managed_exists;
         }
 
@@ -132,10 +140,18 @@ class GroupController extends Controller {
 
         if (isset($_POST['Group'])) {
             $model->attributes = $_POST['Group'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated a {$model->Group_Name} successfully.", "users");
-                Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
-                $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/1'));
+            $model->setAttribute('Group_Photo', isset($_FILES['Group']['name']['Group_Photo']) ? $_FILES['Group']['name']['Group_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Updated a {$model->Group_Name} successfully.", "users");
+                    Yii::app()->user->setFlash('success', 'Group Updated Successfully!!!');
+                    $this->redirect(array('group/update/id/' . $model->Group_Id . '/tab/1'));
+                }
+            } else {
+                $tab = '1';
             }
         } elseif (isset($_POST['GroupMembers'])) {
             GroupMembers::model()->deleteAll("Group_Id = '{$model->Group_Id}'");
@@ -217,13 +233,13 @@ class GroupController extends Controller {
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
-            if($model->Group_Is_Author == '1'){
+            if ($model->Group_Is_Author == '1') {
                 $role = 'author';
-            }elseif($model->Group_Is_Performer == '1'){
+            } elseif ($model->Group_Is_Performer == '1') {
                 $role = 'performer';
             }
             Yii::app()->user->setFlash('success', 'Group Deleted Successfully!!!');
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('group/index/role/'.$role));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('group/index/role/' . $role));
         }
     }
 
@@ -238,7 +254,7 @@ class GroupController extends Controller {
         if (isset($_GET['Group'])) {
             $search = true;
             $role = $_GET['Group']['is_auth_performer'];
-            
+
             $searchModel->attributes = $_GET['Group'];
             $searchModel->search_status = $_GET['Group']['search_status'];
             $searchModel->is_auth_performer = $role;

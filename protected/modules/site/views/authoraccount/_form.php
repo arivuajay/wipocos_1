@@ -65,7 +65,7 @@ $regions = Myclass::getMasterRegion();
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'author-account-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -135,6 +135,11 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Auth_Spouse_Name'); ?>
                                 </div>
 
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Auth_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Auth_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Auth_Photo'); ?>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>

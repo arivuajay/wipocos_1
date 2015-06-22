@@ -20,6 +20,7 @@
  * @property integer $Group_Language_Id
  * @property string $Active
  * @property string $Group_Non_Member
+ * @property string $Group_Photo
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -32,6 +33,8 @@ class Group extends CActiveRecord {
 
     public $search_status;
     public $is_auth_performer;
+    
+    const PHOTO_SIZE = 1;
     
     public function init() {
         parent::init();
@@ -69,8 +72,9 @@ class Group extends CActiveRecord {
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
-            array('Created_Date, Rowversion, Group_Non_Member, Group_GUID', 'safe'),
+            array('Created_Date, Rowversion, Group_Non_Member, Group_GUID, Group_Photo', 'safe'),
             array('Group_Internal_Code', 'unique'),
+            array('Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Id, Group_Name, Group_Is_Author, Group_Is_Performer, Group_Internal_Code, Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Date, Group_Place, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -116,6 +120,7 @@ class Group extends CActiveRecord {
             'search_status' => 'Status',
             'is_auth_performer' => 'Author/Performer',
             'Group_Non_Member' => 'Non Member',
+            'Group_Photo' => 'Profile Picture',
         );
     }
 
@@ -236,5 +241,14 @@ class Group extends CActiveRecord {
             }
         }
         return $status;
+    }
+    
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Group_Photo',
+            )
+        );
     }
 }

@@ -70,6 +70,11 @@ $this->breadcrumbs = array(
 //                'type' => 'raw',
 //                'value' => ($model->Pub_Group_Is_Producer == 1) ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
 //            ),
+            array(
+                'name' => 'Pub_Group_Photo',
+                'type' => 'raw',
+                'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+            ),
             'Pub_Group_Internal_Code',
             'Pub_Group_IPI_Name_Number',
             'Pub_Group_IPN_Base_Number',

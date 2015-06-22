@@ -48,7 +48,7 @@ if ($export == false) {
 <?php } ?>
 
 <?php if ($export) { ?>
-    <h3 class="text-center">Performer <?php echo $this->title ?></h3>
+    <h3 class="text-center"><?php echo $this->title ?></h3>
 <?php } ?>
 
 <div class="row">
@@ -62,6 +62,11 @@ if ($export == false) {
                 'Perf_Acc_Id',
                 'Perf_Sur_Name',
                 'Perf_First_Name',
+                array(
+                    'name' => 'Perf_Photo',
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+                ),
                 'Perf_Internal_Code',
                 'Perf_Ipi',
                 'Perf_Ipi_Base_Number',

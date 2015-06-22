@@ -19,6 +19,7 @@ class WorkController extends Controller {
     public function actions() {
         return array(
             'pdf' => 'application.components.actions.pdf',
+            'download' => 'application.components.actions.download',
         );
     }
 
@@ -35,7 +36,7 @@ class WorkController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
-                    'searchright', 'print', 'pdf', 'subtitledelete'),
+                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -89,11 +90,11 @@ class WorkController extends Controller {
             if ($model->save()) {
 //                $model->save(false);
                 Myclass::addAuditTrail("Created Work successfully.", "sliders");
-                if($model->Work_Unknown == 'N'){
-                    $message =  'Work Created Successfully. Please Fill Doucmentation!!!';
+                if ($model->Work_Unknown == 'N') {
+                    $message = 'Work Created Successfully. Please Fill Doucmentation!!!';
                     $tab = 4;
-                }else{
-                    $message =  'Work Created Successfully.';
+                } else {
+                    $message = 'Work Created Successfully.';
                     $tab = 1;
                 }
                 Yii::app()->user->setFlash('success', $message);
@@ -111,7 +112,7 @@ class WorkController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1, $edit = NULL) {
+    public function actionUpdate($id, $tab = 1, $edit = NULL, $fileedit = NULL, $umodel = NULL) {
         $model = $this->loadModel($id);
         $sub_title_model = $edit == NULL ? new WorkSubtitle : WorkSubtitle::model()->findByAttributes(array('Work_Subtitle_Id' => $edit));
 
@@ -130,9 +131,21 @@ class WorkController extends Controller {
         $right_holder_exists = WorkRightholder::model()->findAllByAttributes(array('Work_Id' => $id));
         $right_holder_model = new WorkRightholder;
 
+        $publishing_upload_model = new WorkPublishingUploads('create');
+        if ($fileedit != NULL && $umodel == 'pub') {
+            $publishing_upload_exists = WorkPublishingUploads::model()->findByPk($fileedit);
+            $publishing_upload_model = empty($publishing_upload_exists) ? new WorkPublishingUploads('create') : $publishing_upload_exists;
+        }
+
+        $sub_publishing_upload_model = new WorkSubPublishingUploads('create');
+        if ($fileedit != NULL && $umodel == 'sub') {
+            $sub_publishing_upload_exists = WorkSubPublishingUploads::model()->findByPk($fileedit);
+            $sub_publishing_upload_model = empty($sub_publishing_upload_exists) ? new WorkSubPublishingUploads('create') : $sub_publishing_upload_exists;
+        }
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
-            $sub_publishing_model, $right_holder_model));
+            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model));
 
         if (isset($_POST['Work'])) {
             $model->attributes = $_POST['Work'];
@@ -160,11 +173,11 @@ class WorkController extends Controller {
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Saved Work Documentation successfully.", "sliders");
                 if (empty($document_exists)) {
-                    if($model->Work_Unknown == 'N'){
-                        $message =  'Work Documentation Saved Successfully. Please Fill Right Holders!!!';
+                    if ($model->Work_Unknown == 'N') {
+                        $message = 'Work Documentation Saved Successfully. Please Fill Right Holders!!!';
                         $tab = 7;
-                    }else{
-                        $message =  'Work Documentation Saved Successfully.';
+                    } else {
+                        $message = 'Work Documentation Saved Successfully.';
                         $tab = 4;
                     }
                     Yii::app()->user->setFlash('success', $message);
@@ -200,32 +213,66 @@ class WorkController extends Controller {
                 Yii::app()->user->setFlash('success', 'Work right holder Saved Successfully!!!');
                 $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '7'));
             }
-        }else{
-            $publish_validate = $sub_publish_validate = false;
-            if(!empty($right_holder_exists)){
-                $ids = array();
-                foreach ($right_holder_exists as $right_holder_exist) {
-                    $ids[$right_holder_exist->Work_Member_GUID] = $right_holder_exist->Work_Member_GUID;
-                }
-                $rgt_hold = new WorkRightholder();
-                $main_pub_code = $rgt_hold->getMainPublisher();
-                $sub_pub_code = $rgt_hold->getSubPublisher();
-                $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $model->Work_Id));
-                $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_pub_code, 'Work_Id' => $model->Work_Id));
+        } elseif (isset($_POST['WorkPublishingUploads'])) {
+            $publishing_upload_model->attributes = $_POST['WorkPublishingUploads'];
+            if ($fileedit == NULL) {
+                $publishing_upload_model->setAttribute('Work_Pub_Upl_File', isset($_FILES['WorkPublishingUploads']['name']['Work_Pub_Upl_File']) ? $_FILES['WorkPublishingUploads']['name']['Work_Pub_Upl_File'] : '');
+            }
 
-                $count = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $ids));
-//                if($count >= 1){
-                    if($main_publisher && $publishing_model->isNewRecord){
-                        $publish_validate = true;
-                        $tab = 5;
-                    }else if($sub_publisher && $sub_publishing_model->isNewRecord){
-                        $sub_publish_validate = true;
-                        $tab = 6;
-                    }
+            if ($publishing_upload_model->validate()) {
+                $publishing_upload_model->setUploadDirectory(UPLOAD_DIR);
+                $publishing_upload_model->uploadFile();
+                if ($publishing_upload_model->save()) {
+                    Myclass::addAuditTrail("{$model->Work_Org_Title}  Publishing Contract Uploaded successfully.", "sliders");
+                    Yii::app()->user->setFlash('success', 'Publishing Contract uploaded Successfully!!!');
+                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '5'));
+                }
+            } else {
+                $tab = '5';
+            }
+        } elseif (isset($_POST['WorkSubPublishingUploads'])) {
+            $sub_publishing_upload_model->attributes = $_POST['WorkSubPublishingUploads'];
+            if ($fileedit == NULL) {
+                $sub_publishing_upload_model->setAttribute('Work_Sub_Upl_File', isset($_FILES['WorkPublishingUploads']['name']['Work_Sub_Upl_File']) ? $_FILES['WorkPublishingUploads']['name']['Work_Sub_Upl_File'] : '');
+            }
+
+            if ($sub_publishing_upload_model->validate()) {
+                $sub_publishing_upload_model->setUploadDirectory(UPLOAD_DIR);
+                $sub_publishing_upload_model->uploadFile();
+                if ($sub_publishing_upload_model->save()) {
+                    Myclass::addAuditTrail("{$model->Work_Org_Title}  Sub Publishing Contract Uploaded successfully.", "sliders");
+                    Yii::app()->user->setFlash('success', 'Sub Publishing Contract uploaded Successfully!!!');
+                    $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '6'));
+                }
+            } else {
+                $tab = '6';
             }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate'));
+        $publish_validate = $sub_publish_validate = false;
+        if (!empty($right_holder_exists)) {
+            $ids = array();
+            foreach ($right_holder_exists as $right_holder_exist) {
+                $ids[$right_holder_exist->Work_Member_GUID] = $right_holder_exist->Work_Member_GUID;
+            }
+            $rgt_hold = new WorkRightholder();
+            $main_pub_code = $rgt_hold->getMainPublisher();
+            $sub_pub_code = $rgt_hold->getSubPublisher();
+            $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $model->Work_Id));
+            $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_pub_code, 'Work_Id' => $model->Work_Id));
+
+            $count = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $ids));
+            if ($main_publisher && $publishing_model->isNewRecord) {
+                $publish_validate = true;
+                $tab = 5;
+            } else if ($sub_publisher && $sub_publishing_model->isNewRecord) {
+                $sub_publish_validate = true;
+                $tab = 6;
+            }
+        }
+
+
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model'));
     }
 
     /**
@@ -346,7 +393,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'work-rightholder-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -377,16 +424,16 @@ class WorkController extends Controller {
         $pubcriteria = new CDbCriteria();
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
-            $criteria->compare('Auth_Sur_Name',$search_txt,true,'OR');
-            $criteria->compare('Auth_First_Name',$search_txt,true,'OR');
-            $criteria->compare('Auth_Internal_Code',$search_txt,true,'OR');
-            $criteria->compare('Auth_Ipi',$search_txt,true,'OR');
-            $criteria->compare('Auth_Ipi_Base_Number',$search_txt,true,'OR');
+            $criteria->compare('Auth_Sur_Name', $search_txt, true, 'OR');
+            $criteria->compare('Auth_First_Name', $search_txt, true, 'OR');
+            $criteria->compare('Auth_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Auth_Ipi', $search_txt, true, 'OR');
+            $criteria->compare('Auth_Ipi_Base_Number', $search_txt, true, 'OR');
 
-            $pubcriteria->compare('Pub_Corporate_Name',$search_txt,true,'OR');
-            $pubcriteria->compare('Pub_Internal_Code',$search_txt,true,'OR');
-            $pubcriteria->compare('Pub_Ipi',$search_txt,true,'OR');
-            $pubcriteria->compare('Pub_Ipi_Base_Number',$search_txt,true,'OR');
+            $pubcriteria->compare('Pub_Corporate_Name', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Internal_Code', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Ipi', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Ipi_Base_Number', $search_txt, true, 'OR');
         }
 
         if ($_REQUEST['is_auth'] == '1') {
@@ -415,6 +462,31 @@ class WorkController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted Work subtitle {$model->Work_Subtitle_Name} successfully.");
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->work->Work_Id, 'tab' => 2));
+        }
+    }
+
+    public function actionFiledelete($id, $delete_model, $rel_model, $tab) {
+        $model = $delete_model::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $work_id = $model->$rel_model->Work_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a file {$model->$rel_model->work->Work_Org_Title} successfully.", "sliders");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', 'Uploaded file Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update' , 'id' => $work_id, 'tab' => $tab));
         }
     }
 }

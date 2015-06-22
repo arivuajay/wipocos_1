@@ -38,10 +38,10 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
             if ($model->Work_Unknown == 'N') {
                 $doc_tab_validation = !$model->isNewRecord;
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
-                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate;
+                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate  && !empty($main_publisher) && !empty($sub_publisher);
 
-                $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
-                $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate;
+                $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !empty($main_publisher);
+                $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !empty($main_publisher) && !empty($sub_publisher);
             }
         } else {
             $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $pub_tab_validation = $sub_pub_tab_validation = false;
@@ -202,14 +202,14 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
                 <div class="tab-pane" id="tab_5">
                     <?php
                     if ($pub_tab_validation) {
-                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories));
+                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories, 'upload_model' => $publishing_upload_model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
                     if ($sub_pub_tab_validation) {
-                        $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories));
+                        $this->renderPartial('_sub_publishing_form', array('model' => $sub_publishing_model, 'work_model' => $model, 'territories' => $territories, 'upload_model' => $sub_publishing_upload_model));
                     }
                     ?>
                 </div>

@@ -64,7 +64,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'publisher-account-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -122,9 +122,11 @@ $legal_forms = Myclass::getMasterLegalForm();
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
+                                    <?php echo $form->labelEx($model, 'Pub_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Pub_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Pub_Photo'); ?>
                                 </div>
+                                
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -204,6 +206,10 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->error($model, 'Pub_Non_Member'); ?>
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
                             </div>
                         </div>
 

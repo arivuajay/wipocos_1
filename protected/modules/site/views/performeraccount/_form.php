@@ -64,7 +64,7 @@ $regions = Myclass::getMasterRegion();
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'performer-account-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -135,17 +135,10 @@ $regions = Myclass::getMasterRegion();
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Perf_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Perf_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Perf_Non_Member'); ?>
+                                    <?php echo $form->labelEx($model, 'Perf_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Perf_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Perf_Photo'); ?>
                                 </div>
-
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
-                                </div>
-
-
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -194,6 +187,16 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Perf_Language_Id'); ?>
                                 </div>
 
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Perf_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Perf_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Perf_Non_Member'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
                             </div>
                         </div>
 

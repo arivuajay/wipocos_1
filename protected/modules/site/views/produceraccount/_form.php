@@ -49,7 +49,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pro_Is_Publisher == 'Y' ? '<br />' : '';?> and Inheritance</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pro_Is_Publisher == 'Y' ? '<br />' : ''; ?> and Inheritance</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -57,7 +57,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'producer-account-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -115,14 +115,9 @@ $legal_forms = Myclass::getMasterLegalForm();
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pro_Non_Member', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Pro_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Pro_Non_Member'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
+                                    <?php echo $form->labelEx($model, 'Pro_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Pro_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Pro_Photo'); ?>
                                 </div>
 
                             </div>
@@ -196,6 +191,15 @@ $legal_forms = Myclass::getMasterLegalForm();
                                         </div>
 
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pro_Non_Member', array('class' => '')); ?><br />
+                                    <?php echo $form->checkBox($model, 'Pro_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                    <?php echo $form->error($model, 'Pro_Non_Member'); ?>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>

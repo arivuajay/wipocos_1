@@ -81,10 +81,18 @@ class PublishergroupController extends Controller {
 
         if (isset($_POST['PublisherGroup'])) {
             $model->attributes = $_POST['PublisherGroup'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Created Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'PublisherGroup Created Successfully. Please Fill Managed Rights!!!');
-                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/6'));
+            $model->setAttribute('Pub_Group_Photo', isset($_FILES['PublisherGroup']['name']['Pub_Group_Photo']) ? $_FILES['PublisherGroup']['name']['Pub_Group_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
+                    Yii::app()->user->setFlash('success', 'PublisherGroup Created Successfully. Please Fill Managed Rights!!!');
+                    $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/6'));
+                }
+            } else {
+                $tab = '1';
             }
         }
 
@@ -107,24 +115,24 @@ class PublishergroupController extends Controller {
         $rel_payment_model = empty($rel_payment_exists) ? new PublisherGroupRelatedPayment : $rel_payment_exists;
 
         $managed_exists = PublisherGroupManageRights::model()->findByAttributes(array('Pub_Group_Id' => $id));
-        if(empty($managed_exists)){
+        if (empty($managed_exists)) {
             $managed_model = new PublisherGroupManageRights;
-            if($model->Pub_Group_Is_Publisher == '1'){
+            if ($model->Pub_Group_Is_Publisher == '1') {
                 $managed_model->Pub_Group_Mnge_Type_Rght_Id = DEFAULT_PUBLISHER_GROUP_RIGHT_HOLDER_ID;
-            }elseif($model->Pub_Group_Is_Producer == '1'){
+            } elseif ($model->Pub_Group_Is_Producer == '1') {
                 $managed_model->Pub_Group_Mnge_Type_Rght_Id = DEFAULT_PRODUCER_GROUP_RIGHT_HOLDER_ID;
             }
-        }else{
+        } else {
             $managed_model = $managed_exists;
         }
-        
-        if($model->Pub_Group_Is_Publisher == '1'){
+
+        if ($model->Pub_Group_Is_Publisher == '1') {
             $managed_model->is_pub_producer = 'PU';
-        }elseif($model->Pub_Group_Is_Producer == '1'){
+        } elseif ($model->Pub_Group_Is_Producer == '1') {
             $managed_model->is_pub_producer = 'PR';
         }
 
-        
+
         $psedonym_exists = PublisherGroupPseudonym::model()->findByAttributes(array('Pub_Group_Id' => $id));
         $psedonym_model = empty($psedonym_exists) ? new PublisherGroupPseudonym : $psedonym_exists;
 
@@ -161,10 +169,18 @@ class PublishergroupController extends Controller {
 
         if (isset($_POST['PublisherGroup'])) {
             $model->attributes = $_POST['PublisherGroup'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
-                Yii::app()->user->setFlash('success', 'Publisher Group Updated Successfully!!!');
-                $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/1'));
+            $model->setAttribute('Pub_Group_Photo', isset($_FILES['PublisherGroup']['name']['Pub_Group_Photo']) ? $_FILES['PublisherGroup']['name']['Pub_Group_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Updated Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
+                    Yii::app()->user->setFlash('success', 'Publisher Group Updated Successfully!!!');
+                    $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/1'));
+                }
+            } else {
+                $tab = '1';
             }
         } elseif (isset($_POST['GroupMembers'])) {
             PublisherGroupMembers::model()->deleteAll("Pub_Group_Id = '{$model->Pub_Group_Id}'");
@@ -216,7 +232,7 @@ class PublishergroupController extends Controller {
 
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
-                Myclass::addAuditTrail("Updated Publisher Group Managed Rights {$model->Pub_Group_Internal_Code} successfully.", "group");
+                    Myclass::addAuditTrail("Updated Publisher Group Managed Rights {$model->Pub_Group_Internal_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                     $this->redirect(array('publishergroup/update/id/' . $managed_model->Pub_Group_Id . '/tab/6'));
                 }
@@ -230,30 +246,26 @@ class PublishergroupController extends Controller {
                 $this->redirect(array('publishergroup/update/id/' . $address_model->Pub_Group_Id . '/tab/7'));
             }
         }
- 
-        if(isset($_POST['PublisherGroupOriginalPublisher']) 
-        || isset($_POST['PublisherGroupSubPublisher'])
-        || isset($_POST['PublisherGroupOriginalShare'])
-        || isset($_POST['PublisherGroupSubShare'])
-        || isset($_POST['PublisherGroupOriginalShare'])
-        ){
+
+        if (isset($_POST['PublisherGroupOriginalPublisher']) || isset($_POST['PublisherGroupSubPublisher']) || isset($_POST['PublisherGroupOriginalShare']) || isset($_POST['PublisherGroupSubShare']) || isset($_POST['PublisherGroupOriginalShare'])
+        ) {
             $tab = 8;
             $validate = false;
-            
+
             if (isset($_POST['PublisherGroupOriginalPublisher'])) {
                 $org_publisher_model->attributes = $_POST['PublisherGroupOriginalPublisher'];
                 $validate = $org_publisher_model->save() ? true : false;
-            } 
-            
+            }
+
             if (isset($_POST['PublisherGroupSubPublisher'])) {
                 $sub_publisher_model->attributes = $_POST['PublisherGroupSubPublisher'];
                 $validate = $sub_publisher_model->save() ? $validate && true : false;
-            } 
+            }
 
             if (isset($_POST['PublisherGroupOriginalShare'])) {
                 $org_share_publisher_model->attributes = $_POST['PublisherGroupOriginalShare'];
                 $validate = $org_share_publisher_model->save() ? $validate && true : false;
-            } 
+            }
 
             if (isset($_POST['PublisherGroupSubShare'])) {
                 $sub_share_publisher_model->attributes = $_POST['PublisherGroupSubShare'];
@@ -276,13 +288,13 @@ class PublishergroupController extends Controller {
                     $validate = false;
                 }
             }
-            if($validate){
+            if ($validate) {
                 Yii::app()->user->setFlash('success', 'Sub publishing Catalog saved!!!');
                 Myclass::addAuditTrail("Publisher Group Subcontracted Catalogue {$model->Pub_Group_Internal_Code} saved successfully.", "group");
                 $this->redirect(array('publishergroup/update/id/' . $model->Pub_Group_Id . '/tab/8'));
             }
         }
-        
+
         $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
     }
 
@@ -323,14 +335,14 @@ class PublishergroupController extends Controller {
         if (isset($_GET['PublisherGroup'])) {
             $search = true;
             $role = $_GET['PublisherGroup']['is_pub_producer'];
-            
+
             $searchModel->attributes = $_GET['PublisherGroup'];
             $searchModel->search_status = $_GET['PublisherGroup']['search_status'];
             $searchModel->is_pub_producer = $_GET['PublisherGroup']['is_pub_producer'];
             $searchModel->search();
         }
         $model->is_pub_producer = $role;
-        
+
         if ($this->isExportRequest()) {
             $model->unsetAttributes();
             $this->exportCSV(array('Groups:'), null, false);

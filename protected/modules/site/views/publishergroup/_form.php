@@ -59,7 +59,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'publisher-group-form',
-                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+                            'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                             ),
@@ -110,11 +110,17 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Pub_Group_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Pub_Group_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_Photo'); ?>
+                                </div>
+
+                                <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
                                 </div>
-
+                                
                                 <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>

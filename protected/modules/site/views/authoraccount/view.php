@@ -47,7 +47,7 @@ if ($export == false) {
 <?php } ?>
 
 <?php if ($export) { ?>
-    <h3 class="text-center">Author <?php echo $this->title ?></h3>
+    <h3 class="text-center"><?php echo $this->title ?></h3>
 <?php } ?>
 
 <div class="row">
@@ -61,6 +61,11 @@ if ($export == false) {
                 'Auth_Acc_Id',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
+                array(
+                    'name' => 'Auth_Photo',
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+                ),
                 'Auth_Internal_Code',
                 'Auth_Ipi',
                 'Auth_Ipi_Base_Number',

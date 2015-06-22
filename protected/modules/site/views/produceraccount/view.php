@@ -48,7 +48,7 @@ if ($export == false) {
 <?php } ?>
 
 <?php if ($export) { ?>
-    <h3 class="text-center">Producer <?php echo $this->title ?></h3>
+    <h3 class="text-center"><?php echo $this->title ?></h3>
 <?php } ?>
 
 <div class="row">
@@ -62,6 +62,11 @@ if ($export == false) {
                 'Pro_Acc_Id',
                 'Pro_Internal_Code',
                 'Pro_Corporate_Name',
+                array(
+                    'name' => 'Pro_Photo',
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+                ),
                 'Pro_Ipi',
                 'Pro_Ipi_Base_Number',
 //                'Pro_Place',

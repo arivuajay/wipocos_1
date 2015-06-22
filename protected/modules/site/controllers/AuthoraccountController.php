@@ -105,17 +105,25 @@ class AuthoraccountController extends Controller {
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
-            if ($model->save()) {
-                Myclass::addAuditTrail("Created a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
-                if ($model->Auth_Non_Member == 'N') {
-                    $message = 'AuthorAccount Created Successfully. Please Fill Managed Rights!!!';
-                    $tab = 6;
-                } else {
-                    $message = 'AuthorAccount Created Successfully';
-                    $tab = 1;
+            $model->setAttribute('Auth_Photo', isset($_FILES['AuthorAccount']['name']['Auth_Photo']) ? $_FILES['AuthorAccount']['name']['Auth_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
+                    if ($model->Auth_Non_Member == 'N') {
+                        $message = 'AuthorAccount Created Successfully. Please Fill Managed Rights!!!';
+                        $tab = 6;
+                    } else {
+                        $message = 'AuthorAccount Created Successfully';
+                        $tab = 1;
+                    }
+                    Yii::app()->user->setFlash('success', $message);
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => $tab));
                 }
-                Yii::app()->user->setFlash('success', $message);
-                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => $tab));
+            } else {
+                $tab = '1';
             }
         }
 
@@ -159,7 +167,7 @@ class AuthoraccountController extends Controller {
         $performer_model = AuthorAccount::model()->checkPerformer($model->Auth_Internal_Code, false);
         $related_exists = PerformerRelatedRights::model()->with('perfAcc')->find('perfAcc.Perf_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
         $related_model = empty($related_exists) ? new PerformerRelatedRights : $related_exists;
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
             $model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model,
@@ -168,10 +176,18 @@ class AuthoraccountController extends Controller {
         if (isset($_POST['AuthorAccount'])) {
             $model->attributes = $_POST['AuthorAccount'];
             $model->setAttribute('Auth_DOB', $_POST['AuthorAccount']['Auth_DOB']);
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} AuthorAccount successfully.", "user");
-                Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
-                $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '1'));
+            $model->setAttribute('Auth_Photo', isset($_FILES['AuthorAccount']['name']['Auth_Photo']) ? $_FILES['AuthorAccount']['name']['Auth_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} AuthorAccount successfully.", "user");
+                    Yii::app()->user->setFlash('success', 'AuthorAccount Updated Successfully!!!');
+                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '1'));
+                }
+            } else {
+                $tab = '1';
             }
         } elseif (isset($_POST['AuthorAccountAddress'])) {
             $address_model->attributes = $_POST['AuthorAccountAddress'];
@@ -220,10 +236,10 @@ class AuthoraccountController extends Controller {
             if ($managed_model->validate()) {
                 if ($managed_model->save()) {
                     Myclass::addAuditTrail("Updated {$model->Auth_First_Name}  {$model->Auth_Sur_Name} Managed Rights successfully.", "user");
-                    if($model->Auth_Is_Performer == 'Y' && $related_model->isNewRecord && $model->Auth_Non_Member == 'N'){
+                    if ($model->Auth_Is_Performer == 'Y' && $related_model->isNewRecord && $model->Auth_Non_Member == 'N') {
                         Yii::app()->user->setFlash('success', 'Managed Rights saved Successfully. Please Fill Related Rights!!!');
                         $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
-                    }else{
+                    } else {
                         Yii::app()->user->setFlash('success', 'Managed Rights Saved Successfully!!!');
                         $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
                     }
@@ -252,9 +268,7 @@ class AuthoraccountController extends Controller {
                     $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '8'));
                 }
             } else {
-                Yii::app()->user->setFlash('danger', 'Failed to upload document.!!!');
-                if ($tab != '8')
-                    $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '8'));
+                $tab = '8';
             }
         } elseif (isset($_POST['PerformerRelatedRights'])) {
             $related_model->attributes = $_POST['PerformerRelatedRights'];
@@ -262,10 +276,10 @@ class AuthoraccountController extends Controller {
             if ($related_model->validate()) {
                 if ($related_model->save()) {
                     Myclass::addAuditTrail("Updated Performer Related Rights {$performer_model->Perf_First_Name} {$performer_model->Perf_Sur_Name} successfully.", "music");
-                    if($model->Auth_Is_Performer == 'Y' && $managed_model->isNewRecord && $model->Auth_Non_Member == 'N'){
+                    if ($model->Auth_Is_Performer == 'Y' && $managed_model->isNewRecord && $model->Auth_Non_Member == 'N') {
                         Yii::app()->user->setFlash('success', 'Related Rights saved Successfully. Please Fill Managed Rights!!!');
                         $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '6'));
-                    }else{
+                    } else {
                         Yii::app()->user->setFlash('success', 'Related Rights Saved Successfully!!!');
                         $this->redirect(array('/site/authoraccount/update', 'id' => $model->Auth_Acc_Id, 'tab' => '9'));
                     }
@@ -273,8 +287,7 @@ class AuthoraccountController extends Controller {
             }
         }
 
-        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 
-                'biograph_model', 'upload_model', 'performer_model', 'related_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'upload_model', 'performer_model', 'related_model'));
     }
 
     /**
@@ -347,8 +360,8 @@ class AuthoraccountController extends Controller {
             $searchModel->search_status = $_GET['AuthorAccount']['search_status'];
             $searchModel->search();
         }
-        
-        
+
+
         if ($this->isExportRequest()) {
             $model->unsetAttributes();
             $this->exportCSV(array('Authors Accounts:'), null, false);
@@ -391,19 +404,11 @@ class AuthoraccountController extends Controller {
      * @param AuthorAccount $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form' 
-                || $_POST['ajax'] === 'author-account-address-form' 
-                || $_POST['ajax'] === 'author-payment-method-form' 
-                || $_POST['ajax'] === 'author-pseudonym-form' 
-                || $_POST['ajax'] === 'author-death-inheritance-form' 
-                || $_POST['ajax'] === 'author-related-rights-form' 
-                || $_POST['ajax'] === 'author-managed-rights-form' 
-                || $_POST['ajax'] === 'author-biography-form' 
-                || $_POST['ajax'] === 'author-upload-form'
-                || $_POST['ajax'] === 'performer-related-rights-form' 
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'author-account-address-form' || $_POST['ajax'] === 'author-payment-method-form' || $_POST['ajax'] === 'author-pseudonym-form' || $_POST['ajax'] === 'author-death-inheritance-form' || $_POST['ajax'] === 'author-related-rights-form' || $_POST['ajax'] === 'author-managed-rights-form' || $_POST['ajax'] === 'author-biography-form' || $_POST['ajax'] === 'author-upload-form' || $_POST['ajax'] === 'performer-related-rights-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
+
 }

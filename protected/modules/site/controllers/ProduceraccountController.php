@@ -99,17 +99,25 @@ class ProduceraccountController extends Controller {
 
         if (isset($_POST['ProducerAccount'])) {
             $model->attributes = $_POST['ProducerAccount'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Created Producer {$model->Pro_Corporate_Name} successfully.", "money");
-                if ($model->Pro_Non_Member == 'N') {
-                    $message = 'ProducerAccount Created Successfully. Please Fill Related Rights!!!';
-                    $tab = 6;
-                } else {
-                    $message = 'ProducerAccount Created Successfully';
-                    $tab = 1;
+            $model->setAttribute('Pro_Photo', isset($_FILES['ProducerAccount']['name']['Pro_Photo']) ? $_FILES['ProducerAccount']['name']['Pro_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Producer {$model->Pro_Corporate_Name} successfully.", "money");
+                    if ($model->Pro_Non_Member == 'N') {
+                        $message = 'ProducerAccount Created Successfully. Please Fill Related Rights!!!';
+                        $tab = 6;
+                    } else {
+                        $message = 'ProducerAccount Created Successfully';
+                        $tab = 1;
+                    }
+                    Yii::app()->user->setFlash('success', $message);
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => $tab));
                 }
-                Yii::app()->user->setFlash('success', $message);
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => $tab));
+            } else {
+                $tab = '1';
             }
         }
 
@@ -156,10 +164,18 @@ class ProduceraccountController extends Controller {
 
         if (isset($_POST['ProducerAccount'])) {
             $model->attributes = $_POST['ProducerAccount'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated Producer {$model->Pro_Corporate_Name} successfully.", "money");
-                Yii::app()->user->setFlash('success', 'ProducerAccount Updated Successfully!!!');
-                $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '1'));
+            $model->setAttribute('Pro_Photo', isset($_FILES['ProducerAccount']['name']['Pro_Photo']) ? $_FILES['ProducerAccount']['name']['Pro_Photo'] : '');
+
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Updated Producer {$model->Pro_Corporate_Name} successfully.", "money");
+                    Yii::app()->user->setFlash('success', 'ProducerAccount Updated Successfully!!!');
+                    $this->redirect(array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => '1'));
+                }
+            } else {
+                $tab = '1';
             }
         } elseif (isset($_POST['ProducerAccountAddress'])) {
             $address_model->attributes = $_POST['ProducerAccountAddress'];

@@ -23,6 +23,7 @@
  * @property string $Perf_Non_Member
  * @property string $Active
  * @property string $Perf_Is_Author
+ * @property string $Perf_Photo
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -55,6 +56,7 @@ class PerformerAccount extends CActiveRecord {
     public $oldRecord;
 
     public $internal_increament = true;
+    const PHOTO_SIZE = 1;
 
     public function init() {
         parent::init();
@@ -101,7 +103,7 @@ class PerformerAccount extends CActiveRecord {
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
             array('Perf_Gender, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion,record_search, Perf_Non_Member, Perf_Is_Author, is_performer, Perf_GUID', 'safe'),
+            array('Created_Date, Rowversion,record_search, Perf_Non_Member, Perf_Is_Author, is_performer, Perf_GUID, Perf_Photo', 'safe'),
             array('Perf_Internal_Code, Perf_GUID', 'unique'),
             array('Perf_Sur_Name', 'nameUnique'),
             array(
@@ -110,6 +112,7 @@ class PerformerAccount extends CActiveRecord {
                 'message' => 'Only Alphabets are allowed ',
             ),
             array('Perf_First_Name', 'UniqueAttributesValidator', 'with' => 'Perf_Sur_Name', "message" => "This User Name already Exists"),
+            array('Perf_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Perf_Non_Member, Active, Created_Date, Rowversion, expiry_date, hierarchy_level, record_search', 'safe', 'on' => 'search'),
@@ -177,6 +180,7 @@ class PerformerAccount extends CActiveRecord {
             'Perf_Non_Member' => 'Non Member',
             'Perf_Is_Author' => 'Author',
             'is_performer' => 'Performer',
+            'Perf_Photo' => 'Profile Picture',
         );
     }
 
@@ -442,5 +446,14 @@ class PerformerAccount extends CActiveRecord {
     protected function afterFind() {
         $this->oldRecord = clone $this;
         return parent::afterFind();
+    }
+    
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Perf_Photo',
+            )
+        );
     }
 }

@@ -47,7 +47,7 @@ if ($export == false) {
     </div>
 <?php } ?>
 <?php if ($export) { ?>
-    <h3 class="text-center">Publisher <?php echo $this->title ?></h3>
+    <h3 class="text-center"><?php echo $this->title ?></h3>
 <?php } ?>
 <div class="row">
     <div class="user-view col-lg-6">
@@ -60,6 +60,11 @@ if ($export == false) {
                 'Pub_Acc_Id',
                 'Pub_Internal_Code',
                 'Pub_Corporate_Name',
+                array(
+                    'name' => 'Pub_Photo',
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+                ),
                 'Pub_Ipi',
                 'Pub_Ipi_Base_Number',
 //                'Pub_Place',
