@@ -43,7 +43,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'convert'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'convert', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -168,6 +168,8 @@ class AuthoraccountController extends Controller {
         $related_exists = PerformerRelatedRights::model()->with('perfAcc')->find('perfAcc.Perf_Internal_Code = :int_code', array(':int_code' => $model->Auth_Internal_Code));
         $related_model = empty($related_exists) ? new PerformerRelatedRights : $related_exists;
 
+        $biograph_upload_model = new AuthorBiographUploads;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
             $model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model,
@@ -209,6 +211,26 @@ class AuthoraccountController extends Controller {
             $biograph_model->attributes = $_POST['AuthorBiography'];
 
             if ($biograph_model->save()) {
+                $bio_id = $biograph_model->Auth_Biogrph_Id;
+
+                $images = CUploadedFile::getInstancesByName('Auth_Biogrph_Upl_File');
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_upload_model = new AuthorBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(time())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_upload_model->Auth_Biogrph_Id = $bio_id;
+                        $biograph_upload_model->Auth_Biogrph_Upl_File = $newName;
+                        if($biograph_upload_model->validate()){
+                            $biograph_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
+
                 GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Auth_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
@@ -287,7 +309,7 @@ class AuthoraccountController extends Controller {
             }
         }
 
-        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'upload_model', 'performer_model', 'related_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'upload_model', 'performer_model', 'related_model', 'biograph_upload_model'));
     }
 
     /**
@@ -337,6 +359,31 @@ class AuthoraccountController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'Uploaded file Deleted Successfully!!!');
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/authoraccount/update/id/' . $auth_acc_id . '/tab/8/fileedit/' . $id));
+        }
+    }
+
+    public function actionBiofiledelete($id) {
+        $model = AuthorBiographUploads::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $bio_id = $model->Auth_Biogrph_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Biography file from {$model->authBiogrph->authAcc->fullname} successfully.", "user");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->authBiogrph->authAcc->fullname} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/authoraccount/update', 'id' => $model->authBiogrph->Auth_Acc_Id , 'tab' => '4'));
         }
     }
 

@@ -20,7 +20,6 @@
         <?php $this->renderPartial('//layouts/_headerBar'); ?>
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <?php $this->renderPartial('//layouts/_sidebarNav'); ?>
-
             <?php echo $content; ?>
         </div>
         <?php

@@ -127,6 +127,22 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Work_Sub_Tacit', array('class' => 'col-sm-3 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->checkBox($model, 'Work_Sub_Tacit', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                <?php echo $form->error($model, 'Work_Sub_Tacit'); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Work_Sub_Renewal_Period', array('class' => 'col-sm-3 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textField($model, 'Work_Sub_Renewal_Period', array('class' => 'form-control')); ?>
+                <?php echo $form->error($model, 'Work_Sub_Renewal_Period'); ?>
+            </div>
+        </div>
+
     </div>
     <div class="box-footer">
         <div class="form-group">

@@ -470,4 +470,17 @@ class Myclass extends CController {
             'Pro_Pay_Id', 'Pro_Pseudo_Id');
     }
 
+    public static function reArrayFiles($model, $column) {
+        $file_ary = array();
+        $file_count = count($_FILES[$model]['name'][$column]);
+        $file_keys = array_keys($_FILES[$model]);
+
+        for ($i = 0; $i < $file_count; $i++) {
+            foreach ($file_keys as $key) {
+                $file_ary[$i][$key] = $_FILES[$model][$key][$column][$i];
+            }
+        }
+        return $file_ary;
+    }
+
 }

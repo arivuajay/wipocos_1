@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{master_managed_rights}}':
  * @property integer $Master_Mgd_Rights_Id
+ * @property integer $Mgd_Rights_Rank
  * @property string $Mgd_Rights_Name
  * @property string $Active
  * @property string $Created_Date
@@ -36,7 +37,7 @@ class MasterManagedRights extends CActiveRecord {
             array('Mgd_Rights_Name', 'required'),
             array('Mgd_Rights_Name', 'length', 'max' => 90),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Mgd_Rights_Rank', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Master_Mgd_Rights_Id, Mgd_Rights_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -59,7 +60,8 @@ class MasterManagedRights extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_Mgd_Rights_Id' => 'Master Mgd Rights',
-            'Mgd_Rights_Name' => 'Mgd Rights Name',
+            'Mgd_Rights_Name' => 'Rights Name',
+            'Mgd_Rights_Rank' => 'Rank',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -115,4 +117,13 @@ class MasterManagedRights extends CActiveRecord {
         ));
     }
 
+    public function getMasterManagedRightbyRank($rank, $is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $managed_rights = CHtml::listData(MasterManagedRights::model()->isActive()->findAll(array('condition' => 'Mgd_Rights_Rank = :rank', 'order' => 'Mgd_Rights_Name', 'params' => array(':rank' => $rank))), 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name');
+        else
+            $managed_rights = CHtml::listData(MasterManagedRights::model()->findAll(array('condition' => 'Mgd_Rights_Rank = :rank', 'order' => 'Mgd_Rights_Name', 'params' => array(':rank' => $rank))), 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name');
+        if ($key != NULL)
+            return $managed_rights[$key];
+        return $managed_rights;
+    }
 }

@@ -12,6 +12,8 @@
  * @property string $Work_Pub_Sign_Date
  * @property string $Work_Pub_File
  * @property integer $Work_Pub_References
+ * @property string $Work_Pub_Tacit
+ * @property integer $Work_Pub_Renewal_Period
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -49,11 +51,12 @@ class WorkPublishing extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References', 'required'),
+            array('Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References, Work_Pub_Renewal_Period', 'required'),
             array('Work_Id, Work_Pub_References', 'numerical', 'integerOnly' => true),
             array('Work_Pub_Territories', 'length', 'max' => 500),
             array('Work_Pub_File', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Work_Pub_Renewal_Period', 'numerical', 'integerOnly'=>true, 'min' => 1),
+            array('Created_Date, Rowversion, Work_Pub_Tacit, Work_Pub_Renewal_Period', 'safe'),
             array('Work_Pub_Contact_End', 'compare', 'compareAttribute' => 'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -85,6 +88,8 @@ class WorkPublishing extends CActiveRecord {
             'Work_Pub_Sign_Date' => 'Date of signature',
             'Work_Pub_File' => 'File',
             'Work_Pub_References' => 'Number of references',
+            'Work_Pub_Tacit' => 'Tacit',
+            'Work_Pub_Renewal_Period' => 'Renewal Period (years)',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
         );

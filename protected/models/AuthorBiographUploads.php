@@ -5,16 +5,17 @@
  *
  * The followings are the available columns in table '{{author_biograph_uploads}}':
  * @property integer $Auth_Biogrph_Upl_Id
- * @property integer $Auth_Acc_Id
+ * @property integer $Auth_Biogrph_Id
  * @property string $Auth_Biogrph_Upl_File
  * @property string $Created
  * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property AuthorAccount $authAcc
+ * @property AuthorBiography $authBiogrph
  */
 class AuthorBiographUploads extends CActiveRecord {
 
+    const IMAGE_SIZE = 2;
     /**
      * @return string the associated database table name
      */
@@ -29,12 +30,14 @@ class AuthorBiographUploads extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
-            array('Auth_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Created, Rowversion', 'safe'),
+            array('Auth_Biogrph_Id, Auth_Biogrph_Upl_File', 'required'),
+            array('Auth_Biogrph_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+//            array('Auth_Biogrph_Upl_File', 'length', 'max' => 500),
+            array('Auth_Biogrph_Upl_File,Created, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Biogrph_Upl_Id, Auth_Acc_Id, Auth_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
+            array('Auth_Biogrph_Upl_Id, Auth_Biogrph_Id, Auth_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -45,7 +48,7 @@ class AuthorBiographUploads extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'authBiogrph' => array(self::BELONGS_TO, 'AuthorBiography', 'Auth_Biogrph_Id'),
         );
     }
 
@@ -55,8 +58,8 @@ class AuthorBiographUploads extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Auth_Biogrph_Upl_Id' => 'Auth Biogrph Upl',
-            'Auth_Acc_Id' => 'Auth Acc',
-            'Auth_Biogrph_Upl_File' => 'Auth Biogrph Upl File',
+            'Auth_Biogrph_Id' => 'Auth Biogrph',
+            'Auth_Biogrph_Upl_File' => 'File',
             'Created' => 'Created',
             'Rowversion' => 'Rowversion',
         );
@@ -80,7 +83,7 @@ class AuthorBiographUploads extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('Auth_Biogrph_Upl_Id', $this->Auth_Biogrph_Upl_Id);
-        $criteria->compare('Auth_Acc_Id', $this->Auth_Acc_Id);
+        $criteria->compare('Auth_Biogrph_Id', $this->Auth_Biogrph_Id);
         $criteria->compare('Auth_Biogrph_Upl_File', $this->Auth_Biogrph_Upl_File, true);
         $criteria->compare('Created', $this->Created, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -118,5 +121,13 @@ class AuthorBiographUploads extends CActiveRecord {
                 'fileField' => 'Auth_Biogrph_Upl_File',
             )
         );
+    }
+    
+    public function acceptFiles() {
+        return 'jpeg|jpg|gif|png';
+    }
+    
+    public function acceptFilesize() {
+        return self::IMAGE_SIZE;
     }
 }

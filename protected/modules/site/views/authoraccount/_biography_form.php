@@ -11,7 +11,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'author-biography-form',
-        'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
+        'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
         ),
@@ -62,7 +62,34 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             </div>
         </div>
 
-    </div><!-- /.box-body -->
+        <div class="form-group">
+            <?php echo $form->labelEx($biograph_upload_model, 'Auth_Biogrph_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-5">
+                <?php
+                $max_size = $biograph_upload_model->acceptFilesize();
+                $this->widget('CMultiFileUpload', array(
+                    'model' => $biograph_upload_model,
+                    'name' => 'Auth_Biogrph_Upl_File',
+                    'accept' => $biograph_upload_model->acceptFiles(),
+                    'duplicate' => 'Duplicate file!',
+                    'denied' => 'Invalid file extension',
+                    'options' => array(
+                        'afterFileSelect' => "function(e ,v ,m){
+                            var fileSize = e.files[0].size;
+                            if(fileSize>1024 * 1024 * {$max_size}){
+                               alert('Exceeds file upload limit {$max_size}MB');
+                               $('.MultiFile-remove').last().click(); 
+                             }                      
+                             return true;
+                        }"
+                    )
+                ));
+                ?>
+                <?php echo $form->error($biograph_upload_model, 'Auth_Biogrph_Upl_File'); ?>
+            </div>
+        </div>
+
+    </div>
     <div class="box-footer">
         <div class="form-group">
             <div class="col-sm-0 col-sm-offset-2">
@@ -72,6 +99,47 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+<?php
+$uploaded_files = AuthorBiographUploads::model()->findAll('Auth_Biogrph_Id = :bio_id', array(':bio_id' => $model->Auth_Biogrph_Id));
+if (!empty($uploaded_files)) {
+    ?>
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">Uploaded Files</h4>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Uploaded Files</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <?php
+                            $file_path = $uploaded_file->getFilePath();
+                            $i = $key + 1
+                            ?>
+                            <td><?php echo $i ?>.</td>
+                            <td><a class="popup-link" href="<?php echo $file_path ?>"><?php echo "Biograph {$i}" ?></a></td>
+                            <td>
+                                <?php
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/biofiledelete/', 'id' => $uploaded_file->Auth_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => '.popup-link'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php }
+?>
 <?php
 $js = <<< EOD
     $(document).ready(function() {

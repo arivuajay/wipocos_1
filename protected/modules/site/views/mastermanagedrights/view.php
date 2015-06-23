@@ -41,6 +41,7 @@ $this->breadcrumbs = array(
         'attributes' => array(
             'Master_Mgd_Rights_Id',
             'Mgd_Rights_Name',
+            'Mgd_Rights_Rank',
             array(
                 'label' => MasterManagedRights::model()->getAttributeLabel('Active'),
                 'type' => 'raw',

@@ -1,29 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "{{author_biography}}".
+ * This is the model class for table "{{performer_biograph_uploads}}".
  *
- * The followings are the available columns in table '{{author_biography}}':
- * @property integer $Auth_Biogrph_Id
- * @property integer $Auth_Acc_Id
- * @property string $Auth_Biogrph_Annotation
- * @property string $Active
- * @property string $Created_Date
+ * The followings are the available columns in table '{{performer_biograph_uploads}}':
+ * @property integer $Perf_Biogrph_Upl_Id
+ * @property integer $Perf_Biogrph_Id
+ * @property string $Perf_Biogrph_Upl_File
+ * @property string $Created
  * @property string $Rowversion
  *
  * The followings are the available model relations:
- * @property AuthorAccount $authAcc
+ * @property PerformerBiography $perfBiogrph
  */
-class AuthorBiography extends CActiveRecord {
+class PerformerBiographUploads extends CActiveRecord {
 
-    public $after_save_enable = true;
-    
     const IMAGE_SIZE = 2;
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{author_biography}}';
+        return '{{performer_biograph_uploads}}';
     }
 
     /**
@@ -33,13 +30,14 @@ class AuthorBiography extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Biogrph_Annotation', 'required'),
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
-            array('Active', 'length', 'max' => 1),
-            array('Auth_Biogrph_Annotation, Created_Date, Rowversion', 'safe'),
+            array('Perf_Biogrph_Id, Perf_Biogrph_Upl_File', 'required'),
+            array('Perf_Biogrph_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Biogrph_Upl_File', 'length', 'max' => 500),
+            array('Perf_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+            array('Created, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Biogrph_Id, Auth_Acc_Id, Auth_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Perf_Biogrph_Upl_Id, Perf_Biogrph_Id, Perf_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,7 +48,7 @@ class AuthorBiography extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'perfBiogrph' => array(self::BELONGS_TO, 'PerformerBiography', 'Perf_Biogrph_Id'),
         );
     }
 
@@ -59,11 +57,10 @@ class AuthorBiography extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Auth_Biogrph_Id' => 'Id',
-            'Auth_Acc_Id' => 'Auth Acc',
-            'Auth_Biogrph_Annotation' => 'Annotation',
-            'Active' => 'Active',
-            'Created_Date' => 'Created Date',
+            'Perf_Biogrph_Upl_Id' => 'Perf Biogrph Upl',
+            'Perf_Biogrph_Id' => 'Perf Biogrph',
+            'Perf_Biogrph_Upl_File' => 'File',
+            'Created' => 'Created',
             'Rowversion' => 'Rowversion',
         );
     }
@@ -85,11 +82,10 @@ class AuthorBiography extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Auth_Biogrph_Id', $this->Auth_Biogrph_Id);
-        $criteria->compare('Auth_Acc_Id', $this->Auth_Acc_Id);
-        $criteria->compare('Auth_Biogrph_Annotation', $this->Auth_Biogrph_Annotation, true);
-        $criteria->compare('Active', $this->Active, true);
-        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Perf_Biogrph_Upl_Id', $this->Perf_Biogrph_Upl_Id);
+        $criteria->compare('Perf_Biogrph_Id', $this->Perf_Biogrph_Id);
+        $criteria->compare('Perf_Biogrph_Upl_File', $this->Perf_Biogrph_Upl_File, true);
+        $criteria->compare('Created', $this->Created, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         return new CActiveDataProvider($this, array(
@@ -104,7 +100,7 @@ class AuthorBiography extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return AuthorBiography the static model class
+     * @return PerformerBiographUploads the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -118,9 +114,20 @@ class AuthorBiography extends CActiveRecord {
         ));
     }
 
-    protected function afterSave() {
-        if($this->after_save_enable)
-            AuthorAccount::afterTabsave('PerformerBiography', 'performerBiographies');
-        return parent::afterSave();
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Perf_Biogrph_Upl_File',
+            )
+        );
+    }
+    
+    public function acceptFiles() {
+        return 'jpeg|jpg|gif|png';
+    }
+    
+    public function acceptFilesize() {
+        return self::IMAGE_SIZE;
     }
 }

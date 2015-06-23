@@ -14,6 +14,8 @@
  * @property string $Work_Sub_File
  * @property integer $Work_Sub_References
  * @property string $Work_Sub_Catelog_Number
+ * @property string $Work_Sub_Tacit
+ * @property integer $Work_Sub_Renewal_Period
  * @property string $Created_Date
  * @property string $Rowversion
  *
@@ -52,13 +54,14 @@ class WorkSubPublishing extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Sub_Contact_Start, Work_Sub_Contact_End, Work_Sub_Territories, Work_Sub_Sign_Date, Work_Sub_References, Work_Sub_Catelog_Number', 'required'),
+            array('Work_Id, Work_Sub_Contact_Start, Work_Sub_Contact_End, Work_Sub_Territories, Work_Sub_Sign_Date, Work_Sub_References, Work_Sub_Catelog_Number, Work_Sub_Renewal_Period', 'required'),
             array('Work_Id, Work_Sub_References', 'numerical', 'integerOnly' => true),
             array('Work_Sub_Territories', 'length', 'max' => 500),
             array('Work_Sub_Clause', 'length', 'max' => 4),
             array('Work_Sub_File', 'length', 'max' => 255),
             array('Work_Sub_Catelog_Number', 'length', 'max' => 100),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Work_Sub_Renewal_Period', 'numerical', 'integerOnly'=>true, 'min' => 1),
+            array('Created_Date, Rowversion, Work_Sub_Renewal_Period, Work_Sub_Tacit', 'safe'),
             array('Work_Sub_Contact_End', 'compare', 'compareAttribute'=>'Work_Sub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -94,6 +97,8 @@ class WorkSubPublishing extends CActiveRecord {
             'Work_Sub_Catelog_Number' => 'Catelogue Number',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'Work_Sub_Tacit' => 'Tacit',
+            'Work_Sub_Renewal_Period' => 'Renewal Period (years)',
         );
     }
 
