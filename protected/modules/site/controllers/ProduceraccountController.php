@@ -16,6 +16,12 @@ class ProduceraccountController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'download' => 'application.components.actions.download',
+        );
+    }
+    
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -37,7 +43,7 @@ class ProduceraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -158,6 +164,9 @@ class ProduceraccountController extends Controller {
         $publisher_model = ProducerAccount::model()->checkPublisher($model->Pro_Internal_Code, false);
         $managed_exists = PublisherManageRights::model()->with('pubAcc')->find('pubAcc.Pub_Internal_Code = :int_code', array(':int_code' => $model->Pro_Internal_Code));
         $managed_model = empty($managed_exists) ? new PublisherManageRights : $managed_exists;
+        
+        $biograph_upload_model = new ProducerBiographUploads;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $address_model, $related_model, $payment_model, $psedonym_model, $related_model,
             $succession_model, $biograph_model, $managed_model));
@@ -197,6 +206,26 @@ class ProduceraccountController extends Controller {
             $biograph_model->attributes = $_POST['ProducerBiography'];
 
             if ($biograph_model->save()) {
+                $bio_id = $biograph_model->Pro_Biogrph_Id;
+
+                $images = CUploadedFile::getInstancesByName('Pro_Biogrph_Upl_File');
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_new_upload_model = new ProducerBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_new_upload_model->Pro_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Pro_Biogrph_Upl_File = $newName;
+                        if($biograph_new_upload_model->validate()){
+                            $biograph_new_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
+                
                 PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_GUID = '{$model->Pro_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
@@ -260,7 +289,7 @@ class ProduceraccountController extends Controller {
             }
         }
 
-        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 'biograph_model', 'related_model', 'publisher_model', 'managed_model'));
+        $this->render('update', compact('tab', 'model', 'address_model', 'payment_model', 'psedonym_model', 'succession_model', 'related_model', 'biograph_model', 'related_model', 'publisher_model', 'managed_model', 'biograph_upload_model'));
     }
 
     /**
@@ -285,6 +314,31 @@ class ProduceraccountController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'ProducerAccount Deleted Successfully!!!');
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+        }
+    }
+
+    public function actionBiofiledelete($id) {
+        $model = ProducerBiographUploads::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $bio_id = $model->Pro_Biogrph_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Biography file from {$model->proBiogrph->proAcc->Pro_Corporate_Name} successfully.", "user");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->proBiogrph->proAcc->Pro_Corporate_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/produceraccount/update', 'id' => $model->proBiogrph->Pro_Acc_Id , 'tab' => '4'));
         }
     }
 

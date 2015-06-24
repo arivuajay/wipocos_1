@@ -402,19 +402,34 @@ class AuthorAccount extends CActiveRecord {
                         !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
                     }
                     $perf_rel_model->save(false);
+                    if($k == 'authorBiographies')
+                        $bio_id = $perf_rel_model->Perf_Biogrph_Id;
                 }
             }
 
             //Uploads
             if (!empty($author_model->authorUploads)) {
                 foreach ($author_model->authorUploads as $upload) {
-                    $performer_upload_model = new PerformerUpload();
+                    $performer_upload_model = new PerformerUpload;
                     $performer_upload_model->Perf_Acc_Id = $perf_acc_id;
                     foreach ($upload->attributes as $key => $value) {
                         $attr_name = str_replace('Auth_', 'Perf_', $key);
                         !in_array($key, $ignore_list) ? $performer_upload_model->setAttribute($attr_name, $value) : '';
                     }
                     $performer_upload_model->save(false);
+                }
+            }
+            
+            //Biography Uploads
+            if (!empty($author_model->authorBiographies->authorBiographUploads) && isset($bio_id)) {
+                foreach ($author_model->authorBiographies->authorBiographUploads as $upload) {
+                    $performer_bio_upload_model = new PerformerBiographUploads;
+                    $performer_bio_upload_model->Perf_Biogrph_Id = $bio_id;
+                    foreach ($upload->attributes as $key => $value) {
+                        $attr_name = str_replace('Auth_', 'Perf_', $key);
+                        !in_array($key, $ignore_list) ? $performer_bio_upload_model->setAttribute($attr_name, $value) : '';
+                    }
+                    $performer_bio_upload_model->save(false);
                 }
             }
         }

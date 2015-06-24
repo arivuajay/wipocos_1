@@ -37,6 +37,7 @@ class MasterManagedRights extends CActiveRecord {
             array('Mgd_Rights_Name', 'required'),
             array('Mgd_Rights_Name', 'length', 'max' => 90),
             array('Active', 'length', 'max' => 1),
+            array('Mgd_Rights_Rank', 'numerical', 'integerOnly' => true),
             array('Created_Date, Rowversion, Mgd_Rights_Rank', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

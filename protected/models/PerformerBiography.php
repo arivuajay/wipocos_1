@@ -48,6 +48,7 @@ class PerformerBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
+            'performerBiographUploads' => array(self::HAS_MANY, 'PerformerBiographUploads', 'Perf_Biogrph_Id'),
         );
     }
 

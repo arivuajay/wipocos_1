@@ -254,15 +254,20 @@ class Work extends CActiveRecord {
         $time = explode(':', $work->Work_Duration);
         $column .= "$time[0]' $time[1]'' {$work->workType->Type_Name} {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
         $column .= "<br />";
+        $auth_key = $pub_key = 0;
+        $auth_col = $pub_col = '';
         foreach ($work->workRightholders as $key => $rightholder) {
             if ($rightholder->workAuthor) {
-                $name = $rightholder->workAuthor->Auth_Sur_Name . ' ' . $rightholder->workAuthor->Auth_First_Name;
+                $auth_name = $rightholder->workAuthor->Auth_Sur_Name . ' ' . $rightholder->workAuthor->Auth_First_Name;
+                $auth_col .= $auth_key == 0 ? "$auth_name" : " , {$auth_name}";
+                $auth_key++;
             } elseif ($rightholder->workPublisher) {
-                $name = $rightholder->workPublisher->Pub_Corporate_Name;
+                $pub_name = $rightholder->workPublisher->Pub_Corporate_Name;
+                $pub_col .= $pub_key == 0 ? "$pub_name" : " , {$pub_name}";
+                $pub_key++;
             }
-
-            $column .= $key == 0 ? "$name" : " , {$name}";
         }
+        $column .= "{$auth_col}<br />{$pub_col}";
         $column .= "<br />";
         foreach ($work->workSubtitles as $key => $subtitle) {
             $name = $subtitle->Work_Subtitle_Name;

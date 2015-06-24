@@ -43,7 +43,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'convert', 'biofiledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -216,16 +216,16 @@ class AuthoraccountController extends Controller {
                 $images = CUploadedFile::getInstancesByName('Auth_Biogrph_Upl_File');
                 if (isset($images) && count($images) > 0) {
                     foreach ($images as $image => $pic) {
-                        $biograph_upload_model = new AuthorBiographUploads;
+                        $biograph_new_upload_model = new AuthorBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
-                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(time())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model));
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
-                        $biograph_upload_model->Auth_Biogrph_Id = $bio_id;
-                        $biograph_upload_model->Auth_Biogrph_Upl_File = $newName;
-                        if($biograph_upload_model->validate()){
-                            $biograph_upload_model->save();
+                        $biograph_new_upload_model->Auth_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Auth_Biogrph_Upl_File = $newName;
+                        if($biograph_new_upload_model->validate()){
+                            $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
                     }

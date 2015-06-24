@@ -216,26 +216,29 @@ class PerformeraccountController extends Controller {
         } elseif (isset($_POST['PerformerBiography'])) {
             $biograph_model->attributes = $_POST['PerformerBiography'];
 
-            $bio_id = $biograph_model->Perf_Biogrph_Id;
-            $images = CUploadedFile::getInstancesByName('Perf_Biogrph_Upl_File');
-            if (isset($images) && count($images) > 0) {
-                foreach ($images as $image => $pic) {
-                    $biograph_upload_model = new PerformerBiographUploads;
-                    $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
-                    $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(time())) . '.' . CFileHelper::getExtension($pic->name);
-                    $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_upload_model));
-                    if (!is_dir($dir))
-                        mkdir($dir);
-                    $biograph_upload_model->Perf_Biogrph_Id = $bio_id;
-                    $biograph_upload_model->Perf_Biogrph_Upl_File = $newName;
-                    if ($biograph_upload_model->validate()) {
-                        $biograph_upload_model->save();
-                        $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
-                    }
-                }
-            }
             if ($biograph_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Biography {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
+                
+                $bio_id = $biograph_model->Perf_Biogrph_Id;
+                $images = CUploadedFile::getInstancesByName('Perf_Biogrph_Upl_File');
+
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_new_upload_model = new PerformerBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_new_upload_model->Perf_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Perf_Biogrph_Upl_File = $newName;
+                        if ($biograph_new_upload_model->validate()) {
+                            $biograph_new_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
+                
                 GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Perf_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid):
@@ -387,10 +390,10 @@ class PerformeraccountController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->perfBiogrph->perfAcc->fullname} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/performeraccount/update', 'id' => $model->perfBiogrph->Perf_Acc_Id , 'tab' => '4'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/performeraccount/update', 'id' => $model->perfBiogrph->Perf_Acc_Id, 'tab' => '4'));
         }
     }
-    
+
     /**
      * Lists all models.
      */

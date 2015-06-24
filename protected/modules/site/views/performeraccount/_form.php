@@ -33,7 +33,7 @@ $regions = Myclass::getMasterRegion();
                         $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord && !$related_model->isNewRecord;
                         break;
                     case 'N':
-                        $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord;
+                        $other_tab_validation = !$model->isNewRecord && !$related_model->isNewRecord;
                         break;
                 }
                 $doc_tab_validation = !$model->isNewRecord;

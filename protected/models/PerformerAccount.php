@@ -405,6 +405,8 @@ class PerformerAccount extends CActiveRecord {
                         !in_array($key, $ignore_list) ? $auth_rel_model->setAttribute($attr_name, $value) : '';
                     }
                     $auth_rel_model->save(false);
+                    if($k == 'performerBiographies')
+                        $bio_id = $auth_rel_model->Auth_Biogrph_Id;
                 }
             }
 
@@ -418,6 +420,19 @@ class PerformerAccount extends CActiveRecord {
                         !in_array($key, $ignore_list) ? $author_upload_model->setAttribute($attr_name, $value) : '';
                     }
                     $author_upload_model->save(false);
+                }
+            }
+            
+            //Biography Uploads
+            if (!empty($performer_model->performerBiographies->performerBiographUploads) && isset($bio_id)) {
+                foreach ($performer_model->performerBiographies->performerBiographUploads as $upload) {
+                    $author_bio_upload_model = new AuthorBiographUploads;
+                    $author_bio_upload_model->Auth_Biogrph_Id = $bio_id;
+                    foreach ($upload->attributes as $key => $value) {
+                        $attr_name = str_replace('Perf_', 'Auth_', $key);
+                        !in_array($key, $ignore_list) ? $author_bio_upload_model->setAttribute($attr_name, $value) : '';
+                    }
+                    $author_bio_upload_model->save(false);
                 }
             }
         }

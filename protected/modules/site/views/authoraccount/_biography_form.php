@@ -114,6 +114,7 @@ if (!empty($uploaded_files)) {
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
+                        <th>Created</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -123,13 +124,14 @@ if (!empty($uploaded_files)) {
                             $i = $key + 1
                             ?>
                             <td><?php echo $i ?>.</td>
-                            <td><a class="popup-link" href="<?php echo $file_path ?>"><?php echo "Biograph {$i}" ?></a></td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Author Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Created?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/biofiledelete/', 'id' => $uploaded_file->Auth_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => '.popup-link'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
                                 ?>
                             </td>
                         </tr>

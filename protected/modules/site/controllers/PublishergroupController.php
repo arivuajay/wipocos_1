@@ -16,6 +16,12 @@ class PublishergroupController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'download' => 'application.components.actions.download',
+        );
+    }
+
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -37,7 +43,7 @@ class PublishergroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -162,6 +168,8 @@ class PublishergroupController extends Controller {
             $catalog_model->setScenario('update');
         }
 
+        $biograph_upload_model = new PublisherGroupBiographUploads;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $managed_model, $payment_model, $rel_payment_model, $biograph_model,
             $psedonym_model, $address_model, $org_publisher_model, $sub_publisher_model, $org_publisher_model,
@@ -215,6 +223,26 @@ class PublishergroupController extends Controller {
         } elseif (isset($_POST['PublisherGroupBiography'])) {
             $biograph_model->attributes = $_POST['PublisherGroupBiography'];
             if ($biograph_model->save()) {
+                $bio_id = $biograph_model->Pub_Group_Biogrph_Id;
+
+                $images = CUploadedFile::getInstancesByName('Pub_Group_Biogrph_Upl_File');
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_new_upload_model = new PublisherGroupBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_new_upload_model->Pub_Group_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Pub_Group_Biogrph_Upl_File = $newName;
+                        if($biograph_new_upload_model->validate()){
+                            $biograph_new_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
+                
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 Myclass::addAuditTrail("Updated Publisher Group Biography {$model->Pub_Group_Internal_Code} successfully.", "group");
                 $this->redirect(array('publishergroup/update/id/' . $biograph_model->Pub_Group_Id . '/tab/4'));
@@ -295,7 +323,7 @@ class PublishergroupController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model'));
+        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'rel_payment_model', 'org_publisher_model', 'sub_publisher_model', 'org_share_publisher_model', 'sub_share_publisher_model', 'catalog_model', 'biograph_upload_model'));
     }
 
     /**
@@ -323,6 +351,30 @@ class PublishergroupController extends Controller {
         }
     }
 
+    public function actionBiofiledelete($id) {
+        $model = PublisherGroupBiographUploads::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $bio_id = $model->Pub_Group_Biogrph_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Biography file from {$model->pubGroupBiogrph->pubGroup->Pub_Group_Name} successfully.", "user");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->pubGroupBiogrph->pubGroup->Pub_Group_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->pubGroupBiogrph->Pub_Group_Id , 'tab' => '4'));
+        }
+    }
     /**
      * Lists all models.
      */

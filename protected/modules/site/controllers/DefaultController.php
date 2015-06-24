@@ -24,7 +24,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset', 'screens'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -139,6 +139,30 @@ class DefaultController extends Controller {
         if ($path) {
             $this->render('screens', compact('path'));
         }
+    }
+
+    public function actionDailycron() {
+        $publishings = WorkPublishing::model()->findAllByAttributes(array('Work_Pub_Contact_End' => date('Y-m-d'), 'Work_Pub_Tacit' => 'Y'));
+        $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d'), 'Work_Sub_Tacit' => 'Y'));
+        
+        if(!empty($publishings)){
+            foreach ($publishings as $key => $publishing) {
+                $model = WorkPublishing::model()->findByPk($publishing->Work_Pub_Id);
+                $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing->Work_Pub_Contact_End)) . " + {$publishing->Work_Pub_Renewal_Period} years"));
+                $model->Work_Pub_Contact_End = $newEndingDate;
+                $model->save(false);
+            }
+        }
+        
+        if(!empty($sub_publishings)){
+            foreach ($sub_publishings as $key => $sub_publishing) {
+                $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
+                $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
+                $model->Work_Sub_Contact_End = $newEndingDate;
+                $model->save(false);
+            }
+        }
+        exit;
     }
 
 }

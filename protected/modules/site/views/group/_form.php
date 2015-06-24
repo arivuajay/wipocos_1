@@ -196,7 +196,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 <div class="tab-pane" id="tab_4">
                     <?php
                     if ($other_tab_validation) {
-                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'group_model' => $model));
+                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'group_model' => $model, 'biograph_upload_model' => $biograph_upload_model, 'role' => $role));
                     }
                     ?>
                 </div>

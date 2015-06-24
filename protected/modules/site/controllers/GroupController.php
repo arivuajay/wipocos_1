@@ -16,6 +16,12 @@ class GroupController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'download' => 'application.components.actions.download',
+        );
+    }
+
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -37,7 +43,7 @@ class GroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -135,6 +141,9 @@ class GroupController extends Controller {
 
 //        $member_exists = GroupMember::model()->findByAttributes(array('Group_Id' => $id));
 //        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
+
+        $biograph_upload_model = new GroupBiographUploads;
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $payment_model, $managed_model, $biograph_model, $address_model, $psedonym_model));
 
@@ -178,6 +187,25 @@ class GroupController extends Controller {
         } elseif (isset($_POST['GroupBiography'])) {
             $biograph_model->attributes = $_POST['GroupBiography'];
             if ($biograph_model->save()) {
+                $bio_id = $biograph_model->Group_Biogrph_Id;
+
+                $images = CUploadedFile::getInstancesByName('Group_Biogrph_Upl_File');
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_new_upload_model = new GroupBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_new_upload_model->Group_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Group_Biogrph_Upl_File = $newName;
+                        if($biograph_new_upload_model->validate()){
+                            $biograph_new_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
                 Myclass::addAuditTrail("Biography Saved on {$model->Group_Name} successfully.", "users");
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 $this->redirect(array('group/update/id/' . $biograph_model->Group_Id . '/tab/4'));
@@ -210,7 +238,7 @@ class GroupController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model'));
+        $this->render('update', compact('model', 'payment_model', 'managed_model', 'biograph_model', 'tab', 'address_model', 'psedonym_model', 'biograph_upload_model'));
     }
 
     /**
@@ -243,6 +271,30 @@ class GroupController extends Controller {
         }
     }
 
+    public function actionBiofiledelete($id) {
+        $model = GroupBiographUploads::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $bio_id = $model->Group_Biogrph_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Biography file from {$model->groupBiogrph->group->Group_Name} successfully.", "user");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->groupBiogrph->group->Group_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->groupBiogrph->Group_Id , 'tab' => '4'));
+        }
+    }
     /**
      * Lists all models.
      */
