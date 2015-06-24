@@ -30,7 +30,7 @@ class PerformerBiographUploads extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Biogrph_Id, Perf_Biogrph_Upl_File', 'required'),
+            array('Perf_Biogrph_Id', 'required'),
             array('Perf_Biogrph_Id', 'numerical', 'integerOnly' => true),
             array('Perf_Biogrph_Upl_File', 'length', 'max' => 500),
             array('Perf_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),

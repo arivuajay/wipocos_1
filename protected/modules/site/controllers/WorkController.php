@@ -189,6 +189,9 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkPublishing'])) {
             $publishing_model->attributes = $_POST['WorkPublishing'];
+            if($publishing_model->Work_Pub_Contact_End == date('Y-m-d') && $publishing_model->Work_Pub_Tacit == 'Y'){
+                $publishing_model->Work_Pub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing_model->Work_Pub_Contact_End)) . " + {$publishing_model->Work_Pub_Renewal_Period} years"));
+            }
             if ($publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Publishing Saved Successfully!!!');
@@ -196,6 +199,9 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkSubPublishing'])) {
             $sub_publishing_model->attributes = $_POST['WorkSubPublishing'];
+            if($sub_publishing_model->Work_Sub_Contact_End == date('Y-m-d') && $sub_publishing_model->Work_Sub_Tacit == 'Y'){
+                $sub_publishing_model->Work_Sub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing_model->Work_Sub_Contact_End)) . " + {$sub_publishing_model->Work_Sub_Renewal_Period} years"));
+            }
             if ($sub_publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Sub Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Sub Publishing Saved Successfully!!!');

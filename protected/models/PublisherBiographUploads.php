@@ -30,7 +30,7 @@ class PublisherBiographUploads extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Biogrph_Id, Pub_Biogrph_Upl_File', 'required'),
+            array('Pub_Biogrph_Id', 'required'),
             array('Pub_Biogrph_Id', 'numerical', 'integerOnly' => true),
             array('Pub_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
             array('Pub_Biogrph_Upl_File', 'length', 'max' => 500),
