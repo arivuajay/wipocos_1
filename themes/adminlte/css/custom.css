@@ -61,7 +61,7 @@ table.selectable tbody tr td {cursor: pointer; }
 table.selectable tbody tr.highlight td { background-color: #f56954; cursor: pointer; color: #fff; }
 
 .total_share{
-    color: #698801;
+    color: #367FA9;
     font-size: 14px;
     font-weight: bold;
 }

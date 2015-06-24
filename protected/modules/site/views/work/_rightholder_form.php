@@ -163,6 +163,7 @@
             <div class="col-lg-12">
                 <div class="col-lg-1">
                     <input id="main_pub" value="0" type="hidden" />
+                    <input id="sub_pub" value="0" type="hidden" />
                     <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-primary', 'id' => 'right_insert')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
@@ -176,11 +177,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100</span> %</div>
-                <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100</span> %</div>
-                <div class="text-right">
-                    <span>Note: Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % and One main publisher is added</span>
-                </div>
+                <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100 %</span> </div>
+                <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100 %</span></div>
+                <div class="text-left total_share hide">Publisher Share : <span id="pub_total">100 %</span></div>
+                <div class="text-left total_share hide">Main Publisher : <span id="is_main_added"></span></div>
+                <br />
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/work/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -266,6 +267,10 @@
                     <div class="loading-img loader"></div>
                     <?php echo CHtml::endForm(); ?>
                 </div>
+                <div class="text-left">
+                    <span><strong>Note:</strong> Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % and One main publisher is added and (Publisher and Sub-Publisher) Shares is 50% Minimum</span>
+                </div>
+
             </div>
         </div>
     </div>
@@ -282,7 +287,6 @@ $def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
-
         $('body').on('click','.holder-edit', function(){
             $("#right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
@@ -304,6 +308,8 @@ $js = <<< EOD
 
             console.log(_urole);
             console.log(_role);
+            console.log($('.user-role-dropdown select.publisher-role').val());
+            $('.user-role-dropdown select.publisher-role').filter(':visible:first').val(2);
             if(_urole == 'AU'){
                 _role !== null ? $('.user-role-dropdown select.author-role').val(_role) : '';
             }else if(_urole == 'PU'){
@@ -317,10 +323,6 @@ $js = <<< EOD
 
         $('body').on('click','#linked-holders tr', function(){
             $("#right_insert").val('Edit');
-            _workrole =  $(this).find('.rightrole').data('wrkrole');
-            if(_workrole == $mainPublisher){
-                $("#main_pub").val(1);
-            }
         });
 
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
@@ -333,9 +335,18 @@ $js = <<< EOD
             $('#WorkRightholder_Work_Member_Internal_Code').val(_intcode);
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'AU'){
-                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide').val('$def_auth_role');
+                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide');
+//                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide').val('$def_auth_role');
             }else if(_urole == 'PU'){
-                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide').val('$def_perf_role');
+                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide');
+//                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide').val('$def_perf_role');
+            }
+            _workrole =  $(this).find('.rightrole').data('wrkrole');
+            if(_workrole == $mainPublisher){
+                $("#main_pub").val(1);
+            }
+            if(_workrole == $subPublisher){
+                $("#sub_pub").val(1);
             }
         });
 
@@ -472,6 +483,7 @@ $js = <<< EOD
 
             $("#search_result tr[data-uid='"+_uid+"']").remove();
             $("#main_pub").val(0);
+            $("#sub_pub").val(0);
             checkShare();
         }
         return false;
@@ -482,6 +494,7 @@ $js = <<< EOD
         _broad_share = 0;
         _mech_share = 0;
 
+        ////// Check Total Share is 100% //////
         $('.broad_share_value').each(function(){
             _broad_share += parseFloat($(this).data('share'));
         });
@@ -489,13 +502,29 @@ $js = <<< EOD
             _mech_share += parseFloat($(this).data('share'));
         });
         $(".total_share").removeClass('hide');
-        $("#equal_total").html(_broad_share);
-        $("#blank_total").html(_mech_share);
+        _equal_color = _broad_share != 100 ? '#D9534F' : '#698801';
+        $("#equal_total").html(_broad_share.toFixed(2)+' %').css({ 'color': _equal_color});
+        
+        _blank_color = _mech_share != 100 ? '#D9534F' : '#698801';
+        $("#blank_total").html(_mech_share.toFixed(2)+' %').css({ 'color': _blank_color});
         _val = _broad_share + _mech_share;
+        ////// End //////////////
 
+        ////// Publisher share must be 50% Minimum //////
+        _publisher_share = 0;
+        _pub = $("#linked-holders tbody").find("[data-urole='PU'] .share_value");
+        _pub.each(function() {
+            _publisher_share = _publisher_share + parseFloat($(this).data("share"));
+        });
+        _publisher_share = (_publisher_share/2).toFixed(2);
+        _pub_color = _publisher_share < 50 ? '#D9534F' : '#698801';
+        $("#pub_total").html(_publisher_share+' %').css({ 'color': _pub_color});
+        ////// End //////////////
+        
         var not_auto_submit = _val != '200';
-        $("#right_ajax_submit").attr("disabled", not_auto_submit);
+//        $("#right_ajax_submit").attr("disabled", not_auto_submit);
 
+        ////// Checking One publisher is added //////
         _isMainPubAdded = false;
         _isSubPubAdded = false;
         rightrole = $('.rightrole');
@@ -509,7 +538,12 @@ $js = <<< EOD
                 }
             });
         }
-        if(not_auto_submit == false && _isMainPubAdded){
+        _is_pub_color = !_isMainPubAdded ? '#D9534F' : '#698801';
+        _is_pub_text = !_isMainPubAdded ? 'Not Added' : 'Added';
+        $("#is_main_added").html(_is_pub_text).css({ 'color': _is_pub_color});
+        ////// End //////////////
+        
+        if(not_auto_submit == false && _isMainPubAdded && _publisher_share >= 50){
             $("#right_form").submit();
         }
     }
@@ -546,7 +580,7 @@ $js = <<< EOD
             _stopContinue = true;
         }
 
-        if(selectedRole == $subPublisher && _isSubPubAdded){
+        if(selectedRole == $subPublisher && _isSubPubAdded && $('#sub_pub').val() == 0){
             alert("Sub-Publisher already Added. You can't Add more than one Sub-publisher");
             _stopContinue = true;
         }

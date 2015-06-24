@@ -109,6 +109,15 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->fileField($model, 'Group_Photo', array()); ?>
                                     <?php echo $form->error($model, 'Group_Photo'); ?>
                                 </div>
+                                <?php if (!$model->isNewRecord && $model->Group_Photo != '') { ?>
+                                    <div class="form-group">
+                                        <?php 
+                                        $file_path = $model->getFilePath();
+                                        echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        ?>
+                                    </div>
+                                <?php } ?>
                                 <div class="form-group">
                                     <label>Status</label><br />
                                     <?php echo $model->status; ?>

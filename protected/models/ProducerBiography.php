@@ -51,6 +51,7 @@ class ProducerBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
+            'producerBiographUploads' => array(self::HAS_MANY, 'ProducerBiographUploads', 'Pro_Biogrph_Id'),
         );
     }
 

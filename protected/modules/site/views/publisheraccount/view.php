@@ -53,6 +53,10 @@ if ($export == false) {
     <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
         <?php
+        $file_path = $model->getFilePath();
+        $photo = CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '50px', 'width' => '50px')), $file_path, array('class' => 'popup-prof'));
+        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+        
         $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
@@ -63,7 +67,7 @@ if ($export == false) {
                 array(
                     'name' => 'Pub_Photo',
                     'type' => 'raw',
-                    'value' => CHtml::image($model->getFilePath(), 'No Profile Picture', array('height' => '50px', 'width' => '50px'))
+                    'value' => $photo
                 ),
                 'Pub_Ipi',
                 'Pub_Ipi_Base_Number',

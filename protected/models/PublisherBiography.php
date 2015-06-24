@@ -56,6 +56,7 @@ class PublisherBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
+            'publisherBiographUploads' => array(self::HAS_MANY, 'PublisherBiographUploads', 'Pub_Biogrph_Id'),
         );
     }
 

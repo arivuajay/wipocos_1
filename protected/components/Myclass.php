@@ -467,8 +467,8 @@ class Myclass extends CController {
 
     public static function getPublisherconvertIgnorelist() {
         return array('Pub_Acc_Id', 'Created_Date', 'Pub_Addr_Id', 'Rowversion', 'Pub_Biogrph_Id', 'Pub_Death_Inhrt_Id',
-            'Pub_Pay_Id', 'Pub_Pseudo_Id', 'Pro_Acc_Id', 'Pro_Addr_Id', 'Pro_Biogrph_Id', 'Pro_Death_Inhrt_Id',
-            'Pro_Pay_Id', 'Pro_Pseudo_Id');
+            'Pub_Pay_Id', 'Pub_Pseudo_Id', 'Pub_Biogrph_Upl_Id',
+            'Pro_Acc_Id', 'Pro_Addr_Id', 'Pro_Biogrph_Id', 'Pro_Death_Inhrt_Id', 'Pro_Pay_Id', 'Pro_Pseudo_Id', 'Pro_Biogrph_Upl_Id');
     }
 
     public static function reArrayFiles($model, $column) {

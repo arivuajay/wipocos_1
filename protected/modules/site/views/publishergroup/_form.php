@@ -110,22 +110,27 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pub_Group_Photo', array('class' => '')); ?>
-                                    <?php echo $form->fileField($model, 'Pub_Group_Photo', array()); ?>
-                                    <?php echo $form->error($model, 'Pub_Group_Photo'); ?>
-                                </div>
-
-                                <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
+                                    <?php echo $form->labelEx($model, 'Pub_Group_Photo', array('class' => '')); ?>
+                                    <?php echo $form->fileField($model, 'Pub_Group_Photo', array()); ?>
+                                    <?php echo $form->error($model, 'Pub_Group_Photo'); ?>
                                 </div>
 
+                                <?php if (!$model->isNewRecord && $model->Pub_Group_Photo != '') { ?>
+                                    <div class="form-group">
+                                        <?php 
+                                        $file_path = $model->getFilePath();
+                                        echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        ?>
+                                    </div>
+                                <?php } ?>
+                                
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -179,6 +184,10 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                                                         </div>-->
                                 <?php } ?>
 
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
+                                </div>
                             </div>
                         </div>
 

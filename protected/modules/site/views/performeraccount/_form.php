@@ -139,6 +139,16 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->fileField($model, 'Perf_Photo', array()); ?>
                                     <?php echo $form->error($model, 'Perf_Photo'); ?>
                                 </div>
+                                
+                                <?php if (!$model->isNewRecord && $model->Perf_Photo != '') { ?>
+                                    <div class="form-group">
+                                        <?php 
+                                        $file_path = $model->getFilePath();
+                                        echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
