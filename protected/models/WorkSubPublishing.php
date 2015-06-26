@@ -24,6 +24,8 @@
  */
 class WorkSubPublishing extends CActiveRecord {
 
+    const EXPIRY_WARNING_MONTH = 2;
+    
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -34,7 +36,7 @@ class WorkSubPublishing extends CActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
-        $expiry_date = date('Y-m-d', strtotime("+2 months"));
+        $expiry_date = date('Y-m-d', strtotime("+".self::EXPIRY_WARNING_MONTH." months"));
         return array(
             'expiry' => array('condition' => "$alias.Work_Sub_Contact_End <= '{$expiry_date}'"),
         );

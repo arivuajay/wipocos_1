@@ -149,6 +149,10 @@ $regions = Myclass::getMasterRegion();
                                         $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
                                         ?>
                                     </div>
+                                <div class="form-group help-block">
+                                    <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
+                                </div>
+
                                 <?php } ?>
                             </div>
                         </div>

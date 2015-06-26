@@ -8,6 +8,7 @@
  * @property integer $Work_Sub_Id
  * @property string $Work_Sub_Upl_Name
  * @property string $Work_Sub_Upl_File
+ * @property string $Work_Sub_Upl_Description
  * @property string $Created
  * @property string $Rowversion
  *
@@ -17,6 +18,7 @@
 class WorkSubPublishingUploads extends CActiveRecord {
 
     const FILE_SIZE = 1;
+    const ACCESS_TYPE = 'pdf,doc,jpg';
     /**
      * @return string the associated database table name
      */
@@ -35,9 +37,9 @@ class WorkSubPublishingUploads extends CActiveRecord {
             array('Work_Sub_Id', 'numerical', 'integerOnly' => true),
             array('Work_Sub_Upl_Name', 'length', 'max' => 255),
             array('Work_Sub_Upl_File', 'length', 'max' => 500),
-            array('Rowversion', 'safe'),
-            array('Work_Sub_Upl_File', 'file', 'types'=>'pdf,doc,jpg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'update'),
-            array('Work_Sub_Upl_File', 'file', 'types'=>'pdf,doc,jpg', 'allowEmpty' => false, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'create'),
+            array('Work_Sub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'update'),
+            array('Work_Sub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => false, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'create'),
+            array('Rowversion, Work_Sub_Upl_Name, Work_Sub_Upl_Description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Sub_Upl_Id, Work_Sub_Id, Work_Sub_Upl_Name, Work_Sub_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -63,6 +65,7 @@ class WorkSubPublishingUploads extends CActiveRecord {
             'Work_Sub_Upl_Id' => 'Work Sub Upl',
             'Work_Sub_Id' => 'Work Sub',
             'Work_Sub_Upl_Name' => 'Name',
+            'Work_Sub_Upl_Description' => 'Description',
             'Work_Sub_Upl_File' => 'File',
             'Created' => 'Created',
             'Rowversion' => 'Rowversion',

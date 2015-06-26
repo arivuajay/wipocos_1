@@ -8,6 +8,7 @@
  * @property integer $Work_Pub_Id
  * @property string $Work_Pub_Upl_File
  * @property string $Work_Pub_Upl_Name
+ * @property string $Work_Pub_Upl_Description
  * @property string $Created
  * @property string $Rowversion
  *
@@ -17,6 +18,7 @@
 class WorkPublishingUploads extends CActiveRecord {
     
     const FILE_SIZE = 1;
+    const ACCESS_TYPE = 'pdf,doc,jpg';
 
     /**
      * @return string the associated database table name
@@ -36,9 +38,9 @@ class WorkPublishingUploads extends CActiveRecord {
             array('Work_Pub_Id', 'numerical', 'integerOnly' => true),
             array('Work_Pub_Upl_Name', 'length', 'max' => 255),
             array('Work_Pub_Upl_File', 'length', 'max' => 500),
-            array('Work_Pub_Upl_File', 'file', 'types'=>'pdf,doc,jpg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'update'),
-            array('Work_Pub_Upl_File', 'file', 'types'=>'pdf,doc,jpg', 'allowEmpty' => false, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'create'),
-            array('Rowversion, Work_Pub_Upl_Name', 'safe'),
+            array('Work_Pub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'update'),
+            array('Work_Pub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => false, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'create'),
+            array('Rowversion, Work_Pub_Upl_Name, Work_Pub_Upl_Description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Pub_Upl_Id, Work_Pub_Id, Work_Pub_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -63,6 +65,7 @@ class WorkPublishingUploads extends CActiveRecord {
         return array(
             'Work_Pub_Upl_Id' => 'Work Pub Upl',
             'Work_Pub_Upl_Name' => 'Name',
+            'Work_Pub_Upl_Description' => 'Description',
             'Work_Pub_Id' => 'Work Pub',
             'Work_Pub_Upl_File' => 'File',
             'Created' => 'Created',

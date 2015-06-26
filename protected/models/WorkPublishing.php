@@ -22,6 +22,8 @@
  */
 class WorkPublishing extends CActiveRecord {
 
+    const EXPIRY_WARNING_MONTH = 2;
+
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -31,12 +33,12 @@ class WorkPublishing extends CActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
-        $expiry_date = date('Y-m-d', strtotime("+2 months"));
+        $expiry_date = date('Y-m-d', strtotime("+".self::EXPIRY_WARNING_MONTH." months"));
         return array(
             'expiry' => array('condition' => "$alias.Work_Pub_Contact_End <= '{$expiry_date}'"),
         );
     }
-    
+
     /**
      * @return string the associated database table name
      */
@@ -55,7 +57,7 @@ class WorkPublishing extends CActiveRecord {
             array('Work_Id, Work_Pub_References', 'numerical', 'integerOnly' => true),
             array('Work_Pub_Territories', 'length', 'max' => 500),
             array('Work_Pub_File', 'length', 'max' => 255),
-            array('Work_Pub_Renewal_Period', 'numerical', 'integerOnly'=>true, 'min' => 1),
+            array('Work_Pub_Renewal_Period', 'numerical', 'integerOnly' => true, 'min' => 1),
             array('Created_Date, Rowversion, Work_Pub_Tacit, Work_Pub_Renewal_Period', 'safe'),
             array('Work_Pub_Contact_End', 'compare', 'compareAttribute' => 'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().

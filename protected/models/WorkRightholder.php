@@ -26,6 +26,7 @@
 class WorkRightholder extends CActiveRecord {
 
     public $Work_Member_Internal_Code;
+
     /**
      * @return string the associated database table name
      */
@@ -64,8 +65,8 @@ class WorkRightholder extends CActiveRecord {
             'workRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Role'),
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
-            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID','foreignKey' => array('Work_Member_GUID'=>'Auth_GUID')),
-            'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_GUID','foreignKey' => array('Work_Member_GUID'=>'Pub_GUID')),
+            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Auth_GUID')),
+            'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Pub_GUID')),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
         );
     }
@@ -159,20 +160,32 @@ class WorkRightholder extends CActiveRecord {
         return $status;
     }
 
-    public function getMainPublisher() {
+    public function getMainPublisherRole() {
         //now hard cord for get main publisher
         $right_holders = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Occupation' => 'PU', 'Type_Rights_Code' => 'E'));
-        if(!empty($right_holders))
+        if (!empty($right_holders))
             return $right_holders->Master_Type_Rights_Id;
         return FALSE;
     }
 
-    public function getSubPublisher() {
+    public function getSubPublisherRole() {
         //now hard cord for get main publisher
         $right_holders = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Occupation' => 'PU', 'Type_Rights_Code' => 'SE'));
-        if(!empty($right_holders))
+        if (!empty($right_holders))
             return $right_holders->Master_Type_Rights_Id;
         return FALSE;
+    }
+
+    public function getMainPublisher($work_id) {
+        $main_pub_code = $this->getMainPublisherRole();
+        $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $work_id));
+        return $main_publisher;
+    }
+
+    public function getSubPublisher($work_id) {
+        $sub_pub_code = $this->getSubPublisherRole();
+        $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_pub_code, 'Work_Id' => $work_id));
+        return $sub_publisher;
     }
 
 }

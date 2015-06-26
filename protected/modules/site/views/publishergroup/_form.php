@@ -81,7 +81,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <div class="box-body">
                                 <?php
                                 if ($model->isNewRecord) {
-                                   $int_type = $type == 'publisher' ? InternalcodeGenerate::PUBLISHER_GROUP_CODE :InternalcodeGenerate::PRODUCER_GROUP_CODE;
+                                    $int_type = $type == 'publisher' ? InternalcodeGenerate::PUBLISHER_GROUP_CODE : InternalcodeGenerate::PRODUCER_GROUP_CODE;
                                     $model->Pub_Group_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $int_type))->Fullcode;
                                 }
                                 ?>
@@ -114,7 +114,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Photo', array('class' => '')); ?>
                                     <?php echo $form->fileField($model, 'Pub_Group_Photo', array()); ?>
@@ -123,14 +123,17 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                                 <?php if (!$model->isNewRecord && $model->Pub_Group_Photo != '') { ?>
                                     <div class="form-group">
-                                        <?php 
+                                        <?php
                                         $file_path = $model->getFilePath();
                                         echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
-                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof"));
                                         ?>
                                     </div>
+                                    <div class="form-group help-block">
+                                        <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
+                                    </div>
                                 <?php } ?>
-                                
+
                             </div>
                         </div>
                         <div class="col-lg-1"></div>

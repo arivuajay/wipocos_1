@@ -38,7 +38,7 @@ $regions = Myclass::getMasterRegion();
                 }
                 $doc_tab_validation = !$model->isNewRecord;
             }
-        }else{
+        } else {
             $other_tab_validation = $doc_tab_validation = false;
         }
         ?>
@@ -55,7 +55,7 @@ $regions = Myclass::getMasterRegion();
                 <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Perf_Is_Author == 'Y' ? '<br />' : '';?> Documents</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Perf_Is_Author == 'Y' ? '<br />' : ''; ?> Documents</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -139,14 +139,17 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->fileField($model, 'Perf_Photo', array()); ?>
                                     <?php echo $form->error($model, 'Perf_Photo'); ?>
                                 </div>
-                                
+
                                 <?php if (!$model->isNewRecord && $model->Perf_Photo != '') { ?>
                                     <div class="form-group">
-                                        <?php 
+                                        <?php
                                         $file_path = $model->getFilePath();
                                         echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
-                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof"));
                                         ?>
+                                    </div>
+                                    <div class="form-group help-block">
+                                        <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
                                     </div>
                                 <?php } ?>
                             </div>

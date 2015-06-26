@@ -19,15 +19,14 @@ $instruments = Myclass::getMasterInstrument();
 $territories = Myclass::getMasterTerritory();
 ?>
 
-<?php
-if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages))*/ ){?>
-<div class="alert alert-info fade in">
-    <button type="button" class="close close-sm" data-dismiss="alert">
-        <i class="fa fa-times"></i>
-    </button>
-    <?php echo $publish_validate ? 'Work is not published !' : 'Work is not subpublished !'?>
-</div>
-<?php }?>
+<?php if (($publish_validate || $sub_publish_validate) /* && (empty($this->flashMessages)) */) { ?>
+    <div class="alert alert-info fade in">
+        <button type="button" class="close close-sm" data-dismiss="alert">
+            <i class="fa fa-times"></i>
+        </button>
+        <?php echo $publish_validate ? 'Work is not published !' : 'Work is not subpublished !' ?>
+    </div>
+<?php } ?>
 
 <div class="row">
     <div class="col-lg-12 col-xs-12">
@@ -38,7 +37,7 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
             if ($model->Work_Unknown == 'N') {
                 $doc_tab_validation = !$model->isNewRecord;
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
-                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate  && !empty($main_publisher) && !empty($sub_publisher);
+                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate && !empty($main_publisher) && !empty($sub_publisher);
 
                 $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !empty($main_publisher);
                 $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !empty($main_publisher) && !empty($sub_publisher);
@@ -202,7 +201,7 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
                 <div class="tab-pane" id="tab_5">
                     <?php
                     if ($pub_tab_validation) {
-                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories, 'upload_model' => $publishing_upload_model));
+                        $this->renderPartial('_publishing_form', array('model' => $publishing_model, 'work_model' => $model, 'territories' => $territories, 'upload_model' => $publishing_upload_model, 'focus' => $focus));
                     }
                     ?>
                 </div>
@@ -231,6 +230,7 @@ if(($publish_validate || $sub_publish_validate) /*&& (empty($this->flashMessages
         </div>
     </div>
 </div>
+
 <?php
 $js = <<< EOD
     $(document).ready(function(){

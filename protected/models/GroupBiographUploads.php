@@ -16,6 +16,8 @@
 class GroupBiographUploads extends CActiveRecord {
 
     const IMAGE_SIZE = 2;
+    const ACCESS_TYPES = 'jpg,png,jpeg,gif';
+    const ACCESS_TYPES_WID = 'jpeg|jpg|gif|png';
     /**
      * @return string the associated database table name
      */
@@ -33,8 +35,8 @@ class GroupBiographUploads extends CActiveRecord {
             array('Group_Biogrph_Id', 'required'),
             array('Group_Biogrph_Id', 'numerical', 'integerOnly' => true),
             array('Group_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Group_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
-            array('Created, Rowversion', 'safe'),
+            array('Group_Biogrph_Upl_File', 'file', 'types'=> self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+            array('Created, Rowversion, Group_Biogrph_Upl_Description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Biogrph_Upl_Id, Group_Biogrph_Id, Group_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -60,6 +62,7 @@ class GroupBiographUploads extends CActiveRecord {
             'Group_Biogrph_Upl_Id' => 'Group Biogrph Upl',
             'Group_Biogrph_Id' => 'Group Biogrph',
             'Group_Biogrph_Upl_File' => 'File',
+            'Group_Biogrph_Upl_Description' => 'Description',
             'Created' => 'Created',
             'Rowversion' => 'Rowversion',
         );
@@ -121,13 +124,5 @@ class GroupBiographUploads extends CActiveRecord {
                 'fileField' => 'Group_Biogrph_Upl_File',
             )
         );
-    }
-    
-    public function acceptFiles() {
-        return 'jpeg|jpg|gif|png';
-    }
-    
-    public function acceptFilesize() {
-        return self::IMAGE_SIZE;
     }
 }

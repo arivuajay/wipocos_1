@@ -7,6 +7,7 @@
  * @property integer $Auth_Biogrph_Upl_Id
  * @property integer $Auth_Biogrph_Id
  * @property string $Auth_Biogrph_Upl_File
+ * @property string $Auth_Biogrph_Upl_Description
  * @property string $Created
  * @property string $Rowversion
  *
@@ -16,6 +17,8 @@
 class AuthorBiographUploads extends CActiveRecord {
 
     const IMAGE_SIZE = 2;
+    const ACCESS_TYPES = 'jpg,png,jpeg,gif';
+    const ACCESS_TYPES_WID = 'jpeg|jpg|gif|png';
     /**
      * @return string the associated database table name
      */
@@ -32,9 +35,9 @@ class AuthorBiographUploads extends CActiveRecord {
         return array(
             array('Auth_Biogrph_Id', 'required'),
             array('Auth_Biogrph_Id', 'numerical', 'integerOnly' => true),
-            array('Auth_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
-//            array('Auth_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Auth_Biogrph_Upl_File,Created, Rowversion', 'safe'),
+            array('Auth_Biogrph_Upl_File', 'file', 'types'=>  self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+            array('Auth_Biogrph_Upl_File', 'length', 'max' => 500),
+            array('Auth_Biogrph_Upl_File, Created, Rowversion, Auth_Biogrph_Upl_Description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Biogrph_Upl_Id, Auth_Biogrph_Id, Auth_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -60,6 +63,7 @@ class AuthorBiographUploads extends CActiveRecord {
             'Auth_Biogrph_Upl_Id' => 'Auth Biogrph Upl',
             'Auth_Biogrph_Id' => 'Auth Biogrph',
             'Auth_Biogrph_Upl_File' => 'File',
+            'Auth_Biogrph_Upl_Description' => 'Description',
             'Created' => 'Created',
             'Rowversion' => 'Rowversion',
         );
@@ -121,13 +125,5 @@ class AuthorBiographUploads extends CActiveRecord {
                 'fileField' => 'Auth_Biogrph_Upl_File',
             )
         );
-    }
-    
-    public function acceptFiles() {
-        return 'jpeg|jpg|gif|png';
-    }
-    
-    public function acceptFilesize() {
-        return self::IMAGE_SIZE;
     }
 }

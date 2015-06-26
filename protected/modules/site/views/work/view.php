@@ -51,7 +51,7 @@ if ($export == false) {
 <?php } ?>
 
 <div class="row">
-    <div class="user-view col-lg-7">
+    <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
         <?php
         $this->widget('zii.widgets.CDetailView', array(
@@ -90,10 +90,43 @@ if ($export == false) {
             ),
         ));
         ?>
+        <h4>Documentation</h4>
+        <?php
+        if (!empty($document_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $document_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    array(
+                        'name' => 'Work_Doc_Status_Id',
+                        'value' => $document_model->workDocStatus->Document_Sts_Name
+                    ),
+                    array(
+                        'name' => 'Work_Doc_Inclusion',
+                        'type' => 'raw',
+                        'value' => $document_model->Work_Doc_Inclusion == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
+                    ),
+                    array(
+                        'name' => 'Work_Doc_Dispute',
+                        'type' => 'raw',
+                        'value' => $document_model->Work_Doc_Dispute == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
+                    ),
+                    array(
+                        'name' => 'Work_Doc_Type_Id',
+                        'value' => $document_model->workDocType->Doc_Name
+                    ),
+                    'Work_Doc_Sign_Date',
+                    'Work_Doc_File',
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4 class="box-title">Sub Titles</h4>
         <?php
         if (!empty($sub_title_model)) {
             ?>
-            <h4 class="box-title">Sub Titles</h4>
             <table class="table table-striped table-bordered">
                 <tbody>
                     <tr>
@@ -126,42 +159,7 @@ if ($export == false) {
             </table>
             <?php
         } else {
-            echo 'No Sub Titles created';
-        }
-        ?>
-    </div>
-    <div class="user-view col-lg-5">
-        <h4>Documentation</h4>
-        <?php
-        if (!empty($document_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $document_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-                    array(
-                        'name' => 'Work_Doc_Status_Id',
-                        'value' => $document_model->workDocStatus->Document_Sts_Name
-                    ),
-                    array(
-                        'name' => 'Work_Doc_Inclusion',
-                        'type' => 'raw',
-                        'value' => $document_model->Work_Doc_Inclusion == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
-                    ),
-                    array(
-                        'name' => 'Work_Doc_Dispute',
-                        'type' => 'raw',
-                        'value' => $document_model->Work_Doc_Dispute == 'Y' ? '<i class="fa fa-circle text-green" title="Yes"></i>' : '<i class="fa fa-circle text-red" title="No"></i>'
-                    ),
-                    array(
-                        'name' => 'Work_Doc_Type_Id',
-                        'value' => $document_model->workDocType->Doc_Name
-                    ),
-                    'Work_Doc_Sign_Date',
-                    'Work_Doc_File',
-                ),
-            ));
-        } else {
-            echo 'No Documentation created';
+            echo 'No data created';
         }
         ?>
         <h4>Biography</h4>
@@ -175,9 +173,11 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Biography created';
+            echo 'No data created';
         }
         ?>
+    </div>
+    <div class="user-view col-lg-6">
         <h4>Publishing</h4>
         <?php
         if (!empty($publishing_model)) {
@@ -197,9 +197,49 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Publishing created';
+            echo 'No data created';
         }
         ?>
+        <h4 class="box-title">Publishing Contract Files</h4>
+        <?php
+        $uploaded_files = array();
+        if (!empty($publishing_model))
+            $uploaded_files = WorkPublishingUploads::model()->findAll('Work_Pub_Id = :pub_id', array(':pub_id' => $publishing_model->Work_Pub_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name == '' ? "Contract {$i}" : $uploaded_file->Work_Pub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Description ?></td>
+                            <td>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $work_model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
         <h4>Sub Publishing</h4>
         <?php
         if (!empty($sub_publishing_model)) {
@@ -224,12 +264,52 @@ if ($export == false) {
                 ),
             ));
         } else {
-            echo 'No Sub Publishing created';
+            echo 'No data created';
+        }
+        ?>
+        <h4 class="box-title">Sub-Publishing Contract Files</h4>
+        <?php
+        $uploaded_files = array();
+        if (!empty($sub_publishing_model))
+            $uploaded_files = WorkSubPublishingUploads::model()->findAll('Work_Sub_Id = :sub_id', array(':sub_id' => $sub_publishing_model->Work_Sub_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $uploaded_file->Work_Sub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Sub_Upl_Description ?></td>
+                            <td>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $work_model->Work_Id, 'tab' => '6', 'fileedit' => $uploaded_file->Work_Sub_Upl_Id, 'umodel' => 'sub'), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Sub_Upl_Id, 'delete_model' => 'WorkSubPublishingUploads', 'rel_model' => 'workSub', 'tab' => 6), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
         }
         ?>
     </div>
+
     <div class="user-view col-lg-12">
-                <h4>Right Holders</h4>
+        <h4>Right Holders</h4>
         <?php
         if (!empty($members)) {
             ?>
@@ -276,7 +356,7 @@ if ($export == false) {
             </div>
             <?php
         } else {
-            echo 'No Right Holders created';
+            echo 'No data created';
         }
         ?>
 

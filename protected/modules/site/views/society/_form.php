@@ -50,7 +50,7 @@ $currencies = Myclass::getMasterCurrency();
 
                     <?php if (!$model->isNewRecord) { ?>
                         <div class="form-group">
-                            <?php echo CHtml::image($model->getFilePath(), 'logo', array('height' => '50px', 'width' => '50px')) ?>
+                            <?php echo CHtml::image($model->getFilePath(), 'logo', array('height' => '110px', 'width' => '110px')) ?>
                         </div>
                     <?php } ?>
 

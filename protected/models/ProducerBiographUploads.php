@@ -7,6 +7,7 @@
  * @property integer $Pro_Biogrph_Upl_Id
  * @property integer $Pro_Biogrph_Id
  * @property string $Pro_Biogrph_Upl_File
+ * @property string $Pro_Biogrph_Upl_Description
  * @property string $Created
  * @property string $Rowversion
  *
@@ -16,6 +17,8 @@
 class ProducerBiographUploads extends CActiveRecord {
 
     const IMAGE_SIZE = 2;
+    const ACCESS_TYPES = 'jpg,png,jpeg,gif';
+    const ACCESS_TYPES_WID = 'jpeg|jpg|gif|png';
     /**
      * @return string the associated database table name
      */
@@ -33,8 +36,8 @@ class ProducerBiographUploads extends CActiveRecord {
             array('Pro_Biogrph_Id', 'required'),
             array('Pro_Biogrph_Id', 'numerical', 'integerOnly' => true),
             array('Pro_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Pro_Biogrph_Upl_File', 'file', 'types'=>'jpg,png,jpeg,gif', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
-            array('Created, Rowversion', 'safe'),
+            array('Pro_Biogrph_Upl_File', 'file', 'types'=> self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+            array('Created, Rowversion, Pro_Biogrph_Upl_Description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Biogrph_Upl_Id, Pro_Biogrph_Id, Pro_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -60,6 +63,7 @@ class ProducerBiographUploads extends CActiveRecord {
             'Pro_Biogrph_Upl_Id' => 'Pro Biogrph Upl',
             'Pro_Biogrph_Id' => 'Pro Biogrph',
             'Pro_Biogrph_Upl_File' => 'File',
+            'Pro_Biogrph_Upl_Description' => 'Description',
             'Created' => 'Created',
             'Rowversion' => 'Rowversion',
         );
@@ -121,13 +125,5 @@ class ProducerBiographUploads extends CActiveRecord {
                 'fileField' => 'Pro_Biogrph_Upl_File',
             )
         );
-    }
-    
-    public function acceptFiles() {
-        return 'jpeg|jpg|gif|png';
-    }
-    
-    public function acceptFilesize() {
-        return self::IMAGE_SIZE;
     }
 }

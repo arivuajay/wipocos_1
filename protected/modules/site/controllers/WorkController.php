@@ -36,7 +36,7 @@ class WorkController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
-                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete'),
+                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'contractexpiry'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -104,6 +104,8 @@ class WorkController extends Controller {
 
         $this->render('create', array(
             'model' => $model,
+            'tab' => 1,
+            'focus' => '',
         ));
     }
 
@@ -143,6 +145,7 @@ class WorkController extends Controller {
             $sub_publishing_upload_model = empty($sub_publishing_upload_exists) ? new WorkSubPublishingUploads('create') : $sub_publishing_upload_exists;
         }
 
+        $focus = 'publisher_contactform';
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
             $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model));
@@ -189,7 +192,7 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkPublishing'])) {
             $publishing_model->attributes = $_POST['WorkPublishing'];
-            if($publishing_model->Work_Pub_Contact_End == date('Y-m-d') && $publishing_model->Work_Pub_Tacit == 'Y'){
+            if ($publishing_model->Work_Pub_Contact_End == date('Y-m-d') && $publishing_model->Work_Pub_Tacit == 'Y') {
                 $publishing_model->Work_Pub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing_model->Work_Pub_Contact_End)) . " + {$publishing_model->Work_Pub_Renewal_Period} years"));
             }
             if ($publishing_model->save()) {
@@ -199,7 +202,7 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkSubPublishing'])) {
             $sub_publishing_model->attributes = $_POST['WorkSubPublishing'];
-            if($sub_publishing_model->Work_Sub_Contact_End == date('Y-m-d') && $sub_publishing_model->Work_Sub_Tacit == 'Y'){
+            if ($sub_publishing_model->Work_Sub_Contact_End == date('Y-m-d') && $sub_publishing_model->Work_Sub_Tacit == 'Y') {
                 $sub_publishing_model->Work_Sub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing_model->Work_Sub_Contact_End)) . " + {$sub_publishing_model->Work_Sub_Renewal_Period} years"));
             }
             if ($sub_publishing_model->save()) {
@@ -235,6 +238,7 @@ class WorkController extends Controller {
                 }
             } else {
                 $tab = '5';
+                $focus = 'contractForm';
             }
         } elseif (isset($_POST['WorkSubPublishingUploads'])) {
             $sub_publishing_upload_model->attributes = $_POST['WorkSubPublishingUploads'];
@@ -262,10 +266,8 @@ class WorkController extends Controller {
                 $ids[$right_holder_exist->Work_Member_GUID] = $right_holder_exist->Work_Member_GUID;
             }
             $rgt_hold = new WorkRightholder();
-            $main_pub_code = $rgt_hold->getMainPublisher();
-            $sub_pub_code = $rgt_hold->getSubPublisher();
-            $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $model->Work_Id));
-            $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_pub_code, 'Work_Id' => $model->Work_Id));
+            $main_publisher = $rgt_hold->getMainPublisher($model->Work_Id);
+            $sub_publisher = $rgt_hold->getSubPublisher($model->Work_Id);
 
             $count = PublisherAccount::model()->countByAttributes(array('Pub_GUID' => $ids));
             if ($main_publisher && $publishing_model->isNewRecord) {
@@ -278,7 +280,7 @@ class WorkController extends Controller {
         }
 
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus'));
     }
 
     /**
@@ -347,6 +349,12 @@ class WorkController extends Controller {
         }
 
         $this->render('index', compact('searchModel', 'search', 'model'));
+    }
+
+    public function actionContractexpiry() {
+//        $model = new Work;
+        $model = WorkPublishing::model()->expiry()->findAll();
+        $this->render('contractexpiry', compact('model'));
     }
 
     /**
@@ -492,7 +500,8 @@ class WorkController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'Uploaded file Deleted Successfully!!!');
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update' , 'id' => $work_id, 'tab' => $tab));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $work_id, 'tab' => $tab));
         }
     }
+
 }

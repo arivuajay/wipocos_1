@@ -224,6 +224,7 @@ class AuthoraccountController extends Controller {
                             mkdir($dir);
                         $biograph_new_upload_model->Auth_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Auth_Biogrph_Upl_File = $newName;
+                        $biograph_new_upload_model->Auth_Biogrph_Upl_Description = $_POST['AuthorBiographUploads']['Auth_Biogrph_Upl_Description'];
                         if($biograph_new_upload_model->validate()){
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);

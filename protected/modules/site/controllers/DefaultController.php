@@ -142,24 +142,78 @@ class DefaultController extends Controller {
     }
 
     public function actionDailycron() {
-        $publishings = WorkPublishing::model()->findAllByAttributes(array('Work_Pub_Contact_End' => date('Y-m-d'), 'Work_Pub_Tacit' => 'Y'));
-        $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d'), 'Work_Sub_Tacit' => 'Y'));
-        
-        if(!empty($publishings)){
+        $publishings = WorkPublishing::model()->findAllByAttributes(array('Work_Pub_Contact_End' => date('Y-m-d')));
+        $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d')));
+
+        if (!empty($publishings)) {
             foreach ($publishings as $key => $publishing) {
-                $model = WorkPublishing::model()->findByPk($publishing->Work_Pub_Id);
-                $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing->Work_Pub_Contact_End)) . " + {$publishing->Work_Pub_Renewal_Period} years"));
-                $model->Work_Pub_Contact_End = $newEndingDate;
-                $model->save(false);
+                if ($publishing->Work_Pub_Tacit == 'Y') {
+                    $model = WorkPublishing::model()->findByPk($publishing->Work_Pub_Id);
+                    $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing->Work_Pub_Contact_End)) . " + {$publishing->Work_Pub_Renewal_Period} years"));
+                    $model->Work_Pub_Contact_End = $newEndingDate;
+                    $model->save(false);
+                } else {
+                    $right_holders = $publishing->work->workRightholders;
+                    //// Get Authors ////
+                    $authors_add_share = array();
+                    foreach ($right_holders as $key => $right_holder) {
+                        if (!empty($right_holder->workAuthor)) {
+                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder->workAuthor->Auth_GUID;
+                        }
+                    }
+                    //// Share Main Publisher shares to Authors ////
+                    $main_publisher = (new WorkRightholder)->getMainPublisher($publishing->Work_Id);
+                    if (!empty($authors_add_share) && !empty($main_publisher)) {
+                        $broad_share = $main_publisher->Work_Right_Broad_Share / (count($authors_add_share));
+                        $mech_share = $main_publisher->Work_Right_Mech_Share / (count($authors_add_share));
+
+                        foreach ($authors_add_share as $author_guid) {
+                            $auth_right_holder = WorkRightholder::model()->findByAttributes(array('Work_Member_GUID' => $author_guid, 'Work_Id' => $publishing->Work_Id));
+                            $auth_right_holder->Work_Right_Broad_Share += $broad_share;
+                            $auth_right_holder->Work_Right_Mech_Share += $mech_share;
+                            $auth_right_holder->save(false);
+                        }
+                    }
+                    //// Remove Main Publisher rightholder from Work////
+                    if(!empty($main_publisher))
+                        $main_publisher->delete();
+                }
             }
         }
-        
-        if(!empty($sub_publishings)){
+
+        if (!empty($sub_publishings)) {
             foreach ($sub_publishings as $key => $sub_publishing) {
-                $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
-                $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
-                $model->Work_Sub_Contact_End = $newEndingDate;
-                $model->save(false);
+                if ($publishing->Work_Pub_Tacit == 'Y') {
+                    $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
+                    $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
+                    $model->Work_Sub_Contact_End = $newEndingDate;
+                    $model->save(false);
+                } else {
+                    $right_holders = $sub_publishing->work->workRightholders;
+                    //// Get Authors ////
+                    $authors_add_share = array();
+                    foreach ($right_holders as $key => $right_holder) {
+                        if (!empty($right_holder->workAuthor)) {
+                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder->workAuthor->Auth_GUID;
+                        }
+                    }
+                    $sub_publisher = (new WorkRightholder)->getSubPublisher($sub_publishing->Work_Id);
+                    //// Share Sub Publisher shares to Authors ////
+                    if (!empty($authors_add_share) && !empty($sub_publisher)) {
+                        $broad_share = $sub_publisher->Work_Right_Broad_Share / (count($authors_add_share));
+                        $mech_share = $sub_publisher->Work_Right_Mech_Share / (count($authors_add_share));
+
+                        foreach ($authors_add_share as $author_guid) {
+                            $auth_right_holder = WorkRightholder::model()->findByAttributes(array('Work_Member_GUID' => $author_guid, 'Work_Id' => $sub_publishing->Work_Id));
+                            $auth_right_holder->Work_Right_Broad_Share += $broad_share;
+                            $auth_right_holder->Work_Right_Mech_Share += $mech_share;
+                            $auth_right_holder->save(false);
+                        }
+                    }
+                    //// Remove Sub Publisher rightholder from Work////
+                    if(!empty($sub_publisher))
+                        $sub_publisher->delete();
+                }
             }
         }
         exit;

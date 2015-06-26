@@ -67,11 +67,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             <?php echo $form->labelEx($biograph_upload_model, 'Perf_Biogrph_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
                 <?php
-                $max_size = $biograph_upload_model->acceptFilesize();
+                $max_size = PerformerBiographUploads::IMAGE_SIZE;
                 $this->widget('CMultiFileUpload', array(
                     'model' => $biograph_upload_model,
                     'name' => 'Perf_Biogrph_Upl_File',
-                    'accept' => $biograph_upload_model->acceptFiles(),
+                    'accept' => PerformerBiographUploads::ACCESS_TYPES_WID,
                     'duplicate' => 'Duplicate file!',
                     'denied' => 'Invalid file extension',
                     'options' => array(
@@ -90,6 +90,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
 
+        <div class="form-group">
+            <?php echo $form->labelEx($biograph_upload_model, 'Perf_Biogrph_Upl_Description', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textArea($biograph_upload_model, 'Perf_Biogrph_Upl_Description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->error($biograph_upload_model, 'Perf_Biogrph_Upl_Description'); ?>
+            </div>
+        </div>
+        
     </div><!-- /.box-body -->
     <div class="box-footer">
         <div class="form-group">
@@ -115,6 +123,7 @@ if (!empty($uploaded_files)) {
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
+                        <th>Description</th>
                         <th>Created</th>
                         <th>Action</th>
                     </tr>
@@ -125,7 +134,8 @@ if (!empty($uploaded_files)) {
                             $i = $key + 1
                             ?>
                             <td><?php echo $i ?>.</td>
-                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Performer Biograph {$i}" ?></a></td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Performer Biograph {$i}"?></a></td>
+                            <td><?php echo $uploaded_file->Perf_Biogrph_Upl_Description?></td>
                             <td><?php echo $uploaded_file->Created?></td>
                             <td>
                                 <?php

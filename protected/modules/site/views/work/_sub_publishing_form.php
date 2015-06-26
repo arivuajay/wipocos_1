@@ -9,12 +9,8 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
-    $main_sub_code = (new WorkRightholder)->getMainPublisher();
-    $sub_sub_code = (new WorkRightholder)->getSubPublisher();
-
-
-    $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_sub_code, 'Work_Id' => $work_model->Work_Id));
-    $sub_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $sub_sub_code, 'Work_Id' => $work_model->Work_Id));
+    $main_publisher = (new WorkRightholder)->getMainPublisher($work_model->Work_Id);
+    $sub_publisher = (new WorkRightholder)->getSubPublisher($work_model->Work_Id);
     ?>
     <div class="box-body">
         <div class="form-group">
@@ -189,13 +185,23 @@ if (!$model->isNewRecord) {
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($upload_model, 'Work_Sub_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+                <?php echo $form->labelEx($upload_model, 'Work_Sub_Upl_File', array('class' => 'col-sm-2 control-label', 'label' => "{$upload_model->getAttributeLabel('Work_Sub_Upl_File')} *")); ?>
                 <div class="col-sm-5">
                     <?php echo $form->fileField($upload_model, 'Work_Sub_Upl_File', array()); ?>
                     <?php echo $form->error($upload_model, 'Work_Sub_Upl_File'); ?>
                 </div>
             </div>
+            <div class="help-block col-sm-offset-2">
+                <span><strong>Note:</strong> Only files with these extensions are allowed: <?php echo WorkSubPublishingUploads::ACCESS_TYPE?></span>
+            </div>
 
+            <div class="form-group">
+                <?php echo $form->labelEx($upload_model, 'Work_Sub_Upl_Description', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->textArea($upload_model, 'Work_Sub_Upl_Description', array('class' => 'form-control')); ?>
+                    <?php echo $form->error($upload_model, 'Work_Sub_Upl_Description'); ?>
+                </div>
+            </div>
         </div>
         <div class="box-footer">
             <div class="form-group">
@@ -223,12 +229,14 @@ if (!empty($uploaded_files)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th>Name</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $uploaded_file->Work_Sub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Sub_Upl_Description ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();

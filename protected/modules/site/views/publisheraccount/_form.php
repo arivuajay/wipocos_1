@@ -28,7 +28,7 @@ $legal_forms = Myclass::getMasterLegalForm();
         <?php
         $other_tab_validation = $doc_tab_validation = true;
         if (!$model->isNewRecord) {
-            if($model->Pub_Non_Member == 'N'){
+            if ($model->Pub_Non_Member == 'N') {
                 switch ($model->Pub_Is_Producer) {
                     case 'Y':
                         $other_tab_validation = !$model->isNewRecord && !$managed_model->isNewRecord && !$related_model->isNewRecord;
@@ -39,7 +39,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                 }
                 $doc_tab_validation = !$model->isNewRecord;
             }
-        }else{
+        } else {
             $other_tab_validation = $doc_tab_validation = false;
         }
         ?>
@@ -55,8 +55,8 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <?php if ($model->Pub_Is_Producer == 'Y') { ?>
                     <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <?php } ?>
-                <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pub_Is_Producer == 'Y' ? '<br />' : '';?> and Inheritance</a></li>
+            <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pub_Is_Producer == 'Y' ? '<br />' : ''; ?> and Inheritance</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -126,14 +126,17 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->fileField($model, 'Pub_Photo', array()); ?>
                                     <?php echo $form->error($model, 'Pub_Photo'); ?>
                                 </div>
-                                
+
                                 <?php if (!$model->isNewRecord && $model->Pub_Photo != '') { ?>
                                     <div class="form-group">
-                                        <?php 
+                                        <?php
                                         $file_path = $model->getFilePath();
                                         echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
-                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof"));
                                         ?>
+                                    </div>
+                                    <div class="form-group help-block">
+                                        <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
                                     </div>
                                 <?php } ?>
                             </div>

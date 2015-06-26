@@ -47,7 +47,7 @@ $this->breadcrumbs = array(
             array(
                 'name' => 'Society_Logo_File',
                 'type' => 'raw',
-                'value' => CHtml::image($model->getFilePath(), 'logo', array('height' => '50px', 'width' => '50px'))
+                'value' => CHtml::image($model->getFilePath(), 'logo', array('height' => '110px', 'width' => '110px'))
             ),
             'Society_Mailing_Address',
             array(

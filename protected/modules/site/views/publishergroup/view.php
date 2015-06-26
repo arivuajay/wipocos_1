@@ -56,7 +56,7 @@ $this->breadcrumbs = array(
     </p>
     <?php
         $file_path = $model->getFilePath();
-        $photo = CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '50px', 'width' => '50px')), $file_path, array('class' => 'popup-prof'));
+        $photo = CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '110px', 'width' => '110px')), $file_path, array('class' => 'popup-prof'));
         $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
         
     $this->widget('zii.widgets.CDetailView', array(

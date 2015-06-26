@@ -56,9 +56,9 @@ if ($export == false) {
         <h4>Basic Data</h4>
         <?php
         $file_path = $model->getFilePath();
-        $photo = CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '50px', 'width' => '50px')), $file_path, array('class' => 'popup-prof'));
-        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
-        
+        $photo = CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '110px', 'width' => '110px')), $file_path, array('class' => 'popup-prof'));
+        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof"));
+
         $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
@@ -284,6 +284,49 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
+        <h4 class="box-title">Biography Uploaded Files</h4>
+        <?php
+        $uploaded_files = array();
+        if(!empty($biograph_model))
+            $uploaded_files = PerformerBiographUploads::model()->findAll('Perf_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Perf_Biogrph_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Uploaded Files</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <?php
+                            $file_path = $uploaded_file->getFilePath();
+                            $i = $key + 1
+                            ?>
+                            <td><?php echo $i ?>.</td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Performer Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Perf_Biogrph_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
+                            <td>
+                                <?php
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/biofiledelete/', 'id' => $uploaded_file->Perf_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php }else{
+            echo 'No data created';
+        }
+        ?>
+
         <h4>Assigned Groups</h4>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_GUID = :int_code', array(':int_code' => $model->Perf_GUID));
@@ -385,8 +428,10 @@ if ($export == false) {
                     </tbody>
                 </table>
             </div>
-        <?php }else{
+            <?php
+        } else {
             echo 'No data created';
-        }?>
+        }
+        ?>
     </div>
 </div>

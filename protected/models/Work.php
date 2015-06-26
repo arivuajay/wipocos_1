@@ -50,7 +50,6 @@ class Work extends CActiveRecord {
             $this->Work_Type_Id = DEFAULT_TYPE_ID;
 
             $this->Work_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::WORK_CODE))->Fullcode;
-
         }
     }
 
@@ -85,10 +84,9 @@ class Work extends CActiveRecord {
         );
     }
 
-    public function durationValidate($attribute,$params) {
-        if($this->duration_hours == '0'){
-            if($this->duration_minutes == '0' && $this->duration_seconds == '0')
-                $this->addError($attribute, 'Duration should not be Zero');
+    public function durationValidate($attribute, $params) {
+        if ($this->duration_hours == '0' && $this->duration_minutes == '0' && $this->duration_seconds == '0') {
+            $this->addError($attribute, 'Duration should not be Zero');
         }
     }
 
@@ -229,7 +227,7 @@ class Work extends CActiveRecord {
         $inst = array();
         $instruments = CHtml::listData(MasterInstrument::model()->findAll(), 'Master_Inst_Id', 'Instrument_Name');
         $exp = json_decode($this->Work_Instrumentation);
-        if($exp != NULL){
+        if ($exp != NULL) {
             foreach ($exp as $ex) {
                 $inst[$ex] = $instruments[$ex];
             }
@@ -277,4 +275,70 @@ class Work extends CActiveRecord {
         return $column;
     }
 
+    public function contractExpiryDataProvider() {
+        $work_publishing = new WorkPublishing;
+        $criteria = new CDbCriteria;
+//        $criteria->select = array('Work_Id');
+//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
+//        $criteria->addCondition("Work_Pub_Contact_End <= {$expiry_date}");
+        $model = new CActiveDataProvider($work_publishing, array(
+            'criteria' => $criteria,
+        ));
+        echo '<pre>';
+        print_r($model);
+        exit;
+
+
+        $work_sub_publishing = new WorkSubPublishing;
+        $criteria = new CDbCriteria;
+//        $criteria->select = array('Work_Id');
+//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkSubPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
+//        $criteria->addCondition("Work_Sub_Contact_End <= {$expiry_date}");
+        $modeliner = new CActiveDataProvider($work_sub_publishing, array(
+            'criteria' => $criteria,
+        ));
+
+        $data = CMap::mergeArray(
+                $model->getData(), 
+                $modeliner->getData()
+//                $model->search()->getData(), 
+//                $modeliner->search()->getData()
+        );
+
+        $provider = new CArrayDataProvider($data);
+    }
+
+//    public function contractExpiryDataProvider() {
+//        $work_publishing = new WorkPublishing;
+//        $criteria = new CDbCriteria;
+//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
+//        $criteria->addCondition("Work_Pub_Contact_End <= {$expiry_date}");
+//        $prov1 = new CActiveDataProvider($work_publishing, array(
+//            'criteria' => $criteria,
+//        ));
+//
+//        $work_sub_publishing = new WorkSubPublishing;
+//        $criteria = new CDbCriteria;
+//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkSubPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
+//        $criteria->addCondition("Work_Sub_Contact_End <= {$expiry_date}");
+//        $prov2 = new CActiveDataProvider($work_sub_publishing, array(
+//            'criteria' => $criteria,
+//        ));
+//        $records = array();
+//
+//        for ($i = 0; $i < $prov1->totalItemCount; $i++) {
+//            $data = $prov1->data[$i];
+//            array_push($records, $data);
+//        }
+//        for ($i = 0; $i < $prov2->totalItemCount; $i++) {
+//            $data = $prov2->data[$i];
+//            array_push($records, $data);
+//        }
+//
+//        return new CArrayDataProvider($ret_records, array(
+//            'pagination' => false
+//            )
+//        );
+//    }
+//
 }

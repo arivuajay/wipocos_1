@@ -26,6 +26,7 @@
 
         <?php
         $_controller = Yii::app()->controller->id;
+        $_action = Yii::app()->controller->action->id;
         
         if($_controller=='group'){
             if(isset($_REQUEST['role'])){
@@ -45,8 +46,11 @@
                 $pub_group = $group->Pub_Group_Is_Publisher == '1';
                 $pro_group = $group->Pub_Group_Is_Producer == '1';
             }
+        }elseif($_controller=='work'){
+            $contract_expiry = $_action == 'contractexpiry';
+            if(!$contract_expiry)
+                $work = true;
         }
-        
         $this->widget('zii.widgets.CMenu', array(
             'activateParents' => true,
             'encodeLabel' => false,
@@ -110,8 +114,9 @@
                                 array('label' => '<i class="fa fa-money"></i> <span>Producers Group</span>', 'url' => array('/site/publishergroup/index/role/producer'), 'active' => $pro_group),
                             ),
                         ),
-                        array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'active' => $_controller=='work'),
+                        array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'active' => $work),
                         array('label' => '<i class="fa fa-volume-up"></i> <span>Recordings</span>', 'url' => array('/site/recording/index'), 'active' => $_controller=='recording'),
+                        array('label' => '<i class="fa fa-warning"></i> <span>Contract Expiry</span>', 'url' => array('/site/work/contractexpiry'), 'active' => $contract_expiry),
                     ),
                 ),
 //                array('label' => '<i class="fa fa-group"></i> <span>Members</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',

@@ -279,8 +279,8 @@
 
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
-$mainPublisher = $model->getMainPublisher();
-$subPublisher = $model->getSubPublisher();
+$mainPublisher = $model->getMainPublisherRole();
+$subPublisher = $model->getSubPublisherRole();
 $def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
 $def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
 

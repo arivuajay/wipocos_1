@@ -9,8 +9,7 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Work_Id', array('value' => $work_model->Work_Id));
-    $main_pub_code = (new WorkRightholder)->getMainPublisher();
-    $main_publisher = WorkRightholder::model()->findByAttributes(array('Work_Right_Role' => $main_pub_code, 'Work_Id' => $work_model->Work_Id));
+    $main_publisher = (new WorkRightholder)->getMainPublisher($work_model->Work_Id);
     ?>
     <div class="box-body">
         <div class="form-group">
@@ -129,7 +128,7 @@ if (!$model->isNewRecord) {
     echo $form->hiddenField($upload_model, 'Work_Pub_Id', array('value' => $model->Work_Pub_Id));
     ?>
 
-    <div class="box box-primary">
+    <div class="box box-primary" id="publisher_contactform">
         <div class="box-header">
             <h4 class="box-title">Contract Upload</h4>
         </div>
@@ -151,10 +150,21 @@ if (!$model->isNewRecord) {
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($upload_model, 'Work_Pub_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+                <?php echo $form->labelEx($upload_model, 'Work_Pub_Upl_File', array('class' => 'col-sm-2 control-label', 'label' => "{$upload_model->getAttributeLabel('Work_Pub_Upl_File')} *")); ?>
                 <div class="col-sm-5">
                     <?php echo $form->fileField($upload_model, 'Work_Pub_Upl_File', array()); ?>
                     <?php echo $form->error($upload_model, 'Work_Pub_Upl_File'); ?>
+                </div>
+            </div>
+            <div class="help-block col-sm-offset-2">
+                <span><strong>Note:</strong> Only files with these extensions are allowed: <?php echo WorkPublishingUploads::ACCESS_TYPE ?></span>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->labelEx($upload_model, 'Work_Pub_Upl_Description', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-5">
+                    <?php echo $form->textArea($upload_model, 'Work_Pub_Upl_Description', array('class' => 'form-control')); ?>
+                    <?php echo $form->error($upload_model, 'Work_Pub_Upl_Description'); ?>
                 </div>
             </div>
 
@@ -185,12 +195,14 @@ if (!empty($uploaded_files)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th>Name</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name == '' ? "Contract {$i}" : $uploaded_file->Work_Pub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Description ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();
@@ -198,7 +210,7 @@ if (!empty($uploaded_files)) {
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update' , 'id' => $work_model->Work_Id , 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $work_model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>

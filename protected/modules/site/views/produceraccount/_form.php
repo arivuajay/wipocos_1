@@ -122,11 +122,14 @@ $legal_forms = Myclass::getMasterLegalForm();
 
                                 <?php if (!$model->isNewRecord && $model->Pro_Photo != '') { ?>
                                     <div class="form-group">
-                                        <?php 
+                                        <?php
                                         $file_path = $model->getFilePath();
                                         echo CHtml::link(CHtml::image($file_path, 'No Profile Picture', array('height' => '60px', 'width' => '60px')), $file_path, array('class' => 'popup-prof'));
-                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof")); 
+                                        $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-prof"));
                                         ?>
+                                    </div>
+                                    <div class="form-group help-block">
+                                        <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
                                     </div>
                                 <?php } ?>
                             </div>
