@@ -192,9 +192,10 @@ class Work extends CActiveRecord {
 
     public function dataProvider() {
         return new CActiveDataProvider($this, array(
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
+            'pagination' => false
+//            'pagination' => array(
+//                'pageSize' => PAGE_SIZE,
+//            )
         ));
     }
 

@@ -100,6 +100,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         </thead>
                         <tbody>
                             <?php
+                            $pub_count = 0;
                             foreach ($search_pub_model as $key => $pub) {
                                 $main_publisher = (new WorkRightholder)->getMainPublisher($pub->Work_Id);
                                 if (isset($_GET['Work']['publisher_name']) && $_GET['Work']['publisher_name'] != '') {
@@ -125,8 +126,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                         <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $pub->Work_Id, 'tab' => '5'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
                                     </td>
                                 </tr>
-                            <?php } ?>
+                            <?php $pub_count++;} ?>
                             <?php
+                            $sub_count = 0;
                             foreach ($search_sub_model as $key => $sub) {
                                 $sub_publisher = (new WorkRightholder)->getSubPublisher($sub->Work_Id);
                                 if (isset($_GET['Work']['publisher_name']) && $_GET['Work']['publisher_name'] != '') {
@@ -153,7 +155,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                         <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $sub->Work_Id, 'tab' => '6'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
                                     </td>
                                 </tr>
-                            <?php } ?>
+                            <?php $sub_count++;} ?>
+                                
+                            <?php 
+                            if($pub_count == 0 && $sub_count == 0){
+                                echo '<tr><td colspan="5">No results found.</td></tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
