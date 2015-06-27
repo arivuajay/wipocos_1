@@ -26,7 +26,7 @@
     //Hard cord
 
     $territories = Myclass::getMasterTerritory();
-    $managed_rights = MasterManagedRights::getMasterManagedRightbyRank(10);
+    $managed_rights = MasterManagedRights::getMasterManagedRightbyRank(MasterManagedRights::AUTHOR_RANK);
     $internal_positions = Myclass::getMasterInternalPosition();
     ?>
 

@@ -13,6 +13,9 @@
  */
 class MasterManagedRights extends CActiveRecord {
 
+    const AUTHOR_RANK = 10;
+    const PUBLISHER_RANK = 10;
+
     /**
      * @return string the associated database table name
      */

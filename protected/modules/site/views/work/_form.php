@@ -37,7 +37,8 @@ $territories = Myclass::getMasterTerritory();
             if ($model->Work_Unknown == 'N') {
                 $doc_tab_validation = !$model->isNewRecord;
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
-                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate && !empty($main_publisher) && !empty($sub_publisher);
+                $other_tab_validation = true;
+//                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate && !empty($main_publisher) && !empty($sub_publisher);
 
                 $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !empty($main_publisher);
                 $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !empty($main_publisher) && !empty($sub_publisher);
