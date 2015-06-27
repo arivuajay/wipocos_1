@@ -62,7 +62,6 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Auth_Acc_Id',
                 'Auth_Sur_Name',
                 'Auth_First_Name',
                 array(

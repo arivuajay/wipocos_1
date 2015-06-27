@@ -36,7 +36,7 @@ class WorkController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
-                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'contractexpiry'),
+                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'contractexpiry', 'biofiledelete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -145,6 +145,7 @@ class WorkController extends Controller {
             $sub_publishing_upload_model = empty($sub_publishing_upload_exists) ? new WorkSubPublishingUploads('create') : $sub_publishing_upload_exists;
         }
 
+        $biograph_upload_model = new WorkBiographUploads;
         $focus = 'publisher_contactform';
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
@@ -167,6 +168,27 @@ class WorkController extends Controller {
         } elseif (isset($_POST['WorkBiography'])) {
             $biograph_model->attributes = $_POST['WorkBiography'];
             if ($biograph_model->save()) {
+                $bio_id = $biograph_model->Work_Biogrph_Id;
+
+                $images = CUploadedFile::getInstancesByName('Work_Biogrph_Upl_File');
+                if (isset($images) && count($images) > 0) {
+                    foreach ($images as $image => $pic) {
+                        $biograph_new_upload_model = new WorkBiographUploads;
+                        $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
+                        $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
+                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        if (!is_dir($dir))
+                            mkdir($dir);
+                        $biograph_new_upload_model->Work_Biogrph_Id = $bio_id;
+                        $biograph_new_upload_model->Work_Biogrph_Upl_File = $newName;
+                        $biograph_new_upload_model->Work_Biogrph_Upl_Description = $_POST['WorkBiographUploads']['Work_Biogrph_Upl_Description'];
+                        if($biograph_new_upload_model->validate()){
+                            $biograph_new_upload_model->save();
+                            $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
+                        }
+                    }
+                }
+                
                 Myclass::addAuditTrail("Saved Work Biography successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Biography Saved Successfully!!!');
                 $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '3'));
@@ -280,7 +302,7 @@ class WorkController extends Controller {
         }
 
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model'));
     }
 
     /**
@@ -526,4 +548,28 @@ class WorkController extends Controller {
         }
     }
 
+    public function actionBiofiledelete($id) {
+        $model = WorkBiographUploads::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $bio_id = $model->Work_Biogrph_Id;
+
+        $model->setUploadDirectory(UPLOAD_DIR);
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Biography file from {$model->workBiogrph->work->Work_Org_Title} successfully.", "user");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->workBiogrph->work->Work_Org_Title} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->workBiogrph->Work_Id , 'tab' => '3'));
+        }
+    }
 }

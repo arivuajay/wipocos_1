@@ -255,16 +255,16 @@ class Myclass extends CController {
         return $work_categories;
     }
 
-    public static function getMasterTypeRight($occupation, $is_active = TRUE, $key = NULL) {
+    public static function getMasterTypeRight($occupation, $rank, $domain, $is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)
             $right_types = CHtml::listData(MasterTypeRights::model()->isActive()->findAll(array(
-                                'condition' => 'Type_Rights_Occupation = :occ',
-                                'params' => array(':occ' => $occupation),
+                                'condition' => 'Type_Rights_Occupation = :occ And Type_Rights_Rank =:rank And Type_Rights_Domain = :domain',
+                                'params' => array(':occ' => $occupation, ':rank' => $rank, ':domain' => $domain),
                             )), 'Master_Type_Rights_Id', 'namewithcode');
         else
             $right_types = CHtml::listData(MasterTypeRights::model()->findAll(array(
-                                'condition' => 'Type_Rights_Occupation = :occ',
-                                'params' => array(':occ' => $occupation),
+                                'condition' => 'Type_Rights_Occupation = :occ And Type_Rights_Rank =:rank And Type_Rights_Domain = :domain',
+                                'params' => array(':occ' => $occupation, ':rank' => $rank, ':domain' => $domain),
                             )), 'Master_Type_Rights_Id', 'namewithcode');
         if ($key != NULL)
             return $right_types[$key];

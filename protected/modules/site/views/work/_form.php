@@ -222,7 +222,7 @@ $territories = Myclass::getMasterTerritory();
                 <div class="tab-pane" id="tab_3">
                     <?php
                     if ($other_tab_validation) {
-                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model));
+                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'work_model' => $model, 'biograph_upload_model' => $biograph_upload_model));
                     }
                     ?>
                 </div>

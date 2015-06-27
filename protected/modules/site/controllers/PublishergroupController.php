@@ -62,8 +62,26 @@ class PublishergroupController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
+        $address_exists = PublisherGroupRepresentative::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $address_model = empty($address_exists) ? array() : $address_exists;
+
+        $payment_exists = PublisherGroupCopyrightPayment::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $payment_model = empty($payment_exists) ? array() : $payment_exists;
+
+        $rel_payment_exists = PublisherGroupRelatedPayment::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $rel_payment_model = empty($rel_payment_exists) ? array() : $rel_payment_exists;
+
+        $psedonym_exists = PublisherGroupPseudonym::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $psedonym_model = empty($psedonym_exists) ? array() : $psedonym_exists;
+
+        $managed_exists = PublisherGroupManageRights::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $managed_model = empty($managed_exists) ? array() : $managed_exists;
+
+        $biograph_exists = PublisherGroupBiography::model()->findByAttributes(array('Pub_Group_Id' => $id));
+        $biograph_model = empty($biograph_exists) ? array() : $biograph_exists;
+
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export');
+        $compact = compact('model', 'address_model', 'payment_model', 'psedonym_model', 'death_model', 'managed_model', 'biograph_model', 'export', 'rel_payment_exists');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();

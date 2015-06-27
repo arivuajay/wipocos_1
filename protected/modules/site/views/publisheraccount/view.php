@@ -61,7 +61,6 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Pub_Acc_Id',
                 'Pub_Internal_Code',
                 'Pub_Corporate_Name',
                 array(

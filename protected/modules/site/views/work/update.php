@@ -11,4 +11,4 @@ $this->breadcrumbs=array(
 
 <div class="user-create">
     <?php $this->renderPartial('_form', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model',
-            'publishing_model', 'sub_publishing_model', 'right_holder_model','right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus')); ?></div>
+            'publishing_model', 'sub_publishing_model', 'right_holder_model','right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model')); ?></div>

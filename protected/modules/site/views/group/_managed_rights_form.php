@@ -13,8 +13,12 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    $occ = $group_model->Group_Is_Author == '1' ? 'AU' : 'PE';
-    $right_types = Myclass::getMasterTypeRight($occ);
+    
+    $occ = $group_model->Group_Is_Author == '1' ? MasterTypeRights::OCCUPATION_AUTHOR : MasterTypeRights::OCCUPATION_PERFORMER;
+    $rank = $group_model->Group_Is_Author == '1' ? MasterTypeRights::AUTHOR_RANK : MasterTypeRights::PERFORMER_RANK;
+    $domain = $group_model->Group_Is_Author == '1' ? MasterTypeRights::AUTHOR_DOMAIN : MasterTypeRights::PERFORMER_DOMAIN;
+    
+    $right_types = Myclass::getMasterTypeRight($occ, $rank, $domain);
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
     $internal_positions = Myclass::getMasterInternalPosition();

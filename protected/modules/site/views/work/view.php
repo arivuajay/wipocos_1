@@ -58,7 +58,6 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Work_Id',
                 'Work_Org_Title',
                 array(
                     'name' => 'Work_Language_Id',
@@ -176,6 +175,48 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
+        <h4>Biography Uploaded Files</h4>
+        <?php
+        $uploaded_files = array();
+        if(!empty($biograph_model))
+            $uploaded_files = WorkBiographUploads::model()->findAll('Work_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Work_Biogrph_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Uploaded Files</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <?php
+                            $file_path = $uploaded_file->getFilePath();
+                            $i = $key + 1
+                            ?>
+                            <td><?php echo $i ?>.</td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Work Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Work_Biogrph_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
+                            <td>
+                                <?php
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/biofiledelete/', 'id' => $uploaded_file->Work_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php }else{
+            echo 'No data created';
+        }
+        ?>
     </div>
     <div class="user-view col-lg-6">
         <h4>Publishing</h4>
@@ -226,7 +267,7 @@ if ($export == false) {
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $work_model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
@@ -293,7 +334,7 @@ if ($export == false) {
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $work_model->Work_Id, 'tab' => '6', 'fileedit' => $uploaded_file->Work_Sub_Upl_Id, 'umodel' => 'sub'), array('title' => 'Edit'));
+                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '6', 'fileedit' => $uploaded_file->Work_Sub_Upl_Id, 'umodel' => 'sub'), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
                                 echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Sub_Upl_Id, 'delete_model' => 'WorkSubPublishingUploads', 'rel_model' => 'workSub', 'tab' => 6), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>

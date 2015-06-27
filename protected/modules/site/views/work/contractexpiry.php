@@ -232,6 +232,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 </td>
                             </tr>
                         <?php } ?>
+                        <?php 
+                        if(empty($pub_model) && empty($sub_model)){
+                            echo '<tr><td colspan="5">No results found.</td></tr>';
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>

@@ -13,16 +13,16 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    $right_types = Myclass::getMasterTypeRight('AU');
+    $right_types = Myclass::getMasterTypeRight(MasterTypeRights::OCCUPATION_AUTHOR, MasterTypeRights::AUTHOR_RANK, MasterTypeRights::AUTHOR_DOMAIN);
     //Hard cord
-    $r = array();
-    $need = array(1,9);
-    foreach($right_types as $k => $v){
-        if(in_array($k, $need)){
-            $r[$k] = $v;
-        }
-    }
-    $right_types = $r;
+//    $r = array();
+//    $need = array(1,9);
+//    foreach($right_types as $k => $v){
+//        if(in_array($k, $need)){
+//            $r[$k] = $v;
+//        }
+//    }
+//    $right_types = $r;
     //Hard cord
 
     $territories = Myclass::getMasterTerritory();

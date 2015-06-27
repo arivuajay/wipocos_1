@@ -76,7 +76,7 @@
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
                                 $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
-                                $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->PubException()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role', 'disabled' => 'disabled'));

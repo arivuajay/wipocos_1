@@ -63,7 +63,6 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Perf_Acc_Id',
                 'Perf_Sur_Name',
                 'Perf_First_Name',
                 array(

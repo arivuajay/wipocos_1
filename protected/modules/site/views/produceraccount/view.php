@@ -63,7 +63,6 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Pro_Acc_Id',
                 'Pro_Internal_Code',
                 'Pro_Corporate_Name',
                 array(

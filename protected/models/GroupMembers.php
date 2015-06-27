@@ -47,8 +47,10 @@ class GroupMembers extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'groupAuthors' => array(self::BELONGS_TO, 'AuthorAccount', 'Group_Member_GUID'),
-            'groupPerformers' => array(self::BELONGS_TO, 'PerformerAccount', 'Group_Member_GUID'),
+            'groupAuthors' => array(self::BELONGS_TO, 'AuthorAccount', array('Group_Member_GUID'=>'Auth_GUID')),
+            'groupPerformers' => array(self::BELONGS_TO, 'PerformerAccount', array('Group_Member_GUID'=>'Perf_GUID')),
+//            'groupAuthors' => array(self::BELONGS_TO, 'AuthorAccount', 'Group_Member_GUID'),
+//            'groupPerformers' => array(self::BELONGS_TO, 'PerformerAccount', 'Group_Member_GUID'),
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
         );
     }
