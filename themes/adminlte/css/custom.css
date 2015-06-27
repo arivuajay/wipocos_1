@@ -74,3 +74,13 @@ table.selectable tbody tr.highlight td { background-color: #f56954; cursor: poin
     color: #3C763D !important;
     font-weight: bold;
 }
+
+.match_det_table{
+    width: 100%;
+    border-color: #DDDDDD;
+}
+
+.match_det_table th,td{
+    padding: 5px;
+    border-color: #DDDDDD;
+}

@@ -169,11 +169,18 @@ $this->breadcrumbs = array(
                 ?>
                 <ul class="todo-list">
                     <li>
-                        <span class="text">No. of Publisher contract expiry: </span>&nbsp;<small class="badge bg-red"><?php echo $publisher_expiry_count;?></small>
+                        <?php 
+                        $text = '<span class="text">No. of Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$publisher_expiry_count.'</small>';
+                        echo CHtml::link($text, array('/site/work/contractexpiry'), array());
+                        ?>
                         <!--<small class="label label-danger"><i class="fa fa-clock-o"></i> 20 mins</small>-->
                     </li>
                     <li>
-                        <span class="text">No. of Sub-Publisher contract expiry: </span>&nbsp;<small class="badge bg-red"><?php echo $sub_publisher_expiry_count;?></small>
+                        <?php 
+                        $text = '<span class="text">No. of Sub-Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$sub_publisher_expiry_count.'</small>';
+                        echo CHtml::link($text, array('/site/work/contractexpiry'), array());
+                        ?>
+                        
                     </li>
                 </ul>
             </div>

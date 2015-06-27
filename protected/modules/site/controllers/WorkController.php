@@ -352,9 +352,31 @@ class WorkController extends Controller {
     }
 
     public function actionContractexpiry() {
-//        $model = new Work;
-        $model = WorkPublishing::model()->expiry()->findAll();
-        $this->render('contractexpiry', compact('model'));
+        $search = false;
+        $search_pub_model = $search_sub_model = array();
+        if (isset($_GET['Work'])) {
+            $search = true;
+            $criteria = new CDbCriteria;
+            $criteria->with = array('work');
+            if(isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
+                $criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
+            if(isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
+                $criteria->addCondition("Work_Pub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
+            $search_pub_model = WorkPublishing::model()->with('work')->expiry()->findAll($criteria);
+
+
+            $search = true;
+            $criteria = new CDbCriteria;
+            $criteria->with = array('work');
+            if(isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
+                $criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
+            if(isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
+                $criteria->addCondition("Work_Sub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
+            $search_sub_model = WorkSubPublishing::model()->with('work')->expiry()->findAll($criteria);
+        }
+        $pub_model = WorkPublishing::model()->expiry()->findAll();
+        $sub_model = WorkSubPublishing::model()->expiry()->findAll();
+        $this->render('contractexpiry', compact('pub_model', 'sub_model', 'search_pub_model', 'search_sub_model', 'search'));
     }
 
     /**

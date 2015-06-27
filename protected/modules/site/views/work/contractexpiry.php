@@ -10,9 +10,157 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
+
+<div class="col-lg-12 col-md-12" id="advance-search-block">
+    <div class="row mb10" id="advance-search-label">
+        <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
+    </div>
+    <div class="row" id="advance-search-form">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="glyphicon glyphicon-search"></i>  Search
+                </h3>
+                <div class="clearfix"></div>
+            </div>
+            <section class="content">
+                <div class="row">
+                    <?php
+                    $form = $this->beginWidget('CActiveForm', array(
+                        'id' => 'search-form',
+                        'method' => 'get',
+                        'action' => array('/site/work/contractexpiry'),
+                        'htmlOptions' => array('role' => 'form')
+                    ));
+                    ?>
+
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Work Name', '', array('class' => ' control-label')) ?>
+                            <?php echo CHtml::textField('Work[work_name]', $_GET['Work']['work_name'], array('class' => 'form-control')) ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Publisher Name', '', array('class' => ' control-label')) ?>
+                            <?php echo CHtml::textField('Work[publisher_name]', $_GET['Work']['publisher_name'], array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)) ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php $Role = CHtml::listData(MasterTypeRights::model()->findAll(), 'Type_Rights_Name', 'Type_Rights_Name'); ?>
+                            <?php echo CHtml::label('Role', '', array('class' => ' control-label')) ?>
+                            <?php echo CHtml::dropDownList('Work[role]', $_GET['Work']['role'], $Role, array('class' => 'form-control', 'prompt' => '')) ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Contract End Date', '', array('class' => ' control-label')) ?>
+                            <?php echo CHtml::textField('Work[contract_end_date]', $_GET['Work']['contract_end_date'], array('class' => 'form-control date')) ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                        </div>
+                    </div>
+                    <?php $this->endWidget(); ?>
+                </div>
+            </section>
+
+
+        </div>
+    </div>
+</div>
+
+<?php if ($search) { ?>
+    <div class="col-lg-12 col-md-12">
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>
+                        Search Results</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Work Name</th>
+                                <th>Publisher Name</th>
+                                <th>Role</th>
+                                <th>Contract End Date</th>
+                                <th align="center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach ($search_pub_model as $key => $pub) {
+                                $main_publisher = (new WorkRightholder)->getMainPublisher($pub->Work_Id);
+                                if (isset($_GET['Work']['publisher_name']) && $_GET['Work']['publisher_name'] != '') {
+                                    similar_text(strtoupper($main_publisher->workPublisher->Pub_Corporate_Name), strtoupper($_GET['Work']['publisher_name']), $pub_percent);
+                                    if($pub_percent < 50)
+                                        continue;
+                                }
+                                if (isset($_GET['Work']['role']) && $_GET['Work']['role'] != '') {
+                                    if($_GET['Work']['role'] != $main_publisher->workRightRole->Type_Rights_Name)
+                                        continue;
+                                }
+                                ?>
+                                <tr>
+                                    <td><?php echo $pub->work->Work_Org_Title ?></td>
+                                    <td>
+                                        <?php
+                                        echo $main_publisher->workPublisher->Pub_Corporate_Name
+                                        ?>
+                                    </td>
+                                    <td><?php echo $main_publisher->workRightRole->Type_Rights_Name ?></td>
+                                    <td><?php echo $pub->Work_Pub_Contact_End ?></td>
+                                    <td align="center">
+                                        <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $pub->Work_Id, 'tab' => '5'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            <?php
+                            foreach ($search_sub_model as $key => $pub) {
+                                $sub_publisher = (new WorkRightholder)->getSubPublisher($sub->Work_Id);
+                                if (isset($_GET['Work']['publisher_name']) && $_GET['Work']['publisher_name'] != '') {
+                                    similar_text(strtoupper($sub_publisher->workPublisher->Pub_Corporate_Name), strtoupper($_GET['Work']['publisher_name']), $pub_percent);
+                                    if($pub_percent < 50)
+                                        continue;
+                                }
+                                if (isset($_GET['Work']['role']) && $_GET['Work']['role'] != '') {
+                                    if($_GET['Work']['role'] != $sub_publisher->workRightRole->Type_Rights_Name)
+                                        continue;
+                                }
+                                ?>
+                                <tr>
+                                    <td><?php echo $sub->work->Work_Org_Title ?></td>
+                                    <td>
+                                        <?php
+                                        
+                                        echo $sub_publisher->workPublisher->Pub_Corporate_Name
+                                        ?>
+                                    </td>
+                                    <td><?php echo $sub_publisher->workRightRole->Type_Rights_Name ?></td>
+                                    <td><?php echo $sub->Work_Sub_Contact_End ?></td>
+                                    <td align="center">
+                                        <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $sub->Work_Id, 'tab' => '6'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
@@ -27,446 +175,66 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 <div class="col-lg-12 col-md-12">
     <div class="row">
-        <table id="example2" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                        Explorer 4.0</td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                        Explorer 5.0</td>
-                    <td>Win 95+</td>
-                    <td>5</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                        Explorer 5.5</td>
-                    <td>Win 95+</td>
-                    <td>5.5</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                        Explorer 6</td>
-                    <td>Win 98+</td>
-                    <td>6</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Trident</td>
-                    <td>Internet Explorer 7</td>
-                    <td>Win XP SP2+</td>
-                    <td>7</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Trident</td>
-                    <td>AOL browser (AOL desktop)</td>
-                    <td>Win XP</td>
-                    <td>6</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 1.0</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 1.5</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 2.0</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Firefox 3.0</td>
-                    <td>Win 2k+ / OSX.3+</td>
-                    <td>1.9</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Camino 1.0</td>
-                    <td>OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Camino 1.5</td>
-                    <td>OSX.3+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Netscape 7.2</td>
-                    <td>Win 95+ / Mac OS 8.6-9.2</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Netscape Browser 8</td>
-                    <td>Win 98SE+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Netscape Navigator 9</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.0</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.1</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.1</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.2</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.2</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.3</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.3</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.4</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.4</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.5</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.5</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.6</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>1.6</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.7</td>
-                    <td>Win 98+ / OSX.1+</td>
-                    <td>1.7</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Mozilla 1.8</td>
-                    <td>Win 98+ / OSX.1+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Seamonkey 1.1</td>
-                    <td>Win 98+ / OSX.2+</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Gecko</td>
-                    <td>Epiphany 2.20</td>
-                    <td>Gnome</td>
-                    <td>1.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>Safari 1.2</td>
-                    <td>OSX.3</td>
-                    <td>125.5</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>Safari 1.3</td>
-                    <td>OSX.3</td>
-                    <td>312.8</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>Safari 2.0</td>
-                    <td>OSX.4+</td>
-                    <td>419.3</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>Safari 3.0</td>
-                    <td>OSX.4+</td>
-                    <td>522.1</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>OmniWeb 5.5</td>
-                    <td>OSX.4+</td>
-                    <td>420</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>iPod Touch / iPhone</td>
-                    <td>iPod</td>
-                    <td>420.1</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Webkit</td>
-                    <td>S60</td>
-                    <td>S60</td>
-                    <td>413</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 7.0</td>
-                    <td>Win 95+ / OSX.1+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 7.5</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 8.0</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 8.5</td>
-                    <td>Win 95+ / OSX.2+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.0</td>
-                    <td>Win 95+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.2</td>
-                    <td>Win 88+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera 9.5</td>
-                    <td>Win 88+ / OSX.3+</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Opera for Wii</td>
-                    <td>Wii</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Nokia N800</td>
-                    <td>N800</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Presto</td>
-                    <td>Nintendo DS browser</td>
-                    <td>Nintendo DS</td>
-                    <td>8.5</td>
-                    <td>C/A<sup>1</sup></td>
-                </tr>
-                <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.1</td>
-                    <td>KDE 3.1</td>
-                    <td>3.1</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.3</td>
-                    <td>KDE 3.3</td>
-                    <td>3.3</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>KHTML</td>
-                    <td>Konqureror 3.5</td>
-                    <td>KDE 3.5</td>
-                    <td>3.5</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 4.5</td>
-                    <td>Mac OS 8-9</td>
-                    <td>-</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 5.1</td>
-                    <td>Mac OS 7.6-9</td>
-                    <td>1</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Tasman</td>
-                    <td>Internet Explorer 5.2</td>
-                    <td>Mac OS 8-X</td>
-                    <td>1</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>NetFront 3.1</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>NetFront 3.4</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>A</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>Dillo 0.8</td>
-                    <td>Embedded devices</td>
-                    <td>-</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>Links</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>Lynx</td>
-                    <td>Text only</td>
-                    <td>-</td>
-                    <td>X</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>IE Mobile</td>
-                    <td>Windows Mobile 6</td>
-                    <td>-</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Misc</td>
-                    <td>PSP browser</td>
-                    <td>PSP</td>
-                    <td>-</td>
-                    <td>C</td>
-                </tr>
-                <tr>
-                    <td>Other browsers</td>
-                    <td>All others</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>U</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>
+                    <?php echo $this->title; ?></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-datatable">
+                    <thead>
+                        <tr>
+                            <th>Work Name</th>
+                            <th>Publisher Name</th>
+                            <th>Role</th>
+                            <th>Contract End Date</th>
+                            <th align="center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($pub_model as $key => $pub) { ?>
+                            <tr>
+                                <td><?php echo $pub->work->Work_Org_Title ?></td>
+                                <td>
+                                    <?php
+                                    $main_publisher = (new WorkRightholder)->getMainPublisher($pub->Work_Id);
+                                    echo $main_publisher->workPublisher->Pub_Corporate_Name
+                                    ?>
+                                </td>
+                                <td><?php echo $main_publisher->workRightRole->Type_Rights_Name ?></td>
+                                <td><?php echo $pub->Work_Pub_Contact_End ?></td>
+                                <td align="center">
+                                    <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $pub->Work_Id, 'tab' => '5'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        <?php foreach ($sub_model as $key => $sub) { ?>
+                            <tr>
+                                <td><?php echo $sub->work->Work_Org_Title ?></td>
+                                <td>
+                                    <?php
+                                    $sub_publisher = (new WorkRightholder)->getSubPublisher($sub->Work_Id);
+                                    echo $sub_publisher->workPublisher->Pub_Corporate_Name
+                                    ?>
+                                </td>
+                                <td><?php echo $sub_publisher->workRightRole->Type_Rights_Name ?></td>
+                                <td><?php echo $sub->Work_Sub_Contact_End ?></td>
+                                <td align="center">
+                                    <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', array('/site/work/update', 'id' => $sub->Work_Id, 'tab' => '6'), array('class' => 'update', 'data-original-title' => 'Update', 'data-toggle' => 'tooltip')) ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-       $('#example2').dataTable({
-//            "bPaginate": true,
-//            "bLengthChange": false,
-//            "bFilter": false,
-//            "bSort": true,
-//            "bInfo": true,
-//            "bAutoWidth": false
-        });
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
     });
 EOD;
-Yii::app()->clientScript->registerScript('_form', $js);
+Yii::app()->clientScript->registerScript('index', $js);
 ?>

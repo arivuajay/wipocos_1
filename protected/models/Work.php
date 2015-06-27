@@ -249,28 +249,40 @@ class Work extends CActiveRecord {
     public function getMatchingdetails($work_id = NULL) {
         $work = self::model()->with('workRightholders', 'workSubtitles')->findByAttributes(array('Work_Id' => $work_id));
         $column = '';
-        $time = explode(':', $work->Work_Duration);
-        $column .= "$time[0]' $time[1]'' {$work->workType->Type_Name} {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
-        $column .= "<br />";
-        $auth_key = $pub_key = 0;
-        $auth_col = $pub_col = '';
-        foreach ($work->workRightholders as $key => $rightholder) {
-            if ($rightholder->workAuthor) {
-                $auth_name = $rightholder->workAuthor->Auth_Sur_Name . ' ' . $rightholder->workAuthor->Auth_First_Name;
-                $auth_col .= $auth_key == 0 ? "$auth_name" : " , {$auth_name}";
-                $auth_key++;
-            } elseif ($rightholder->workPublisher) {
-                $pub_name = $rightholder->workPublisher->Pub_Corporate_Name;
-                $pub_col .= $pub_key == 0 ? "$pub_name" : " , {$pub_name}";
-                $pub_key++;
-            }
-        }
-        $column .= "{$auth_col}<br />{$pub_col}";
-        $column .= "<br />";
         foreach ($work->workSubtitles as $key => $subtitle) {
             $name = $subtitle->Work_Subtitle_Name;
-//            $name = $subtitle->workSubtitleLanguage->Lang_Name;
-            $column .= $key == 0 ? "$name" : " , {$name}";
+            $column .= $key == 0 ? "Subtitle - $name" : " , {$name}";
+        }
+        if($work->workSubtitles)
+            $column .= "<br />";
+        $time = explode(':', $work->Work_Duration);
+        $column .= "Duration - $time[0]' $time[1]'' <br />";
+        $column .= "Type - {$work->workType->Type_Name}, Documentary Status- {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
+
+        if ($work->workRightholders) {
+            $column .= "<br /><br />";
+            $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Shares</th></thead><tbody>";
+            foreach ($work->workRightholders as $key => $rightholder) {
+                if ($rightholder->workAuthor) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->workAuthor->fullname}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->rolename}</td>";
+                    $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
+                    $column .= "<td>{$shares} %</td>";
+                    $column .= '</tr>';
+                }
+            }
+            foreach ($work->workRightholders as $key => $rightholder) {
+                if ($rightholder->workPublisher) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->rolename}</td>";
+                    $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
+                    $column .= "<td>{$shares} %</td>";
+                    $column .= '</tr>';
+                }
+            }
+            $column .= '</tbody></table>';
         }
         return $column;
     }
@@ -299,8 +311,7 @@ class Work extends CActiveRecord {
         ));
 
         $data = CMap::mergeArray(
-                $model->getData(), 
-                $modeliner->getData()
+                        $model->getData(), $modeliner->getData()
 //                $model->search()->getData(), 
 //                $modeliner->search()->getData()
         );
