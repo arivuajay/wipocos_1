@@ -24,7 +24,7 @@
  */
 class WorkSubPublishing extends CActiveRecord {
 
-    const EXPIRY_WARNING_MONTH = 2;
+    const EXPIRY_WARNING_MONTH = 3;
     
     public function init() {
         parent::init();
