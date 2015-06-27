@@ -127,7 +127,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 </tr>
                             <?php } ?>
                             <?php
-                            foreach ($search_sub_model as $key => $pub) {
+                            foreach ($search_sub_model as $key => $sub) {
                                 $sub_publisher = (new WorkRightholder)->getSubPublisher($sub->Work_Id);
                                 if (isset($_GET['Work']['publisher_name']) && $_GET['Work']['publisher_name'] != '') {
                                     similar_text(strtoupper($sub_publisher->workPublisher->Pub_Corporate_Name), strtoupper($_GET['Work']['publisher_name']), $pub_percent);
