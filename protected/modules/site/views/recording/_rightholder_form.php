@@ -70,8 +70,8 @@
                             <?php echo $form->labelEx($model, 'Rcd_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
-                                $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->ProException()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
