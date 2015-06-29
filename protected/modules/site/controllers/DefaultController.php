@@ -143,7 +143,6 @@ class DefaultController extends Controller {
 
     public function actionDailycron() {
         $publishings = WorkPublishing::model()->findAllByAttributes(array('Work_Pub_Contact_End' => date('Y-m-d')));
-        $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d')));
 
         if (!empty($publishings)) {
             foreach ($publishings as $key => $publishing) {
@@ -225,6 +224,7 @@ class DefaultController extends Controller {
             }
         }
 
+        $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d')));
         if (!empty($sub_publishings)) {
             foreach ($sub_publishings as $key => $sub_publishing) {
                 if ($sub_publishing->Work_Sub_Tacit == 'Y') {
