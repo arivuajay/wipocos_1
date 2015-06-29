@@ -106,7 +106,7 @@ class ProducerRelatedRights extends CActiveRecord {
             'Pro_Rel_File' => 'File',
             'Pro_Rel_Duration' => 'Duration',
             'Pro_Rel_Avl_Work_Cat_Id' => 'Category of Performance',
-            'Pro_Rel_Type_Rght_Id' => 'RightHolder Type',
+            'Pro_Rel_Type_Rght_Id' => 'Membership Role',
             'Pro_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Pro_Rel_Territories_Id' => 'Territories',
             'Created_Date' => 'Created Date',

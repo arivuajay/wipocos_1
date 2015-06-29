@@ -106,7 +106,7 @@ class PerformerRelatedRights extends CActiveRecord {
             'Perf_Rel_File' => 'Physical File Location',
             'Perf_Rel_Duration' => 'Duration',
             'Perf_Rel_Avl_Work_Cat_Id' => 'Work Category',
-            'Perf_Rel_Type_Rght_Id' => 'RightHolder Type',
+            'Perf_Rel_Type_Rght_Id' => 'Membership Role',
             'Perf_Rel_Managed_Rights_Id' => 'Managed Rights',
             'Perf_Rel_Territories_Id' => 'Territories',
         );

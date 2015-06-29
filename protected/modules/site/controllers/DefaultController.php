@@ -154,28 +154,72 @@ class DefaultController extends Controller {
                     $model->save(false);
                 } else {
                     $right_holders = $publishing->work->workRightholders;
+                    $sub_pub_role_exists = false;
+                    $sub_pub_role = (new WorkRightholder)->getSubPublisherRole();
                     //// Get Authors ////
                     $authors_add_share = array();
                     foreach ($right_holders as $key => $right_holder) {
                         if (!empty($right_holder->workAuthor)) {
-                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder->workAuthor->Auth_GUID;
+                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder;
+                        }
+                        if ($sub_pub_role_exists == false && $right_holder->Work_Right_Role == $sub_pub_role) {
+                            $sub_pub_role_exists = true;
                         }
                     }
                     //// Share Main Publisher shares to Authors ////
                     $main_publisher = (new WorkRightholder)->getMainPublisher($publishing->Work_Id);
                     if (!empty($authors_add_share) && !empty($main_publisher)) {
-                        $broad_share = $main_publisher->Work_Right_Broad_Share / (count($authors_add_share));
-                        $mech_share = $main_publisher->Work_Right_Mech_Share / (count($authors_add_share));
-
-                        foreach ($authors_add_share as $author_guid) {
+                        $check_audits = WorkRightholderAudit::model()->findAllByAttributes(array('Work_Id' => $publishing->Work_Id));
+                        $authors_list = array();
+                        if (!empty($check_audits)) {
+                            $broad_share = $mech_share = 0;
+                            if ($sub_pub_role_exists) {
+                                foreach ($authors_add_share as $author_guid => $author) {
+                                    //Example 0.2*0.2 = 0.04 * 20 = 0.8 * 10 = 8
+                                    $broad_share = $author->Work_Right_Broad_Share + (($author->Work_Right_Broad_Share / 100) * ($main_publisher->Work_Right_Broad_Share / 100) * $main_publisher->Work_Right_Broad_Share * 10);
+                                    $mech_share = $author->Work_Right_Mech_Share + (($author->Work_Right_Mech_Share / 100) * ($main_publisher->Work_Right_Mech_Share / 100) * $main_publisher->Work_Right_Mech_Share * 10);
+                                    $authors_list[$author_guid] = array(
+                                        'guid' => $author_guid,
+                                        'broad_share' => $broad_share,
+                                        'mech_share' => $mech_share
+                                    );
+                                }
+                            } else {
+                                foreach ($authors_add_share as $author_guid => $author) {
+                                    foreach ($check_audits as $check_audit) {
+                                        if ($check_audit->Work_Member_GUID == $author_guid) {
+                                            $broad_share = $check_audit->Work_Right_Audit_Broad_Share;
+                                            $mech_share = $check_audit->Work_Right_Audit_Mech_Share;
+                                            break;
+                                        }
+                                    }
+                                    $authors_list[$author_guid] = array(
+                                        'guid' => $author_guid,
+                                        'broad_share' => $broad_share,
+                                        'mech_share' => $mech_share
+                                    );
+                                }
+                            }
+                        } else {
+                            $broad_share = $main_publisher->Work_Right_Broad_Share / (count($authors_add_share));
+                            $mech_share = $main_publisher->Work_Right_Mech_Share / (count($authors_add_share));
+                            foreach ($authors_add_share as $author_guid => $author) {
+                                $authors_list[$author_guid] = array(
+                                    'guid' => $author_guid,
+                                    'broad_share' => $auth_right_holder->Work_Right_Broad_Share += $broad_share,
+                                    'mech_share' => $auth_right_holder->Work_Right_Mech_Share += $mech_share
+                                );
+                            }
+                        }
+                        foreach ($authors_list as $author_guid => $author) {
                             $auth_right_holder = WorkRightholder::model()->findByAttributes(array('Work_Member_GUID' => $author_guid, 'Work_Id' => $publishing->Work_Id));
-                            $auth_right_holder->Work_Right_Broad_Share += $broad_share;
-                            $auth_right_holder->Work_Right_Mech_Share += $mech_share;
+                            $auth_right_holder->Work_Right_Broad_Share = $author['broad_share'];
+                            $auth_right_holder->Work_Right_Mech_Share = $author['mech_share'];
                             $auth_right_holder->save(false);
                         }
                     }
                     //// Remove Main Publisher rightholder from Work////
-                    if(!empty($main_publisher))
+                    if (!empty($main_publisher))
                         $main_publisher->delete();
                 }
             }
@@ -183,35 +227,74 @@ class DefaultController extends Controller {
 
         if (!empty($sub_publishings)) {
             foreach ($sub_publishings as $key => $sub_publishing) {
-                if ($publishing->Work_Pub_Tacit == 'Y') {
+                if ($sub_publishing->Work_Sub_Tacit == 'Y') {
                     $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
                     $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
                     $model->Work_Sub_Contact_End = $newEndingDate;
                     $model->save(false);
                 } else {
                     $right_holders = $sub_publishing->work->workRightholders;
+                    $main_pub_role_exists = false;
+                    $main_pub_role = (new WorkRightholder)->getMainPublisherRole();
                     //// Get Authors ////
                     $authors_add_share = array();
                     foreach ($right_holders as $key => $right_holder) {
                         if (!empty($right_holder->workAuthor)) {
-                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder->workAuthor->Auth_GUID;
+                            $authors_add_share[$right_holder->workAuthor->Auth_GUID] = $right_holder->workAuthor;
+                        }
+                        if ($main_pub_role_exists == false && $right_holder->Work_Right_Role == $main_pub_role) {
+                            $main_pub_role_exists = true;
                         }
                     }
                     $sub_publisher = (new WorkRightholder)->getSubPublisher($sub_publishing->Work_Id);
                     //// Share Sub Publisher shares to Authors ////
                     if (!empty($authors_add_share) && !empty($sub_publisher)) {
-                        $broad_share = $sub_publisher->Work_Right_Broad_Share / (count($authors_add_share));
-                        $mech_share = $sub_publisher->Work_Right_Mech_Share / (count($authors_add_share));
+                        $check_audits = WorkRightholderAudit::model()->findAllByAttributes(array('Work_Id' => $sub_publishing->Work_Id));
+                        $authors_list = array();
 
-                        foreach ($authors_add_share as $author_guid) {
-                            $auth_right_holder = WorkRightholder::model()->findByAttributes(array('Work_Member_GUID' => $author_guid, 'Work_Id' => $sub_publishing->Work_Id));
-                            $auth_right_holder->Work_Right_Broad_Share += $broad_share;
-                            $auth_right_holder->Work_Right_Mech_Share += $mech_share;
+                        if (!empty($check_audits)) {
+                            if ($main_pub_role_exists) {
+                                $main_publisher = (new WorkRightholder)->getMainPublisher($sub_publishing->Work_Id);
+                                $main_publisher->Work_Right_Broad_Share = $main_publisher->Work_Right_Broad_Share + $sub_publisher->Work_Right_Broad_Share;
+                                $main_publisher->Work_Right_Mech_Share = $main_publisher->Work_Right_Mech_Share + $sub_publisher->Work_Right_Mech_Share;
+                                $main_publisher->save(false);
+                            } else {
+                                foreach ($authors_add_share as $author_guid => $author) {
+                                    foreach ($check_audits as $check_audit) {
+                                        if ($check_audit->Work_Member_GUID == $author_guid) {
+                                            $broad_share = $check_audit->Work_Right_Audit_Broad_Share;
+                                            $mech_share = $check_audit->Work_Right_Audit_Mech_Share;
+                                            break;
+                                        }
+                                    }
+                                    $authors_list[$author_guid] = array(
+                                        'guid' => $author_guid,
+                                        'broad_share' => $broad_share,
+                                        'mech_share' => $mech_share
+                                    );
+                                }
+                            }
+                        } else {
+                            $broad_share = $sub_publisher->Work_Right_Broad_Share / (count($authors_add_share));
+                            $mech_share = $sub_publisher->Work_Right_Mech_Share / (count($authors_add_share));
+
+                            foreach ($authors_add_share as $author_guid => $author) {
+                                $authors_list[$author_guid] = array(
+                                    'guid' => $author_guid,
+                                    'broad_share' => $auth_right_holder->Work_Right_Broad_Share += $broad_share,
+                                    'mech_share' => $auth_right_holder->Work_Right_Mech_Share += $mech_share
+                                );
+                            }
+                        }
+                        foreach ($authors_list as $author_guid => $author) {
+                            $auth_right_holder = WorkRightholder::model()->findByAttributes(array('Work_Member_GUID' => $author_guid, 'Work_Id' => $publishing->Work_Id));
+                            $auth_right_holder->Work_Right_Broad_Share = $author['broad_share'];
+                            $auth_right_holder->Work_Right_Mech_Share = $author['mech_share'];
                             $auth_right_holder->save(false);
                         }
                     }
                     //// Remove Sub Publisher rightholder from Work////
-                    if(!empty($sub_publisher))
+                    if (!empty($sub_publisher))
                         $sub_publisher->delete();
                 }
             }

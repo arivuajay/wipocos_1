@@ -15,7 +15,7 @@
     $work_categories = Myclass::getMasterWorkCategory();
     $right_types = Myclass::getMasterTypeRight(MasterTypeRights::OCCUPATION_PERFORMER, MasterTypeRights::PERFORMER_RANK, MasterTypeRights::PERFORMER_DOMAIN);
     $territories = Myclass::getMasterTerritory();
-    $managed_rights = Myclass::getMasterManagedRight();
+    $managed_rights = MasterManagedRights::getMasterManagedRightbyRank(MasterManagedRights::PERFORMER_RANK);
     $internal_positions = Myclass::getMasterInternalPosition();
     ?>
 

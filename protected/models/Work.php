@@ -267,7 +267,7 @@ class Work extends CActiveRecord {
                 if ($rightholder->workAuthor) {
                     $column .= '<tr>';
                     $column .= "<td>{$rightholder->workAuthor->fullname}</td>";
-                    $column .= "<td>{$rightholder->workRightRole->rolename}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
                     $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
                     $column .= "<td>{$shares} %</td>";
                     $column .= '</tr>';
@@ -277,7 +277,7 @@ class Work extends CActiveRecord {
                 if ($rightholder->workPublisher) {
                     $column .= '<tr>';
                     $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
-                    $column .= "<td>{$rightholder->workRightRole->rolename}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
                     $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
                     $column .= "<td>{$shares} %</td>";
                     $column .= '</tr>';

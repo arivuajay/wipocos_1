@@ -179,8 +179,8 @@
             <div class="box-body">
                 <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100 %</span> </div>
                 <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100 %</span></div>
-                <div class="text-left total_share hide">Publisher Share : <span id="pub_total">100 %</span></div>
-                <div class="text-left total_share hide">Main Publisher : <span id="is_main_added"></span></div>
+                <div class="text-left total_share hide show_pub_hint">Publisher Share : <span id="pub_total">100 %</span></div>
+                <div class="text-left total_share hide show_pub_hint">Main Publisher : <span id="is_main_added"></span></div>
                 <br />
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/work/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
@@ -210,12 +210,12 @@
                                         if ($member->workAuthor) {
                                             $name = $member->workAuthor->fullname;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
-                                            $role = 'AU';
+                                            $role = MasterTypeRights::OCCUPATION_AUTHOR;
                                             $internal_code = $member->workAuthor->Auth_Internal_Code;
                                         } elseif ($member->workPublisher) {
                                             $name = $member->workPublisher->Pub_Corporate_Name;
                                             $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
-                                            $role = 'PU';
+                                            $role = MasterTypeRights::OCCUPATION_PUBLISHER;
                                             $internal_code = $member->workPublisher->Pub_Internal_Code;
                                         }
                                         ?>
@@ -281,8 +281,8 @@
 $search_url = Yii::app()->createAbsoluteUrl("site/work/searchright");
 $mainPublisher = $model->getMainPublisherRole();
 $subPublisher = $model->getSubPublisherRole();
-$def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
-$def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
+//$def_auth_role = DEFAULT_WORK_RIGHTHOLDER_AUTHOR_ROLE;
+//$def_perf_role = DEFAULT_WORK_RIGHTHOLDER_PERFORMER_ROLE;
 
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
@@ -493,6 +493,7 @@ $js = <<< EOD
         _val = 0;
         _broad_share = 0;
         _mech_share = 0;
+        $('.show_pub_hint').hide();
 
         ////// Check Total Share is 100% //////
         $('.broad_share_value').each(function(){
@@ -521,8 +522,7 @@ $js = <<< EOD
         $("#pub_total").html(_publisher_share+' %').css({ 'color': _pub_color});
         ////// End //////////////
         
-        var not_auto_submit = _val != '200';
-//        $("#right_ajax_submit").attr("disabled", not_auto_submit);
+        var not_cent_percent = _val != '200';
 
         ////// Checking One publisher is added //////
         _isMainPubAdded = false;
@@ -542,8 +542,16 @@ $js = <<< EOD
         _is_pub_text = !_isMainPubAdded ? 'Not Added' : 'Added';
         $("#is_main_added").html(_is_pub_text).css({ 'color': _is_pub_color});
         ////// End //////////////
+
+        ////// Publisher validate /////
+        _publisher_validate = true;
+        if(_isMainPubAdded || _isSubPubAdded){
+            $('.show_pub_hint').show();
+            _publisher_validate = _publisher_share >= 50 && _isMainPubAdded;
+        }
+        ////// End //////////////
         
-        if(not_auto_submit == false && _isMainPubAdded && _publisher_share >= 50){
+        if(not_cent_percent == false && _publisher_validate){
             $("#right_form").submit();
         }
     }

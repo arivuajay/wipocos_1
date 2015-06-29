@@ -176,19 +176,19 @@ class WorkController extends Controller {
                         $biograph_new_upload_model = new WorkBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
                         $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
                         $biograph_new_upload_model->Work_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Work_Biogrph_Upl_File = $newName;
                         $biograph_new_upload_model->Work_Biogrph_Upl_Description = $_POST['WorkBiographUploads']['Work_Biogrph_Upl_Description'];
-                        if($biograph_new_upload_model->validate()){
+                        if ($biograph_new_upload_model->validate()) {
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
                     }
                 }
-                
+
                 Myclass::addAuditTrail("Saved Work Biography successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Biography Saved Successfully!!!');
                 $this->redirect(array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '3'));
@@ -214,9 +214,9 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkPublishing'])) {
             $publishing_model->attributes = $_POST['WorkPublishing'];
-            if ($publishing_model->Work_Pub_Contact_End == date('Y-m-d') && $publishing_model->Work_Pub_Tacit == 'Y') {
-                $publishing_model->Work_Pub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing_model->Work_Pub_Contact_End)) . " + {$publishing_model->Work_Pub_Renewal_Period} years"));
-            }
+//            if ($publishing_model->Work_Pub_Contact_End == date('Y-m-d') && $publishing_model->Work_Pub_Tacit == 'Y') {
+//                $publishing_model->Work_Pub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing_model->Work_Pub_Contact_End)) . " + {$publishing_model->Work_Pub_Renewal_Period} years"));
+//            }
             if ($publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Publishing Saved Successfully!!!');
@@ -224,9 +224,9 @@ class WorkController extends Controller {
             }
         } elseif (isset($_POST['WorkSubPublishing'])) {
             $sub_publishing_model->attributes = $_POST['WorkSubPublishing'];
-            if ($sub_publishing_model->Work_Sub_Contact_End == date('Y-m-d') && $sub_publishing_model->Work_Sub_Tacit == 'Y') {
-                $sub_publishing_model->Work_Sub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing_model->Work_Sub_Contact_End)) . " + {$sub_publishing_model->Work_Sub_Renewal_Period} years"));
-            }
+//            if ($sub_publishing_model->Work_Sub_Contact_End == date('Y-m-d') && $sub_publishing_model->Work_Sub_Tacit == 'Y') {
+//                $sub_publishing_model->Work_Sub_Contact_End = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing_model->Work_Sub_Contact_End)) . " + {$sub_publishing_model->Work_Sub_Renewal_Period} years"));
+//            }
             if ($sub_publishing_model->save()) {
                 Myclass::addAuditTrail("Saved Work Sub Publishing successfully.", "sliders");
                 Yii::app()->user->setFlash('success', 'Work Sub Publishing Saved Successfully!!!');
@@ -378,23 +378,23 @@ class WorkController extends Controller {
         $search_pub_model = $search_sub_model = array();
         if (isset($_GET['Work'])) {
             $search = true;
-            $criteria = new CDbCriteria;
-            $criteria->with = array('work');
-            if(isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
-                $criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
-            if(isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
-                $criteria->addCondition("Work_Pub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
-            $search_pub_model = WorkPublishing::model()->with('work')->expiry()->findAll($criteria);
+            $pub_criteria = new CDbCriteria;
+            $pub_criteria->with = array('work');
+            if (isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
+                $pub_criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
+            if (isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
+                $pub_criteria->addCondition("Work_Pub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
+            $search_pub_model = WorkPublishing::model()->with('work')->expiry()->findAll($pub_criteria);
 
 
             $search = true;
-            $criteria = new CDbCriteria;
-            $criteria->with = array('work');
-            if(isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
-                $criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
-            if(isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
-                $criteria->addCondition("Work_Sub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
-            $search_sub_model = WorkSubPublishing::model()->with('work')->expiry()->findAll($criteria);
+            $sub_criteria = new CDbCriteria;
+            $sub_criteria->with = array('work');
+            if (isset($_GET['Work']['work_name']) && $_GET['Work']['work_name'] != '')
+                $sub_criteria->addCondition("work.Work_Org_Title Like '%{$_GET['Work']['work_name']}%'");
+            if (isset($_GET['Work']['contract_end_date']) && $_GET['Work']['contract_end_date'] != '')
+                $sub_criteria->addCondition("Work_Sub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
+            $search_sub_model = WorkSubPublishing::model()->with('work')->expiry()->findAll($sub_criteria);
         }
         $pub_model = WorkPublishing::model()->expiry()->findAll();
         $sub_model = WorkSubPublishing::model()->expiry()->findAll();
@@ -462,6 +462,30 @@ class WorkController extends Controller {
         if (isset($_POST['WorkRightholder']) && !empty($_POST['WorkRightholder'])) {
             $end = end($_POST['WorkRightholder']);
             $work_id = $end['Work_Id'];
+
+            //audit table insert
+            $check_insert_audit = true;
+            $main_pub_role = (new WorkRightholder)->getMainPublisherRole();
+            $sub_pub_role = (new WorkRightholder)->getSubPublisherRole();
+            foreach ($_POST['WorkRightholder'] as $values) {
+                if ($values['Work_Right_Role'] == $main_pub_role || $values['Work_Right_Role'] == $sub_pub_role) {
+                    $check_insert_audit = false;
+                    break;
+                }
+            }
+            if ($check_insert_audit) {
+                WorkRightholderAudit::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
+                foreach ($_POST['WorkRightholder'] as $values) {
+                    $audit_model = new WorkRightholderAudit;
+                    foreach ($values as $key => $value) {
+                        $attr_name = str_replace('Work_Right_', 'Work_Right_Audit_', $key);
+                        $audit_model->setAttribute($attr_name, $value);
+                    }
+                    $audit_model->save(false);
+                }
+            }
+            //end
+            
             WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
             $valid = true;
             foreach ($_POST['WorkRightholder'] as $values) {
@@ -569,7 +593,8 @@ class WorkController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->workBiogrph->work->Work_Org_Title} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->workBiogrph->Work_Id , 'tab' => '3'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->workBiogrph->Work_Id, 'tab' => '3'));
         }
     }
+
 }
