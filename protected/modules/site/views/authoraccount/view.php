@@ -12,33 +12,31 @@ if ($export == false) {
         <p>
             <?php
             $this->widget(
-                    'booster.widgets.TbButton', array(
+                    'application.components.MyActionButton', array(
                 'label' => 'Update',
                 'url' => array('update', 'id' => $model->Auth_Acc_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                     )
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'booster.widgets.TbButton', array(
+                    'application.components.MyActionButton', array(
                 'label' => 'Delete',
                 'url' => array('delete', 'id' => $model->Auth_Acc_Id),
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                     )
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'booster.widgets.TbButton', array(
+                    'application.components.MyActionButton', array(
                 'label' => 'Download',
                 'url' => array('view', 'id' => $model->Auth_Acc_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+//                    
                     )
             );
             ?>
@@ -284,7 +282,7 @@ if ($export == false) {
         <h4>Biography Uploaded Files</h4>
         <?php
         $uploaded_files = array();
-        if(!empty($biograph_model))
+        if (!empty($biograph_model))
             $uploaded_files = AuthorBiographUploads::model()->findAll('Auth_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Auth_Biogrph_Id));
         if (!empty($uploaded_files)) {
             ?>
@@ -319,7 +317,8 @@ if ($export == false) {
                     <?php } ?>
                 </tbody>
             </table>
-        <?php }else{
+        <?php
+        } else {
             echo 'No data created';
         }
         ?>

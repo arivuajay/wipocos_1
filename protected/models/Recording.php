@@ -40,7 +40,7 @@ class Recording extends CActiveRecord {
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->duration_hours = 0;
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
@@ -54,6 +54,7 @@ class Recording extends CActiveRecord {
             $this->Rcd_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::RECORDING_CODE))->Fullcode;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -84,9 +85,9 @@ class Recording extends CActiveRecord {
         );
     }
 
-    public function durationValidate($attribute,$params) {
-        if($this->duration_hours == '0'){
-            if($this->duration_minutes == '0' && $this->duration_seconds == '0')
+    public function durationValidate($attribute, $params) {
+        if ($this->duration_hours == '0') {
+            if ($this->duration_minutes == '0' && $this->duration_seconds == '0')
                 $this->addError($attribute, 'Duration should not be Zero');
         }
     }
@@ -239,24 +240,34 @@ class Recording extends CActiveRecord {
     public function getMatchingdetails($recording_id = NULL) {
         $recording = self::model()->with('recordingRightholders', 'recordingSubtitles')->findByAttributes(array('Rcd_Id' => $recording_id));
         $column = '';
-        $time = explode(':', $recording->Rcd_Duration);
-        $column .= "$time[0]' $time[1]'' {$recording->rcdType->Type_Name} {$recording->rcdDocStatus->Document_Sts_Name}";
-        $column .= "<br />";
-        foreach ($recording->recordingRightholders as $key => $rightholder) {
-            if ($rightholder->recordingPerformer) {
-                $name = $rightholder->recordingPerformer->Perf_Sur_Name . ' ' . $rightholder->recordingPerformer->Perf_First_Name;
-            } elseif ($rightholder->recordingProducer) {
-                $name = $rightholder->recordingProducer->Pro_Corporate_Name;
-            }
-
-            $column .= $key == 0 ? "$name" : " , {$name}";
-        }
-        $column .= "<br />";
         foreach ($recording->recordingSubtitles as $key => $subtitle) {
             $name = $subtitle->Rcd_Subtitle_Name;
-//            $name = $subtitle->recordingSubtitleLanguage->Lang_Name;
-            $column .= $key == 0 ? "$name" : " , {$name}";
+            $column .= $key == 0 ? "Subtitle - $name" : " , {$name}";
+        }
+        if (!empty($recording->recordingSubtitles))
+            $column .= "<br />";
+        $time = explode(':', $recording->Rcd_Duration);
+        $column .= "Duration - $time[0]' $time[1]'' <br />";
+        $column .= "Type - {$recording->rcdType->Type_Name}, Documentary Status - {$recording->rcdDocStatus->Document_Sts_Name}";
+        if ($recording->recordingRightholders) {
+            $column .= "<br /><br />";
+            $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
+            foreach ($recording->recordingRightholders as $key => $rightholder) {
+                if ($rightholder->recordingPerformer) {
+                    $name = $rightholder->recordingPerformer->fullname;
+                } elseif ($rightholder->recordingProducer) {
+                    $name = $rightholder->recordingProducer->Pro_Corporate_Name;
+                }
+                $column .= '<tr>';
+                $column .= "<td>{$name}</td>";
+                $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                $column .= '</tr>';
+            }
+            $column .= '</tbody></table>';
         }
         return $column;
     }
+
 }

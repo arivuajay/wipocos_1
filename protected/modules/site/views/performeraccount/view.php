@@ -13,12 +13,12 @@ if ($export == false) {
         <p>
             <?php
             $this->widget(
-                    'booster.widgets.TbButton', array(
+                    'application.components.MyActionButton', array(
                 'label' => 'Update',
                 'url' => array('update', 'id' => $model->Perf_Acc_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+//                    
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -29,17 +29,17 @@ if ($export == false) {
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                
                     )
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'booster.widgets.TbButton', array(
+                    'application.components.MyActionButton', array(
                 'label' => 'Download',
                 'url' => array('view', 'id' => $model->Perf_Acc_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+//                    
                     )
             );
             ?>

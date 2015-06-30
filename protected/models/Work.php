@@ -258,7 +258,7 @@ class Work extends CActiveRecord {
             $column .= "<br />";
         $time = explode(':', $work->Work_Duration);
         $column .= "Duration - $time[0]' $time[1]'' <br />";
-        $column .= "Type - {$work->workType->Type_Name}, Documentary Status- {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
+        $column .= "Type - {$work->workType->Type_Name}, Documentary Status - {$work->workDocumentations->workDocStatus->Document_Sts_Name}";
 
         if ($work->workRightholders) {
             $column .= "<br /><br />";
@@ -287,70 +287,4 @@ class Work extends CActiveRecord {
         }
         return $column;
     }
-
-    public function contractExpiryDataProvider() {
-        $work_publishing = new WorkPublishing;
-        $criteria = new CDbCriteria;
-//        $criteria->select = array('Work_Id');
-//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
-//        $criteria->addCondition("Work_Pub_Contact_End <= {$expiry_date}");
-        $model = new CActiveDataProvider($work_publishing, array(
-            'criteria' => $criteria,
-        ));
-        echo '<pre>';
-        print_r($model);
-        exit;
-
-
-        $work_sub_publishing = new WorkSubPublishing;
-        $criteria = new CDbCriteria;
-//        $criteria->select = array('Work_Id');
-//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkSubPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
-//        $criteria->addCondition("Work_Sub_Contact_End <= {$expiry_date}");
-        $modeliner = new CActiveDataProvider($work_sub_publishing, array(
-            'criteria' => $criteria,
-        ));
-
-        $data = CMap::mergeArray(
-                        $model->getData(), $modeliner->getData()
-//                $model->search()->getData(), 
-//                $modeliner->search()->getData()
-        );
-
-        $provider = new CArrayDataProvider($data);
-    }
-
-//    public function contractExpiryDataProvider() {
-//        $work_publishing = new WorkPublishing;
-//        $criteria = new CDbCriteria;
-//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
-//        $criteria->addCondition("Work_Pub_Contact_End <= {$expiry_date}");
-//        $prov1 = new CActiveDataProvider($work_publishing, array(
-//            'criteria' => $criteria,
-//        ));
-//
-//        $work_sub_publishing = new WorkSubPublishing;
-//        $criteria = new CDbCriteria;
-//        $expiry_date = new CDbExpression("DATE_ADD(CURDATE(), INTERVAL " . WorkSubPublishing::EXPIRY_WARNING_MONTH . " MONTH)");
-//        $criteria->addCondition("Work_Sub_Contact_End <= {$expiry_date}");
-//        $prov2 = new CActiveDataProvider($work_sub_publishing, array(
-//            'criteria' => $criteria,
-//        ));
-//        $records = array();
-//
-//        for ($i = 0; $i < $prov1->totalItemCount; $i++) {
-//            $data = $prov1->data[$i];
-//            array_push($records, $data);
-//        }
-//        for ($i = 0; $i < $prov2->totalItemCount; $i++) {
-//            $data = $prov2->data[$i];
-//            array_push($records, $data);
-//        }
-//
-//        return new CArrayDataProvider($ret_records, array(
-//            'pagination' => false
-//            )
-//        );
-//    }
-//
 }

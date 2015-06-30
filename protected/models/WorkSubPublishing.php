@@ -65,10 +65,19 @@ class WorkSubPublishing extends CActiveRecord {
             array('Work_Sub_Renewal_Period', 'numerical', 'integerOnly'=>true, 'min' => 1),
             array('Created_Date, Rowversion, Work_Sub_Renewal_Period, Work_Sub_Tacit', 'safe'),
             array('Work_Sub_Contact_End', 'compare', 'compareAttribute'=>'Work_Sub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Work_Sub_Contact_End', 'maxEndDate'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Sub_Id, Work_Id, Work_Sub_Contact_Start, Work_Sub_Contact_End, Work_Sub_Territories, Work_Sub_Clause, Work_Sub_Sign_Date, Work_Sub_File, Work_Sub_References, Work_Sub_Catelog_Number, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
+    }
+    
+    public function maxEndDate($attribute,$params) {
+        $publishing = WorkPublishing::model()->findByAttributes(array('Work_Id' => $this->Work_Id));
+        if(!empty($publishing)){
+            if($publishing->Work_Pub_Contact_End < $this->Work_Sub_Contact_End)
+                $this->addError($attribute, "End date Exceeds Publishing End date. End date should be lesser than {$publishing->Work_Pub_Contact_End}");
+        }
     }
 
     /**

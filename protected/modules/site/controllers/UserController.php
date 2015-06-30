@@ -24,6 +24,7 @@ class UserController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'create', 'update', 'search', 'sendemail', 'view', 'delete'),
+                'expression'=> 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('deny', // deny all users

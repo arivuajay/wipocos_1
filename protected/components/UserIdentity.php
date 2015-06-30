@@ -63,10 +63,46 @@ class UserIdentity extends CUserIdentity {
     protected function setUserData($user) {
         $this->_id = $user->id;
         $this->setState('name', $user->name);
+        $this->setState('id', $user->id);
         return;
     }
 
-    public static function checkAccess($name) {
-        return ($name == 'admin');
+    public static function checkAccess($id = NULL, $controller = NULL, $action = NULL) {
+        $return = true;
+        if($id == NULL)
+            $id = Yii::app()->user->id;
+        if($controller == NULL)
+            $controller = Yii::app()->controller->id;
+        if($action == NULL)
+            $action = Yii::app()->controller->action->id;
+        
+        $user = User::model()->find('id = :U', array(':U' => $id));
+        $screen = MasterScreen::model()->find("Screen_code = :controller", array(':controller' => $controller));
+        if(!empty($user) && !empty($screen)){
+            $auth_resources = AuthResources::model()->findByAttributes(array('Master_User_ID' => $user->id, 'Master_Module_ID' => $screen->Module_ID, 'Master_Screen_ID' => $screen->Master_Screen_ID));
+            if(empty($auth_resources)){
+                $auth_resources = AuthResources::model()->findByAttributes(array('Master_Role_ID' => $user->role, 'Master_Module_ID' => $screen->Module_ID, 'Master_Screen_ID' => $screen->Master_Screen_ID));
+            }
+            if(!empty($auth_resources)){
+                $insert_actions = array('create', 'insertright');
+                $update_actions = array('update');
+                $view_actions = array('index', 'view', 'download', 'print', 'pdf', 'searchright');
+                $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove');
+                $other_actions = array('contractexpiry');
+                
+                if(in_array($action, $insert_actions)){
+                    $return = $auth_resources->Master_Task_ADD == 1;
+                }elseif(in_array($action, $update_actions)){
+                    $return = $auth_resources->Master_Task_UPT == 1;
+                }elseif(in_array($action, $view_actions)){
+                    $return = $auth_resources->Master_Task_SEE == 1;
+                }elseif(in_array($action, $delete_actions)){
+                    $return = $auth_resources->Master_Task_DEL == 1;
+                }elseif(in_array($action, $other_actions)){
+                    $return = true;
+                }
+            }
+        }
+        return $return;
     }
 }

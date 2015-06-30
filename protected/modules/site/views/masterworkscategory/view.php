@@ -13,12 +13,12 @@ $this->breadcrumbs = array(
     <p>
         <?php
         $this->widget(
-                'booster.widgets.TbButton', array(
+                'application.components.MyActionButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' => $model->Master_Work_Category_Id),
                     'buttonType' => 'link',
                     'context' => 'primary',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+//                    
                 )
         );
         echo "&nbsp;&nbsp;";
@@ -29,7 +29,7 @@ $this->breadcrumbs = array(
                     'buttonType' => 'link',
                     'context' => 'danger',
                     'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    
                 )
         );
         ?>

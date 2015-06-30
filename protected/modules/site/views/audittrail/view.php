@@ -12,23 +12,23 @@ $this->breadcrumbs=array(
     <p>
         <?php
         $this->widget(
-                'booster.widgets.TbButton', array(
+                'application.components.MyActionButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' =>  $model->aud_id ),
                     'buttonType' => 'link',
                     'context' => 'primary',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+//                    
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
-                'booster.widgets.TbButton', array(
+                'application.components.MyActionButton', array(
                     'label' => 'Delete',
                     'url' => array('delete', 'id' =>  $model->aud_id ),
                     'buttonType' => 'link',
                     'context' => 'danger',
                     'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
+                    
                 )
         );
         ?>

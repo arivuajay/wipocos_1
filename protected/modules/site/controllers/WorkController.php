@@ -37,6 +37,7 @@ class WorkController extends Controller {
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
                     'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'contractexpiry', 'biofiledelete'),
+                'expression'=> 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions

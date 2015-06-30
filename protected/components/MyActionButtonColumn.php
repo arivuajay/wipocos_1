@@ -17,8 +17,14 @@ class MyActionButtonColumn extends TbButtonColumn {
 
     protected function initDefaultButtons() {
         $validate_buttons = array(
+            'view' => array(
+                'visible' => 'UserIdentity::checkAccess(NULL, "'.strtolower($this->grid->dataProvider->modelClass).'", "view")'
+            ),
+            'update' => array(
+                'visible' => 'UserIdentity::checkAccess(NULL, "'.strtolower($this->grid->dataProvider->modelClass).'", "update")'
+            ),
             'delete' => array(
-                'visible' => 'UserIdentity::checkAccess("'.Yii::app()->user->name.'")'
+                'visible' => 'UserIdentity::checkAccess(NULL, "'.strtolower($this->grid->dataProvider->modelClass).'", "delete")'
             )
         );
         $this->buttons = array_merge($this->buttons, $validate_buttons);

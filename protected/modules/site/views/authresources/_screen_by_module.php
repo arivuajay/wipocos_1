@@ -10,10 +10,10 @@ $form = $this->beginWidget('CActiveForm', array(
         <table class="table table-striped table-bordered">
             <thead class="bg-green">
             <td align="center" width="40%"><strong>Screen Name</strong></td>
-            <td align="center" width="15%"><strong>Add</strong></td>
-            <td align="center" width="15%"><strong>View</strong></td>
-            <td align="center" width="15%"><strong>Update</strong></td>
-            <td align="center" width="15%"><strong>Delete</strong></td>
+            <td align="center" width="15%"><strong>Add</strong><?php echo CHtml::checkBox('check_all_add', false, array('class' => 'form-control all_check', 'data-check' => 'check_add'));?></td>
+            <td align="center" width="15%"><strong>View</strong><?php echo CHtml::checkBox('check_all_view', false, array('class' => 'form-control all_check', 'data-check' => 'check_view'));?></td>
+            <td align="center" width="15%"><strong>Update</strong><?php echo CHtml::checkBox('check_all_update', false, array('class' => 'form-control all_check', 'data-check' => 'check_update'));?></td>
+            <td align="center" width="15%"><strong>Delete</strong><?php echo CHtml::checkBox('check_all_delete', false, array('class' => 'form-control all_check', 'data-check' => 'check_delete'));?></td>
             </thead>
             <tbody>
                 <?php
@@ -30,10 +30,10 @@ $form = $this->beginWidget('CActiveForm', array(
                         echo '<tr class="text-center">';
                         echo '<td>' . $master->Description . '</td>';
 
-                        echo '<td>' . $form->checkBox($model, 'Master_Task_ADD', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_ADD]')) . '</td>';
-                        echo '<td>' . $form->checkBox($model, 'Master_Task_SEE', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_SEE]')) . '</td>';
-                        echo '<td>' . $form->checkBox($model, 'Master_Task_UPT', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_UPT]')) . '</td>';
-                        echo '<td>' . $form->checkBox($model, 'Master_Task_DEL', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_DEL]')) . '</td>';
+                        echo '<td>' . $form->checkBox($model, 'Master_Task_ADD', array('class' => 'form-control check_add', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_ADD]')) . '</td>';
+                        echo '<td>' . $form->checkBox($model, 'Master_Task_SEE', array('class' => 'form-control check_view', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_SEE]')) . '</td>';
+                        echo '<td>' . $form->checkBox($model, 'Master_Task_UPT', array('class' => 'form-control check_update', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_UPT]')) . '</td>';
+                        echo '<td>' . $form->checkBox($model, 'Master_Task_DEL', array('class' => 'form-control check_delete', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_DEL]')) . '</td>';
                         echo '</tr>';
                     }
                 } else {
@@ -41,10 +41,10 @@ $form = $this->beginWidget('CActiveForm', array(
                         echo CHtml::activeHiddenField($master, 'Master_Resource_ID', array('value' => $master->Master_Resource_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Resource_ID]'));
                         echo '<tr class="text-center">';
                         echo '<td>' . $master->masterScreen->Description . '</td>';
-                        echo '<td>' . $form->checkBox($master, 'Master_Task_ADD', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_ADD]')) . '</td>';
-                        echo '<td>' . $form->checkBox($master, 'Master_Task_SEE', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_SEE]')) . '</td>';
-                        echo '<td>' . $form->checkBox($master, 'Master_Task_UPT', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_UPT]')) . '</td>';
-                        echo '<td>' . $form->checkBox($master, 'Master_Task_DEL', array('class' => 'form-control', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_DEL]')) . '</td>';
+                        echo '<td>' . $form->checkBox($master, 'Master_Task_ADD', array('class' => 'form-control check_add', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_ADD]')) . '</td>';
+                        echo '<td>' . $form->checkBox($master, 'Master_Task_SEE', array('class' => 'form-control check_view', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_SEE]')) . '</td>';
+                        echo '<td>' . $form->checkBox($master, 'Master_Task_UPT', array('class' => 'form-control check_update', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_UPT]')) . '</td>';
+                        echo '<td>' . $form->checkBox($master, 'Master_Task_DEL', array('class' => 'form-control check_delete', 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_DEL]')) . '</td>';
                         echo '</tr>';
                     }
                 }
