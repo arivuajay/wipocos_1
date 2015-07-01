@@ -3,9 +3,9 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $g_type = ucfirst($role);
-$this->title = $g_type.' Groups';
+$this->title = $g_type . ' Groups';
 $this->breadcrumbs = array(
-$g_type.' Groups',
+    $g_type . ' Groups',
 );
 
 $themeUrl = $this->themeUrl;
@@ -22,7 +22,7 @@ $languages = Myclass::getMasterLanguage();
 $legal_forms = Myclass::getMasterLegalForm();
 ?>
 
-<?php $this->renderPartial('/default/_colors')?>
+<?php $this->renderPartial('/default/_colors') ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -118,12 +118,12 @@ $legal_forms = Myclass::getMasterLegalForm();
                         </div>
                     </div>
                     <?php echo $form->hiddenField($searchModel, 'is_auth_performer', array('class' => 'form-control', 'value' => $role)); ?>
-<!--                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'is_auth_performer', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'is_auth_performer', array('A' => 'Author', 'P' => 'Performer'), array('prompt' => '', 'class' => 'form-control')); ?>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                    <?php echo $form->labelEx($searchModel, 'is_auth_performer', array('class' => ' control-label')); ?>
+                    <?php echo $form->dropDownList($searchModel, 'is_auth_performer', array('A' => 'Author', 'P' => 'Performer'), array('prompt' => '', 'class' => 'form-control')); ?>
+                                            </div>
+                                        </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
@@ -229,12 +229,31 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php 
-        if($role == 'author'){
-            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
-        }elseif($role == 'performer'){
-            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right'));
-        }?>
+        <?php
+        if ($role == 'author') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Create Author Group',
+                'icon' => 'fa fa-plus',
+                'url' => array('/site/group/create', 'type' => 'author'),
+                'buttonType' => 'link',
+                'context' => 'success',
+                'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                    )
+            );
+        } elseif ($role == 'performer') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Create Performer Group',
+                'icon' => 'fa fa-plus',
+                'url' => array('/site/group/create', 'type' => 'performer'),
+                'buttonType' => 'link',
+                'context' => 'success',
+                'htmlOptions' => array('class' => 'pull-right'),
+                    )
+            );
+        }
+        ?>
     </div>
 </div>
 
@@ -305,7 +324,7 @@ $legal_forms = Myclass::getMasterLegalForm();
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> '.$g_type.'  Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> ' . $g_type . '  Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

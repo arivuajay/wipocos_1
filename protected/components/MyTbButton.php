@@ -9,23 +9,29 @@ Yii::import('booster.widgets.TbButton');
 Yii::import('application.components.UserIdentity');
 
 /**
- * Description of MyActionButtonColumn
+ * Description of MyActionButton
  *
  * @author Admin
  */
-class MyTbButton extends TbButton {
-
+class MyTbButton extends TbButton{
+    
     public function init() {
+        $exp = explode("/", $this->url[0]);
+        $group_role = NULL;
+        if(count($exp) == 1){
+            $controller = Yii::app()->controller->id;
+            $action = $this->url[0];
+        }else{
+            $controller = $exp[2];
+            $action = $exp[3];
+        }
+        //hard code for groups controller//
+        if(isset($this->url['type'])){
+            $group_role = "{$this->url['type']}group";
+        }
+        //end//
 
-//        $this->visible = $this->url;
-//        var_dump($this->UrlToController($this->url));
-//        exit;
-//        $this->buttons = array(
-//            'delete' => array(
-//                'visible' => 'UserIdentity::checkAccess("' . Yii::app()->user->name . '")'
-//            )
-//        );
-
+        $this->visible = UserIdentity::checkAccess(NULL, $controller, $action, $group_role);
         parent::init();
     }
 

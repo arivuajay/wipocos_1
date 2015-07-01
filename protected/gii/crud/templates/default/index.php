@@ -112,7 +112,7 @@ if($count>=7)
 ?>
 		array(
                 'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
+                'class' => 'application.components.MyTbButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )
@@ -139,7 +139,18 @@ if($count>=7)
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo "<?php"; ?> echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create <?php echo $this->modelClass; ?>', array('/site/<?php echo strtolower($this->modelClass); ?>/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php echo "<?php"; ?>
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create <?php echo $this->modelClass; ?>',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/<?php echo strtolower($this->modelClass); ?>/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 
@@ -175,7 +186,7 @@ if($count>=7)
 ?>
 		array(
                 'header' => 'Actions',
-                'class' => 'booster.widgets.TbButtonColumn',
+                'class' => 'application.components.MyTbButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )

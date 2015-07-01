@@ -217,8 +217,28 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create/type/publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher', array('/site/publisheraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Publisher Group',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/publishergroup/create', 'type' => 'publisher'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Publisher',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/publisheraccount/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

@@ -29,12 +29,11 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
     <p>
         <?php echo "<?php"; ?>
         $this->widget(
-                'booster.widgets.TbButton', array(
+                'application.components.MyTbButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>),
                     'buttonType' => 'link',
                     'context' => 'primary',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         echo "&nbsp;&nbsp;";
@@ -45,17 +44,15 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
                     'buttonType' => 'link',
                     'context' => 'danger',
                     'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
-                'booster.widgets.TbButton', array(
+                'application.components.MyTbButton', array(
             'label' => 'Download',
             'url' => array('view', 'id' => <?php echo " \$model->{$this->tableSchema->primaryKey} " ?>, 'export' => 'PDF'),
             'buttonType' => 'link',
             'context' => 'warning',
-//                    'visible' => UserIdentity::checkAccess(Yii::app()->user->name)
                 )
         );
         ?>

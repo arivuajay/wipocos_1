@@ -237,7 +237,18 @@ $labels = $model->getLabel();
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Recording', array('/site/recording/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Recording',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/recording/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

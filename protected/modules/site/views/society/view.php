@@ -12,7 +12,7 @@ $this->breadcrumbs = array(
     <p>
         <?php
         $this->widget(
-                'application.components.MyActionButton', array(
+                'application.components.MyTbButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' => $model->Society_Id),
                     'buttonType' => 'link',

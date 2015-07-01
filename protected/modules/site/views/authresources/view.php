@@ -13,7 +13,7 @@ $this->breadcrumbs = array(
     <p>
         <?php
         $this->widget(
-                'application.components.MyActionButton', array(
+                'application.components.MyTbButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' => $model->Master_Resource_ID),
                     'buttonType' => 'link',
@@ -23,7 +23,7 @@ $this->breadcrumbs = array(
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
-                'application.components.MyActionButton', array(
+                'application.components.MyTbButton', array(
                     'label' => 'Delete',
                     'url' => array('delete', 'id' => $model->Master_Resource_ID),
                     'buttonType' => 'link',

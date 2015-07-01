@@ -10,7 +10,18 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create MasterModule', array('/site/mastermodule/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Master Module',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/mastermodule/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

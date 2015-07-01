@@ -133,7 +133,18 @@ $producers = Myclass::getProducer();
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create ProducerLabelOwner', array('/site/producerlabelowner/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Producer LabelOwner',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/producerlabelowner/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

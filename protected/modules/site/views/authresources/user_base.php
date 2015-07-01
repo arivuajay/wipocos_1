@@ -68,8 +68,16 @@ $this->breadcrumbs = array(
 
         <div id="resources-block">
         </div>
-
-
     </div>
-
 </div>
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $("body").on('click', '.all_check', function(){
+            _class = $(this).data('check');
+            $('.'+_class).prop('checked', this.checked);    
+        });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('_user_base', $js);
+?>

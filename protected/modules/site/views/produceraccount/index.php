@@ -225,9 +225,38 @@ $legal_forms = Myclass::getMasterLegalForm();
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Labels Ownership', array('/site/producerlabelowner/create'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create/type/producer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;')); ?>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer', array('/site/produceraccount/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Labels Ownership',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/producerlabelowner/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Producer Group',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/publishergroup/create', 'type' => 'producer'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Producer',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/produceraccount/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

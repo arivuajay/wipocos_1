@@ -113,16 +113,16 @@ $this->breadcrumbs = array(
                             echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
                             ;
                             ?>
-<?php echo $form->error($searchModel, 'Active'); ?>
+                            <?php echo $form->error($searchModel, 'Active'); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
-<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                            <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                         </div>
                     </div>
-<?php $this->endWidget(); ?>
+                    <?php $this->endWidget(); ?>
                 </div>
             </section>
 
@@ -205,7 +205,18 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Society', array('/site/society/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Society',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/society/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

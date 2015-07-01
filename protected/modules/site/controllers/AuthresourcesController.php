@@ -205,7 +205,7 @@ class AuthresourcesController extends Controller {
             $type = $_GET['type'];
         }
         $model = new AuthResources();
-        $masters = MasterScreen::model()->findAllByAttributes(array('Module_ID' => $mid));
+        $masters = MasterScreen::model()->isActive()->findAllByAttributes(array('Module_ID' => $mid));
 
         if ($type == 'role') {
             $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, 'Master_Role_ID' => $id));
@@ -228,9 +228,7 @@ class AuthresourcesController extends Controller {
                 return $this->redirect(array($action . '/index'));
             }
         } else {
-            return $this->renderPartial('_screen_by_module', compact(
-                                    'masters', 'exist_resources', 'model', 'id', 'type', 'mid'
-            ));
+            return $this->renderPartial('_screen_by_module', compact('masters', 'exist_resources', 'model', 'id', 'type', 'mid'));
         }
     }
 

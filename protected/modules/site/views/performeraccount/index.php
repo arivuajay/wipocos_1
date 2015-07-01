@@ -266,9 +266,26 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php echo CHtml::link('Clear', array('/site/performeraccount/index'), array('class' => 'btn btn-primary btn-sm')); ?>
                 </div>-->
         <?php
-//        $this->endWidget();
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer Group', array('/site/group/create', 'type' => 'performer'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Performer', array('/site/performeraccount/create'), array('class' => 'btn btn-success pull-right'));
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Performer Group',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/group/create', 'type' => 'performer'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Performer',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/performeraccount/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
         ?>
     </div>
 </div>

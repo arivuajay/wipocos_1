@@ -44,7 +44,8 @@ $this->breadcrumbs = array(
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                            <?php
+                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
                             ;
                             ?>
 <?php echo $form->error($searchModel, 'Active'); ?>
@@ -108,7 +109,18 @@ $this->breadcrumbs = array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-<?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create MasterEventType', array('/site/mastereventtype/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Master EventType',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/mastereventtype/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

@@ -329,7 +329,11 @@ class Myclass extends CController {
     }
 
     public static function getMasterModule($is_active = TRUE, $key = NULL) {
-        $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
+        if($is_active && $key == NULL)
+            $modules = CHtml::listData(MasterModule::model()->isActive()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
+        else
+            $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
+            
         if ($key != NULL)
             return $modules[$key];
         return $modules;
@@ -460,7 +464,7 @@ class Myclass extends CController {
 
     public static function getAuthorconvertIgnorelist() {
         return array('Auth_Acc_Id', 'Created_Date', 'Auth_Addr_Id', 'Rowversion', 'Auth_Biogrph_Id', 'Auth_Death_Inhrt_Id',
-            'Auth_Pay_Id', 'Auth_Pseudo_Id', 'Auth_Upl_Id', 'Auth_Biogrph_Upl_Id', 
+            'Auth_Pay_Id', 'Auth_Pseudo_Id', 'Auth_Upl_Id', 'Auth_Biogrph_Upl_Id',
             'Perf_Acc_Id', 'Perf_Addr_Id', 'Perf_Biogrph_Id', 'Perf_Death_Inhrt_Id',
             'Perf_Pay_Id', 'Perf_Pseudo_Id', 'Perf_Upl_Id', 'Perf_Biogrph_Upl_Id');
     }
@@ -484,4 +488,38 @@ class Myclass extends CController {
         return $file_ary;
     }
 
+    public static function checkGroupactions($_controller, $_action) {
+        $ret = array(
+            'authorgroup' => false,
+            'performergroup' => false,
+            'publishergroup' => false,
+            'producergroup' => false,
+        );
+        if ($_controller == 'group') {
+            if (isset($_REQUEST['role'])) {
+                $ret['authorgroup'] = $_REQUEST['role'] == 'author';
+                $ret['performergroup'] = $_REQUEST['role'] == 'performer';
+            } elseif (isset($_REQUEST['type'])) {
+                $ret['authorgroup'] = $_REQUEST['type'] == 'author';
+                $ret['performergroup'] = $_REQUEST['type'] == 'performer';
+            } elseif (isset($_REQUEST['id'])) {
+                $group = Group::model()->findByPk($_REQUEST['id']);
+                $ret['authorgroup'] = $group->Group_Is_Author == '1';
+                $ret['performergroup'] = $group->Group_Is_Performer == '1';
+            }
+        } elseif ($_controller == 'publishergroup') {
+            if (isset($_REQUEST['role'])) {
+                $ret['publishergroup'] = $_REQUEST['role'] == 'publisher';
+                $ret['producergroup'] = $_REQUEST['role'] == 'producer';
+            }else if (isset($_REQUEST['type'])) {
+                $ret['publishergroup'] = $_REQUEST['type'] == 'publisher';
+                $ret['producergroup'] = $_REQUEST['type'] == 'producer';
+            } elseif (isset($_REQUEST['id'])) {
+                $group = PublisherGroup::model()->findByPk($_REQUEST['id']);
+                $ret['publishergroup'] = $group->Pub_Group_Is_Publisher == '1';
+                $ret['producergroup'] = $group->Pub_Group_Is_Producer == '1';
+            }
+        }
+        return $ret;
+    }
 }

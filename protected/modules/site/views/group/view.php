@@ -24,7 +24,7 @@ $this->breadcrumbs = array(
         <?php
         if ($export == false) {
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Update',
                 'url' => array('update', 'id' => $model->Group_Id),
                 'buttonType' => 'link',
@@ -34,7 +34,7 @@ $this->breadcrumbs = array(
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Delete',
                 'url' => array('delete', 'id' => $model->Group_Id),
                 'buttonType' => 'link',
@@ -45,7 +45,7 @@ $this->breadcrumbs = array(
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Download',
                 'url' => array('view', 'id' => $model->Group_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',

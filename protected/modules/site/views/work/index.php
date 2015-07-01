@@ -115,20 +115,20 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Work_Unknown', array('class' => ' control-label')); ?><br />
                             <?php // echo $form->checkBox($searchModel, 'Work_Unknown', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Work_Unknown', array('Y' => 'Yes', 'N' => 'No'), array('class' => 'form-control', 'prompt'=>'')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Work_Unknown', array('Y' => 'Yes', 'N' => 'No'), array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Work_Unknown'); ?>
                         </div>
                     </div>
-<!--                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
-                            <?php
-                            echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
-                            ;
-                            ?>
-                            <?php echo $form->error($searchModel, 'Active'); ?>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                    <?php echo $form->labelEx($searchModel, 'Active', array('class' => ' control-label')); ?>
+                    <?php
+                    echo $form->dropDownList($searchModel, 'Active', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control'));
+                    ;
+                    ?>
+                    <?php echo $form->error($searchModel, 'Active'); ?>
+                                            </div>
+                                        </div>-->
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
@@ -175,7 +175,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                ),
                 array(
                     'name' => 'matchingdetails',
-                    'value' => function($data,$row) use (&$model){
+                    'value' => function($data, $row) use (&$model) {
                         echo $model->getMatchingdetails($data->Work_Id);
                     },
                 ),
@@ -224,7 +224,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <input type="text" class="form-control inline" name="base_table_search" id="base_table_search" />
             </div>
         </div>
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Work', array('/site/work/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Work',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/work/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 
@@ -236,7 +247,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                'class' => 'IndexColumn',
 //                'header' => '',
 //            ),
-                'Work_Org_Title',
+            'Work_Org_Title',
 //                array(
 //                    'name' => 'Work_Language_Id',
 //                    'type' => 'raw',
@@ -245,8 +256,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                            echo $data->workLanguage->Lang_Name;
 //                    },
 //                ),
-                'Work_Internal_Code',
-                'Work_Iswc',
+            'Work_Internal_Code',
+            'Work_Iswc',
 //                'Work_Wic_Code',
 //                array(
 //                    'name' => 'Work_Type_Id',
@@ -256,12 +267,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                            echo $data->workType->Type_Name;
 //                    },
 //                ),
-                array(
-                    'name' => 'matchingdetails',
-                    'value' => function($data,$row) use (&$model){
-                        echo $model->getMatchingdetails($data->Work_Id);
-                    },
-                ),
+            array(
+                'name' => 'matchingdetails',
+                'value' => function($data, $row) use (&$model) {
+                    echo $model->getMatchingdetails($data->Work_Id);
+                },
+            ),
             /*
               'Work_Factor_Id',
               'Work_Instrumentation',

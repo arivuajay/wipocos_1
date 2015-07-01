@@ -2,9 +2,9 @@
 /* @var $this PublishergroupController */
 /* @var $dataProvider CActiveDataProvider */
 $g_type = ucfirst($role);
-$this->title = $g_type.' Groups';
+$this->title = $g_type . ' Groups';
 $this->breadcrumbs = array(
-$g_type.' Groups',
+    $g_type . ' Groups',
 );
 
 $themeUrl = $this->themeUrl;
@@ -20,7 +20,7 @@ $countries = Myclass::getMasterCountry();
 $languages = Myclass::getMasterLanguage();
 $legal_forms = Myclass::getMasterLegalForm();
 ?>
-<?php $this->renderPartial('/default/_colors')?>
+<?php $this->renderPartial('/default/_colors') ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -72,13 +72,13 @@ $legal_forms = Myclass::getMasterLegalForm();
                             <?php echo $form->error($searchModel, 'Pub_Group_IPN_Base_Number'); ?>
                         </div>
                     </div>
-<!--                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Pub_Group_IPD_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($searchModel, 'Pub_Group_IPD_Number'); ?>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                    <?php echo $form->labelEx($searchModel, 'Pub_Group_IPD_Number', array('class' => ' control-label')); ?>
+                    <?php echo $form->textField($searchModel, 'Pub_Group_IPD_Number', array('class' => 'form-control')); ?>
+                    <?php echo $form->error($searchModel, 'Pub_Group_IPD_Number'); ?>
+                                            </div>
+                                        </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Pub_Group_Date', array('class' => ' control-label')); ?>
@@ -116,12 +116,12 @@ $legal_forms = Myclass::getMasterLegalForm();
                     </div>
                     <?php echo $form->hiddenField($searchModel, 'is_pub_producer', array('class' => 'form-control', 'value' => $role)); ?>
 
-<!--                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'is_pub_producer', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'is_pub_producer', array('PU' => 'Publisher', 'PR' => 'Producer'), array('prompt' => '', 'class' => 'form-control')); ?>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                    <?php echo $form->labelEx($searchModel, 'is_pub_producer', array('class' => ' control-label')); ?>
+                    <?php echo $form->dropDownList($searchModel, 'is_pub_producer', array('PU' => 'Publisher', 'PR' => 'Producer'), array('prompt' => '', 'class' => 'form-control')); ?>
+                                            </div>
+                                        </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'search_status', array('class' => ' control-label')); ?>
@@ -228,10 +228,28 @@ $legal_forms = Myclass::getMasterLegalForm();
             </div>
         </div>
         <?php
-        if($role == 'publisher'){
-            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Publisher Group', array('/site/publishergroup/create', 'type' => 'publisher'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
-        }elseif($role == 'producer'){
-            echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Producer Group', array('/site/publishergroup/create', 'type' => 'producer'), array('class' => 'btn btn-success pull-right')); 
+        if ($role == 'publisher') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Create Publisher Group',
+                'icon' => 'fa fa-plus',
+                'url' => array('/site/publishergroup/create', 'type' => 'publisher'),
+                'buttonType' => 'link',
+                'context' => 'success',
+                'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                    )
+            );
+        } elseif ($role == 'producer') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Create Producer Group',
+                'icon' => 'fa fa-plus',
+                'url' => array('/site/publishergroup/create', 'type' => 'producer'),
+                'buttonType' => 'link',
+                'context' => 'success',
+                'htmlOptions' => array('class' => 'pull-right'),
+                    )
+            );
         }
         ?>
     </div>
@@ -304,7 +322,7 @@ $legal_forms = Myclass::getMasterLegalForm();
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  '.$g_type.' Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary} &nbsp;' . $export_btn . '</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  ' . $g_type . ' Groups</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

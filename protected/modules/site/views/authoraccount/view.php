@@ -12,7 +12,7 @@ if ($export == false) {
         <p>
             <?php
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Update',
                 'url' => array('update', 'id' => $model->Auth_Acc_Id),
                 'buttonType' => 'link',
@@ -21,7 +21,7 @@ if ($export == false) {
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Delete',
                 'url' => array('delete', 'id' => $model->Auth_Acc_Id),
                 'buttonType' => 'link',
@@ -31,7 +31,7 @@ if ($export == false) {
             );
             echo "&nbsp;&nbsp;";
             $this->widget(
-                    'application.components.MyActionButton', array(
+                    'application.components.MyTbButton', array(
                 'label' => 'Download',
                 'url' => array('view', 'id' => $model->Auth_Acc_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',

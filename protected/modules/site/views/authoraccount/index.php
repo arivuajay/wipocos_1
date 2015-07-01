@@ -236,8 +236,26 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
         <?php
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author Group', array('/site/group/create', 'type' => 'author'), array('class' => 'btn btn-success pull-right', 'style' => 'margin-left:10px;'));
-        echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create Author', array('/site/authoraccount/create'), array('class' => 'btn btn-success pull-right'));
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Author Group',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/group/create', 'type' => 'author'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Author',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/authoraccount/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
         ?>
     </div>
 </div>

@@ -104,7 +104,18 @@ $this->breadcrumbs=array(
 
 <div class="col-lg-12 col-md-12">
     <div class="row mb10">
-        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;Create MasterLabel', array('/site/masterlabel/create'), array('class' => 'btn btn-success pull-right')); ?>
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Master Label',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/masterlabel/create'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right'),
+                )
+        );
+        ?>
     </div>
 </div>
 

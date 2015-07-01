@@ -25,6 +25,12 @@ class MasterScreen extends CActiveRecord {
         return '{{master_screen}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */
