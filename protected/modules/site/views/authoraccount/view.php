@@ -103,6 +103,14 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : 'Not Set'
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
             ),
         ));
         ?>

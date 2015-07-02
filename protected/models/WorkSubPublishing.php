@@ -104,7 +104,7 @@ class WorkSubPublishing extends CActiveRecord {
             'Work_Sub_Clause' => 'Clause',
             'Work_Sub_Sign_Date' => 'Date of signature',
             'Work_Sub_File' => 'File',
-            'Work_Sub_References' => 'Number of References',
+            'Work_Sub_References' => 'No or References',
             'Work_Sub_Catelog_Number' => 'Catelogue Number',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

@@ -25,6 +25,7 @@ class InternalcodeGenerate extends CActiveRecord {
 
     const WORK_CODE = 'W';
     const RECORDING_CODE = 'R';
+    const RECORDING_PUBLISHING_CODE = 'RP';
 
     public $fullcode;
 

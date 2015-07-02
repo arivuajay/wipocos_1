@@ -32,7 +32,7 @@
  * @property MasterTypeRights $authMngeTypeRght
  * @property MasterWorksCategory $authMngeAvlWorkCat
  */
-class AuthorManageRights extends CActiveRecord {
+class AuthorManageRights extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -58,12 +58,12 @@ class AuthorManageRights extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Entry_Date, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Entry_Date_2, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'required'),
-            array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Mnge_File', 'length', 'max' => 255),
             array('Auth_Mnge_Duration', 'length', 'max' => 100),
             array('Auth_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Auth_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2', 'safe'),
+            array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Mnge_Rgt_Id, Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Entry_Date, Auth_Mnge_Exit_Date, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Entry_Date_2, Auth_Mnge_Exit_Date_2, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_File, Auth_Mnge_Duration, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'safe', 'on' => 'search'),
@@ -86,6 +86,8 @@ class AuthorManageRights extends CActiveRecord {
             'authMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Auth_Mnge_Territories_Id'),
             'authMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Auth_Mnge_Type_Rght_Id'),
             'authMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Auth_Mnge_Avl_Work_Cat_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

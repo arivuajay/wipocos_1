@@ -112,7 +112,7 @@ if($count>=7)
 ?>
 		array(
                 'header' => 'Actions',
-                'class' => 'application.components.MyTbButtonColumn',
+                'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )
@@ -186,7 +186,7 @@ if($count>=7)
 ?>
 		array(
                 'header' => 'Actions',
-                'class' => 'application.components.MyTbButtonColumn',
+                'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
                 'template' => '{view}{update}{delete}',
             )

@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property AuthorAccount $authAcc
  */
-class AuthorUpload extends CActiveRecord {
+class AuthorUpload extends RActiveRecord {
 
     public $after_save_enable = true;
     public $after_delete_disable = true;
@@ -34,7 +34,7 @@ class AuthorUpload extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Upl_Doc_Name', 'required'),
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Upl_Doc_Name', 'length', 'max' => 255),
             array('Auth_Upl_File', 'length', 'max' => 1000),
             array('Auth_Upl_File', 'file', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB'),
@@ -43,6 +43,7 @@ class AuthorUpload extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Upl_Id, Auth_Acc_Id, Auth_Upl_Doc_Name, Auth_Upl_File', 'safe', 'on' => 'search'),
+            array('Created_By, Updated_By', 'safe'),
         );
     }
 
@@ -54,6 +55,8 @@ class AuthorUpload extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

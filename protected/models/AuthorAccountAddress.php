@@ -34,7 +34,7 @@
  * The followings are the available model relations:
  * @property AuthorAccount $authAcc
  */
-class AuthorAccountAddress extends CActiveRecord {
+class AuthorAccountAddress extends RActiveRecord {
     
     public $after_save_enable = true;
 
@@ -61,7 +61,7 @@ class AuthorAccountAddress extends CActiveRecord {
             array('Auth_Home_Email, Auth_Mailing_Email', 'length', 'max' => 50),
             array('Auth_Home_Website, Auth_Mailing_Website', 'length', 'max' => 100),
             array('Auth_Unknown_Address, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Addr_Id, Auth_Acc_Id, Auth_Home_Address_1, Auth_Home_Address_2, Auth_Home_Address_3, Auth_Home_Fax, Auth_Home_Telephone, Auth_Home_Email, Auth_Home_Website, Auth_Mailing_Address_1, Auth_Mailing_Address_2, Auth_Mailing_Address_3, Auth_Mailing_Telephone, Auth_Mailing_Fax, Auth_Mailing_Email, Auth_Mailing_Website, Auth_Author_Account_1, Auth_Author_Account_2, Auth_Author_Account_3, Auth_Performer_Account_1, Auth_Performer_Account_2, Auth_Performer_Account_3, Auth_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -76,6 +76,8 @@ class AuthorAccountAddress extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

@@ -41,7 +41,7 @@
  * @property AuthorPseudonym[] $authorPseudonyms
  * @property AuthorRelatedRights[] $authorRelatedRights
  */
-class AuthorAccount extends CActiveRecord {
+class AuthorAccount extends RActiveRecord {
 
     public $expiry_date;
     public $hierarchy_level;
@@ -96,7 +96,7 @@ class AuthorAccount extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code', 'required'),
-            array('Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),
             array('Auth_Gender, Active', 'length', 'max' => 1),
@@ -112,7 +112,8 @@ class AuthorAccount extends CActiveRecord {
             array('Auth_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Created_By, Updated_By', 'safe'),
         );
     }
 
@@ -144,6 +145,8 @@ class AuthorAccount extends CActiveRecord {
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
                 'foreignKey' => array('Group_Member_GUID' => 'Auth_GUID')
             ),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

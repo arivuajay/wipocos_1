@@ -18,7 +18,7 @@
  * @property AuthorAccount $authAcc
  * @property MasterPaymentMethod $authPayMethod
  */
-class AuthorPaymentMethod extends CActiveRecord {
+class AuthorPaymentMethod extends RActiveRecord {
     
     public $after_save_enable = true;
 
@@ -37,10 +37,10 @@ class AuthorPaymentMethod extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Pay_Method_id, Auth_Bank_Account_1, Auth_Bank_Account_2, Auth_Bank_Account_3', 'required'),
-            array('Auth_Acc_Id, Auth_Pay_Method_id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Auth_Pay_Method_id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Bank_Account_1, Auth_Bank_Account_2, Auth_Bank_Account_3', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Pay_Id, Auth_Acc_Id, Auth_Pay_Method_id, Auth_Bank_Account_1, Auth_Bank_Account_2, Auth_Bank_Account_3, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -56,6 +56,8 @@ class AuthorPaymentMethod extends CActiveRecord {
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Auth_Pay_Method_id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

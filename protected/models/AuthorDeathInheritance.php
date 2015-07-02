@@ -18,7 +18,7 @@
  * The followings are the available model relations:
  * @property AuthorAccount $authAcc
  */
-class AuthorDeathInheritance extends CActiveRecord {
+class AuthorDeathInheritance extends RActiveRecord {
     
     public $after_save_enable = true;
     
@@ -38,11 +38,11 @@ class AuthorDeathInheritance extends CActiveRecord {
         return array(
             array('Auth_Acc_Id, Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Email, Auth_Death_Inhrt_Phone, Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3', 'required'),
             array('Auth_Death_Inhrt_Email', 'email'),
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Phone', 'length', 'max' => 50),
             array('Auth_Death_Inhrt_Email', 'length', 'max' => 100),
             array('Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3', 'length', 'max' => 500),
-            array('Auth_Death_Inhrt_Addtion_Annotation', 'safe'),
+            array('Auth_Death_Inhrt_Addtion_Annotation, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Death_Inhrt_Id, Auth_Acc_Id, Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Email, Auth_Death_Inhrt_Phone, Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3, Auth_Death_Inhrt_Addtion_Annotation', 'safe', 'on' => 'search'),
@@ -57,6 +57,8 @@ class AuthorDeathInheritance extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

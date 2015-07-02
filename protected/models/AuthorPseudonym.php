@@ -16,7 +16,7 @@
  * @property AuthorAccount $authAcc
  * @property MasterPseudonymTypes $authPseudoType
  */
-class AuthorPseudonym extends CActiveRecord {
+class AuthorPseudonym extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -34,10 +34,10 @@ class AuthorPseudonym extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Pseudo_Type_Id, Auth_Pseudo_Name', 'required'),
-            array('Auth_Acc_Id, Auth_Pseudo_Type_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Auth_Pseudo_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Pseudo_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Pseudo_Id, Auth_Acc_Id, Auth_Pseudo_Type_Id, Auth_Pseudo_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -53,6 +53,8 @@ class AuthorPseudonym extends CActiveRecord {
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authPseudoType' => array(self::BELONGS_TO, 'MasterPseudonymTypes', 'Auth_Pseudo_Type_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 

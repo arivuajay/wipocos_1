@@ -89,7 +89,7 @@ class WorkPublishing extends CActiveRecord {
             'Work_Pub_Territories' => 'Territories',
             'Work_Pub_Sign_Date' => 'Date of signature',
             'Work_Pub_File' => 'File',
-            'Work_Pub_References' => 'Number of references',
+            'Work_Pub_References' => 'No or References',
             'Work_Pub_Tacit' => 'Tacit',
             'Work_Pub_Renewal_Period' => 'Renewal Period (years)',
             'Created_Date' => 'Created Date',

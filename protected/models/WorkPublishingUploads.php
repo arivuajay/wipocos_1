@@ -18,7 +18,7 @@
 class WorkPublishingUploads extends CActiveRecord {
     
     const FILE_SIZE = 1;
-    const ACCESS_TYPE = 'pdf,doc,jpg';
+    const ACCESS_TYPE = 'pdf,jpg';
 
     /**
      * @return string the associated database table name

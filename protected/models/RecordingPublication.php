@@ -25,6 +25,7 @@ class RecordingPublication extends CActiveRecord {
         if($this->isNewRecord){
             $this->Rcd_Publ_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Publ_Prod_Nation_Id = DEFAULT_NATIONALITY_ID;
+            $this->Rcd_Publ_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::RECORDING_PUBLISHING_CODE))->Fullcode;
         }
     }
 
@@ -42,7 +43,7 @@ class RecordingPublication extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Rcd_Id, Rcd_Publ_Internal_Code, Rcd_Publ_Year', 'required'),
+            array('Rcd_Id, Rcd_Publ_Internal_Code, Rcd_Publ_Year, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id', 'required'),
             array('Rcd_Id, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id', 'numerical', 'integerOnly' => true),
             array('Rcd_Publ_Internal_Code', 'length', 'max' => 100),
             array('Rcd_Publ_Internal_Code', 'unique'),
@@ -76,8 +77,8 @@ class RecordingPublication extends CActiveRecord {
             'Rcd_Publ_Id' => 'Rcd Publ',
             'Rcd_Id' => 'Rcd',
             'Rcd_Publ_Internal_Code' => 'Internal Code',
-            'Rcd_Publ_Year' => 'Year',
-            'Rcd_Publ_Country_Id' => 'Country',
+            'Rcd_Publ_Year' => 'Year of Publication',
+            'Rcd_Publ_Country_Id' => 'Country of Publication',
             'Rcd_Publ_Prod_Nation_Id' => 'Nationality of Producer',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -136,4 +137,10 @@ class RecordingPublication extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::RECORDING_PUBLISHING_CODE);
+        }
+        return parent::afterSave();
+    }
 }

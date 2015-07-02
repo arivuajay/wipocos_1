@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property AuthorAccount $authAcc
  */
-class AuthorBiography extends CActiveRecord {
+class AuthorBiography extends RActiveRecord {
 
     public $after_save_enable = true;
     
@@ -34,9 +34,9 @@ class AuthorBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Biogrph_Annotation', 'required'),
-            array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Active', 'length', 'max' => 1),
-            array('Auth_Biogrph_Annotation, Created_Date, Rowversion', 'safe'),
+            array('Auth_Biogrph_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Biogrph_Id, Auth_Acc_Id, Auth_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class AuthorBiography extends CActiveRecord {
         return array(
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authorBiographUploads' => array(self::HAS_MANY, 'AuthorBiographUploads', 'Auth_Biogrph_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
         );
     }
 
