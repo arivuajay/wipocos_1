@@ -29,7 +29,7 @@
  * @property MasterCountry $groupCountry
  * @property MasterLanguage $groupLanguage
  */
-class Group extends CActiveRecord {
+class Group extends RActiveRecord {
 
     public $search_status;
     public $is_auth_performer;
@@ -68,13 +68,13 @@ class Group extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Name, Group_Internal_Code, Group_Date', 'required'),
-            array('Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id', 'numerical', 'integerOnly' => true),
+            array('Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
-            array('Created_Date, Rowversion, Group_Non_Member, Group_GUID, Group_Photo', 'safe'),
             array('Group_Internal_Code', 'unique'),
             array('Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Created_Date, Rowversion, Group_Non_Member, Group_GUID, Group_Photo, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Id, Group_Name, Group_Is_Author, Group_Is_Performer, Group_Internal_Code, Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Date, Group_Place, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -93,6 +93,8 @@ class Group extends CActiveRecord {
             'groupLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Group_Language_Id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Id'),
             'groupManageRights' => array(self::HAS_ONE, 'GroupManageRights', 'Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

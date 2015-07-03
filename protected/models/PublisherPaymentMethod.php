@@ -18,7 +18,7 @@
  * @property PublisherAccount $pubAcc
  * @property MasterPaymentMethod $pubPayMethod
  */
-class PublisherPaymentMethod extends CActiveRecord {
+class PublisherPaymentMethod extends RActiveRecord {
     public $after_save_enable = true;
 
     /**
@@ -36,10 +36,10 @@ class PublisherPaymentMethod extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account', 'required'),
-            array('Pub_Acc_Id, Pub_Pay_Method_id', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Pub_Pay_Method_id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Pub_Pay_Address, Pub_Pay_Iban, Pub_Pay_Swift', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Pay_Id, Pub_Acc_Id, Pub_Pay_Method_id, Pub_Bank_Account, Pub_Bank_Code, Pub_Bank_Branch, Active, Created_Date, Rowversion, Pub_Pay_Address, Pub_Pay_Iban, Pub_Pay_Swift', 'safe', 'on' => 'search'),
@@ -55,6 +55,8 @@ class PublisherPaymentMethod extends CActiveRecord {
         return array(
             'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
             'pubPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Pub_Pay_Method_id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

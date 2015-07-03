@@ -15,37 +15,41 @@
     <div class="box-body">
         <div class="form-group">
             <label class="col-sm-3 control-label required">Original Publisher</label>
-            <div class="col-sm-5">
-                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Internal_Code;  ?>" class="col-sm-4" disabled="disabled">
-                <div class="col-sm-1"></div>
-                <input type="text" value="<?php echo $main_publisher->workPublisher->Pub_Corporate_Name;  ?>" class="col-sm-7" disabled="disabled">
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Pub_Internal_Code', $main_publisher->workPublisher->Pub_Internal_Code, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <div class="col-sm-3">
+                <?php echo CHtml::textField('Pub_Corporate_Name', $main_publisher->workPublisher->Pub_Corporate_Name, array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label required">Performance/Broadcast</label>
-            <div class="col-sm-5">
-                <input type="text" value="<?php echo $main_publisher->Work_Right_Broad_Share;  ?>" class="col-sm-4" disabled="disabled">
-                <div class="col-sm-1"></div>
-                <label class="col-sm-3">Mechanical</label>
-                <input type="text" value="<?php echo $main_publisher->Work_Right_Mech_Share;  ?>" class="col-sm-4" disabled="disabled">
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Work_Right_Broad_Share', $main_publisher->Work_Right_Broad_Share, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <label class="col-sm-1 control-label required">Mechanical</label>
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Work_Right_Mech_Share', $main_publisher->Work_Right_Mech_Share, array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
         <hr />
         <div class="form-group">
             <label class="col-sm-3 control-label required">Sub-Publisher</label>
-            <div class="col-sm-5">
-                <input type="text" value="<?php echo $sub_publisher->workPublisher->Pub_Internal_Code;  ?>" class="col-sm-4" disabled="disabled">
-                <div class="col-sm-1"></div>
-                <input type="text" value="<?php echo $sub_publisher->workPublisher->Pub_Corporate_Name;  ?>" class="col-sm-7" disabled="disabled">
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Pub_Internal_Code', $sub_publisher->workPublisher->Pub_Internal_Code, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <div class="col-sm-3">
+                <?php echo CHtml::textField('Pub_Corporate_Name', $sub_publisher->workPublisher->Pub_Corporate_Name, array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label required">Performance/Broadcast</label>
-            <div class="col-sm-5">
-                <input type="text" value="<?php echo $sub_publisher->Work_Right_Broad_Share;  ?>" class="col-sm-4" disabled="disabled">
-                <div class="col-sm-1"></div>
-                <label class="col-sm-3">Mechanical</label>
-                <input type="text" value="<?php echo $sub_publisher->Work_Right_Mech_Share;  ?>" class="col-sm-4" disabled="disabled">
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Work_Right_Broad_Share', $sub_publisher->Work_Right_Broad_Share, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <label class="col-sm-1 control-label required">Mechanical</label>
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Work_Right_Mech_Share', $sub_publisher->Work_Right_Mech_Share, array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
         <hr />

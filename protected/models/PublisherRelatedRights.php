@@ -31,7 +31,7 @@
  * @property MasterTypeRights $pubRelTypeRght
  * @property MasterWorksCategory $pubRelAvlWorkCat
  */
-class PublisherRelatedRights extends CActiveRecord {
+class PublisherRelatedRights extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -48,10 +48,10 @@ class PublisherRelatedRights extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Entry_Date, Pub_Rel_Internal_Position_Id, Pub_Rel_Entry_Date_2, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id, Pub_Rel_Type_Rght_Id', 'required'),
-            array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Internal_Position_Id, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Internal_Position_Id, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Rel_File', 'length', 'max' => 255),
             array('Pub_Rel_Duration', 'length', 'max' => 100),
-            array('Pub_Rel_Exit_Date, Pub_Rel_Exit_Date_2', 'safe'),
+            array('Pub_Rel_Exit_Date, Pub_Rel_Exit_Date_2, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Rel_Rgt_Id, Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Entry_Date, Pub_Rel_Exit_Date, Pub_Rel_Internal_Position_Id, Pub_Rel_Entry_Date_2, Pub_Rel_Exit_Date_2, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_File, Pub_Rel_Duration, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id', 'safe', 'on' => 'search'),
@@ -73,6 +73,8 @@ class PublisherRelatedRights extends CActiveRecord {
             'pubRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Rel_Territories_Id'),
             'pubRelTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pub_Rel_Type_Rght_Id'),
             'pubRelAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pub_Rel_Avl_Work_Cat_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

@@ -123,7 +123,8 @@ if (!empty($uploaded_files)) {
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -136,6 +137,7 @@ if (!empty($uploaded_files)) {
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Author Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Auth_Biogrph_Upl_Description?></td>
                             <td><?php echo $uploaded_file->Created?></td>
+                            <td><?php echo $uploaded_file->createdBy->name?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));

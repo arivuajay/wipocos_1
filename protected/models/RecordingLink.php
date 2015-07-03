@@ -17,7 +17,7 @@
  * @property PerformerAccount $rcdPerf
  * @property Recording $rcd
  */
-class RecordingLink extends CActiveRecord {
+class RecordingLink extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -34,9 +34,9 @@ class RecordingLink extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Rcd_Id, Rcd_Link_Title, Rcd_Perf_Id, Rcd_Prod_Id', 'required'),
-            array('Rcd_Id, Rcd_Perf_Id, Rcd_Prod_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Id, Rcd_Perf_Id, Rcd_Prod_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Link_Title', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Link_Id, Rcd_Id, Rcd_Link_Title, Rcd_Perf_Id, Rcd_Prod_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -53,6 +53,8 @@ class RecordingLink extends CActiveRecord {
             'rcdProd' => array(self::BELONGS_TO, 'ProducerAccount', 'Rcd_Prod_Id'),
             'rcdPerf' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Perf_Id'),
             'rcd' => array(self::BELONGS_TO, 'Recording', 'Rcd_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

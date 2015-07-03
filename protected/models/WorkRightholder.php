@@ -23,7 +23,7 @@
  * @property Organization $workRightMechOrg
  * @property Work $work
  */
-class WorkRightholder extends CActiveRecord {
+class WorkRightholder extends RActiveRecord {
 
     public $Work_Member_Internal_Code;
 
@@ -43,12 +43,12 @@ class WorkRightholder extends CActiveRecord {
         return array(
             array('Work_Id, Work_Right_Broad_Share,Work_Right_Role, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Org_Id', 'required'),
             array('Work_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
-            array('Work_Id,Work_Right_Role,  Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Id,Work_Right_Role,  Work_Right_Broad_Org_id, Work_Right_Mech_Org_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Member_GUID', 'length', 'max' => 100),
 //            array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Broad_Special, Work_Right_Mech_Special', 'length', 'max' => 2),
             array('Work_Right_Broad_Share, Work_Right_Mech_Share', 'numerical', 'integerOnly' => false, 'max' => 100),
-            array('Created_Date, Rowversion, Work_Member_Internal_Code', 'safe'),
+            array('Created_Date, Rowversion, Work_Member_Internal_Code, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Right_Id, Work_Id,Work_Right_Role,  Work_Member_GUID, Work_Right_Broad_Share, Work_Right_Broad_Special, Work_Right_Broad_Org_id, Work_Right_Mech_Share, Work_Right_Mech_Special, Work_Right_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -65,9 +65,11 @@ class WorkRightholder extends CActiveRecord {
             'workRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Role'),
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
-            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Auth_GUID')),
+            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Auth_GUID'), 'order'=>'Auth_First_Name ASC'),
             'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Pub_GUID')),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -169,7 +171,7 @@ class WorkRightholder extends CActiveRecord {
     }
 
     public function getSubPublisherRole() {
-        //now hard cord for get main publisher
+        //now hard cord for get sub publisher
         $right_holders = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Occupation' => MasterTypeRights::OCCUPATION_PUBLISHER, 'Type_Rights_Code' => 'SE'));
         if (!empty($right_holders))
             return $right_holders->Master_Type_Rights_Id;

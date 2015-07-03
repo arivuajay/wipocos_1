@@ -16,7 +16,7 @@
  * @property MasterPseudonymTypes $proPseudoType
  * @property ProducerAccount $proAcc
  */
-class ProducerPseudonym extends CActiveRecord {
+class ProducerPseudonym extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -34,10 +34,10 @@ class ProducerPseudonym extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Pseudo_Type_Id, Pro_Pseudo_Name', 'required'),
-            array('Pro_Acc_Id, Pro_Pseudo_Type_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Pro_Pseudo_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Pseudo_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
 //            array(
 //                'Pro_Pseudo_Name',
 //                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -58,6 +58,8 @@ class ProducerPseudonym extends CActiveRecord {
         return array(
             'proPseudoType' => array(self::BELONGS_TO, 'MasterPseudonymTypes', 'Pro_Pseudo_Type_Id'),
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

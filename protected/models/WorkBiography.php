@@ -13,7 +13,7 @@
  * The followings are the available model relations:
  * @property Work $work
  */
-class WorkBiography extends CActiveRecord {
+class WorkBiography extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -30,8 +30,8 @@ class WorkBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Biogrph_Annotation', 'required'),
-            array('Work_Id', 'numerical', 'integerOnly' => true),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Work_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Biogrph_Id, Work_Id, Work_Biogrph_Annotation, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -46,6 +46,8 @@ class WorkBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

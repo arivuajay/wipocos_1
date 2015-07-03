@@ -32,7 +32,7 @@
  * @property MasterTypeRights $pubMngeTypeRght
  * @property MasterWorksCategory $pubMngeAvlWorkCat
  */
-class PublisherManageRights extends CActiveRecord {
+class PublisherManageRights extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -57,12 +57,12 @@ class PublisherManageRights extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Entry_Date, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Entry_Date_2, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id', 'required'),
-            array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Mnge_File', 'length', 'max' => 255),
             array('Pub_Mnge_Duration', 'length', 'max' => 100),
-            array('Pub_Mnge_Exit_Date, Pub_Mnge_Exit_Date_2', 'safe'),
             array('Pub_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Pub_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Mnge_Exit_Date, Pub_Mnge_Exit_Date_2, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Mnge_Rgt_Id, Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Entry_Date, Pub_Mnge_Exit_Date, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Entry_Date_2, Pub_Mnge_Exit_Date_2, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_File, Pub_Mnge_Duration, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id', 'safe', 'on' => 'search'),
@@ -85,6 +85,8 @@ class PublisherManageRights extends CActiveRecord {
             'pubMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Mnge_Territories_Id'),
             'pubMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pub_Mnge_Type_Rght_Id'),
             'pubMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pub_Mnge_Avl_Work_Cat_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

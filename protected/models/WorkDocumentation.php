@@ -18,7 +18,7 @@
  * @property MasterDocumentType $workDocType
  * @property Work $work
  */
-class WorkDocumentation extends CActiveRecord {
+class WorkDocumentation extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -41,10 +41,10 @@ class WorkDocumentation extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id, Work_Doc_Sign_Date', 'required'),
-            array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Id, Work_Doc_Status_Id, Work_Doc_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Doc_Inclusion, Work_Doc_Dispute', 'length', 'max' => 1),
             array('Work_Doc_File', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Doc_Id, Work_Id, Work_Doc_Status_Id, Work_Doc_Inclusion, Work_Doc_Dispute, Work_Doc_Type_Id, Work_Doc_Sign_Date, Work_Doc_File, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -61,6 +61,8 @@ class WorkDocumentation extends CActiveRecord {
             'workDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Work_Doc_Status_Id'),
             'workDocType' => array(self::BELONGS_TO, 'MasterDocument', 'Work_Doc_Type_Id'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

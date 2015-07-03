@@ -147,10 +147,12 @@ class DefaultController extends Controller {
         if (!empty($publishings)) {
             foreach ($publishings as $key => $publishing) {
                 if ($publishing->Work_Pub_Tacit == 'Y') {
-                    $model = WorkPublishing::model()->findByPk($publishing->Work_Pub_Id);
-                    $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing->Work_Pub_Contact_End)) . " + {$publishing->Work_Pub_Renewal_Period} years"));
-                    $model->Work_Pub_Contact_End = $newEndingDate;
-                    $model->save(false);
+                    if (WorkPublishing::AUTO_RENEWAL) {
+                        $model = WorkPublishing::model()->findByPk($publishing->Work_Pub_Id);
+                        $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($publishing->Work_Pub_Contact_End)) . " + {$publishing->Work_Pub_Renewal_Period} years"));
+                        $model->Work_Pub_Contact_End = $newEndingDate;
+                        $model->save(false);
+                    }
                 } else {
                     $right_holders = $publishing->work->workRightholders;
                     $sub_pub_role_exists = false;
@@ -228,10 +230,12 @@ class DefaultController extends Controller {
         if (!empty($sub_publishings)) {
             foreach ($sub_publishings as $key => $sub_publishing) {
                 if ($sub_publishing->Work_Sub_Tacit == 'Y') {
-                    $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
-                    $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
-                    $model->Work_Sub_Contact_End = $newEndingDate;
-                    $model->save(false);
+                    if (WorkSubPublishing::AUTO_RENEWAL) {
+                        $model = WorkSubPublishing::model()->findByPk($sub_publishing->Work_Sub_Id);
+                        $newEndingDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime($sub_publishing->Work_Sub_Contact_End)) . " + {$sub_publishing->Work_Sub_Renewal_Period} years"));
+                        $model->Work_Sub_Contact_End = $newEndingDate;
+                        $model->save(false);
+                    }
                 } else {
                     $right_holders = $sub_publishing->work->workRightholders;
                     $main_pub_role_exists = false;

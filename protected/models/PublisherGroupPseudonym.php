@@ -16,7 +16,7 @@
  * @property MasterPseudonymTypes $pubGroupPseudoType
  * @property PublisherGroup $pubGroup
  */
-class PublisherGroupPseudonym extends CActiveRecord {
+class PublisherGroupPseudonym extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -33,10 +33,10 @@ class PublisherGroupPseudonym extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Pseudo_Type_Id, Pub_Group_Pseudo_Name', 'required'),
-            array('Pub_Group_Id, Pub_Group_Pseudo_Type_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_Pseudo_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Pseudo_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Group_Pseudo_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -57,6 +57,8 @@ class PublisherGroupPseudonym extends CActiveRecord {
         return array(
             'pubGroupPseudoType' => array(self::BELONGS_TO, 'MasterPseudonymTypes', 'Pub_Group_Pseudo_Type_Id'),
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

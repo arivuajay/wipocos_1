@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property Group $group
  */
-class GroupBiography extends CActiveRecord {
+class GroupBiography extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -31,9 +31,9 @@ class GroupBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id, Group_Biogrph_Annotation', 'required'),
-            array('Group_Id', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Biogrph_Id, Group_Id, Group_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -48,6 +48,8 @@ class GroupBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

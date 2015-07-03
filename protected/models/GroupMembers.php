@@ -31,9 +31,9 @@ class GroupMembers extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id,Group_Member_GUID', 'required'),
-            array('Group_Id', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Member_GUID', 'length', 'max' => 50),
-            array('Rowversion', 'safe'),
+            array('Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Member_Id, Group_Id, Group_Member_GUID, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class GroupMembers extends CActiveRecord {
 //            'groupAuthors' => array(self::BELONGS_TO, 'AuthorAccount', 'Group_Member_GUID'),
 //            'groupPerformers' => array(self::BELONGS_TO, 'PerformerAccount', 'Group_Member_GUID'),
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

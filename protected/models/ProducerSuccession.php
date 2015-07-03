@@ -17,7 +17,7 @@
  * The followings are the available model relations:
  * @property ProducerAccount $proAcc
  */
-class ProducerSuccession extends CActiveRecord {
+class ProducerSuccession extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -35,10 +35,10 @@ class ProducerSuccession extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Suc_Name, Pro_Suc_Address_1, Pro_Suc_Annotation', 'required'),
-            array('Pro_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Suc_Name', 'length', 'max' => 255),
             array('Pro_Suc_Address_1, Pro_Suc_Address_2', 'length', 'max' => 500),
-            array('Pro_Suc_Date_Transfer, Created_Date, Rowversion', 'safe'),
+            array('Pro_Suc_Date_Transfer, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pro_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -58,6 +58,8 @@ class ProducerSuccession extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

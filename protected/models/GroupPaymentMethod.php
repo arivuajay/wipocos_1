@@ -18,7 +18,7 @@
  * @property Group $group
  * @property MasterPaymentMethod $groupPayMethod
  */
-class GroupPaymentMethod extends CActiveRecord {
+class GroupPaymentMethod extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -35,10 +35,10 @@ class GroupPaymentMethod extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id, Group_Pay_Method_id, Group_Bank_Account_1, Group_Bank_Account_2, Group_Bank_Account_3', 'required'),
-            array('Group_Id, Group_Pay_Method_id', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Group_Pay_Method_id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Bank_Account_1, Group_Bank_Account_2, Group_Bank_Account_3', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Pay_Id, Group_Id, Group_Pay_Method_id, Group_Bank_Account_1, Group_Bank_Account_2, Group_Bank_Account_3, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -54,6 +54,8 @@ class GroupPaymentMethod extends CActiveRecord {
         return array(
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
             'groupPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Group_Pay_Method_id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

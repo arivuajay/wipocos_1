@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property PerformerAccount $perfAcc
  */
-class PerformerUpload extends CActiveRecord {
+class PerformerUpload extends RActiveRecord {
 
     const FILE_SIZE = 10;
 
@@ -31,12 +31,13 @@ class PerformerUpload extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Upl_Doc_Name, Perf_Upl_File', 'required'),
-            array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Upl_Doc_Name', 'length', 'max' => 255),
             array('Perf_Upl_File', 'length', 'max' => 1000),
             array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
+            array('Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Upl_Id, Perf_Acc_Id, Perf_Upl_Doc_Name, Perf_Upl_File', 'safe', 'on' => 'search'),
@@ -51,6 +52,8 @@ class PerformerUpload extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

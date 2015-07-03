@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property PerformerAccount $perfAcc
  */
-class PerformerDeathInheritance extends CActiveRecord {
+class PerformerDeathInheritance extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -32,10 +32,10 @@ class PerformerDeathInheritance extends CActiveRecord {
         return array(
             array('Perf_Acc_Id, Perf_Death_Inhrt_Firstname, Perf_Death_Inhrt_Email, Perf_Death_Inhrt_Phone, Perf_Death_Inhrt_Surname, Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3', 'required'),
             array('Perf_Death_Inhrt_Email', 'email'),
-            array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Death_Inhrt_Surname', 'length', 'max' => 50),
             array('Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3', 'length', 'max' => 500),
-            array('Perf_Death_Inhrt_Addtion_Annotation', 'safe'),
+            array('Perf_Death_Inhrt_Addtion_Annotation, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Death_Inhrt_Id, Perf_Acc_Id, Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3, Perf_Death_Inhrt_Addtion_Annotation', 'safe', 'on' => 'search'),
@@ -50,6 +50,8 @@ class PerformerDeathInheritance extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

@@ -86,6 +86,14 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->Work_Unknown == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                 ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                    ),
             ),
         ));
         ?>
@@ -116,6 +124,14 @@ if ($export == false) {
                     ),
                     'Work_Doc_Sign_Date',
                     'Work_Doc_File',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($document_model->createdBy->name) ? $document_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($document_model->updatedBy->name) ? $document_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -133,6 +149,8 @@ if ($export == false) {
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Name') ?></th>
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Type_Id') ?></th>
                         <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
                         <?php if ($export == false) { ?>
                             <th>Action</th>
                         <?php } ?>
@@ -143,6 +161,8 @@ if ($export == false) {
                             <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
                             <?php if ($export == false) { ?>
                                 <td>
                                     <?php
@@ -169,6 +189,14 @@ if ($export == false) {
                 'htmlOptions' => array('class' => 'table table-striped table-bordered'),
                 'attributes' => array(
                     'Work_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -188,7 +216,8 @@ if ($export == false) {
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -201,6 +230,7 @@ if ($export == false) {
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Work Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Work_Biogrph_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
@@ -235,6 +265,14 @@ if ($export == false) {
                     'Work_Pub_Sign_Date',
                     'Work_Pub_File',
                     'Work_Pub_References',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($publishing_model->createdBy->name) ? $publishing_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($publishing_model->updatedBy->name) ? $publishing_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -253,6 +291,8 @@ if ($export == false) {
                         <th style="width: 10px">#</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -260,6 +300,8 @@ if ($export == false) {
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $uploaded_file->Work_Pub_Upl_Name == '' ? "Contract {$i}" : $uploaded_file->Work_Pub_Upl_Name ?></td>
                             <td><?php echo $uploaded_file->Work_Pub_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td><?php echo $uploaded_file->updatedBy->name ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();
@@ -302,6 +344,14 @@ if ($export == false) {
                     'Work_Sub_File',
                     'Work_Sub_References',
                     'Work_Sub_Catelog_Number',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($sub_publishing_model->createdBy->name) ? $sub_publishing_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($sub_publishing_model->updatedBy->name) ? $sub_publishing_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -320,6 +370,8 @@ if ($export == false) {
                         <th style="width: 10px">#</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -327,6 +379,8 @@ if ($export == false) {
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $uploaded_file->Work_Sub_Upl_Name ?></td>
                             <td><?php echo $uploaded_file->Work_Sub_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td><?php echo $uploaded_file->updatedBy->name ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();

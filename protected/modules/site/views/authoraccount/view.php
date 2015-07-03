@@ -60,8 +60,8 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Auth_Sur_Name',
                 'Auth_First_Name',
+                'Auth_Sur_Name',
                 array(
                     'name' => 'Auth_Photo',
                     'type' => 'raw',
@@ -105,7 +105,7 @@ if ($export == false) {
                 ),
                 array(
                     'name' => 'Created_By',
-                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : 'Not Set'
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
                 ),
                 array(
                     'name' => 'Updated_By',
@@ -146,6 +146,14 @@ if ($export == false) {
                         'type' => 'raw',
                         'value' => $address_model->Auth_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
+                    ),
 //        array(
 //                'name' => 'Active',
 //                'type' => 'raw',
@@ -157,180 +165,6 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
-    </div>
-
-    <div class="user-view col-lg-6">
-        <h4>Payment</h4>
-        <?php
-        if (!empty($payment_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $payment_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Auth_Pay_Method_id',
-                    'Auth_Bank_Account_1',
-                    'Auth_Bank_Account_2',
-                    'Auth_Bank_Account_3',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4>Pseudonyms</h4>
-        <?php
-        if (!empty($psedonym_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $psedonym_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Auth_Pseudo_Type_Id',
-                    array(
-                        'name' => 'Auth_Pseudo_Type_Id',
-                        'value' => isset($psedonym_model->authPseudoType->Pseudo_Code) ? $psedonym_model->authPseudoType->Pseudo_Code : 'Not Set'
-                    ),
-                    'Auth_Pseudo_Name',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-
-        <h4>Death Inheritance</h4>
-        <?php
-        if (!empty($death_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $death_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Auth_Death_Inhrt_Id',
-                    'Auth_Death_Inhrt_Firstname',
-                    'Auth_Death_Inhrt_Surname',
-                    'Auth_Death_Inhrt_Email',
-                    'Auth_Death_Inhrt_Phone',
-                    'Auth_Death_Inhrt_Address_1',
-                    'Auth_Death_Inhrt_Address_2',
-                    'Auth_Death_Inhrt_Address_3',
-                    'Auth_Death_Inhrt_Addtion_Annotation',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Managed Rights</h4>
-        <?php
-        if (!empty($managed_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $managed_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Auth_Mnge_Rgt_Id',
-//        'Auth_Mnge_Society_Id',
-                    'Auth_Mnge_Entry_Date',
-                    'Auth_Mnge_Exit_Date',
-                    array(
-                        'name' => 'Auth_Mnge_Internal_Position_Id',
-                        'value' => isset($managed_model->authMngeInternalPosition->Int_Post_Name) ? $managed_model->authMngeInternalPosition->Int_Post_Name : 'Not Set'
-                    ),
-                    'Auth_Mnge_Entry_Date_2',
-                    'Auth_Mnge_Exit_Date_2',
-                    array(
-                        'name' => 'Auth_Mnge_Region_Id',
-                        'value' => isset($managed_model->authMngeRegion->Region_Name) ? $managed_model->authMngeRegion->Region_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Auth_Mnge_Profession_Id',
-                        'value' => isset($managed_model->authMngeProfession->Profession_Name) ? $managed_model->authMngeProfession->Profession_Name : 'Not Set'
-                    ),
-                    'Auth_Mnge_File',
-                    'Auth_Mnge_Duration',
-                    array(
-                        'name' => 'Auth_Mnge_Avl_Work_Cat_Id',
-                        'value' => isset($managed_model->authMngeAvlWorkCat->Work_Category_Name) ? $managed_model->authMngeAvlWorkCat->Work_Category_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Auth_Mnge_Type_Rght_Id',
-                        'value' => isset($managed_model->authMngeTypeRght->Type_Rights_Name) ? $managed_model->authMngeTypeRght->Type_Rights_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Auth_Mnge_Managed_Rights_Id',
-                        'value' => isset($managed_model->authMngeManagedRights->Mgd_Rights_Name) ? $managed_model->authMngeManagedRights->Mgd_Rights_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Auth_Mnge_Territories_Id',
-                        'value' => isset($managed_model->authMngeTerritories->Territory_Name) ? $managed_model->authMngeTerritories->Territory_Name : 'Not Set'
-                    ),
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-
-        <h4>Biography</h4>
-        <?php
-        if (!empty($biograph_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $biograph_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Auth_Biogrph_Id',
-                    'Auth_Biogrph_Annotation',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4>Biography Uploaded Files</h4>
-        <?php
-        $uploaded_files = array();
-        if (!empty($biograph_model))
-            $uploaded_files = AuthorBiographUploads::model()->findAll('Auth_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Auth_Biogrph_Id));
-        if (!empty($uploaded_files)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th>Uploaded Files</th>
-                        <th>Description</th>
-                        <th>Created</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
-                        <tr>
-                            <?php
-                            $file_path = $uploaded_file->getFilePath();
-                            $i = $key + 1
-                            ?>
-                            <td><?php echo $i ?>.</td>
-                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Author Biograph {$i}" ?></a></td>
-                            <td><?php echo $uploaded_file->Auth_Biogrph_Upl_Description ?></td>
-                            <td><?php echo $uploaded_file->Created ?></td>
-                            <td>
-                                <?php
-                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
-                                echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/biofiledelete/', 'id' => $uploaded_file->Auth_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
         <h4>Assigned Groups</h4>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_GUID = :int_code', array(':int_code' => $model->Auth_GUID));
@@ -390,6 +224,221 @@ if ($export == false) {
         }
         ?>
     </div>
+
+    <div class="user-view col-lg-6">
+        <h4>Payment</h4>
+        <?php
+        if (!empty($payment_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $payment_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Auth_Pay_Method_id',
+                    'Auth_Bank_Account_1',
+                    'Auth_Bank_Account_2',
+                    'Auth_Bank_Account_3',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4>Pseudonyms</h4>
+        <?php
+        if (!empty($psedonym_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $psedonym_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Auth_Pseudo_Type_Id',
+                    array(
+                        'name' => 'Auth_Pseudo_Type_Id',
+                        'value' => isset($psedonym_model->authPseudoType->Pseudo_Code) ? $psedonym_model->authPseudoType->Pseudo_Code : 'Not Set'
+                    ),
+                    'Auth_Pseudo_Name',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+
+        <h4>Death Inheritance</h4>
+        <?php
+        if (!empty($death_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $death_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Auth_Death_Inhrt_Id',
+                    'Auth_Death_Inhrt_Firstname',
+                    'Auth_Death_Inhrt_Surname',
+                    'Auth_Death_Inhrt_Email',
+                    'Auth_Death_Inhrt_Phone',
+                    'Auth_Death_Inhrt_Address_1',
+                    'Auth_Death_Inhrt_Address_2',
+                    'Auth_Death_Inhrt_Address_3',
+                    'Auth_Death_Inhrt_Addtion_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($death_model->createdBy->name) ? $death_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($death_model->updatedBy->name) ? $death_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+        <h4>Managed Rights</h4>
+        <?php
+        if (!empty($managed_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $managed_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Auth_Mnge_Rgt_Id',
+//        'Auth_Mnge_Society_Id',
+                    'Auth_Mnge_Entry_Date',
+                    'Auth_Mnge_Exit_Date',
+                    array(
+                        'name' => 'Auth_Mnge_Internal_Position_Id',
+                        'value' => isset($managed_model->authMngeInternalPosition->Int_Post_Name) ? $managed_model->authMngeInternalPosition->Int_Post_Name : 'Not Set'
+                    ),
+                    'Auth_Mnge_Entry_Date_2',
+                    'Auth_Mnge_Exit_Date_2',
+                    array(
+                        'name' => 'Auth_Mnge_Region_Id',
+                        'value' => isset($managed_model->authMngeRegion->Region_Name) ? $managed_model->authMngeRegion->Region_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Auth_Mnge_Profession_Id',
+                        'value' => isset($managed_model->authMngeProfession->Profession_Name) ? $managed_model->authMngeProfession->Profession_Name : 'Not Set'
+                    ),
+                    'Auth_Mnge_File',
+                    'Auth_Mnge_Duration',
+                    array(
+                        'name' => 'Auth_Mnge_Avl_Work_Cat_Id',
+                        'value' => isset($managed_model->authMngeAvlWorkCat->Work_Category_Name) ? $managed_model->authMngeAvlWorkCat->Work_Category_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Auth_Mnge_Type_Rght_Id',
+                        'value' => isset($managed_model->authMngeTypeRght->Type_Rights_Name) ? $managed_model->authMngeTypeRght->Type_Rights_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Auth_Mnge_Managed_Rights_Id',
+                        'value' => isset($managed_model->authMngeManagedRights->Mgd_Rights_Name) ? $managed_model->authMngeManagedRights->Mgd_Rights_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Auth_Mnge_Territories_Id',
+                        'value' => isset($managed_model->authMngeTerritories->Territory_Name) ? $managed_model->authMngeTerritories->Territory_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($managed_model->updatedBy->name) ? $managed_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+
+        <h4>Biography</h4>
+        <?php
+        if (!empty($biograph_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $biograph_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Auth_Biogrph_Id',
+                    'Auth_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4>Biography Uploaded Files</h4>
+        <?php
+        $uploaded_files = array();
+        if (!empty($biograph_model))
+            $uploaded_files = AuthorBiographUploads::model()->findAll('Auth_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Auth_Biogrph_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Uploaded Files</th>
+                        <th>Description</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <?php
+                            $file_path = $uploaded_file->getFilePath();
+                            $i = $key + 1
+                            ?>
+                            <td><?php echo $i ?>.</td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Author Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Auth_Biogrph_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td>
+                                <?php
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/authoraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/authoraccount/biofiledelete/', 'id' => $uploaded_file->Auth_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+    </div>
 </div>
 
 
@@ -405,6 +454,8 @@ if ($export == false) {
                     <tbody><tr>
                             <th style="width: 10px">#</th>
                             <th>Document Name</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
                             <?php if ($export == false) { ?>
                                 <th>Action</th>
                             <?php } ?>
@@ -413,6 +464,8 @@ if ($export == false) {
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
+                                <td><?php echo $uploaded_file->createdBy->name ?></td>
+                                <td><?php echo $uploaded_file->updatedBy->name ?></td>
                                 <?php if ($export == false) { ?>
                                     <td>
                                         <?php

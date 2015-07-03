@@ -109,10 +109,18 @@ $this->breadcrumbs = array(
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                    ),
             ),
         ));
         ?>
-        <h4>Address</h4>
+        <h4>Representatives</h4>
         <?php
         if (!empty($address_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -146,10 +154,18 @@ $this->breadcrumbs = array(
                         'type' => 'raw',
                         'value' => $address_model->Pub_Group_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
+//                    array(
+//                        'name' => 'Active',
+//                        'type' => 'raw',
+//                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//                    ),
                     array(
-                        'name' => 'Active',
-                        'type' => 'raw',
-                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
                     ),
                 ),
             ));
@@ -171,6 +187,14 @@ $this->breadcrumbs = array(
                     'Pub_Group_Pay_Copy_Rate',
                     'Pub_Group_Pay_Copy_Pay_Method',
                     'Pub_Group_Pay_Copy_Bank_Account',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -188,13 +212,21 @@ $this->breadcrumbs = array(
                     'Pub_Group_Pay_Rel_Rate',
                     'Pub_Group_Pay_Rel_Pay_Method',
                     'Pub_Group_Pay_Rel_Bank_Account',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($rel_payment_exists->createdBy->name) ? $rel_payment_exists->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($rel_payment_exists->updatedBy->name) ? $rel_payment_exists->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
             echo 'No data created';
         }
         ?>
-        <h4>Pseudonyms</h4>
+        <h4>Cross-references</h4>
         <?php
         if (!empty($psedonym_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -206,10 +238,18 @@ $this->breadcrumbs = array(
                         'value' => isset($psedonym_model->pubGroupPseudoType->Pseudo_Code) ? $psedonym_model->pubGroupPseudoType->Pseudo_Code : 'Not Set'
                     ),
                     'Pub_Group_Pseudo_Name',
+//                    array(
+//                        'name' => 'Active',
+//                        'type' => 'raw',
+//                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//                    ),
                     array(
-                        'name' => 'Active',
-                        'type' => 'raw',
-                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'name' => 'Created_By',
+                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
                     ),
                 ),
             ));
@@ -262,6 +302,14 @@ $this->breadcrumbs = array(
                         'name' => 'Pub_Group_Mnge_Territories_Id',
                         'value' => isset($managed_model->pubGroupMngeTerritories->Territory_Name) ? $managed_model->pubGroupMngeTerritories->Territory_Name : 'Not Set'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($managed_model->updatedBy->name) ? $managed_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -279,6 +327,14 @@ $this->breadcrumbs = array(
                 'attributes' => array(
 //        'Pub_Group_Biogrph_Id',
                     'Pub_Group_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -303,7 +359,8 @@ $this->breadcrumbs = array(
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -316,6 +373,7 @@ $this->breadcrumbs = array(
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "{$role} Group Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Pub_Group_Biogrph_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/publishergroup/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));

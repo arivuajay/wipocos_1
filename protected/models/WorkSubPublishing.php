@@ -22,9 +22,10 @@
  * The followings are the available model relations:
  * @property Work $work
  */
-class WorkSubPublishing extends CActiveRecord {
+class WorkSubPublishing extends RActiveRecord {
 
     const EXPIRY_WARNING_MONTH = 3;
+    const AUTO_RENEWAL = FALSE;
     
     public function init() {
         parent::init();
@@ -57,13 +58,13 @@ class WorkSubPublishing extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Sub_Contact_Start, Work_Sub_Contact_End, Work_Sub_Territories, Work_Sub_Sign_Date, Work_Sub_References, Work_Sub_Catelog_Number, Work_Sub_Renewal_Period', 'required'),
-            array('Work_Id, Work_Sub_References', 'numerical', 'integerOnly' => true),
+            array('Work_Id, Work_Sub_References, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Sub_Territories', 'length', 'max' => 500),
             array('Work_Sub_Clause', 'length', 'max' => 4),
             array('Work_Sub_File', 'length', 'max' => 255),
             array('Work_Sub_Catelog_Number', 'length', 'max' => 100),
             array('Work_Sub_Renewal_Period', 'numerical', 'integerOnly'=>true, 'min' => 1),
-            array('Created_Date, Rowversion, Work_Sub_Renewal_Period, Work_Sub_Tacit', 'safe'),
+            array('Created_Date, Rowversion, Work_Sub_Renewal_Period, Work_Sub_Tacit, Created_By, Updated_By', 'safe'),
             array('Work_Sub_Contact_End', 'compare', 'compareAttribute'=>'Work_Sub_Contact_Start', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Work_Sub_Contact_End', 'maxEndDate'),
             // The following rule is used by search().
@@ -88,6 +89,8 @@ class WorkSubPublishing extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

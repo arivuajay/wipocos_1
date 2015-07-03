@@ -20,9 +20,10 @@
  * The followings are the available model relations:
  * @property Work $work
  */
-class WorkPublishing extends CActiveRecord {
+class WorkPublishing extends RActiveRecord {
 
     const EXPIRY_WARNING_MONTH = 3;
+    const AUTO_RENEWAL = FALSE;
 
     public function init() {
         parent::init();
@@ -54,11 +55,11 @@ class WorkPublishing extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Pub_Contact_Start, Work_Pub_Contact_End, Work_Pub_Territories, Work_Pub_Sign_Date, Work_Pub_File, Work_Pub_References, Work_Pub_Renewal_Period', 'required'),
-            array('Work_Id, Work_Pub_References', 'numerical', 'integerOnly' => true),
+            array('Work_Id, Work_Pub_References, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Pub_Territories', 'length', 'max' => 500),
             array('Work_Pub_File', 'length', 'max' => 255),
             array('Work_Pub_Renewal_Period', 'numerical', 'integerOnly' => true, 'min' => 1),
-            array('Created_Date, Rowversion, Work_Pub_Tacit, Work_Pub_Renewal_Period', 'safe'),
+            array('Created_Date, Rowversion, Work_Pub_Tacit, Work_Pub_Renewal_Period, Created_By, Updated_By', 'safe'),
             array('Work_Pub_Contact_End', 'compare', 'compareAttribute' => 'Work_Pub_Contact_Start', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -74,6 +75,8 @@ class WorkPublishing extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

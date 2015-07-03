@@ -41,7 +41,7 @@
  * @property PerformerPseudonym[] $performerPseudonyms
  * @property PerformerRelatedRights[] $performerRelatedRights
  */
-class PerformerAccount extends CActiveRecord {
+class PerformerAccount extends RActiveRecord {
 
     public $expiry_date;
     public $hierarchy_level;
@@ -99,7 +99,7 @@ class PerformerAccount extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code', 'required'),
-            array('Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
             array('Perf_Gender, Active', 'length', 'max' => 1),
@@ -116,6 +116,7 @@ class PerformerAccount extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Perf_Non_Member, Active, Created_Date, Rowversion, expiry_date, hierarchy_level, record_search', 'safe', 'on' => 'search'),
+            array('Created_By, Updated_By', 'safe'),
         );
     }
 
@@ -148,6 +149,8 @@ class PerformerAccount extends CActiveRecord {
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
                 'foreignKey' => array('Group_Member_GUID' => 'Perf_GUID')
             ),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

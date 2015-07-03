@@ -15,7 +15,7 @@
  * The followings are the available model relations:
  * @property PublisherAccount $pubAcc
  */
-class PublisherSuccession extends CActiveRecord {
+class PublisherSuccession extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -33,10 +33,10 @@ class PublisherSuccession extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Suc_Name, Pub_Suc_Address_1, Pub_Suc_Annotation', 'required'),
-            array('Pub_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Suc_Name', 'length', 'max' => 255),
             array('Pub_Suc_Address_1, Pub_Suc_Address_2', 'length', 'max' => 500),
-            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation', 'safe'),
+            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -56,6 +56,8 @@ class PublisherSuccession extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

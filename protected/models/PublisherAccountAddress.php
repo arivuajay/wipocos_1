@@ -35,7 +35,7 @@
  * The followings are the available model relations:
  * @property PublisherAccount $pubAcc
  */
-class PublisherAccountAddress extends CActiveRecord {
+class PublisherAccountAddress extends RActiveRecord {
 
     public $after_save_enable = true;
     
@@ -60,7 +60,7 @@ class PublisherAccountAddress extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Head_Address_1, Pub_Head_Telephone, Pub_Head_Email, Pub_Mailing_Address_1, Pub_Mailing_Telephone, Pub_Mailing_Email', 'required'),
-            array('Pub_Acc_Id, Pub_Addr_Country_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Pub_Addr_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Head_Address_1, Pub_Head_Address_2, Pub_Head_Address_3, Pub_Mailing_Address_1, Pub_Mailing_Address_2, Pub_Mailing_Address_3, Pub_Publisher_Account_1, Pub_Publisher_Account_2, Pub_Publisher_Account_3, Pub_Producer_Account_1, Pub_Producer_Account_2, Pub_Producer_Account_3', 'length', 'max' => 255),
             array('Pub_Head_Fax, Pub_Head_Telephone, Pub_Mailing_Telephone, Pub_Mailing_Fax', 'length', 'max' => 25),
             array('Pub_Head_Email, Pub_Mailing_Email', 'length', 'max' => 50),
@@ -68,7 +68,7 @@ class PublisherAccountAddress extends CActiveRecord {
             array('Pub_Unknown_Address, Active', 'length', 'max' => 1),
             array('Pub_Head_Email, Pub_Mailing_Email', 'email'),
             array('Pub_Head_Website, Pub_Mailing_Website', 'url'),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Addr_Id, Pub_Acc_Id, Pub_Head_Address_1, Pub_Head_Address_2, Pub_Head_Address_3, Pub_Head_Fax, Pub_Head_Telephone, Pub_Head_Email, Pub_Head_Website, Pub_Mailing_Address_1, Pub_Mailing_Address_2, Pub_Mailing_Address_3, Pub_Mailing_Telephone, Pub_Mailing_Fax, Pub_Mailing_Email, Pub_Mailing_Website, Pub_Publisher_Account_1, Pub_Publisher_Account_2, Pub_Publisher_Account_3, Pub_Producer_Account_1, Pub_Producer_Account_2, Pub_Producer_Account_3, Pub_Unknown_Address, Active, Created_Date, Rowversion, Pub_Addr_Country_Id', 'safe', 'on' => 'search'),
@@ -84,6 +84,8 @@ class PublisherAccountAddress extends CActiveRecord {
         return array(
             'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
             'pubCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Pub_Addr_Country_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

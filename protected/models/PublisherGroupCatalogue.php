@@ -22,7 +22,7 @@
  * @property PublisherGroup $pubGroup
  * @property MasterTerritories $pubGroupCatTerritory
  */
-class PublisherGroupCatalogue extends CActiveRecord {
+class PublisherGroupCatalogue extends RActiveRecord {
     const FILE_SIZE = 1;
 
 
@@ -41,11 +41,11 @@ class PublisherGroupCatalogue extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Cat_Number, Pub_Group_Cat_Start_Date, Pub_Group_Cat_End_Date, Pub_Group_Cat_Name, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Sign_Date', 'required'),
-            array('Pub_Group_Id, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Reference', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_Cat_Territory_Id, Pub_Group_Cat_Reference, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Cat_Number, Pub_Group_Cat_Name', 'length', 'max' => 100),
             array('Pub_Group_Cat_Clasue', 'length', 'max' => 4),
             array('Pub_Group_Cat_File', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Group_Cat_Number, Pub_Group_Cat_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -69,6 +69,8 @@ class PublisherGroupCatalogue extends CActiveRecord {
         return array(
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
             'pubGroupCatTerritory' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Group_Cat_Territory_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

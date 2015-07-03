@@ -17,7 +17,7 @@
  * @property Recording $rcd
  * @property MasterType $rcdSubtitleType
  */
-class RecordingSubtitle extends CActiveRecord {
+class RecordingSubtitle extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -41,9 +41,9 @@ class RecordingSubtitle extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id', 'required'),
-            array('Rcd_Id, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Id, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Subtitle_Name', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Subtitle_Id, Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -60,6 +60,8 @@ class RecordingSubtitle extends CActiveRecord {
             'rcdSubtitleLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Rcd_Subtitle_Language_Id'),
             'rcd' => array(self::BELONGS_TO, 'Recording', 'Rcd_Id'),
             'rcdSubtitleType' => array(self::BELONGS_TO, 'MasterType', 'Rcd_Subtitle_Type_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

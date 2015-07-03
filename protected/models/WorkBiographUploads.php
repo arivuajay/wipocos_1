@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property WorkBiography $workBiogrph
  */
-class WorkBiographUploads extends CActiveRecord {
+class WorkBiographUploads extends RActiveRecord {
 
     const IMAGE_SIZE = 2;
     const ACCESS_TYPES = 'jpg,png,jpeg,gif';
@@ -34,10 +34,10 @@ class WorkBiographUploads extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Biogrph_Id', 'required'),
-            array('Work_Biogrph_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Biogrph_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Biogrph_Upl_File', 'file', 'types'=>  self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
             array('Work_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Work_Biogrph_Upl_Description, Created, Rowversion', 'safe'),
+            array('Work_Biogrph_Upl_Description, Created, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Biogrph_Upl_Id, Work_Biogrph_Id, Work_Biogrph_Upl_File, Work_Biogrph_Upl_Description, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class WorkBiographUploads extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workBiogrph' => array(self::BELONGS_TO, 'WorkBiography', 'Work_Biogrph_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

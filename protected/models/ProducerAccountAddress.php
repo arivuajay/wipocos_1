@@ -36,7 +36,7 @@
  * @property MasterCountry $proAddrCountry
  * @property ProducerAccount $proAcc
  */
-class ProducerAccountAddress extends CActiveRecord {
+class ProducerAccountAddress extends RActiveRecord {
 
     public $after_save_enable = true;
     
@@ -61,7 +61,7 @@ class ProducerAccountAddress extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Head_Address_1, Pro_Head_Telephone, Pro_Head_Email, Pro_Mailing_Address_1, Pro_Mailing_Telephone, Pro_Mailing_Email', 'required'),
-            array('Pro_Acc_Id, Pro_Addr_Country_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Pro_Addr_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Head_Address_1, Pro_Head_Address_2, Pro_Head_Address_3, Pro_Mailing_Address_1, Pro_Mailing_Address_2, Pro_Mailing_Address_3, Pro_Publisher_Account_1, Pro_Publisher_Account_2, Pro_Publisher_Account_3, Pro_Producer_Account_1, Pro_Producer_Account_2, Pro_Producer_Account_3', 'length', 'max' => 255),
             array('Pro_Head_Fax, Pro_Head_Telephone, Pro_Mailing_Telephone, Pro_Mailing_Fax', 'length', 'max' => 25),
             array('Pro_Head_Email, Pro_Mailing_Email', 'length', 'max' => 50),
@@ -69,7 +69,7 @@ class ProducerAccountAddress extends CActiveRecord {
             array('Pro_Unknown_Address, Active', 'length', 'max' => 1),
             array('Pro_Head_Email, Pro_Mailing_Email', 'email'),
             array('Pro_Head_Website, Pro_Mailing_Website', 'url'),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Addr_Id, Pro_Acc_Id, Pro_Head_Address_1, Pro_Head_Address_2, Pro_Head_Address_3, Pro_Head_Fax, Pro_Head_Telephone, Pro_Head_Email, Pro_Head_Website, Pro_Mailing_Address_1, Pro_Mailing_Address_2, Pro_Mailing_Address_3, Pro_Mailing_Telephone, Pro_Mailing_Fax, Pro_Mailing_Email, Pro_Mailing_Website, Pro_Publisher_Account_1, Pro_Publisher_Account_2, Pro_Publisher_Account_3, Pro_Producer_Account_1, Pro_Producer_Account_2, Pro_Producer_Account_3, Pro_Addr_Country_Id, Pro_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -85,6 +85,8 @@ class ProducerAccountAddress extends CActiveRecord {
         return array(
             'proAddrCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Pro_Addr_Country_Id'),
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

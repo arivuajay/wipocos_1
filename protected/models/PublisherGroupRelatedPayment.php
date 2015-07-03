@@ -16,7 +16,7 @@
  * The followings are the available model relations:
  * @property PublisherGroup $pubGroup
  */
-class PublisherGroupRelatedPayment extends CActiveRecord {
+class PublisherGroupRelatedPayment extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -33,10 +33,10 @@ class PublisherGroupRelatedPayment extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Pay_Rel_Payee, Pub_Group_Pay_Rel_Rate, Pub_Group_Pay_Rel_Pay_Method', 'required'),
-            array('Pub_Group_Id, Pub_Group_Pay_Rel_Pay_Method, Pub_Group_Pay_Rel_Bank_Account', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_Pay_Rel_Pay_Method, Pub_Group_Pay_Rel_Bank_Account, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Pay_Rel_Id, Pub_Group_Pay_Rel_Rate', 'length', 'max' => 10),
             array('Pub_Group_Pay_Rel_Payee', 'length', 'max' => 100),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Group_Pay_Rel_Payee',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -56,6 +56,8 @@ class PublisherGroupRelatedPayment extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

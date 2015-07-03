@@ -57,7 +57,7 @@ class AuthorPaymentMethod extends RActiveRecord {
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Auth_Pay_Method_id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

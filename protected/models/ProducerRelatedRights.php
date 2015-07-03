@@ -33,7 +33,7 @@
  * @property MasterTypeRights $proRelTypeRght
  * @property MasterWorksCategory $proRelAvlWorkCat
  */
-class ProducerRelatedRights extends CActiveRecord {
+class ProducerRelatedRights extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -58,10 +58,10 @@ class ProducerRelatedRights extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Entry_Date, Pro_Rel_Internal_Position_Id, Pro_Rel_Entry_Date_2, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id', 'required'),
-            array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Internal_Position_Id, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Internal_Position_Id, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Rel_File', 'length', 'max' => 255),
             array('Pro_Rel_Duration', 'length', 'max' => 100),
-            array('Pro_Rel_Exit_Date, Pro_Rel_Exit_Date_2, Created_Date, Rowversion', 'safe'),
+            array('Pro_Rel_Exit_Date, Pro_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array('Pro_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Pro_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
@@ -85,6 +85,8 @@ class ProducerRelatedRights extends CActiveRecord {
             'proRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pro_Rel_Territories_Id'),
             'proRelTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pro_Rel_Type_Rght_Id'),
             'proRelAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pro_Rel_Avl_Work_Cat_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

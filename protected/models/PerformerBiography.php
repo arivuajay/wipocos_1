@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property PerformerAccount $perfAcc
  */
-class PerformerBiography extends CActiveRecord {
+class PerformerBiography extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -31,9 +31,9 @@ class PerformerBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Biogrph_Annotation', 'required'),
-            array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Active', 'length', 'max' => 1),
-            array('Perf_Biogrph_Annotation, Created_Date, Rowversion', 'safe'),
+            array('Perf_Biogrph_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Biogrph_Id, Perf_Acc_Id, Perf_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -49,6 +49,8 @@ class PerformerBiography extends CActiveRecord {
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
             'performerBiographUploads' => array(self::HAS_MANY, 'PerformerBiographUploads', 'Perf_Biogrph_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

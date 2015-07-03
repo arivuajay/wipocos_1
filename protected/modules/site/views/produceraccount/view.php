@@ -93,6 +93,14 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                    ),
             ),
         ));
         ?>
@@ -122,6 +130,14 @@ if ($export == false) {
                         'name' => 'Pro_Unknown_Address',
                         'type' => 'raw',
                         'value' => $address_model->Pro_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
                     ),
 //        array(
 //                'name' => 'Active',
@@ -186,6 +202,14 @@ if ($export == false) {
                     'Pro_Pay_Address',
                     'Pro_Pay_Iban',
                     'Pro_Pay_Swift',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -205,6 +229,14 @@ if ($export == false) {
                         'value' => isset($psedonym_model->proPseudoType->Pseudo_Code) ? $psedonym_model->proPseudoType->Pseudo_Code : 'Not Set'
                     ),
                     'Pro_Pseudo_Name',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -225,6 +257,14 @@ if ($export == false) {
                     'Pro_Suc_Address_1',
                     'Pro_Suc_Address_2',
                     'Pro_Suc_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($death_model->createdBy->name) ? $death_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($death_model->updatedBy->name) ? $death_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -275,6 +315,14 @@ if ($export == false) {
                         'name' => 'Pro_Rel_Territories_Id',
                         'value' => isset($related_model->proRelTerritories->Territory_Name) ? $related_model->proRelTerritories->Territory_Name : 'Not Set'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($related_model->createdBy->name) ? $related_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($related_model->updatedBy->name) ? $related_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -292,6 +340,14 @@ if ($export == false) {
                 'attributes' => array(
 //        'Pro_Biogrph_Id',
                     'Pro_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -311,7 +367,8 @@ if ($export == false) {
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -324,6 +381,7 @@ if ($export == false) {
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Producer Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Pro_Biogrph_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/produceraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));

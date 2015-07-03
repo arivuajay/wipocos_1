@@ -36,7 +36,7 @@
  * @property PublisherGroupRelatedPayment[] $publisherGroupRelatedPayments
  * @property PublisherGroupRepresentative[] $publisherGroupRepresentatives
  */
-class PublisherGroup extends CActiveRecord {
+class PublisherGroup extends RActiveRecord {
     public $search_status;
     public $is_pub_producer;
 
@@ -73,13 +73,13 @@ class PublisherGroup extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Name, Pub_Group_Internal_Code, Pub_Group_Date', 'required'),
-            array('Pub_Group_Id, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Name, Pub_Group_Place', 'length', 'max' => 100),
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
             array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
             array('Pub_Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
-            array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID, Pub_Group_Photo', 'safe'),
+            array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID, Pub_Group_Photo, Created_By, Updated_By', 'safe'),
 //            array(
 //                'Pub_Group_Name',
 //                'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -108,6 +108,8 @@ class PublisherGroup extends CActiveRecord {
             'publisherGroupPseudonyms' => array(self::HAS_ONE, 'PublisherGroupPseudonym', 'Pub_Group_Id'),
             'publisherGroupRelatedPayments' => array(self::HAS_ONE, 'PublisherGroupRelatedPayment', 'Pub_Group_Id'),
             'publisherGroupRepresentatives' => array(self::HAS_ONE, 'PublisherGroupRepresentative', 'Pub_Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

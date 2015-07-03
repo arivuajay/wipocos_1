@@ -21,7 +21,7 @@
  * @property ProducerAccount $proAcc
  * @property MasterPaymentMethod $proPayMethod
  */
-class ProducerPaymentMethod extends CActiveRecord {
+class ProducerPaymentMethod extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -39,10 +39,10 @@ class ProducerPaymentMethod extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Pay_Method_id, Pro_Bank_Account', 'required'),
-            array('Pro_Acc_Id, Pro_Pay_Method_id, Pro_Bank_Account, Pro_Bank_Code, Pro_Bank_Branch', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Pro_Pay_Method_id, Pro_Bank_Account, Pro_Bank_Code, Pro_Bank_Branch, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Pay_Address, Pro_Pay_Iban, Pro_Pay_Swift', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Pay_Id, Pro_Acc_Id, Pro_Pay_Method_id, Pro_Bank_Account, Pro_Bank_Code, Pro_Bank_Branch, Pro_Pay_Address, Pro_Pay_Iban, Pro_Pay_Swift, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -58,6 +58,8 @@ class ProducerPaymentMethod extends CActiveRecord {
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
             'proPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Pro_Pay_Method_id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

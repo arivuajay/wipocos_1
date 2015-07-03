@@ -146,7 +146,7 @@ class AuthorAccount extends RActiveRecord {
                 'foreignKey' => array('Group_Member_GUID' => 'Auth_GUID')
             ),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

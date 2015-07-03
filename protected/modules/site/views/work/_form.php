@@ -39,10 +39,9 @@ $territories = Myclass::getMasterTerritory();
                 $rgt_tab_validation = !$model->isNewRecord && !$document_model->isNewRecord;
                 $other_tab_validation = true;
 //                $other_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !$sub_publish_validate && !empty($main_publisher) && !empty($sub_publisher);
-
-                $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !empty($main_publisher);
-                $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !empty($main_publisher) && !empty($sub_publisher);
             }
+            $pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !empty($main_publisher);
+            $sub_pub_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists) && !$publish_validate && !empty($main_publisher) && !empty($sub_publisher);
         } else {
             $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $pub_tab_validation = $sub_pub_tab_validation = false;
         }

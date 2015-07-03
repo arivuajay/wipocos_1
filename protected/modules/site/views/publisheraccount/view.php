@@ -29,7 +29,6 @@ if ($export == false) {
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -91,6 +90,14 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
             ),
         ));
         ?>
@@ -121,6 +128,14 @@ if ($export == false) {
                         'type' => 'raw',
                         'value' => $address_model->Pub_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
+                    ),
 //        array(
 //                'name' => 'Active',
 //                'type' => 'raw',
@@ -128,6 +143,63 @@ if ($export == false) {
 //            ),
                 ),
             ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4>Assigned Groups</h4>
+        <?php
+        $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_GUID = :int_code', array(':int_code' => $model->Pub_GUID));
+        if (!empty($members)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                        </tr>
+                        <?php foreach ($members as $key => $member) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4>Assigned Works</h4>
+        <?php
+        $works = WorkRightholder::model()->findAll('Work_Member_GUID = :int_code', array(':int_code' => $model->Pub_GUID));
+        if (!empty($works)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Works Name</th>
+                            <th>Internal Code</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php foreach ($works as $key => $work) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $work->work->Work_Org_Title ?></td>
+                                <td><?php echo $work->work->Work_Internal_Code ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
         } else {
             echo 'No data created';
         }
@@ -151,6 +223,14 @@ if ($export == false) {
                     'Pub_Pay_Address',
                     'Pub_Pay_Iban',
                     'Pub_Pay_Swift',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -170,6 +250,14 @@ if ($export == false) {
                         'value' => isset($psedonym_model->pubPseudoType->Pseudo_Code) ? $psedonym_model->pubPseudoType->Pseudo_Code : 'Not Set'
                     ),
                     'Pub_Pseudo_Name',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -190,13 +278,21 @@ if ($export == false) {
                     'Pub_Suc_Address_1',
                     'Pub_Suc_Address_2',
                     'Pub_Suc_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($death_model->createdBy->name) ? $death_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($death_model->updatedBy->name) ? $death_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
             echo 'No data created';
         }
         ?>
-        <h4>Related Rights</h4>
+        <h4>Managed Rights</h4>
         <?php
         if (!empty($managed_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -239,6 +335,14 @@ if ($export == false) {
                         'name' => 'Pub_Mnge_Territories_Id',
                         'value' => isset($managed_model->pubMngeTerritories->Territory_Name) ? $managed_model->pubMngeTerritories->Territory_Name : 'Not Set'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($managed_model->updatedBy->name) ? $managed_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -255,13 +359,24 @@ if ($export == false) {
                 'htmlOptions' => array('class' => 'table table-striped table-bordered'),
                 'attributes' => array(
 //        'Pub_Biogrph_Id',
+                    'Pub_Managers',
                     'Pub_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
             echo 'No data created';
         }
         ?>
+        
+        <h4>Biography Uploaded Files</h4>
         <?php
         $uploaded_files = array();
         if (!empty($biograph_model))
@@ -274,7 +389,8 @@ if ($export == false) {
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -287,6 +403,7 @@ if ($export == false) {
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Publisher Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Pub_Biogrph_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/publisheraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
@@ -299,69 +416,10 @@ if ($export == false) {
                     <?php } ?>
                 </tbody>
             </table>
-        <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Assigned Groups</h4>
-        <?php
-        $members = PublisherGroupMembers::model()->findAll('Pub_Group_Member_GUID = :int_code', array(':int_code' => $model->Pub_GUID));
-        if (!empty($members)) {
-            ?>
-            <div class="box-body no-padding">
-                <table class="table table-striped table-bordered">
-                    <tbody><tr>
-                            <th>#</th>
-                            <th>Group Name</th>
-                        </tr>
-    <?php foreach ($members as $key => $member) { ?>
-                            <tr>
-                                <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $member->pubGroup->Pub_Group_Name ?></td>
-                            </tr>
-    <?php } ?>
-                    </tbody>
-                </table>
-            </div>
             <?php
         } else {
             echo 'No data created';
         }
         ?>
-        <h4>Assigned Works</h4>
-        <?php
-        $works = WorkRightholder::model()->findAll('Work_Member_GUID = :int_code', array(':int_code' => $model->Pub_GUID));
-        if (!empty($works)) {
-            ?>
-            <div class="box-body no-padding">
-                <table class="table table-striped table-bordered">
-                    <tbody><tr>
-                            <th>#</th>
-                            <th>Works Name</th>
-                            <th>Internal Code</th>
-                            <?php if ($export == false) { ?>
-                                <th>Action</th>
-                        <?php } ?>
-                        </tr>
-    <?php foreach ($works as $key => $work) { ?>
-                            <tr>
-                                <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $work->work->Work_Org_Title ?></td>
-                                <td><?php echo $work->work->Work_Internal_Code ?></td>
-                                <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
-                            <?php } ?>
-                            </tr>
-    <?php } ?>
-                    </tbody></table>
-            </div>
-            <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
     </div>
 </div>

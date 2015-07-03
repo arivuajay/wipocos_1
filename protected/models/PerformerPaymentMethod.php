@@ -18,7 +18,7 @@
  * @property PerformerAccount $perfAcc
  * @property MasterPaymentMethod $perfPayMethod
  */
-class PerformerPaymentMethod extends CActiveRecord {
+class PerformerPaymentMethod extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -35,10 +35,10 @@ class PerformerPaymentMethod extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Pay_Method_id, Perf_Bank_Account_1, Perf_Bank_Account_2, Perf_Bank_Account_3', 'required'),
-            array('Perf_Acc_Id, Perf_Pay_Method_id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Perf_Pay_Method_id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Bank_Account_1, Perf_Bank_Account_2, Perf_Bank_Account_3', 'length', 'max' => 255),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Pay_Id, Perf_Acc_Id, Perf_Pay_Method_id, Perf_Bank_Account_1, Perf_Bank_Account_2, Perf_Bank_Account_3, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -54,6 +54,8 @@ class PerformerPaymentMethod extends CActiveRecord {
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
             'perfPayMethod' => array(self::BELONGS_TO, 'MasterPaymentMethod', 'Perf_Pay_Method_id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

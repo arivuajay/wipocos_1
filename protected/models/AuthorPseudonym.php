@@ -54,7 +54,7 @@ class AuthorPseudonym extends RActiveRecord {
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authPseudoType' => array(self::BELONGS_TO, 'MasterPseudonymTypes', 'Auth_Pseudo_Type_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

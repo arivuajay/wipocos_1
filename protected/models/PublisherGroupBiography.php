@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property PublisherGroup $pubGroup
  */
-class PublisherGroupBiography extends CActiveRecord {
+class PublisherGroupBiography extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -31,9 +31,9 @@ class PublisherGroupBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Biogrph_Annotation', 'required'),
-            array('Pub_Group_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Biogrph_Id, Pub_Group_Id, Pub_Group_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -48,6 +48,8 @@ class PublisherGroupBiography extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

@@ -32,7 +32,7 @@
  * @property WorkSubPublishing[] $workSubPublishings
  * @property WorkSubtitle[] $workSubtitles
  */
-class Work extends CActiveRecord {
+class Work extends RActiveRecord {
 
     public $duration_hours;
     public $duration_minutes;
@@ -68,7 +68,7 @@ class Work extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Org_Title, Work_Internal_Code, Work_Type_Id, Work_Factor_Id, Work_Duration, duration_hours, duration_minutes, duration_seconds', 'required'),
-            array('Work_Language_Id, Work_Type_Id, Work_Factor_Id, Work_Opus_Number, duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
+            array('Work_Language_Id, Work_Type_Id, Work_Factor_Id, Work_Opus_Number, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Org_Title, Work_Internal_Code, Work_Iswc, Work_Wic_Code', 'length', 'max' => 100),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
@@ -77,7 +77,7 @@ class Work extends CActiveRecord {
             array('Work_Internal_Code, Work_Org_Title', 'unique'),
             array('Work_Unknown, Active', 'length', 'max' => 1),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -106,6 +106,8 @@ class Work extends CActiveRecord {
             'workRightholders' => array(self::HAS_MANY, 'WorkRightholder', 'Work_Id'),
             'workSubPublishings' => array(self::HAS_ONE, 'WorkSubPublishing', 'Work_Id'),
             'workSubtitles' => array(self::HAS_MANY, 'WorkSubtitle', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -263,6 +265,7 @@ class Work extends CActiveRecord {
         if ($work->workRightholders) {
             $column .= "<br /><br />";
             $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Shares</th></thead><tbody>";
+            //Author
             foreach ($work->workRightholders as $key => $rightholder) {
                 if ($rightholder->workAuthor) {
                     $column .= '<tr>';
@@ -273,8 +276,21 @@ class Work extends CActiveRecord {
                     $column .= '</tr>';
                 }
             }
+            $main_publisher = (new WorkRightholder)->getMainPublisher($work_id);
+            //Main Publisher
             foreach ($work->workRightholders as $key => $rightholder) {
-                if ($rightholder->workPublisher) {
+                if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID == $rightholder->workPublisher->Pub_GUID) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                    $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
+                    $column .= "<td>{$shares} %</td>";
+                    $column .= '</tr>';
+                }
+            }
+            //Sub Publisher
+            foreach ($work->workRightholders as $key => $rightholder) {
+                if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID != $rightholder->workPublisher->Pub_GUID) {
                     $column .= '<tr>';
                     $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
                     $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";

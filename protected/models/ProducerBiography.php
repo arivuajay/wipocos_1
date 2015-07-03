@@ -15,7 +15,7 @@
  * The followings are the available model relations:
  * @property ProducerAccount $proAcc
  */
-class ProducerBiography extends CActiveRecord {
+class ProducerBiography extends RActiveRecord {
 
     public $after_save_enable = true;
     /**
@@ -33,10 +33,10 @@ class ProducerBiography extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Biogrph_Annotation', 'required'),
-            array('Pro_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Managers', 'length', 'max' => 500),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Biogrph_Id, Pro_Acc_Id, Pro_Managers, Pro_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class ProducerBiography extends CActiveRecord {
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
             'producerBiographUploads' => array(self::HAS_MANY, 'ProducerBiographUploads', 'Pro_Biogrph_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

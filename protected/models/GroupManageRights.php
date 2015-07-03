@@ -32,7 +32,7 @@
  * @property MasterTypeRights $groupMngeTypeRght
  * @property MasterWorksCategory $groupMngeAvlWorkCat
  */
-class GroupManageRights extends CActiveRecord {
+class GroupManageRights extends RActiveRecord {
 
 public function init() {
         parent::init();
@@ -56,12 +56,12 @@ public function init() {
         // will receive user inputs.
         return array(
             array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Entry_Date, Group_Mnge_Internal_Position_Id, Group_Mnge_Entry_Date_2, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id', 'required'),
-            array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Internal_Position_Id, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Internal_Position_Id, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Mnge_File', 'length', 'max' => 255),
             array('Group_Mnge_Duration', 'length', 'max' => 100),
             array('Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Group_Mnge_Exit_Date, Group_Mnge_Exit_Date_2', 'safe'),
+            array('Group_Mnge_Exit_Date, Group_Mnge_Exit_Date_2, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Mnge_Rgt_Id, Group_Id, Group_Mnge_Society_Id, Group_Mnge_Entry_Date, Group_Mnge_Exit_Date, Group_Mnge_Internal_Position_Id, Group_Mnge_Entry_Date_2, Group_Mnge_Exit_Date_2, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_File, Group_Mnge_Duration, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id', 'safe', 'on' => 'search'),
@@ -84,6 +84,8 @@ public function init() {
             'groupMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Group_Mnge_Territories_Id'),
             'groupMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Group_Mnge_Type_Rght_Id'),
             'groupMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Group_Mnge_Avl_Work_Cat_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

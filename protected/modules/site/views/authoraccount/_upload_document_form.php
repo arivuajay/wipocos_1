@@ -64,12 +64,16 @@ if (!empty($uploaded_files)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th>Document Name</th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td><?php echo $uploaded_file->updatedBy->name ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();

@@ -40,7 +40,6 @@ $this->breadcrumbs = array(
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -109,10 +108,18 @@ $this->breadcrumbs = array(
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
             ),
         ));
         ?>
-        <h4>Address</h4>
+        <h4>Representatives</h4>
         <?php
         if (!empty($address_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -147,9 +154,12 @@ $this->breadcrumbs = array(
                         'value' => $address_model->Group_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
                     array(
-                        'name' => 'Active',
-                        'type' => 'raw',
-                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
                     ),
                 ),
             ));
@@ -175,13 +185,21 @@ $this->breadcrumbs = array(
                     'Group_Bank_Account_1',
                     'Group_Bank_Account_2',
                     'Group_Bank_Account_3',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
             echo 'No data created';
         }
         ?>
-        <h4>Pseudonyms</h4>
+        <h4>Cross-references</h4>
         <?php
         if (!empty($psedonym_model)) {
             $this->widget('zii.widgets.CDetailView', array(
@@ -190,13 +208,21 @@ $this->breadcrumbs = array(
                 'attributes' => array(
                     array(
                         'name' => 'Group_Pseudo_Type_Id',
-                        'value' => isset($psedonym_model->authPseudoType->Pseudo_Code) ? $psedonym_model->authPseudoType->Pseudo_Code : 'Not Set'
+                        'value' => isset($psedonym_model->groupPseudoType->Pseudo_Code) ? $psedonym_model->groupPseudoType->Pseudo_Code : 'Not Set'
                     ),
                     'Group_Pseudo_Name',
+//                    array(
+//                        'name' => 'Active',
+//                        'type' => 'raw',
+//                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+//                    ),
                     array(
-                        'name' => 'Active',
-                        'type' => 'raw',
-                        'value' => $model->Active == 1 ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
                     ),
                 ),
             ));
@@ -219,35 +245,43 @@ $this->breadcrumbs = array(
                     'Group_Mnge_Exit_Date',
                     array(
                         'name' => 'Group_Mnge_Internal_Position_Id',
-                        'value' => isset($managed_model->authMngeInternalPosition->Int_Post_Name) ? $managed_model->authMngeInternalPosition->Int_Post_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeInternalPosition->Int_Post_Name) ? $managed_model->groupMngeInternalPosition->Int_Post_Name : 'Not Set'
                     ),
                     'Group_Mnge_Entry_Date_2',
                     'Group_Mnge_Exit_Date_2',
                     array(
                         'name' => 'Group_Mnge_Region_Id',
-                        'value' => isset($managed_model->authMngeRegion->Region_Name) ? $managed_model->authMngeRegion->Region_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeRegion->Region_Name) ? $managed_model->groupMngeRegion->Region_Name : 'Not Set'
                     ),
                     array(
                         'name' => 'Group_Mnge_Profession_Id',
-                        'value' => isset($managed_model->authMngeProfession->Profession_Name) ? $managed_model->authMngeProfession->Profession_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeProfession->Profession_Name) ? $managed_model->groupMngeProfession->Profession_Name : 'Not Set'
                     ),
                     'Group_Mnge_File',
                     'Group_Mnge_Duration',
                     array(
                         'name' => 'Group_Mnge_Avl_Work_Cat_Id',
-                        'value' => isset($managed_model->authMngeAvlWorkCat->Work_Category_Name) ? $managed_model->authMngeAvlWorkCat->Work_Category_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeAvlWorkCat->Work_Category_Name) ? $managed_model->groupMngeAvlWorkCat->Work_Category_Name : 'Not Set'
                     ),
                     array(
                         'name' => 'Group_Mnge_Type_Rght_Id',
-                        'value' => isset($managed_model->authMngeTypeRght->Type_Rights_Name) ? $managed_model->authMngeTypeRght->Type_Rights_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeTypeRght->Type_Rights_Name) ? $managed_model->groupMngeTypeRght->Type_Rights_Name : 'Not Set'
                     ),
                     array(
                         'name' => 'Group_Mnge_Managed_Rights_Id',
-                        'value' => isset($managed_model->authMngeManagedRights->Mgd_Rights_Name) ? $managed_model->authMngeManagedRights->Mgd_Rights_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeManagedRights->Mgd_Rights_Name) ? $managed_model->groupMngeManagedRights->Mgd_Rights_Name : 'Not Set'
                     ),
                     array(
                         'name' => 'Group_Mnge_Territories_Id',
-                        'value' => isset($managed_model->authMngeTerritories->Territory_Name) ? $managed_model->authMngeTerritories->Territory_Name : 'Not Set'
+                        'value' => isset($managed_model->groupMngeTerritories->Territory_Name) ? $managed_model->groupMngeTerritories->Territory_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($managed_model->updatedBy->name) ? $managed_model->updatedBy->name : ''
                     ),
                 ),
             ));
@@ -266,6 +300,14 @@ $this->breadcrumbs = array(
                 'attributes' => array(
 //        'Group_Biogrph_Id',
                     'Group_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
                 ),
             ));
         } else {
@@ -290,7 +332,8 @@ $this->breadcrumbs = array(
                         <th style="width: 10px">#</th>
                         <th>Uploaded Files</th>
                         <th>Description</th>
-                        <th>Created</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -303,6 +346,7 @@ $this->breadcrumbs = array(
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "{$role} Group Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Group_Biogrph_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/group/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));

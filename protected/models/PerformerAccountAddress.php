@@ -34,7 +34,7 @@
  * The followings are the available model relations:
  * @property PerformerAccount $perfAcc
  */
-class PerformerAccountAddress extends CActiveRecord {
+class PerformerAccountAddress extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -51,7 +51,7 @@ class PerformerAccountAddress extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Home_Address_1, Perf_Home_Telephone, Perf_Home_Email, Perf_Mailing_Address_1, Perf_Mailing_Telephone, Perf_Mailing_Email', 'required'),
-            array('Perf_Acc_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Home_Email, Perf_Mailing_Email', 'email'),
             array('Perf_Home_Website, Perf_Mailing_Website', 'url'),
             array('Perf_Home_Address_1, Perf_Home_Address_2, Perf_Home_Address_3, Perf_Mailing_Address_1, Perf_Mailing_Address_2, Perf_Mailing_Address_3, Perf_Author_Account_1, Perf_Author_Account_2, Perf_Author_Account_3, Perf_Performer_Account_1, Perf_Performer_Account_2, Perf_Performer_Account_3', 'length', 'max' => 255),
@@ -59,7 +59,7 @@ class PerformerAccountAddress extends CActiveRecord {
             array('Perf_Home_Email, Perf_Mailing_Email', 'length', 'max' => 50),
             array('Perf_Home_Website, Perf_Mailing_Website', 'length', 'max' => 100),
             array('Perf_Unknown_Address, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Addr_Id, Perf_Acc_Id, Perf_Home_Address_1, Perf_Home_Address_2, Perf_Home_Address_3, Perf_Home_Fax, Perf_Home_Telephone, Perf_Home_Email, Perf_Home_Website, Perf_Mailing_Address_1, Perf_Mailing_Address_2, Perf_Mailing_Address_3, Perf_Mailing_Telephone, Perf_Mailing_Fax, Perf_Mailing_Email, Perf_Mailing_Website, Perf_Performer_Account_1, Perf_Performer_Account_2, Perf_Performer_Account_3, Perf_Performer_Account_1, Perf_Performer_Account_2, Perf_Performer_Account_3, Perf_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -74,6 +74,8 @@ class PerformerAccountAddress extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

@@ -14,6 +14,17 @@
     <div class="box-body">
 
         <div class="form-group">
+            <?php echo CHtml::label('Recording', '', array('class' => 'col-sm-3 control-label')); ?>
+            <div class="col-sm-2">
+                <?php echo CHtml::textField('Recording Internal Code', $recording_model->Rcd_Internal_Code, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <div class="col-sm-3">
+                <?php echo CHtml::textField('Recording Name', $recording_model->Rcd_Title, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+        </div>
+        <hr />
+
+        <div class="form-group">
             <?php echo $form->labelEx($model, 'Rcd_Publ_Internal_Code', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Rcd_Publ_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'readonly' => true)); ?>

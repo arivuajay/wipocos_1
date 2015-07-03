@@ -43,6 +43,7 @@ $this->breadcrumbs = array(
                         'onchange' => '{'
                         . 'if($("#AuthResources_Master_User_ID").val() != "" && this.value != ""){'
                         . '$("#ajax-loader").show();'
+                        . '$("#resources-block").hide();'
                         . '$.get("' . Yii::app()->createUrl("site/authresources/getscreensbymodule") . '", { 
                             type: "user", 
                             mid: this.value, 
@@ -50,9 +51,31 @@ $this->breadcrumbs = array(
                             ).done(function( data ){
                                 $("#ajax-loader").hide();
                                 $("#resources-block").html( data );
+                                $(".chkbox").iCheck({
+                                    checkboxClass: "icheckbox_minimal",
+                                    radioClass: "iradio_minimal"
+                                });
+                                $(".all_check").on("ifChecked", function(event){
+                                    _class = $(this).data("check");
+                                    $("."+_class).iCheck("check");
+                                });
+                                $(".all_check").on("ifUnchecked", function(event){
+                                    _class = $(this).data("check");
+                                    $("."+_class).iCheck("uncheck");
+                                });
+                                $(".check_view").on("ifUnchecked", function(event){
+                                    _class = $(this).data("chbx");
+                                    $("."+_class).iCheck("uncheck");
+                                });
+                                $(".check_add, .check_update, .check_delete").on("ifChecked", function(event){
+                                    _class = $(this).data("chbx");
+                                    $(".check_view."+_class).iCheck("check");
+                                });
+                                $("#resources-block").show();
                            });'
                         . '}else{'
                         . '$("#resources-block").html("");'
+                        . '$("#resources-block").show();'
                         . '}'
                         . '}'
                     ));
@@ -70,14 +93,3 @@ $this->breadcrumbs = array(
         </div>
     </div>
 </div>
-<?php
-$js = <<< EOD
-    $(document).ready(function(){
-        $("body").on('click', '.all_check', function(){
-            _class = $(this).data('check');
-            $('.'+_class).prop('checked', this.checked);    
-        });
-    });
-EOD;
-Yii::app()->clientScript->registerScript('_user_base', $js);
-?>

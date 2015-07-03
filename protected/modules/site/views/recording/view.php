@@ -98,6 +98,14 @@ $this->breadcrumbs = array(
                 'Rcd_File',
                 'Rcd_Isrc_Code',
                 'Rcd_Iswc_Number',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                    ),
             ),
         ));
         ?>
@@ -115,6 +123,8 @@ $this->breadcrumbs = array(
                         <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Name') ?></th>
                         <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Type_Id') ?></th>
                         <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
                         <?php if ($export == false) { ?>
                             <th>Action</th>
                         <?php } ?>
@@ -125,6 +135,8 @@ $this->breadcrumbs = array(
                             <td><?php echo $sub_title->Rcd_Subtitle_Name ?></td>
                             <td><?php echo $sub_title->rcdSubtitleType->Type_Name ?></td>
                             <td><?php echo $sub_title->rcdSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
                             <?php if ($export == false) { ?>
                                 <td>
                                     <?php
@@ -159,6 +171,14 @@ $this->breadcrumbs = array(
                     array(
                         'name' => 'Rcd_Publ_Prod_Nation_Id',
                         'value' => isset($publication_model->rcdPublProdNation->Nation_Name) ? $publication_model->rcdPublProdNation->Nation_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($publication_model->createdBy->name) ? $publication_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($publication_model->updatedBy->name) ? $publication_model->updatedBy->name : ''
                     ),
                 ),
             ));

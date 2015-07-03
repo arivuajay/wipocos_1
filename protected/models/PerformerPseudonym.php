@@ -16,7 +16,7 @@
  * @property PerformerAccount $perfAcc
  * @property MasterPseudonymTypes $perfPseudoType
  */
-class PerformerPseudonym extends CActiveRecord {
+class PerformerPseudonym extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -33,10 +33,10 @@ class PerformerPseudonym extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Pseudo_Type_Id, Perf_Pseudo_Name', 'required'),
-            array('Perf_Acc_Id, Perf_Pseudo_Type_Id', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Perf_Pseudo_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Pseudo_Name', 'length', 'max' => 50),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Pseudo_Id, Perf_Acc_Id, Perf_Pseudo_Type_Id, Perf_Pseudo_Name, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class PerformerPseudonym extends CActiveRecord {
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
             'perfPseudoType' => array(self::BELONGS_TO, 'MasterPseudonymTypes', 'Perf_Pseudo_Type_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

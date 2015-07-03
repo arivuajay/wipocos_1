@@ -17,7 +17,7 @@
  * @property MasterType $workSubtitleType
  * @property Work $work
  */
-class WorkSubtitle extends CActiveRecord {
+class WorkSubtitle extends RActiveRecord {
     
     public function init() {
         parent::init();
@@ -42,9 +42,9 @@ class WorkSubtitle extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Subtitle_Name, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id', 'required'),
-            array('Work_Id, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Id, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Subtitle_Name', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Subtitle_Id, Work_Id, Work_Subtitle_Name, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -61,6 +61,8 @@ class WorkSubtitle extends CActiveRecord {
             'workSubtitleLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Work_Subtitle_Language_Id'),
             'workSubtitleType' => array(self::BELONGS_TO, 'MasterType', 'Work_Subtitle_Type_Id'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

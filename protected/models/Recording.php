@@ -32,7 +32,7 @@
  * @property RecordingRightholder[] $recordingRightholders
  * @property RecordingSubtitle[] $recordingSubtitles
  */
-class Recording extends CActiveRecord {
+class Recording extends RActiveRecord {
 
     public $duration_hours;
     public $duration_minutes;
@@ -70,7 +70,7 @@ class Recording extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Rcd_Title, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, duration_hours, duration_minutes, duration_seconds', 'required'),
-            array('Rcd_Language_Id, Rcd_Type_Id, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Language_Id, Rcd_Type_Id, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Title, Rcd_Reference, Rcd_File', 'length', 'max' => 255),
             array('Rcd_Internal_Code, Rcd_Isrc_Code, Rcd_Iswc_Number', 'length', 'max' => 100),
             array('Rcd_Record_Type_Id, Rcd_Label_Id', 'length', 'max' => 20),
@@ -78,7 +78,7 @@ class Recording extends CActiveRecord {
             array('duration_hours', 'numerical', 'min' => 0),
             array('Rcd_Internal_Code', 'unique'),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -109,6 +109,8 @@ class Recording extends CActiveRecord {
             'recordingRightholders' => array(self::HAS_MANY, 'RecordingRightholder', 'Rcd_Id'),
             'recordingSubtitles' => array(self::HAS_MANY, 'RecordingSubtitle', 'Rcd_Id'),
             'recordingLinks' => array(self::HAS_MANY, 'RecordingLink', 'Rcd_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -254,16 +256,23 @@ class Recording extends CActiveRecord {
             $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
             foreach ($recording->recordingRightholders as $key => $rightholder) {
                 if ($rightholder->recordingPerformer) {
-                    $name = $rightholder->recordingPerformer->fullname;
-                } elseif ($rightholder->recordingProducer) {
-                    $name = $rightholder->recordingProducer->Pro_Corporate_Name;
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->recordingPerformer->fullname}</td>";
+                    $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                    $column .= '</tr>';
                 }
-                $column .= '<tr>';
-                $column .= "<td>{$name}</td>";
-                $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
-                $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
-                $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
-                $column .= '</tr>';
+            }
+            foreach ($recording->recordingRightholders as $key => $rightholder) {
+                if ($rightholder->recordingProducer) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
+                    $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                    $column .= '</tr>';
+                }
             }
             $column .= '</tbody></table>';
         }

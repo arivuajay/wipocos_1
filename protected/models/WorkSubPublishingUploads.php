@@ -15,7 +15,7 @@
  * The followings are the available model relations:
  * @property WorkSubPublishing $workSub
  */
-class WorkSubPublishingUploads extends CActiveRecord {
+class WorkSubPublishingUploads extends RActiveRecord {
 
     const FILE_SIZE = 1;
     const ACCESS_TYPE = 'pdf,jpg';
@@ -34,12 +34,12 @@ class WorkSubPublishingUploads extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Sub_Id, Work_Sub_Upl_Name', 'required'),
-            array('Work_Sub_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Sub_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Sub_Upl_Name', 'length', 'max' => 255),
             array('Work_Sub_Upl_File', 'length', 'max' => 500),
             array('Work_Sub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'update'),
             array('Work_Sub_Upl_File', 'file', 'types'=>self::ACCESS_TYPE, 'allowEmpty' => false, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB', 'on' => 'create'),
-            array('Rowversion, Work_Sub_Upl_Name, Work_Sub_Upl_Description', 'safe'),
+            array('Rowversion, Work_Sub_Upl_Name, Work_Sub_Upl_Description, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Sub_Upl_Id, Work_Sub_Id, Work_Sub_Upl_Name, Work_Sub_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -54,6 +54,8 @@ class WorkSubPublishingUploads extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workSub' => array(self::BELONGS_TO, 'WorkSubPublishing', 'Work_Sub_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

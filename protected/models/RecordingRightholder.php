@@ -21,7 +21,7 @@
  * @property Recording $rcd
  * @property MasterTypeRights $rcdRightRole
  */
-class RecordingRightholder extends CActiveRecord {
+class RecordingRightholder extends RActiveRecord {
 
     public $Rcd_Member_Internal_Code;
     /**
@@ -40,10 +40,10 @@ class RecordingRightholder extends CActiveRecord {
         return array(
             array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Share, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Share, Rcd_Right_Blank_Org_Id, Created_Date', 'required'),
             array('Rcd_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
-            array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Org_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Id, Rcd_Right_Role, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Org_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Member_GUID', 'length', 'max' => 100),
             array('Rcd_Right_Equal_Share, Rcd_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 10, 'integerOnly' => false),
-            array('Rowversion', 'safe'),
+            array('Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Right_Id, Rcd_Id, Rcd_Member_GUID, Rcd_Right_Role, Rcd_Right_Equal_Share, Rcd_Right_Equal_Org_id, Rcd_Right_Blank_Share, Rcd_Right_Blank_Org_Id, Created_Date, Rowversion, Rcd_Member_Internal_Code', 'safe', 'on' => 'search'),
@@ -63,6 +63,8 @@ class RecordingRightholder extends CActiveRecord {
             'rcdRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Rcd_Right_Role'),
             'recordingPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Perf_GUID')),
             'recordingProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Pro_GUID')),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

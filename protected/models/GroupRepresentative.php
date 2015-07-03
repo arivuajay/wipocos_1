@@ -37,7 +37,7 @@
  * @property $group
  * @property MasterCountry $groupCountry
  */
-class GroupRepresentative extends CActiveRecord {
+class GroupRepresentative extends RActiveRecord {
 
     public function init() {
         parent::init();
@@ -60,13 +60,13 @@ class GroupRepresentative extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id, Group_Rep_Name, Group_Home_Address_1, Group_Home_Telephone, Group_Home_Email, Group_Mailing_Address_1, Group_Mailing_Telephone, Group_Mailing_Email', 'required'),
-            array('Group_Id, Group_Country_Id', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Group_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Rep_Name, Group_Home_Website, Group_Mailing_Website', 'length', 'max' => 100),
             array('Group_Rep_Address_1, Group_Rep_Address_2, Group_Rep_Address_3, Group_Rep_Address_4, Group_Home_Address_1, Group_Home_Address_2, Group_Home_Address_3, Group_Home_Address_4, Group_Mailing_Address_1, Group_Mailing_Address_2, Group_Mailing_Address_3, Group_Mailing_Address_4', 'length', 'max' => 255),
             array('Group_Home_Fax, Group_Home_Telephone, Group_Mailing_Telephone, Group_Mailing_Fax', 'length', 'max' => 25),
             array('Group_Home_Email, Group_Mailing_Email', 'length', 'max' => 50),
             array('Group_Unknown_Address, Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Addr_Id, Group_Id, Group_Rep_Name, Group_Rep_Address_1, Group_Rep_Address_2, Group_Rep_Address_3, Group_Rep_Address_4, Group_Home_Address_1, Group_Home_Address_2, Group_Home_Address_3, Group_Home_Address_4, Group_Home_Fax, Group_Home_Telephone, Group_Home_Email, Group_Home_Website, Group_Mailing_Address_1, Group_Mailing_Address_2, Group_Mailing_Address_3, Group_Mailing_Address_4, Group_Mailing_Telephone, Group_Mailing_Fax, Group_Mailing_Email, Group_Mailing_Website, Group_Country_Id, Group_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -82,6 +82,8 @@ class GroupRepresentative extends CActiveRecord {
         return array(
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
             'groupCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Group_Country_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

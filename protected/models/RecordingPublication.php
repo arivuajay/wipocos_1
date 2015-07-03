@@ -18,7 +18,7 @@
  * @property MasterNationality $rcdPublProdNation
  * @property Recording $rcd
  */
-class RecordingPublication extends CActiveRecord {
+class RecordingPublication extends RActiveRecord {
     
     public function init() {
         parent::init();
@@ -44,11 +44,11 @@ class RecordingPublication extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Rcd_Id, Rcd_Publ_Internal_Code, Rcd_Publ_Year, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id', 'required'),
-            array('Rcd_Id, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id', 'numerical', 'integerOnly' => true),
+            array('Rcd_Id, Rcd_Publ_Country_Id, Rcd_Publ_Prod_Nation_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Publ_Internal_Code', 'length', 'max' => 100),
             array('Rcd_Publ_Internal_Code', 'unique'),
             array('Rcd_Publ_Year', 'length', 'max' => 4),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array('Rcd_Publ_Year', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -66,6 +66,8 @@ class RecordingPublication extends CActiveRecord {
             'rcdPublCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Rcd_Publ_Country_Id'),
             'rcdPublProdNation' => array(self::BELONGS_TO, 'MasterNationality', 'Rcd_Publ_Prod_Nation_Id'),
             'rcd' => array(self::BELONGS_TO, 'Recording', 'Rcd_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

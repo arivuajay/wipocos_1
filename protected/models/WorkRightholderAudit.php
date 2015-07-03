@@ -23,7 +23,7 @@
  * @property MasterTypeRights $workRightAuditRole
  * @property Work $work
  */
-class WorkRightholderAudit extends CActiveRecord {
+class WorkRightholderAudit extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -40,11 +40,11 @@ class WorkRightholderAudit extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Work_Id, Work_Member_GUID, Work_Right_Audit_Role, Work_Right_Audit_Broad_Share, Work_Right_Audit_Broad_Org_id, Work_Right_Audit_Mech_Share, Work_Right_Audit_Mech_Org_Id', 'required'),
-            array('Work_Id, Work_Right_Audit_Role, Work_Right_Audit_Broad_Org_id, Work_Right_Audit_Mech_Org_Id', 'numerical', 'integerOnly' => true),
+            array('Work_Id, Work_Right_Audit_Role, Work_Right_Audit_Broad_Org_id, Work_Right_Audit_Mech_Org_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Member_GUID', 'length', 'max' => 50),
             array('Work_Right_Audit_Broad_Share, Work_Right_Audit_Mech_Share', 'length', 'max' => 10),
             array('Work_Right_Audit_Broad_Special, Work_Right_Audit_Mech_Special', 'length', 'max' => 2),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Right_Audit_Id, Work_Id, Work_Member_GUID, Work_Right_Audit_Role, Work_Right_Audit_Broad_Share, Work_Right_Audit_Broad_Special, Work_Right_Audit_Broad_Org_id, Work_Right_Audit_Mech_Share, Work_Right_Audit_Mech_Special, Work_Right_Audit_Mech_Org_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -62,6 +62,8 @@ class WorkRightholderAudit extends CActiveRecord {
             'workRightAuditMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Audit_Mech_Org_Id'),
             'workRightAuditRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Audit_Role'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

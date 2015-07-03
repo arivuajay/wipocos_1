@@ -35,7 +35,7 @@
  * The followings are the available model relations:
  * @property PublisherGroup $pubGroup
  */
-class PublisherGroupRepresentative extends CActiveRecord {
+class PublisherGroupRepresentative extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -52,14 +52,14 @@ class PublisherGroupRepresentative extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Rep_Name, Pub_Group_Home_Address_1, Pub_Group_Home_Telephone, Pub_Group_Home_Email, Pub_Group_Mailing_Address_1, Pub_Group_Mailing_Telephone, Pub_Group_Mailing_Email', 'required'),
-            array('Pub_Group_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Rep_Name, Pub_Group_Home_Website, Pub_Group_Mailing_Website', 'length', 'max' => 100),
             array('Pub_Group_Rep_Address_1, Pub_Group_Rep_Address_2, Pub_Group_Rep_Address_3, Pub_Group_Rep_Address_4, Pub_Group_Home_Address_1, Pub_Group_Home_Address_2, Pub_Group_Home_Address_3, Pub_Group_Home_Address_4, Pub_Group_Mailing_Address_1, Pub_Group_Mailing_Address_2, Pub_Group_Mailing_Address_3, Pub_Group_Mailing_Address_4', 'length', 'max' => 255),
             array('Pub_Group_Home_Fax, Pub_Group_Home_Telephone, Pub_Group_Mailing_Telephone, Pub_Group_Mailing_Fax', 'length', 'max' => 25),
             array('Pub_Group_Home_Email, Pub_Group_Mailing_Email', 'length', 'max' => 50),
             array('Pub_Group_Unknown_Address, Active', 'length', 'max' => 1),
             array('Pub_Group_Home_Email, Pub_Group_Mailing_Email', 'email'),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Group_Rep_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -79,6 +79,8 @@ class PublisherGroupRepresentative extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

@@ -53,7 +53,7 @@ class AuthorBiographUploads extends RActiveRecord {
         return array(
             'authBiogrph' => array(self::BELONGS_TO, 'AuthorBiography', 'Auth_Biogrph_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

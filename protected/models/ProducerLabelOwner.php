@@ -17,7 +17,7 @@
  * @property ProducerAccount $proAcc
  * @property MasterLabel $label
  */
-class ProducerLabelOwner extends CActiveRecord {
+class ProducerLabelOwner extends RActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -34,11 +34,11 @@ class ProducerLabelOwner extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Label_Id, Label_Share, Label_Owner_From, Label_Owner_To', 'required'),
-            array('Pro_Acc_Id, Label_Id', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Label_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Label_Share', 'numerical', 'integerOnly' => false, 'max' => 100),
             array('Label_Share', 'length', 'max' => 10),
             array('Label_Owner_To', 'compare', 'compareAttribute'=>'Label_Owner_From', 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Label_Owner_From, Label_Owner_To, Created_Date, Rowversion', 'safe'),
+            array('Label_Owner_From, Label_Owner_To, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Label_Owner_Id, Pro_Acc_Id, Label_Id, Label_Owner_From, Label_Owner_To, Label_Share, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -54,6 +54,8 @@ class ProducerLabelOwner extends CActiveRecord {
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
             'label' => array(self::BELONGS_TO, 'MasterLabel', 'Label_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

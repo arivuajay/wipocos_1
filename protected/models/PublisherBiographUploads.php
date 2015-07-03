@@ -14,7 +14,7 @@
  * The followings are the available model relations:
  * @property PublisherBiography $pubBiogrph
  */
-class PublisherBiographUploads extends CActiveRecord {
+class PublisherBiographUploads extends RActiveRecord {
 
     const IMAGE_SIZE = 2;
     const ACCESS_TYPES = 'jpg,png,jpeg,gif';
@@ -34,10 +34,10 @@ class PublisherBiographUploads extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Biogrph_Id', 'required'),
-            array('Pub_Biogrph_Id', 'numerical', 'integerOnly' => true),
+            array('Pub_Biogrph_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Biogrph_Upl_File', 'file', 'types'=> self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
             array('Pub_Biogrph_Upl_File', 'length', 'max' => 500),
-            array('Created, Rowversion, Pub_Biogrph_Upl_Description', 'safe'),
+            array('Created, Rowversion, Pub_Biogrph_Upl_Description, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Biogrph_Upl_Id, Pub_Biogrph_Id, Pub_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),
@@ -52,6 +52,8 @@ class PublisherBiographUploads extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'pubBiogrph' => array(self::BELONGS_TO, 'PublisherBiography', 'Pub_Biogrph_Id'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

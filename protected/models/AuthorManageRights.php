@@ -87,7 +87,7 @@ class AuthorManageRights extends RActiveRecord {
             'authMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Auth_Mnge_Type_Rght_Id'),
             'authMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Auth_Mnge_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By')
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 

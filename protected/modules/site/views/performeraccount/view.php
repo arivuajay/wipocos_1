@@ -63,8 +63,8 @@ if ($export == false) {
             'data' => $model,
             'htmlOptions' => array('class' => 'table table-striped table-bordered'),
             'attributes' => array(
-                'Perf_Sur_Name',
                 'Perf_First_Name',
+                'Perf_Sur_Name',
                 array(
                     'name' => 'Perf_Photo',
                     'type' => 'raw',
@@ -106,6 +106,14 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->status
                 ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                    ),
             ),
         ));
         ?>
@@ -142,6 +150,14 @@ if ($export == false) {
                         'type' => 'raw',
                         'value' => $address_model->Perf_Unknown_Address == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
+                    ),
 //        array(
 //                'name' => 'Active',
 //                'type' => 'raw',
@@ -153,179 +169,6 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
-    </div>
-
-    <div class="user-view col-lg-6">
-        <h4>Payment</h4>
-        <?php
-        if (!empty($payment_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $payment_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Pay_Method_id',
-                    'Perf_Bank_Account_1',
-                    'Perf_Bank_Account_2',
-                    'Perf_Bank_Account_3',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Pseudonyms</h4>
-        <?php
-        if (!empty($psedonym_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $psedonym_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Pseudo_Type_Id',
-                    array(
-                        'name' => 'Perf_Pseudo_Type_Id',
-                        'value' => isset($psedonym_model->perfPseudoType->Pseudo_Code) ? $psedonym_model->perfPseudoType->Pseudo_Code : 'Not Set'
-                    ),
-                    'Perf_Pseudo_Name',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Death Inheritance</h4>
-        <?php
-        if (!empty($death_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $death_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Death_Inhrt_Id',
-                    'Perf_Death_Inhrt_Firstname',
-                    'Perf_Death_Inhrt_Surname',
-                    'Perf_Death_Inhrt_Email',
-                    'Perf_Death_Inhrt_Phone',
-                    'Perf_Death_Inhrt_Address_1',
-                    'Perf_Death_Inhrt_Address_2',
-                    'Perf_Death_Inhrt_Address_3',
-                    'Perf_Death_Inhrt_Addtion_Annotation',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Related Rights</h4>
-        <?php
-        if (!empty($related_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $related_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Rel_Rgt_Id',
-//        'Perf_Rel_Society_Id',
-                    'Perf_Rel_Entry_Date',
-                    'Perf_Rel_Exit_Date',
-                    array(
-                        'name' => 'Perf_Rel_Internal_Position_Id',
-                        'value' => isset($related_model->perfRelInternalPosition->Int_Post_Name) ? $related_model->perfRelInternalPosition->Int_Post_Name : 'Not Set'
-                    ),
-                    'Perf_Rel_Entry_Date_2',
-                    'Perf_Rel_Exit_Date_2',
-                    array(
-                        'name' => 'Perf_Rel_Region_Id',
-                        'value' => isset($related_model->perfRelRegion->Region_Name) ? $related_model->perfRelRegion->Region_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Perf_Rel_Profession_Id',
-                        'value' => isset($related_model->perfRelProfession->Profession_Name) ? $related_model->perfRelProfession->Profession_Name : 'Not Set'
-                    ),
-                    'Perf_Rel_File',
-                    'Perf_Rel_Duration',
-                    array(
-                        'name' => 'Perf_Rel_Avl_Work_Cat_Id',
-                        'value' => isset($related_model->perfRelAvlWorkCat->Work_Category_Name) ? $related_model->perfRelAvlWorkCat->Work_Category_Name : 'Not Set'
-                    ),
-//        array(
-//            'name' => 'Perf_Rel_Type_Rght_Id',
-//            'value' => isset($related_model->perfRelTypeRght->Type_Rights_Name) ? $related_model->perfRelTypeRght->Type_Rights_Name : 'Not Set'
-//        ),
-                    array(
-                        'name' => 'Perf_Rel_Managed_Rights_Id',
-                        'value' => isset($related_model->perfRelManagedRights->Mgd_Rights_Name) ? $related_model->perfRelManagedRights->Mgd_Rights_Name : 'Not Set'
-                    ),
-                    array(
-                        'name' => 'Perf_Rel_Territories_Id',
-                        'value' => isset($related_model->perfRelTerritories->Territory_Name) ? $related_model->perfRelTerritories->Territory_Name : 'Not Set'
-                    ),
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-
-        <h4>Biography</h4>
-        <?php
-        if (!empty($biograph_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $biograph_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Biogrph_Id',
-                    'Perf_Biogrph_Annotation',
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4 class="box-title">Biography Uploaded Files</h4>
-        <?php
-        $uploaded_files = array();
-        if(!empty($biograph_model))
-            $uploaded_files = PerformerBiographUploads::model()->findAll('Perf_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Perf_Biogrph_Id));
-        if (!empty($uploaded_files)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th>Uploaded Files</th>
-                        <th>Description</th>
-                        <th>Created</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
-                        <tr>
-                            <?php
-                            $file_path = $uploaded_file->getFilePath();
-                            $i = $key + 1
-                            ?>
-                            <td><?php echo $i ?>.</td>
-                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Performer Biograph {$i}" ?></a></td>
-                            <td><?php echo $uploaded_file->Perf_Biogrph_Upl_Description ?></td>
-                            <td><?php echo $uploaded_file->Created ?></td>
-                            <td>
-                                <?php
-                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
-                                echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/biofiledelete/', 'id' => $uploaded_file->Perf_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        <?php }else{
-            echo 'No data created';
-        }
-        ?>
-
         <h4>Assigned Groups</h4>
         <?php
         $members = GroupMembers::model()->findAll('Group_Member_GUID = :int_code', array(':int_code' => $model->Perf_GUID));
@@ -385,6 +228,220 @@ if ($export == false) {
         }
         ?>
     </div>
+
+    <div class="user-view col-lg-6">
+        <h4>Payment</h4>
+        <?php
+        if (!empty($payment_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $payment_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Pay_Method_id',
+                    'Perf_Bank_Account_1',
+                    'Perf_Bank_Account_2',
+                    'Perf_Bank_Account_3',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+        <h4>Pseudonyms</h4>
+        <?php
+        if (!empty($psedonym_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $psedonym_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Pseudo_Type_Id',
+                    array(
+                        'name' => 'Perf_Pseudo_Type_Id',
+                        'value' => isset($psedonym_model->perfPseudoType->Pseudo_Code) ? $psedonym_model->perfPseudoType->Pseudo_Code : 'Not Set'
+                    ),
+                    'Perf_Pseudo_Name',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+        <h4>Death Inheritance</h4>
+        <?php
+        if (!empty($death_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $death_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Death_Inhrt_Id',
+                    'Perf_Death_Inhrt_Firstname',
+                    'Perf_Death_Inhrt_Surname',
+                    'Perf_Death_Inhrt_Email',
+                    'Perf_Death_Inhrt_Phone',
+                    'Perf_Death_Inhrt_Address_1',
+                    'Perf_Death_Inhrt_Address_2',
+                    'Perf_Death_Inhrt_Address_3',
+                    'Perf_Death_Inhrt_Addtion_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($death_model->createdBy->name) ? $death_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($death_model->updatedBy->name) ? $death_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+        <h4>Related Rights</h4>
+        <?php
+        if (!empty($related_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $related_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Rel_Rgt_Id',
+//        'Perf_Rel_Society_Id',
+                    'Perf_Rel_Entry_Date',
+                    'Perf_Rel_Exit_Date',
+                    array(
+                        'name' => 'Perf_Rel_Internal_Position_Id',
+                        'value' => isset($related_model->perfRelInternalPosition->Int_Post_Name) ? $related_model->perfRelInternalPosition->Int_Post_Name : 'Not Set'
+                    ),
+                    'Perf_Rel_Entry_Date_2',
+                    'Perf_Rel_Exit_Date_2',
+                    array(
+                        'name' => 'Perf_Rel_Region_Id',
+                        'value' => isset($related_model->perfRelRegion->Region_Name) ? $related_model->perfRelRegion->Region_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Perf_Rel_Profession_Id',
+                        'value' => isset($related_model->perfRelProfession->Profession_Name) ? $related_model->perfRelProfession->Profession_Name : 'Not Set'
+                    ),
+                    'Perf_Rel_File',
+                    'Perf_Rel_Duration',
+                    array(
+                        'name' => 'Perf_Rel_Avl_Work_Cat_Id',
+                        'value' => isset($related_model->perfRelAvlWorkCat->Work_Category_Name) ? $related_model->perfRelAvlWorkCat->Work_Category_Name : 'Not Set'
+                    ),
+//        array(
+//            'name' => 'Perf_Rel_Type_Rght_Id',
+//            'value' => isset($related_model->perfRelTypeRght->Type_Rights_Name) ? $related_model->perfRelTypeRght->Type_Rights_Name : 'Not Set'
+//        ),
+                    array(
+                        'name' => 'Perf_Rel_Managed_Rights_Id',
+                        'value' => isset($related_model->perfRelManagedRights->Mgd_Rights_Name) ? $related_model->perfRelManagedRights->Mgd_Rights_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Perf_Rel_Territories_Id',
+                        'value' => isset($related_model->perfRelTerritories->Territory_Name) ? $related_model->perfRelTerritories->Territory_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($related_model->createdBy->name) ? $related_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($related_model->updatedBy->name) ? $related_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+
+        <h4>Biography</h4>
+        <?php
+        if (!empty($biograph_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $biograph_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Perf_Biogrph_Id',
+                    'Perf_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4 class="box-title">Biography Uploaded Files</h4>
+        <?php
+        $uploaded_files = array();
+        if(!empty($biograph_model))
+            $uploaded_files = PerformerBiographUploads::model()->findAll('Perf_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Perf_Biogrph_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Uploaded Files</th>
+                        <th>Description</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <?php
+                            $file_path = $uploaded_file->getFilePath();
+                            $i = $key + 1
+                            ?>
+                            <td><?php echo $i ?>.</td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Performer Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Perf_Biogrph_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td>
+                                <?php
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/biofiledelete/', 'id' => $uploaded_file->Perf_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php }else{
+            echo 'No data created';
+        }
+        ?>
+    </div>
 </div>
 
 <div class="row">
@@ -400,6 +457,8 @@ if ($export == false) {
                         <tr>
                             <th style="width: 10px">#</th>
                             <th>Document Name</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
                             <?php if ($export == false) { ?>
                                 <th>Action</th>
                             <?php } ?>
@@ -408,6 +467,8 @@ if ($export == false) {
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $uploaded_file->Perf_Upl_Doc_Name ?></td>
+                                <td><?php echo $uploaded_file->createdBy->name ?></td>
+                                <td><?php echo $uploaded_file->updatedBy->name ?></td>
                                 <?php if ($export == false) { ?>
                                     <td>
                                         <?php
