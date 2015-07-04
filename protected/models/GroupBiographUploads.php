@@ -36,7 +36,7 @@ class GroupBiographUploads extends RActiveRecord {
             array('Group_Biogrph_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Biogrph_Upl_File', 'length', 'max' => 500),
             array('Group_Biogrph_Upl_File', 'file', 'types'=> self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
-            array('Created, Rowversion, Group_Biogrph_Upl_Description, Created_By, Updated_By', 'safe'),
+            array('Created, Rowversion, Group_Biogrph_Upl_Description, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Biogrph_Upl_Id, Group_Biogrph_Id, Group_Biogrph_Upl_File, Created, Rowversion', 'safe', 'on' => 'search'),

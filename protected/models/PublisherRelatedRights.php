@@ -51,7 +51,7 @@ class PublisherRelatedRights extends RActiveRecord {
             array('Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Internal_Position_Id, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Rel_File', 'length', 'max' => 255),
             array('Pub_Rel_Duration', 'length', 'max' => 100),
-            array('Pub_Rel_Exit_Date, Pub_Rel_Exit_Date_2, Created_By, Updated_By', 'safe'),
+            array('Pub_Rel_Exit_Date, Pub_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Rel_Rgt_Id, Pub_Acc_Id, Pub_Rel_Society_Id, Pub_Rel_Entry_Date, Pub_Rel_Exit_Date, Pub_Rel_Internal_Position_Id, Pub_Rel_Entry_Date_2, Pub_Rel_Exit_Date_2, Pub_Rel_Region_Id, Pub_Rel_Profession_Id, Pub_Rel_File, Pub_Rel_Duration, Pub_Rel_Avl_Work_Cat_Id, Pub_Rel_Type_Rght_Id, Pub_Rel_Managed_Rights_Id, Pub_Rel_Territories_Id', 'safe', 'on' => 'search'),

@@ -37,7 +37,7 @@ class PerformerUpload extends RActiveRecord {
             array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::FILE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::FILE_SIZE . 'MB'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('Perf_Upl_File', 'file', 'allowEmpty' => true, 'on' => 'update'),
-            array('Created_By, Updated_By', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Upl_Id, Perf_Acc_Id, Perf_Upl_Doc_Name, Perf_Upl_File', 'safe', 'on' => 'search'),

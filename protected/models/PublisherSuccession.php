@@ -36,7 +36,7 @@ class PublisherSuccession extends RActiveRecord {
             array('Pub_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Suc_Name', 'length', 'max' => 255),
             array('Pub_Suc_Address_1, Pub_Suc_Address_2', 'length', 'max' => 500),
-            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation, Created_By, Updated_By', 'safe'),
+            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',

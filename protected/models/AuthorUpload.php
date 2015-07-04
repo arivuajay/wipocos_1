@@ -43,7 +43,7 @@ class AuthorUpload extends RActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Upl_Id, Auth_Acc_Id, Auth_Upl_Doc_Name, Auth_Upl_File', 'safe', 'on' => 'search'),
-            array('Created_By, Updated_By', 'safe'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
         );
     }
 

@@ -35,7 +35,7 @@ class PerformerDeathInheritance extends RActiveRecord {
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Death_Inhrt_Surname', 'length', 'max' => 50),
             array('Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3', 'length', 'max' => 500),
-            array('Perf_Death_Inhrt_Addtion_Annotation, Created_By, Updated_By', 'safe'),
+            array('Perf_Death_Inhrt_Addtion_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Death_Inhrt_Id, Perf_Acc_Id, Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3, Perf_Death_Inhrt_Addtion_Annotation', 'safe', 'on' => 'search'),

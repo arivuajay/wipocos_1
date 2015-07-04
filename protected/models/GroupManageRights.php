@@ -61,7 +61,7 @@ public function init() {
             array('Group_Mnge_Duration', 'length', 'max' => 100),
             array('Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Group_Mnge_Exit_Date, Group_Mnge_Exit_Date_2, Created_By, Updated_By', 'safe'),
+            array('Group_Mnge_Exit_Date, Group_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Group_Mnge_Rgt_Id, Group_Id, Group_Mnge_Society_Id, Group_Mnge_Entry_Date, Group_Mnge_Exit_Date, Group_Mnge_Internal_Position_Id, Group_Mnge_Entry_Date_2, Group_Mnge_Exit_Date_2, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_File, Group_Mnge_Duration, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id', 'safe', 'on' => 'search'),
