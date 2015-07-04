@@ -23,7 +23,7 @@
  * @property MasterTypeRights $workRightAuditRole
  * @property Work $work
  */
-class WorkRightholderAudit extends RActiveRecord {
+class WorkRightholderAudit extends CActiveRecord {
 
     /**
      * @return string the associated database table name
