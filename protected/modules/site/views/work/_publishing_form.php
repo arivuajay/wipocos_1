@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group hide">
             <?php echo $form->labelEx($model, 'Work_Pub_Renewal_Period', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Work_Pub_Renewal_Period', array('class' => 'form-control')); ?>

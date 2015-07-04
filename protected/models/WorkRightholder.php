@@ -23,7 +23,7 @@
  * @property Organization $workRightMechOrg
  * @property Work $work
  */
-class WorkRightholder extends RActiveRecord {
+class WorkRightholder extends CActiveRecord {
 
     public $Work_Member_Internal_Code;
 

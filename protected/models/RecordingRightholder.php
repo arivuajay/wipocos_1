@@ -21,7 +21,7 @@
  * @property Recording $rcd
  * @property MasterTypeRights $rcdRightRole
  */
-class RecordingRightholder extends RActiveRecord {
+class RecordingRightholder extends CActiveRecord {
 
     public $Rcd_Member_Internal_Code;
     /**

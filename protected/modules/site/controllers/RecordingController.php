@@ -300,11 +300,29 @@ class RecordingController extends Controller {
         if (isset($_POST['RecordingRightholder']) && !empty($_POST['RecordingRightholder'])) {
             $end = end($_POST['RecordingRightholder']);
             $rcd_id = $end['Rcd_Id'];
+            
+            $created_by = $updated_by = '';
+            $created_date = date('Y-m-d H:i:s');
+            $updated_by = "0000-00-00 00:00:00";
+            $holders = RecordingRightholder::model()->findAllByAttributes(array('Rcd_Id' => $rcd_id));
+            if(empty($holders)){
+                $created_by = Yii::app()->user->id;
+            }else{
+                $created_by = $holders[0]->Created_By;
+                $created_date = $holders[0]->Created_Date;
+                $updated_by = Yii::app()->user->id;
+                $updated_date = date('Y-m-d H:i:s');
+            }
+            
             RecordingRightholder::model()->deleteAllByAttributes(array('Rcd_Id' => $rcd_id));
             $valid = true;
             foreach ($_POST['RecordingRightholder'] as $values) {
                 $model = new RecordingRightholder;
                 $model->attributes = $values;
+                $model->setAttribute('Created_By', $created_by);
+                $model->setAttribute('Updated_By', $updated_by);
+                $model->setAttribute('Created_Date', $created_date);
+                $model->setAttribute('Rowversion', $updated_date);
                 $valid = $valid && $model->save(false);
                 if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->rcd->Rcd_Title} successfully.", "fa fa-at");

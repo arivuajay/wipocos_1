@@ -239,7 +239,7 @@ $this->breadcrumbs = array(
                             <th>Internal Code</th>
                             <th>Role</th>
                             <th>Equal Remuneration Points</th>
-                            <th>Organization</th>
+                            <!--<th>Organization</th>-->
                             <th>Blank Levy Points</th>
                             <th>Organization</th>
                             <?php if ($export == false) { ?>
@@ -264,7 +264,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $internal_code; ?></td>
                                 <td><?php echo $member->rcdRightRole->Type_Rights_Name; ?></td>
                                 <td><?php echo $member->Rcd_Right_Equal_Share; ?></td>
-                                <td><?php echo $member->rcdRightBlankOrg->Org_Abbrevation; ?></td>
+                                <!--<td><?php echo $member->rcdRightBlankOrg->Org_Abbrevation; ?></td>-->
                                 <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
                                 <td><?php echo $member->rcdRightEqualOrg->Org_Abbrevation; ?></td>
                                 <?php if ($export == false) { ?>

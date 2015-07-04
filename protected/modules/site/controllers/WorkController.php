@@ -492,11 +492,28 @@ class WorkController extends Controller {
             }
             //end
             
+            $created_by = $updated_by = '';
+            $created_date = date('Y-m-d H:i:s');
+            $updated_by = "0000-00-00 00:00:00";
+            $holders = WorkRightholder::model()->findAllByAttributes(array('Work_Id' => $work_id));
+            if(empty($holders)){
+                $created_by = Yii::app()->user->id;
+            }else{
+                $created_by = $holders[0]->Created_By;
+                $created_date = $holders[0]->Created_Date;
+                $updated_by = Yii::app()->user->id;
+                $updated_date = date('Y-m-d H:i:s');
+            }
+            
             WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
             $valid = true;
             foreach ($_POST['WorkRightholder'] as $values) {
                 $model = new WorkRightholder;
                 $model->attributes = $values;
+                $model->setAttribute('Created_By', $created_by);
+                $model->setAttribute('Updated_By', $updated_by);
+                $model->setAttribute('Created_Date', $created_date);
+                $model->setAttribute('Rowversion', $updated_date);
                 $valid = $valid && $model->save(false);
                 if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->work->Work_Org_Title} successfully.", "fa fa-at");
