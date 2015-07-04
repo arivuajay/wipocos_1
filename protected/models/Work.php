@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{work}}':
  * @property integer $Work_Id
+ * @property string $Work_GUID
  * @property string $Work_Org_Title
  * @property integer $Work_Language_Id
  * @property string $Work_Internal_Code
@@ -48,6 +49,7 @@ class Work extends RActiveRecord {
             $this->Work_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Work_Factor_Id = DEFAULT_FACTOR_ID;
             $this->Work_Type_Id = DEFAULT_TYPE_ID;
+            $this->Work_GUID = Myclass::guid(false);
 
             $this->Work_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::WORK_CODE))->Fullcode;
         }
@@ -74,10 +76,10 @@ class Work extends RActiveRecord {
             array('duration_hours', 'numerical', 'min' => 0),
             array('Work_Instrumentation', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
-            array('Work_Internal_Code, Work_Org_Title', 'unique'),
+            array('Work_Internal_Code, Work_Org_Title, Work_GUID', 'unique'),
             array('Work_Unknown, Active', 'length', 'max' => 1),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Work_GUID', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),

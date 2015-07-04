@@ -14,22 +14,21 @@ $this->breadcrumbs = array(
         <?php
         $this->widget(
                 'application.components.MyTbButton', array(
-                    'label' => 'Update',
-                    'url' => array('update', 'id' => $model->Master_Country_Id),
-                    'buttonType' => 'link',
-                    'context' => 'primary',
+            'label' => 'Update',
+            'url' => array('update', 'id' => $model->Master_Country_Id),
+            'buttonType' => 'link',
+            'context' => 'primary',
 //                    
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
                 'application.components.MyTbButton', array(
-                    'label' => 'Delete',
-                    'url' => array('delete', 'id' => $model->Master_Country_Id),
-                    'buttonType' => 'link',
-                    'context' => 'danger',
-                    'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    
+            'label' => 'Delete',
+            'url' => array('delete', 'id' => $model->Master_Country_Id),
+            'buttonType' => 'link',
+            'context' => 'danger',
+            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
                 )
         );
         ?>
@@ -39,7 +38,7 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
-            'Master_Country_Id',
+//            'Master_Country_Id',
             'Country_Name',
             'Country_Two_Code',
             'Country_Three_Code',

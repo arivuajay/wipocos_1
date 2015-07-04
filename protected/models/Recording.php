@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{recording}}':
  * @property integer $Rcd_Id
  * @property string $Rcd_Title
+ * @property string $Rcd_GUID
  * @property integer $Rcd_Language_Id
  * @property string $Rcd_Internal_Code
  * @property integer $Rcd_Type_Id
@@ -50,6 +51,7 @@ class Recording extends RActiveRecord {
             $this->Rcd_Product_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Date = date('Y-m-d');
             $this->Rcd_Record_Type_Id = DEFAULT_RECORD_TYPE_ID;
+            $this->Rcd_GUID = Myclass::guid(false);
 
             $this->Rcd_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::RECORDING_CODE))->Fullcode;
         }
@@ -76,9 +78,9 @@ class Recording extends RActiveRecord {
             array('Rcd_Record_Type_Id, Rcd_Label_Id', 'length', 'max' => 20),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Rcd_Internal_Code', 'unique'),
+            array('Rcd_Internal_Code, Rcd_GUID', 'unique'),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By, Rcd_GUID', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number, Created_Date, Rowversion', 'safe', 'on' => 'search'),

@@ -67,6 +67,8 @@ class Myclass extends CController {
             $exist_count += ProducerAccount::model()->countByAttributes(array('Pro_GUID' => $new_guid));
             $exist_count += Group::model()->countByAttributes(array('Group_GUID' => $new_guid));
             $exist_count += PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
+            $exist_count += Work::model()->countByAttributes(array('Work_GUID' => $new_guid));
+            $exist_count += Recording::model()->countByAttributes(array('Rcd_GUID' => $new_guid));
 
             if ($exist_count > 0) {
                 $old_guid = $new_guid;

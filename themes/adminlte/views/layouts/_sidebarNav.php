@@ -71,6 +71,7 @@
                         array('label' => '<i class="fa fa-file-o"></i> <span>Legal Form</span>', 'url' => array('/site/masterlegalform/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-language"></i> <span>Languages</span>', 'url' => array('/site/masterlanguage/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-copyright"></i> <span>Managed rights</span>', 'url' => array('/site/mastermanagedrights/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-cubes"></i> <span>Manufacturer</span>', 'url' => array('/site/mastermanufacturer/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-female"></i> <span>Marital Status</span>', 'url' => array('/site/mastermaritalstatus/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-flag"></i> <span>Nationalities</span>', 'url' => array('/site/masternationality/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-building"></i> <span>Organization</span>', 'url' => array('/site/organization/index'), 'visible' => '1', 'active' => '0'),

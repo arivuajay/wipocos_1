@@ -11,7 +11,7 @@
 <?php
 $nameColumn=$this->guessNameColumn($this->tableSchema->columns);
 $label=$this->pluralize($this->class2name($this->modelClass));
-echo "\$this->title='View #'.\$model->{$nameColumn};\n";
+echo "\$this->title='View {$this->modelClass}:'.\$model->{$nameColumn};\n";
 echo "\$this->breadcrumbs=array(
 	'$label'=>array('index'),
 	'View '.'$this->modelClass',
