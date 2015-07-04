@@ -30,7 +30,6 @@ $this->breadcrumbs = array(
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -98,14 +97,14 @@ $this->breadcrumbs = array(
                 'Rcd_File',
                 'Rcd_Isrc_Code',
                 'Rcd_Iswc_Number',
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
-                    ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
             ),
         ));
         ?>
@@ -191,34 +190,34 @@ $this->breadcrumbs = array(
         <?php
         if (!empty($links)) {
             ?>
-<!--            <table class="table table-striped table-bordered">
-                <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Link_Title') ?></th>
-                        <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Perf_Id') ?></th>
-                        <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Prod_Id') ?></th>
-                        <?php if ($export == false) { ?>
-                            <th>Action</th>
-                        <?php } ?>
-                    </tr>
-                    <?php foreach ($links as $key => $link) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $link->Rcd_Link_Title ?></td>
-                            <td><?php echo $link->rcdPerf->Perf_First_Name . ' ' . $link->rcdPerf->Perf_Sur_Name ?></td>
-                            <td><?php echo $link->rcdProd->Pro_Corporate_Name ?></td>
-                            <?php if ($export == false) { ?>
-                                <td>
-                                    <?php
-                                    echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $link->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
-                                    echo "&nbsp;&nbsp;";
-                                    echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                    ?>
-                                </td>
-                            <?php } ?>
+    <!--            <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Link_Title') ?></th>
+                            <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Perf_Id') ?></th>
+                            <th><?php echo RecordingLink::model()->getAttributeLabel('Rcd_Prod_Id') ?></th>
+            <?php if ($export == false) { ?>
+                                    <th>Action</th>
+            <?php } ?>
                         </tr>
-                    <?php } ?>
-                </tbody></table>-->
+            <?php foreach ($links as $key => $link) { ?>
+                                <tr>
+                                    <td><?php echo $key + 1 ?>.</td>
+                                    <td><?php echo $link->Rcd_Link_Title ?></td>
+                                    <td><?php echo $link->rcdPerf->Perf_First_Name . ' ' . $link->rcdPerf->Perf_Sur_Name ?></td>
+                                    <td><?php echo $link->rcdProd->Pro_Corporate_Name ?></td>
+                <?php if ($export == false) { ?>
+                                            <td>
+                    <?php
+                    echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $link->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
+                    echo "&nbsp;&nbsp;";
+                    echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                    ?>
+                                            </td>
+                <?php } ?>
+                                </tr>
+            <?php } ?>
+                    </tbody></table>-->
             <?php
         } else {
 //            echo 'No data created';
@@ -231,6 +230,10 @@ $this->breadcrumbs = array(
         <?php
         if (!empty($members)) {
             ?>
+            <div>
+                <span>Created By: <?php echo $members[0]->createdBy->name?></span><br />
+                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br /><br />
+            </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">
                     <tbody><tr>

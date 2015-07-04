@@ -408,6 +408,10 @@ if ($export == false) {
         <?php
         if (!empty($members)) {
             ?>
+            <div>
+                <span>Created By: <?php echo $members[0]->createdBy->name?></span><br />
+                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br /><br />
+            </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">
                     <tbody><tr>
