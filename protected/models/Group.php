@@ -88,11 +88,15 @@ class Group extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'groupLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Group_Legal_Form_Id'),
             'groupCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Group_Country_Id'),
             'groupLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Group_Language_Id'),
+            'groupLegalForm' => array(self::BELONGS_TO, 'MasterLegalForm', 'Group_Legal_Form_Id'),
+            'groupBiographies' => array(self::HAS_ONE, 'GroupBiography', 'Group_Id'),
+            'groupManageRights' => array(self::HAS_MANY, 'GroupManageRights', 'Group_Id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Id'),
-            'groupManageRights' => array(self::HAS_ONE, 'GroupManageRights', 'Group_Id'),
+            'groupPaymentMethods' => array(self::HAS_MANY, 'GroupPaymentMethod', 'Group_Id'),
+            'groupPseudonyms' => array(self::HAS_MANY, 'GroupPseudonym', 'Group_Id'),
+            'groupRepresentatives' => array(self::HAS_MANY, 'GroupRepresentative', 'Group_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );

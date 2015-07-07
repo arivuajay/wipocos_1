@@ -19,8 +19,8 @@ $languages = Myclass::getMasterLanguage();
 $types = Myclass::getMasterType();
 $countries = Myclass::getMasterCountry();
 $doc_status = CHtml::listData(MasterDocumentStatus::model()->isActive()->findAll(array('order' => 'Document_Sts_Code')), 'Master_Document_Sts_Id', 'Document_Sts_Name');
-$recording_types = $model->getRecordingtype();
-$labels = $model->getLabel();
+$recording_types = Myclass::getMasterRecordType();
+$labels = Myclass::getMasterLabel();
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">

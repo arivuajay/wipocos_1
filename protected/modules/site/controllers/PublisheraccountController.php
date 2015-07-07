@@ -302,7 +302,17 @@ class PublisheraccountController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $uploads = $model->publisherBiographies->publisherBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Pub_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted Publisher {$model->Pub_Corporate_Name} successfully.", "microphone");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {

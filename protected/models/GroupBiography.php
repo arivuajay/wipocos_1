@@ -47,6 +47,7 @@ class GroupBiography extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'groupBiographUploads' => array(self::HAS_MANY, 'GroupBiographUploads', 'Group_Biogrph_Id'),
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),

@@ -1,13 +1,6 @@
 <?php
-/**
- * This is the template for generating a controller class file for CRUD feature.
- * The following variables are available in this template:
- * - $this: the CrudCode object
- */
-?>
-<?php echo "<?php\n"; ?>
 
-class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseControllerClass."\n"; ?>
+class MastermediumController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -73,7 +66,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
                 $stylesheet = $this->pdfStyles();
                 $mPDF1->WriteHTML($stylesheet, 1);
                 $mPDF1->WriteHTML($this->renderPartial('view', $compact, true));
-                $mPDF1->Output("<?php echo $this->modelClass; ?>_view_{$id}.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+                $mPDF1->Output("MasterMedium_view_{$id}.pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
             } else {
                 $this->render('view', $compact);
             }
@@ -85,18 +78,18 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
      */
     public function actionCreate()
     {
-            $model=new <?php echo $this->modelClass; ?>;
+            $model=new MasterMedium;
 
             // Uncomment the following line if AJAX validation is needed
             $this->performAjaxValidation($model);
 
-            if(isset($_POST['<?php echo $this->modelClass; ?>']))
+            if(isset($_POST['MasterMedium']))
             {
-                    $model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
+                    $model->attributes=$_POST['MasterMedium'];
                     if($model->save()){
-                            Myclass::addAuditTrail("Created <?php echo $this->modelClass; ?> successfully.", "user");
-                            Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Created Successfully!!!');
-                            $this->redirect(array('/site/<?php echo strtolower($this->modelClass); ?>/index'));
+                            Myclass::addAuditTrail("Created MasterMedium successfully.", "user");
+                            Yii::app()->user->setFlash('success', 'MasterMedium Created Successfully!!!');
+                            $this->redirect(array('/site/mastermedium/index'));
                     }
             }
 
@@ -117,13 +110,13 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
             // Uncomment the following line if AJAX validation is needed
             $this->performAjaxValidation($model);
 
-            if(isset($_POST['<?php echo $this->modelClass; ?>']))
+            if(isset($_POST['MasterMedium']))
             {
-                    $model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
+                    $model->attributes=$_POST['MasterMedium'];
                     if($model->save()){
-                            Myclass::addAuditTrail("Updated <?php echo $this->modelClass; ?> successfully.", "user");
-                            Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Updated Successfully!!!');
-                            $this->redirect(array('/site/<?php echo strtolower($this->modelClass); ?>/index'));
+                            Myclass::addAuditTrail("Updated MasterMedium successfully.", "user");
+                            Yii::app()->user->setFlash('success', 'MasterMedium Updated Successfully!!!');
+                            $this->redirect(array('/site/mastermedium/index'));
                     }
             }
 
@@ -142,7 +135,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
             try {
                 $model = $this->loadModel($id);
                 $model->delete();
-                Myclass::addAuditTrail("Deleted <?php echo $this->modelClass; ?> successfully.", "user");
+                Myclass::addAuditTrail("Deleted MasterMedium successfully.", "user");
             } catch (CDbException $e) {
                 if ($e->errorInfo[1] == 1451) {
                     throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
@@ -153,8 +146,8 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if(!isset($_GET['ajax'])){
-                Yii::app()->user->setFlash('success', '<?php echo $this->modelClass; ?> Deleted Successfully!!!');
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/<?php echo strtolower($this->modelClass); ?>/index'));
+                Yii::app()->user->setFlash('success', 'MasterMedium Deleted Successfully!!!');
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/mastermedium/index'));
             }
     }
 
@@ -165,12 +158,12 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
     {
         $search = false;
 
-        $model = new <?php echo $this->modelClass; ?>();
-        $searchModel = new <?php echo $this->modelClass; ?>('search');
+        $model = new MasterMedium();
+        $searchModel = new MasterMedium('search');
         $searchModel->unsetAttributes();  // clear any default values
-        if (isset($_GET['<?php echo $this->modelClass; ?>'])) {
+        if (isset($_GET['MasterMedium'])) {
             $search = true;
-            $searchModel->attributes = $_GET['<?php echo $this->modelClass; ?>'];
+            $searchModel->attributes = $_GET['MasterMedium'];
             $searchModel->search();
         }
 
@@ -182,10 +175,10 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
      */
     public function actionAdmin()
     {
-            $model=new <?php echo $this->modelClass; ?>('search');
+            $model=new MasterMedium('search');
             $model->unsetAttributes();  // clear any default values
-            if(isset($_GET['<?php echo $this->modelClass; ?>']))
-                    $model->attributes=$_GET['<?php echo $this->modelClass; ?>'];
+            if(isset($_GET['MasterMedium']))
+                    $model->attributes=$_GET['MasterMedium'];
 
             $this->render('admin',array(
                     'model'=>$model,
@@ -196,12 +189,12 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
-     * @return <?php echo $this->modelClass; ?> the loaded model
+     * @return MasterMedium the loaded model
      * @throws CHttpException
      */
     public function loadModel($id)
     {
-            $model=<?php echo $this->modelClass; ?>::model()->findByPk($id);
+            $model=MasterMedium::model()->findByPk($id);
             if($model===null)
                     throw new CHttpException(404,'The requested page does not exist.');
             return $model;
@@ -209,11 +202,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
     /**
      * Performs the AJAX validation.
-     * @param <?php echo $this->modelClass; ?> $model the model to be validated
+     * @param MasterMedium $model the model to be validated
      */
     protected function performAjaxValidation($model)
     {
-            if(isset($_POST['ajax']) && $_POST['ajax']==='<?php echo $this->class2id($this->modelClass); ?>-form')
+            if(isset($_POST['ajax']) && $_POST['ajax']==='master-medium-form')
             {
                     echo CActiveForm::validate($model);
                     Yii::app()->end();

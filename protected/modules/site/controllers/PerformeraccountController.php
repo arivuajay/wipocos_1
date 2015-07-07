@@ -330,7 +330,25 @@ class PerformeraccountController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $upload_docs = $model->performerUploads;
+            $uploads = $model->performerBiographies->performerBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($upload_docs)) {
+                foreach ($upload_docs as $upload) {
+                    $path = UPLOAD_DIR . $upload->Perf_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Perf_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted Performer {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {

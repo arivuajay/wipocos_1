@@ -54,7 +54,7 @@ $this->breadcrumbs = array(
 </div>
 
 <div class="row">
-    <div class="user-view col-lg-7">
+    <div class="user-view col-lg-6">
         <h4>Basic Data</h4>
         <?php
         $this->widget('zii.widgets.CDetailView', array(
@@ -87,11 +87,11 @@ $this->breadcrumbs = array(
                 ),
                 array(
                     'name' => 'Rcd_Record_Type_Id',
-                    'value' => $model->getRecordingtype($model->Rcd_Record_Type_Id)
+                    'value' => Myclass::getMasterRecordType(TRUE, $model->Rcd_Record_Type_Id)
                 ),
                 array(
                     'name' => 'Rcd_Label_Id',
-                    'value' => $model->getLabel($model->Rcd_Label_Id)
+                    'value' => Myclass::getMasterLabel(TRUE, $model->Rcd_Label_Id)
                 ),
                 'Rcd_Reference',
                 'Rcd_File',
@@ -110,7 +110,7 @@ $this->breadcrumbs = array(
         ?>
     </div>
 
-    <div class="user-view col-lg-5">
+    <div class="user-view col-lg-6">
         <h4 class="box-title">Sub Titles</h4>
         <?php
         if (!empty($sub_title_model)) {

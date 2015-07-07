@@ -354,7 +354,17 @@ class PublishergroupController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $uploads = $model->publisherGroupBiographies->publisherGroupBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Pub_Group_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted Publisher Group {$model->Pub_Group_Internal_Code} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {

@@ -176,34 +176,34 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
-                            echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
-                    },
+                if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+            },
                 ),
                 array(
                     'name' => 'Auth_DOB',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
-                            echo date('Y-m-d', strtotime($data->Auth_DOB));
-                    },
+                if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                    echo date('Y-m-d', strtotime($data->Auth_DOB));
+            },
                 ),
                 array(
                     'name' => 'search_status',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        echo $data->status;
-                    },
+                echo $data->status;
+            },
                 ),
                 array(
                     'name' => 'Auth_Is_Performer',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => function($data) {
-                        echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
-                    },
+                echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+            },
                 ),
                 array(
                     'header' => 'Actions',
@@ -288,34 +288,34 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
-                        echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
-                },
+            if ($data->authorManageRights && $data->authorManageRights->Auth_Mnge_Entry_Date != '' && $data->authorManageRights->Auth_Mnge_Entry_Date != '0000-00-00')
+                echo date('Y-m-d', strtotime($data->authorManageRights->Auth_Mnge_Entry_Date));
+        },
             ),
             array(
                 'name' => 'Auth_DOB',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
-                        echo date('Y-m-d', strtotime($data->Auth_DOB));
-                },
+            if ($data->Auth_DOB != '' && $data->Auth_DOB != '0000-00-00')
+                echo date('Y-m-d', strtotime($data->Auth_DOB));
+        },
             ),
             array(
                 'name' => 'search_status',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->status;
-                },
+            echo $data->status;
+        },
             ),
             array(
                 'name' => 'Auth_Is_Performer',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
-                },
+            echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+        },
             ),
 //            array(
 //                'name' => 'Active',

@@ -1,28 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "{{publisher_group_biography}}".
+ * This is the model class for table "{{master_medium}}".
  *
- * The followings are the available columns in table '{{publisher_group_biography}}':
- * @property integer $Pub_Group_Biogrph_Id
- * @property integer $Pub_Group_Id
- * @property string $Pub_Group_Biogrph_Annotation
+ * The followings are the available columns in table '{{master_medium}}':
+ * @property integer $Master_Medium_Id
+ * @property string $Medium_Name
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
- *
- * The followings are the available model relations:
- * @property PublisherGroup $pubGroup
+ * @property integer $Created_By
+ * @property integer $Updated_By
  */
-class PublisherGroupBiography extends RActiveRecord {
+class MasterMedium extends RActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{publisher_group_biography}}';
+        return '{{master_medium}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -30,13 +34,14 @@ class PublisherGroupBiography extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Id, Pub_Group_Biogrph_Annotation', 'required'),
-            array('Pub_Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Medium_Name', 'required'),
+            array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Medium_Name', 'length', 'max' => 100),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Group_Biogrph_Id, Pub_Group_Id, Pub_Group_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Medium_Id, Medium_Name, Active, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -47,10 +52,6 @@ class PublisherGroupBiography extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'publisherGroupBiographUploads' => array(self::HAS_MANY, 'PublisherGroupBiographUploads', 'Pub_Group_Biogrph_Id'),
-            'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -59,12 +60,13 @@ class PublisherGroupBiography extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Pub_Group_Biogrph_Id' => 'Biogrph',
-            'Pub_Group_Id' => 'Pub Group',
-            'Pub_Group_Biogrph_Annotation' => 'Annotation',
+            'Master_Medium_Id' => 'Master Medium',
+            'Medium_Name' => 'Medium',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'Created_By' => 'Created By',
+            'Updated_By' => 'Updated By',
         );
     }
 
@@ -85,12 +87,13 @@ class PublisherGroupBiography extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Pub_Group_Biogrph_Id', $this->Pub_Group_Biogrph_Id);
-        $criteria->compare('Pub_Group_Id', $this->Pub_Group_Id);
-        $criteria->compare('Pub_Group_Biogrph_Annotation', $this->Pub_Group_Biogrph_Annotation, true);
+        $criteria->compare('Master_Medium_Id', $this->Master_Medium_Id);
+        $criteria->compare('Medium_Name', $this->Medium_Name, true);
         $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('Created_By', $this->Created_By);
+        $criteria->compare('Updated_By', $this->Updated_By);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -104,7 +107,7 @@ class PublisherGroupBiography extends RActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return PublisherGroupBiography the static model class
+     * @return MasterMedium the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

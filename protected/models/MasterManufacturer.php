@@ -17,6 +17,13 @@ class MasterManufacturer extends CActiveRecord {
     /**
      * @return string the associated database table name
      */
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
+    
     public function tableName() {
         return '{{master_manufacturer}}';
     }

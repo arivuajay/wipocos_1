@@ -68,7 +68,7 @@ $form = $this->beginWidget('CActiveForm', array(
                             }
                             echo CHtml::activeHiddenField($model, 'Master_Screen_ID', array('value' => $master->Master_Screen_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Screen_ID]'));
                             echo '<tr class="text-center">';
-                            echo '<td>' . $master->Description . '</td>';
+                            echo "<td>{$master->Description} (Newly added)</td>";
 
                             echo '<td>' . $form->checkBox($model, 'Master_Task_ADD', array('class' => 'form-control check_add chkbox chbx'.$master->Master_Screen_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_ADD]', 'data-chbx' => "chbx{$master->Master_Screen_ID}")) . '</td>';
                             echo '<td>' . $form->checkBox($model, 'Master_Task_SEE', array('class' => 'form-control check_view chkbox chbx'.$master->Master_Screen_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Task_SEE]', 'data-chbx' => "chbx{$master->Master_Screen_ID}")) . '</td>';

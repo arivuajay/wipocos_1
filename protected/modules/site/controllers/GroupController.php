@@ -265,7 +265,17 @@ class GroupController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $uploads = $model->groupBiographies->groupBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Group_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted a {$model->Group_Name} successfully.", "group");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {

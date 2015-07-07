@@ -26,6 +26,8 @@ class InternalcodeGenerate extends CActiveRecord {
     const WORK_CODE = 'W';
     const RECORDING_CODE = 'R';
     const RECORDING_PUBLISHING_CODE = 'RP';
+    const SOUND_CARRIER_CODE = 'S';
+    const SOUND_CARRIER_PUBLISHING_CODE = 'SP';
 
     public $fullcode;
 
@@ -61,8 +63,9 @@ class InternalcodeGenerate extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Gen_Inter_Code', 'required'),
+            array('Gen_User_Type', 'unique'),
             array('Gen_Inter_Code', 'numerical', 'integerOnly' => true),
-            array('Gen_User_Type', 'length', 'max' => 1),
+            array('Gen_User_Type', 'length', 'max'=>4),
             array('Gen_Prefix, Gen_Suffix', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

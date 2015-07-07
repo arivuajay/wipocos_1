@@ -44,7 +44,7 @@ class AuthoraccountController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'biofiledelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -170,7 +170,7 @@ class AuthoraccountController extends Controller {
         $related_model = empty($related_exists) ? new PerformerRelatedRights : $related_exists;
 
         $biograph_upload_model = new AuthorBiographUploads;
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array(
             $model, $address_model, $payment_model, $psedonym_model, $death_model, $managed_model,
@@ -220,13 +220,13 @@ class AuthoraccountController extends Controller {
                         $biograph_new_upload_model = new AuthorBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
                         $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
                         $biograph_new_upload_model->Auth_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Auth_Biogrph_Upl_File = $newName;
                         $biograph_new_upload_model->Auth_Biogrph_Upl_Description = $_POST['AuthorBiographUploads']['Auth_Biogrph_Upl_Description'];
-                        if($biograph_new_upload_model->validate()){
+                        if ($biograph_new_upload_model->validate()) {
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
@@ -322,7 +322,25 @@ class AuthoraccountController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $upload_docs = $model->authorUploads;
+            $uploads = $model->authorBiographies->authorBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($upload_docs)) {
+                foreach ($upload_docs as $upload) {
+                    $path = UPLOAD_DIR . $upload->Auth_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Auth_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted a {$model->Auth_First_Name}  {$model->Auth_Sur_Name} successfully.", "user");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
@@ -385,7 +403,7 @@ class AuthoraccountController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->authBiogrph->authAcc->fullname} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/authoraccount/update', 'id' => $model->authBiogrph->Auth_Acc_Id , 'tab' => '4'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/authoraccount/update', 'id' => $model->authBiogrph->Auth_Acc_Id, 'tab' => '4'));
         }
     }
 

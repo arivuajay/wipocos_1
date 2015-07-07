@@ -1,26 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{publisher_group_biography}}".
+ * This is the model class for table "{{sound_carrier_biography}}".
  *
- * The followings are the available columns in table '{{publisher_group_biography}}':
- * @property integer $Pub_Group_Biogrph_Id
- * @property integer $Pub_Group_Id
- * @property string $Pub_Group_Biogrph_Annotation
- * @property string $Active
+ * The followings are the available columns in table '{{sound_carrier_biography}}':
+ * @property integer $Sound_Car_Biogrph_Id
+ * @property integer $Sound_Car_Id
+ * @property string $Sound_Car_Biogrph_Annotation
  * @property string $Created_Date
  * @property string $Rowversion
+ * @property integer $Created_By
+ * @property integer $Updated_By
  *
  * The followings are the available model relations:
- * @property PublisherGroup $pubGroup
+ * @property SoundCarrierBiographUploads[] $soundCarrierBiographUploads
+ * @property SoundCarrier $soundCar
  */
-class PublisherGroupBiography extends RActiveRecord {
+class SoundCarrierBiography extends RActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{publisher_group_biography}}';
+        return '{{sound_carrier_biography}}';
     }
 
     /**
@@ -30,13 +32,12 @@ class PublisherGroupBiography extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Id, Pub_Group_Biogrph_Annotation', 'required'),
-            array('Pub_Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Sound_Car_Id, Sound_Car_Biogrph_Annotation', 'required'),
+            array('Sound_Car_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Group_Biogrph_Id, Pub_Group_Id, Pub_Group_Biogrph_Annotation, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Sound_Car_Biogrph_Id, Sound_Car_Id, Sound_Car_Biogrph_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -47,8 +48,8 @@ class PublisherGroupBiography extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'publisherGroupBiographUploads' => array(self::HAS_MANY, 'PublisherGroupBiographUploads', 'Pub_Group_Biogrph_Id'),
-            'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
+            'soundCarrierBiographUploads' => array(self::HAS_MANY, 'SoundCarrierBiographUploads', 'Sound_Car_Biogrph_Id'),
+            'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -59,12 +60,13 @@ class PublisherGroupBiography extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Pub_Group_Biogrph_Id' => 'Biogrph',
-            'Pub_Group_Id' => 'Pub Group',
-            'Pub_Group_Biogrph_Annotation' => 'Annotation',
-            'Active' => 'Active',
+            'Sound_Car_Biogrph_Id' => 'Sound Car Biogrph',
+            'Sound_Car_Id' => 'Sound Car',
+            'Sound_Car_Biogrph_Annotation' => 'Annotation',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'Created_By' => 'Created By',
+            'Updated_By' => 'Updated By',
         );
     }
 
@@ -85,12 +87,13 @@ class PublisherGroupBiography extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Pub_Group_Biogrph_Id', $this->Pub_Group_Biogrph_Id);
-        $criteria->compare('Pub_Group_Id', $this->Pub_Group_Id);
-        $criteria->compare('Pub_Group_Biogrph_Annotation', $this->Pub_Group_Biogrph_Annotation, true);
-        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Sound_Car_Biogrph_Id', $this->Sound_Car_Biogrph_Id);
+        $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
+        $criteria->compare('Sound_Car_Biogrph_Annotation', $this->Sound_Car_Biogrph_Annotation, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('Created_By', $this->Created_By);
+        $criteria->compare('Updated_By', $this->Updated_By);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -104,7 +107,7 @@ class PublisherGroupBiography extends RActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return PublisherGroupBiography the static model class
+     * @return SoundCarrierBiography the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

@@ -45,6 +45,7 @@ class WorkBiography extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'workBiographUploads' => array(self::HAS_MANY, 'WorkBiographUploads', 'Work_Biogrph_Id'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),

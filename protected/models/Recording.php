@@ -233,13 +233,13 @@ class Recording extends RActiveRecord {
         return $recording;
     }
 
-    public function getLabel($key = NULL) {
-        $label = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
-        if ($key != NULL)
-            return $label[$key];
-
-        return $label;
-    }
+//    public function getLabel($key = NULL) {
+//        $label = CHtml::listData(MasterLabel::model()->isActive()->findAll(), 'Master_Label_Id', 'Label_Name');
+//        if ($key != NULL)
+//            return $label[$key];
+//
+//        return $label;
+//    }
 
     public function getMatchingdetails($recording_id = NULL) {
         $recording = self::model()->with('recordingRightholders', 'recordingSubtitles')->findByAttributes(array('Rcd_Id' => $recording_id));

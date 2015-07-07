@@ -319,7 +319,33 @@ class WorkController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $uploads = $model->workBiographies->workBiographUploads;
+            $pub_uploads = $model->workPublishings->workPublishingUploads;
+            $sub_uploads = $model->workSubPublishings->workSubPublishingUploads;
             $model->delete();
+            //file remove
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Work_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            if (!empty($pub_uploads)) {
+                foreach ($pub_uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Work_Pub_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            if (!empty($sub_uploads)) {
+                foreach ($sub_uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Work_Sub_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted Work successfully.", "sliders");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {

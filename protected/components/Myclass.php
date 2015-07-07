@@ -69,6 +69,7 @@ class Myclass extends CController {
             $exist_count += PublisherGroup::model()->countByAttributes(array('Pub_Group_GUID' => $new_guid));
             $exist_count += Work::model()->countByAttributes(array('Work_GUID' => $new_guid));
             $exist_count += Recording::model()->countByAttributes(array('Rcd_GUID' => $new_guid));
+            $exist_count += SoundCarrier::model()->countByAttributes(array('Sound_Car_GUID' => $new_guid));
 
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
@@ -460,6 +461,36 @@ class Myclass extends CController {
         if ($key != NULL)
             return $instruments[$key];
         return $instruments;
+    }
+
+    public static function getMasterManufacturer($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $manfs = CHtml::listData(MasterManufacturer::model()->isActive(array('order' => 'Manf_Name'))->findAll(), 'Master_Manf_Id', 'Manf_Name');
+        else
+            $manfs = CHtml::listData(MasterManufacturer::model()->findAll(array('order' => 'Manf_Name')), 'Master_Manf_Id', 'Manf_Name');
+        if ($key != NULL)
+            return $manfs[$key];
+        return $manfs;
+    }
+
+    public static function getMasterRecordType($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $manfs = CHtml::listData(MasterRecordType::model()->isActive(array('order' => 'Rec_Type_Name'))->findAll(), 'Master_Rec_Type_Id', 'Rec_Type_Name');
+        else
+            $manfs = CHtml::listData(MasterRecordType::model()->findAll(array('order' => 'Rec_Type_Name')), 'Master_Rec_Type_Id', 'Rec_Type_Name');
+        if ($key != NULL)
+            return $manfs[$key];
+        return $manfs;
+    }
+
+    public static function getMasterMedium($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $media = CHtml::listData(MasterMedium::model()->isActive(array('order' => 'Medium_Name'))->findAll(), 'Master_Medium_Id', 'Medium_Name');
+        else
+            $media = CHtml::listData(MasterMedium::model()->findAll(array('order' => 'Medium_Name')), 'Master_Medium_Id', 'Medium_Name');
+        if ($key != NULL)
+            return $media[$key];
+        return $media;
     }
 
     //end

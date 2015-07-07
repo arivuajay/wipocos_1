@@ -250,7 +250,7 @@ class CrudCode extends CCodeModel {
     }
 
     public function giiGenerateHiddenFields() {
-        return array('Created_Date', 'Rowversion');
+        return array('Created_Date', 'Rowversion', 'Created_By', 'Updated_By');
     }
 
 }
