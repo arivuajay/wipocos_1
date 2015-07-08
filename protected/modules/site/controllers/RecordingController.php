@@ -29,7 +29,7 @@ class RecordingController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'subtitledelete', 'searchright',
-                    'insertright', 'linkdelete'),
+                    'insertright', 'linkdelete', 'getrecordingdetails'),
                 'expression'=> 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -331,6 +331,13 @@ class RecordingController extends Controller {
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
             $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => 4));
         }
+    }
+    
+    public function actionGetrecordingdetails() {
+        if(isset($_POST['id'])){
+            $this->loadModel($_POST['id']);
+        }
+        exit;
     }
 
 }

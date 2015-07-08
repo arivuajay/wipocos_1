@@ -45,6 +45,7 @@ $manfs = Myclass::getMasterManufacturer();
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -213,6 +214,13 @@ $manfs = Myclass::getMasterManufacturer();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'sound_car_model' => $model, 'biograph_upload_model' => $biograph_upload_model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_6">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_fixation_form', array('model' => $fixation_model, 'sound_car_model' => $model, 'countries' => $countries));
                     }
                     ?>
                 </div>

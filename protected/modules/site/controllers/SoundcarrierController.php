@@ -114,9 +114,12 @@ class SoundcarrierController extends Controller {
         $publication_exists = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $publication_model = empty($publication_exists) ? new SoundCarrierPublication : $publication_exists;
 
+        $fixation_exists = SoundCarrierFixations::model()->findByAttributes(array('Sound_Car_Id' => $id));
+        $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
+
         $biograph_upload_model = new SoundCarrierBiographUploads;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model));
+        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model));
 
         if (isset($_POST['SoundCarrier'])) {
             $model->attributes = $_POST['SoundCarrier'];
@@ -176,7 +179,7 @@ class SoundcarrierController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model'));
+        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model'));
     }
 
     /**
@@ -310,7 +313,7 @@ class SoundcarrierController extends Controller {
      * @param SoundCarrier $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form')) {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form' || $_POST['ajax'] === 'sound-carrier-fixations-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

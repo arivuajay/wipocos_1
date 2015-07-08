@@ -47,7 +47,7 @@
             'activateItems' => true,
             'items' => array(
                 array('label' => '<i class="fa fa-dashboard"></i> <span>Dashboard</span>', 'url' => Yii::app()->homeUrl),
-                array('label' => '<i class="fa fa-briefcase"></i> <span>Administration</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                array('label' => '<i class="fa fa-cog"></i> <span>Administration</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
@@ -56,7 +56,7 @@
                         array('label' => '<i class="fa fa-user"></i> <span>Operator</span>', 'url' => array('/site/user/index'), 'visible' => '1', 'active' => '0'),
                     ),
                 ),
-                array('label' => '<i class="fa fa-cog"></i> <span>Master</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                array('label' => '<i class="fa fa-database"></i> <span>Master</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(

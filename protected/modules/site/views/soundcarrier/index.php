@@ -254,7 +254,6 @@ $manufacturers = Myclass::getMasterManufacturer();
                     echo $data->soundCarLanguage->Lang_Name;
                 }
             ),
-            'Sound_Car_Language_Id',
             'Sound_Car_Internal_Code',
             'Sound_Car_Standardized_Code',
             'Sound_Car_Catelog',
