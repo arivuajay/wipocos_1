@@ -65,9 +65,9 @@ class SoundCarrierPublication extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'soundCarPublStudio' => array(self::BELONGS_TO, 'MasterStudio', 'Sound_Car_Publ_Studio'),
             'soundCarPublCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Sound_Car_Publ_Country_Id'),
             'soundCarPublProdNation' => array(self::BELONGS_TO, 'MasterNationality', 'Sound_Car_Publ_Prod_Nation_Id'),
-            'soundCarPublStudio' => array(self::BELONGS_TO, 'MasterCountry', 'Sound_Car_Publ_Studio'),
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),

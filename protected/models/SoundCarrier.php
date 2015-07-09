@@ -39,7 +39,6 @@
  * @property SoundCarrierSubtitle[] $soundCarrierSubtitles
  */
 class SoundCarrier extends RActiveRecord {
-
     /**
      * @return string the associated database table name
      */
@@ -66,11 +65,11 @@ class SoundCarrier extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Sound_Car_GUID, Sound_Car_Title, Sound_Car_Internal_Code, Sound_Car_Standardized_Code, Sound_Car_Medium, Sound_Car_Main_Artist, Sound_Car_Producer, Sound_Car_Product_Country_Id, Sound_Car_Year, Sound_Car_Release_Year, Sound_Car_Manf_Id', 'required'),
-            array('Sound_Car_Language_Id, Sound_Car_Type_Id, Sound_Car_Product_Country_Id, Sound_Car_Manf_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Sound_Car_Language_Id, Sound_Car_Type_Id, Sound_Car_Product_Country_Id, Sound_Car_Manf_Id, Created_By, Updated_By, Sound_Car_Main_Artist, Sound_Car_Producer, Sound_Car_Medium', 'numerical', 'integerOnly' => true),
             array('Sound_Car_GUID', 'length', 'max' => 50),
             array('Sound_Car_Title, Sound_Car_Internal_Code, Sound_Car_Standardized_Code', 'unique'),
             array('Sound_Car_Title, Sound_Car_Barcode', 'length', 'max' => 255),
-            array('Sound_Car_Internal_Code, Sound_Car_Standardized_Code, Sound_Car_Catelog, Sound_Car_Distributor, Sound_Car_Medium, Sound_Car_Main_Artist, Sound_Car_Producer', 'length', 'max' => 100),
+            array('Sound_Car_Internal_Code, Sound_Car_Standardized_Code, Sound_Car_Catelog, Sound_Car_Distributor', 'length', 'max' => 100),
             array('Sound_Car_Label_Id', 'length', 'max' => 20),
             array('Sound_Car_Year, Sound_Car_Release_Year', 'length', 'max' => 4),
             array('Sound_Car_Year', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
@@ -98,7 +97,10 @@ class SoundCarrier extends RActiveRecord {
             'soundCarrierDocumentations' => array(self::HAS_ONE, 'SoundCarrierDocumentation', 'Sound_Car_Id'),
             'soundCarrierPublications' => array(self::HAS_ONE, 'SoundCarrierPublication', 'Sound_Car_Id'),
             'soundCarrierSubtitles' => array(self::HAS_MANY, 'SoundCarrierSubtitle', 'Sound_Car_Id'),
+            'soundCarrierRightholders' => array(self::HAS_MANY, 'SoundCarrierRightholder', 'Sound_Car_Id'),
             'soundCarMedia' => array(self::BELONGS_TO, 'MasterMedium', 'Sound_Car_Medium'),
+            'soundCarMainArtist' => array(self::BELONGS_TO, 'PerformerAccount', 'Sound_Car_Main_Artist'),
+            'soundCarProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Sound_Car_Producer'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );

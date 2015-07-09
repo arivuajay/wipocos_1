@@ -267,7 +267,7 @@
                     <div class="loading-img loader"></div>
                     <?php echo CHtml::endForm(); ?>
                 </div>
-                <div class="text-left">
+                <div class="text-left help-block">
                     <span><strong>Note:</strong> Data will be automatically saved after Broadcasting Share & Mechanical Share is 100 % and One main publisher is added and (Publisher and Sub-Publisher) Shares is 50% Minimum</span>
                 </div>
 

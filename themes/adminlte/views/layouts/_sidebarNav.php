@@ -83,6 +83,7 @@
                         array('label' => '<i class="fa fa-list"></i> <span>Types</span>', 'url' => array('/site/mastertype/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-newspaper-o"></i> <span>Types of events</span>', 'url' => array('/site/mastereventtype/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-at"></i> <span>RightHolder Type</span>', 'url' => array('/site/mastertyperights/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-video-camera"></i> <span>Studio</span>', 'url' => array('/site/masterstudio/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-institution"></i> <span>Territories</span>', 'url' => array('/site/masterterritories/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-suitcase"></i> <span>Works Category</span>', 'url' => array('/site/masterworkscategory/index'), 'visible' => '1', 'active' => '0'),
                     ),

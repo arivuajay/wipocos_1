@@ -59,7 +59,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Sound_Car_Publ_Studio', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->dropDownList($model, 'Sound_Car_Publ_Studio', $countries, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Sound_Car_Publ_Studio', $studios, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Sound_Car_Publ_Studio'); ?>
             </div>
         </div>

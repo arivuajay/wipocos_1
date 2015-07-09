@@ -68,7 +68,9 @@ class SoundCarrierFixations extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'soundCarFixCountry' => array(self::BELONGS_TO, 'MasterCountry', 'Sound_Car_Fix_Country_Id'),
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
+            'soundCarFixStudio' => array(self::BELONGS_TO, 'MasterStudio', 'Sound_Car_Fix_Studio'),
             'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Fix_GUID' => 'Rcd_GUID')),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),

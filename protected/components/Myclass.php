@@ -493,6 +493,16 @@ class Myclass extends CController {
         return $media;
     }
 
+    public static function getMasterStudio($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $media = CHtml::listData(MasterStudio::model()->isActive(array('order' => 'Studio_Name'))->findAll(), 'Master_Studio_Id', 'Studio_Name');
+        else
+            $media = CHtml::listData(MasterStudio::model()->findAll(array('order' => 'Studio_Name')), 'Master_Studio_Id', 'Studio_Name');
+        if ($key != NULL)
+            return $media[$key];
+        return $media;
+    }
+
     //end
 
     public static function getAuthorconvertIgnorelist() {

@@ -35,7 +35,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -117,6 +117,9 @@ class SoundcarrierController extends Controller {
         $fixation_exists = SoundCarrierFixations::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
 
+        $right_holder_exists = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
+        $right_holder_model = new SoundCarrierRightholder;
+        
         $biograph_upload_model = new SoundCarrierBiographUploads;
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model));
@@ -186,7 +189,7 @@ class SoundcarrierController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model'));
+        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model'));
     }
 
     /**
@@ -267,6 +270,24 @@ class SoundcarrierController extends Controller {
             Yii::app()->user->setFlash('success', "Deleted Work subtitle {$model->Sound_Car_Subtitle_Name} successfully.");
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/soundcarrier/update', 'id' => $model->soundCar->Sound_Car_Id, 'tab' => 4));
         }
+    }
+
+    public function actionSearchworks() {
+        $criteria = new CDbCriteria();
+        $pubcriteria = new CDbCriteria();
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Work_Org_Title', $search_txt, true, 'OR');
+            $criteria->compare('Work_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Work_Iswc', $search_txt, true, 'OR');
+            $criteria->compare('Work_Wic_Code', $search_txt, true, 'OR');
+            $criteria->compare('Work_Opus_Number', $search_txt, true, 'OR');
+        }
+
+        if ($_REQUEST['is_work'] == '1') {
+            $works = Work::model()->findAll($criteria);
+        }
+        $this->renderPartial('_search_works', compact('works'));
     }
 
     /**
