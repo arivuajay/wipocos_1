@@ -177,6 +177,13 @@ class SoundcarrierController extends Controller {
                 Yii::app()->user->setFlash('success', 'Sound Carrier Publication Saved Successfully!!!');
                 $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => '3'));
             }
+        } elseif (isset($_POST['SoundCarrierFixations'])) {
+            $fixation_model->attributes = $_POST['SoundCarrierFixations'];
+            if ($fixation_model->save()) {
+                Myclass::addAuditTrail("Saved SoundCarrier Fixations successfully.", "headphones");
+                Yii::app()->user->setFlash('success', 'Sound Carrier Fixations Saved Successfully!!!');
+                $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => '6'));
+            }
         }
 
         $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model'));

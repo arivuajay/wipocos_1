@@ -18,19 +18,10 @@
                 <?php
                 $post_url = Yii::app()->createAbsoluteUrl('/site/recording/getrecordingdetails');
                 echo $form->dropDownList($model, 'Sound_Car_Fix_GUID', $titles, array(
-                    'class' => 'form-control', 
+                    'class' => 'form-control',
                     'prompt' => '',
-                    'onchange' => "{"
-                    . "$.ajax({
-                        type: 'POST',
-                        url: '{$post_url}',
-                        data: {id: $(this).val()},
-                        success: function(data){
-                            console.log(data);
-                        },
-                      });"
-                    . "}",
-                    )); ?>
+                ));
+                ?>
                 <?php echo $form->error($model, 'Sound_Car_Fix_GUID'); ?>
             </div>
         </div>
@@ -38,14 +29,14 @@
         <div class="form-group">
             <?php echo CHtml::label('Internal Code', '', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo CHtml::textField('Recording Internal Code', '', array('class' => 'form-control', 'disabled' => true)) ?>
+                <?php echo CHtml::textField('Fix Recording Internal Code', '', array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
 
         <div class="form-group">
             <?php echo CHtml::label('ISRC Code', '', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo CHtml::textField('Recording ISRC Code', '', array('class' => 'form-control', 'disabled' => true)) ?>
+                <?php echo CHtml::textField('Fix Recording ISRC Code', '', array('class' => 'form-control', 'disabled' => true)) ?>
             </div>
         </div>
         <hr />
@@ -101,3 +92,28 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('#SoundCarrierFixations_Sound_Car_Fix_GUID').on('change', function(){
+            load_code($(this).val());
+        });
+    });
+        
+    function load_code(guid){
+        $.ajax({
+            type: 'POST',
+            url: '{$post_url}',
+            data: {guid: guid},
+            dataType: 'JSON',
+            success: function(data){
+                $('#Fix_Recording_Internal_Code').val(data.Rcd_Internal_Code);
+                $('#Fix_Recording_ISRC_Code').val(data.Rcd_Isrc_Code);
+            },
+        });
+    }
+EOD;
+Yii::app()->clientScript->registerScript('_fix_form', $js);
+?>                 

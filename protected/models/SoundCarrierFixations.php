@@ -69,6 +69,7 @@ class SoundCarrierFixations extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
+            'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Fix_GUID' => 'Rcd_GUID')),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -145,9 +146,21 @@ class SoundCarrierFixations extends CActiveRecord {
         ));
     }
 
+    public function setDuration() {
+        $time = explode(':', $this->Sound_Car_Fix_Duration);
+        $this->duration_hours = $time[0];
+        $this->duration_minutes = $time[1];
+        $this->duration_seconds = $time[2];
+    }
+    
     protected function beforeValidate() {
         $this->Sound_Car_Fix_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
         return parent::beforeValidate();
+    }
+    
+    protected function afterFind() {
+        $this->setDuration();
+        return parent::afterFind();
     }
 
 }

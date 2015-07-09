@@ -308,4 +308,9 @@ class Work extends RActiveRecord {
         }
         return $column;
     }
+    
+    protected function afterFind() {
+        $this->setDuration();
+        return parent::afterFind();
+    }
 }

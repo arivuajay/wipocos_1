@@ -473,7 +473,6 @@ class WorkController extends Controller {
         $model = Work::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        $model->setDuration();
         return $model;
     }
 

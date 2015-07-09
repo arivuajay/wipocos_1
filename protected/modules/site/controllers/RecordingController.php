@@ -334,8 +334,9 @@ class RecordingController extends Controller {
     }
     
     public function actionGetrecordingdetails() {
-        if(isset($_POST['id'])){
-            $this->loadModel($_POST['id']);
+        if(isset($_POST['guid'])){
+            $recording = Recording::model()->findByAttributes(array('Rcd_GUID'=> $_POST['guid']));
+            echo json_encode($recording->attributes);
         }
         exit;
     }
