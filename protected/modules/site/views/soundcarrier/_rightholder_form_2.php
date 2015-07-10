@@ -90,7 +90,7 @@
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Id]", $rightholder->Sound_Car_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Work_GUID]", $rightholder->Sound_Car_Right_Work_GUID);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Acc_GUID]", $rightholder->Sound_Car_Right_Acc_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Work_Type]", 'R');
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Work_Type]", "R");
                                                 ?>
                                             </td>
                                         </tr>
@@ -207,7 +207,7 @@ $search_performer_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchr
 
 $js = <<< EOD
     $(document).ready(function() {
-        key = $i;
+        key2 = $i;
         $('#search_button_rec').on("click", function(){
             if($("#is_record").is(':checked') == false && $("#is_publ").is(':checked') == false){
                 $("#chkbox_err_rec").removeClass("hide");
@@ -263,11 +263,11 @@ $js = <<< EOD
             _tr = $(this).closest('tr');
             $('#link-performer-rec tr[data-intcode="'+_tr.data('intcode')+'"]').removeClass('hide');
             _tr.remove();
-            checkSave();
+            checkSave2();
         });
     });
         
-    function checkSave(){
+    function checkSave2(){
         _count = $("#linked-holders-rec tbody tr").length;
         $("#right_ajax_submit_rec").attr("disabled", _count == 0);
     }
@@ -319,18 +319,18 @@ $js = <<< EOD
         _tr += '<td>'+intcode+'</td>';
         _tr += '<td><a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a></td>';
         _tr += '<td class="hide">';
-        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Id]" value="$sound_car_id" />';
-        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Work_GUID]" value="'+record_uid+'" />';
-        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Acc_GUID]" value="'+uid+'" />';
-        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Work_Type]" value="R" />';
+        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key2+'][Sound_Car_Id]" value="$sound_car_id" />';
+        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key2+'][Sound_Car_Right_Work_GUID]" value="'+record_uid+'" />';
+        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key2+'][Sound_Car_Right_Acc_GUID]" value="'+uid+'" />';
+        _tr += '<input type="hidden" name="SoundCarrierRightholder['+key2+'][Sound_Car_Work_Type]" value="R" />';
         _tr += '</td>';
 
         _tr += "</tr>";
         $('#linked-holders-rec tbody').append(_tr);
         _performer.removeClass('highlight');
         $("#add-performer-rec").attr('disabled', true);
-        checkSave();
-        key++;
+        checkSave2();
+        key2++;
     }
         
 EOD;

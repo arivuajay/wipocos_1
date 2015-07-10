@@ -142,7 +142,7 @@
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Id]", $rightholder->Sound_Car_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Work_GUID]", $rightholder->Sound_Car_Right_Work_GUID);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Acc_GUID]", $rightholder->Sound_Car_Right_Acc_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Work_Type]", 'W');
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Work_Type]", "W");
                                                 ?>
                                             </td>
                                         </tr>
