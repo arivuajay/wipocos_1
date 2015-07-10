@@ -139,7 +139,6 @@ $territories = Myclass::getMasterTerritory();
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <?php echo $form->textField($model, 'duration_hours', array('class' => 'form-control')); ?>
-                                            <?php echo $form->error($model, 'duration_hours'); ?>
                                         </div>
                                         <div class="col-lg-4">
                                             <?php echo $form->textField($model, 'duration_minutes', array('class' => 'form-control')); ?>
@@ -151,6 +150,11 @@ $territories = Myclass::getMasterTerritory();
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->error($model, 'duration_hours'); ?>
+                                </div>
+
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Work_Creation', array('class' => '')); ?>

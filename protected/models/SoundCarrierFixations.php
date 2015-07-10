@@ -15,12 +15,12 @@
  * The followings are the available model relations:
  * @property SoundCarrier $soundCar
  */
-class SoundCarrierFixations extends CActiveRecord {
+class SoundCarrierFixations extends RActiveRecord {
 
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
-    
+
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -31,6 +31,7 @@ class SoundCarrierFixations extends CActiveRecord {
             $this->Sound_Car_Fix_Studio = DEFAULT_COUNTRY_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -49,7 +50,8 @@ class SoundCarrierFixations extends CActiveRecord {
             array('Sound_Car_Id, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'numerical', 'integerOnly' => true),
             array('Sound_Car_Fix_GUID', 'length', 'max' => 40),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By', 'safe'),
+            array('Sound_Car_Fix_GUID', 'checkUnique'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Sound_Car_Fix_Work_Type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Sound_Car_Fix_Id, Sound_Car_Id, Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'safe', 'on' => 'search'),
@@ -61,6 +63,18 @@ class SoundCarrierFixations extends CActiveRecord {
             $this->addError($attribute, 'Duration should not be Zero');
         }
     }
+
+    public function checkUnique($attribute, $params) {
+        $checkExists = array();
+        if ($this->isNewRecord) {
+            $checkExists = self::model()->findByAttributes(array('Sound_Car_Id' => $this->Sound_Car_Id, 'Sound_Car_Fix_GUID' => $this->Sound_Car_Fix_GUID));
+        }else{
+            $checkExists = self::model()->find("Sound_Car_Fix_Id != :id And Sound_Car_Id = :sound_car_id And Sound_Car_Fix_GUID = :guid", array(':id' => $this->Sound_Car_Fix_Id, ':sound_car_id' => $this->Sound_Car_Id, ':guid' => $this->Sound_Car_Fix_GUID));
+        }
+        if (!empty($checkExists))
+            $this->addError($attribute, "This Title has already been taken.");
+    }
+
     /**
      * @return array relational rules.
      */
@@ -72,6 +86,7 @@ class SoundCarrierFixations extends CActiveRecord {
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
             'soundCarFixStudio' => array(self::BELONGS_TO, 'MasterStudio', 'Sound_Car_Fix_Studio'),
             'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Fix_GUID' => 'Rcd_GUID')),
+            'soundCarWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Fix_GUID' => 'Work_GUID')),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -154,12 +169,12 @@ class SoundCarrierFixations extends CActiveRecord {
         $this->duration_minutes = $time[1];
         $this->duration_seconds = $time[2];
     }
-    
+
     protected function beforeValidate() {
         $this->Sound_Car_Fix_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
         return parent::beforeValidate();
     }
-    
+
     protected function afterFind() {
         $this->setDuration();
         return parent::afterFind();

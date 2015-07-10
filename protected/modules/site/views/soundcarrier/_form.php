@@ -46,7 +46,8 @@ $studios = Myclass::getMasterStudio();
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders 1</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders 2</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -230,7 +231,14 @@ $studios = Myclass::getMasterStudio();
                 <div class="tab-pane" id="tab_7">
                     <?php
                     if ($other_tab_validation) {
-                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'sound_car_model' => $model));
+                        $this->renderPartial('_rightholder_form_1', array('model' => $right_holder_model_1, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_1));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_8">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_rightholder_form_2', array('model' => $right_holder_model_2, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_2));
                     }
                     ?>
                 </div>

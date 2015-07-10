@@ -3,7 +3,7 @@
     $sound_car_id = $sound_car_model->Sound_Car_Id;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'work-rightholder-search-form',
-        'action' => $this->createUrl('/site/work/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/soundcarrier/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -42,7 +42,7 @@
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'work-rightholder-search-form',
-        'action' => $this->createUrl('/site/work/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/soundcarrier/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -127,8 +127,8 @@
                             <tbody>
                                 <?php
                                 $i = 0;
-                                if ($sound_car_model->soundCarrierRightholders) {
-                                    foreach ($sound_car_model->soundCarrierRightholders as $rightholder) {
+                                if (!empty($exists_model)) {
+                                    foreach ($exists_model as $rightholder) {
                                         ?>
                                         <tr data-uid="<?php echo $rightholder->rightholderPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->rightholderPerformer->fullname ?>" data-intcode="<?php echo $rightholder->rightholderPerformer->Perf_Internal_Code ?>" data-work_uid="<?php echo $rightholder->rightholderWork->Work_GUID ?>">
                                             <td><?php echo $rightholder->rightholderWork->Work_Org_Title; ?></td>
@@ -142,6 +142,7 @@
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Id]", $rightholder->Sound_Car_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Work_GUID]", $rightholder->Sound_Car_Right_Work_GUID);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Acc_GUID]", $rightholder->Sound_Car_Right_Acc_GUID);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Work_Type]", 'W');
                                                 ?>
                                             </td>
                                         </tr>
@@ -176,7 +177,6 @@
 $search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchworks");
 
 $js = <<< EOD
-    var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
         key = $i;
         $('#search_button').on("click", function(){
@@ -241,6 +241,7 @@ $js = <<< EOD
             _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Id]" value="$sound_car_id" />';
             _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Work_GUID]" value="'+work_uid+'" />';
             _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Acc_GUID]" value="'+uid+'" />';
+            _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Work_Type]" value="W" />';
             _tr += '</td>';
 
             _tr += "</tr>";

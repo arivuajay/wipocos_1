@@ -35,7 +35,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -102,7 +102,7 @@ class SoundcarrierController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1, $edit = NULL, $fileedit = NULL) {
+    public function actionUpdate($id, $tab = 1, $edit = NULL, $fixedit = NULL) {
         $model = $this->loadModel($id);
         $sub_title_model = $edit == NULL ? new SoundCarrierSubtitle : SoundCarrierSubtitle::model()->findByAttributes(array('Sound_Car_Subtitle_Id' => $edit));
 
@@ -115,10 +115,14 @@ class SoundcarrierController extends Controller {
         $publication_exists = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $publication_model = empty($publication_exists) ? new SoundCarrierPublication : $publication_exists;
 
-        $fixation_exists = SoundCarrierFixations::model()->findByAttributes(array('Sound_Car_Id' => $id));
-        $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
+        $fixation_model = new SoundCarrierFixations;
+        if($fixedit != NULL){
+            $fixation_exists = SoundCarrierFixations::model()->findByAttributes(array('Sound_Car_Fix_Id' => $fixedit));
+            $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
+        }
 
-        $right_holder_exists = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
+        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Work_Type' => 'W'));
+        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Work_Type' => 'R'));
         $right_holder_model = new SoundCarrierRightholder;
 
         $biograph_upload_model = new SoundCarrierBiographUploads;
@@ -189,8 +193,8 @@ class SoundcarrierController extends Controller {
                 $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => '6'));
             }
         }
-
-        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model'));
+        
+        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model_1', 'right_holder_model_2', 'right_holder_exists_1', 'right_holder_exists_2'));
     }
 
     /**
@@ -273,9 +277,28 @@ class SoundcarrierController extends Controller {
         }
     }
 
+    public function actionFixationdelete($id) {
+        try {
+            $model = SoundCarrierFixations::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Sound Carrier Fixation {$model->soundCar->Sound_Car_Title} successfully.", "headphones");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Sound Carrier Fixation {$model->soundCar->Sound_Car_Title} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/soundcarrier/update', 'id' => $model->soundCar->Sound_Car_Id, 'tab' => 6));
+        }
+    }
+
     public function actionSearchworks() {
         $criteria = new CDbCriteria();
-        $pubcriteria = new CDbCriteria();
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
             $criteria->compare('Work_Org_Title', $search_txt, true, 'OR');
@@ -291,6 +314,29 @@ class SoundcarrierController extends Controller {
         $this->renderPartial('_search_works', compact('works'));
     }
 
+    public function actionSearchrecords() {
+        $criteria = new CDbCriteria();
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Rcd_Title', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Isrc_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Iswc_Number', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Reference', $search_txt, true, 'OR');
+        }
+
+        if ($_REQUEST['is_record'] == '1') {
+            $recordings = Recording::model()->findAll($criteria);
+        }
+        $this->renderPartial('_search_recordings', compact('recordings'));
+    }
+
+    public function actionSearchrecordperformers() {
+        if(isset($_REQUEST['rcd_guid']))
+            $recording = Recording::model()->findByAttributes (array('Rcd_GUID' => $_REQUEST['rcd_guid']));
+        $this->renderPartial('_search_recording_performers', compact('recording'));
+    }
+
     public function actionInsertright() {
         if (isset($_POST['SoundCarrierRightholder']) && !empty($_POST['SoundCarrierRightholder'])) {
             $end = end($_POST['SoundCarrierRightholder']);
@@ -299,7 +345,7 @@ class SoundcarrierController extends Controller {
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_by = "0000-00-00 00:00:00";
-            $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id));
+            $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Work_Type' => $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type']));
             if(empty($holders)){
                 $created_by = Yii::app()->user->id;
             }else{
@@ -309,7 +355,7 @@ class SoundcarrierController extends Controller {
                 $updated_date = date('Y-m-d H:i:s');
             }
             
-            SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id));
+            SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Work_Type' => $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type']));
             $valid = true;
             foreach ($_POST['SoundCarrierRightholder'] as $values) {
                 $model = new SoundCarrierRightholder;
@@ -324,7 +370,8 @@ class SoundcarrierController extends Controller {
             }
             if ($valid)
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
-            $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => 7));
+            $tab = $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type'] == 'W' ? 7 : 8;
+            $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => $tab));
         }
         exit;
     }
@@ -386,4 +433,34 @@ class SoundcarrierController extends Controller {
         }
     }
 
+    public function actionGetrecordingdetails() {
+        if(isset($_POST['guid'])){
+            $work = Recording::model()->findByAttributes(array('Rcd_GUID'=> $_POST['guid']));
+            if(empty($work)){
+                $work = Work::model()->findByAttributes(array('Work_GUID'=> $_POST['guid']));
+                $int_code = $work->Work_Internal_Code;
+                $type = 'W';
+                $duration_hour = $work->duration_hours;
+                $duration_minute = $work->duration_minutes;
+                $duration_second = $work->duration_seconds;
+            }else{
+                $int_code = $work->Rcd_Internal_Code;
+                $isrw = '';
+                $type = 'R';
+                $duration_hour = $work->duration_hours;
+                $duration_minute = $work->duration_minutes;
+                $duration_second = $work->duration_seconds;
+            }
+            $ret = array(
+                'Internal_Code' => $int_code,
+                'Isrc_Code' => $isrw,
+                'Work_Type' => $type,
+                'duration_hours' => $duration_hour,
+                'duration_minutes' => $duration_minute,
+                'duration_seconds' => $duration_second,
+            );
+            echo json_encode($ret);
+        }
+        exit;
+    }
 }

@@ -56,6 +56,8 @@
                 </div>
             </div>
         </div>
-        <?php }
+    <?php }else{
+        echo '<div class="errorMessage text-center">No Users Found</div>';
+    }
     ?>
 </div>

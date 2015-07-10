@@ -11,6 +11,13 @@
     echo $form->hiddenField($model, 'Rcd_Id', array('value' => $recording_model->Rcd_Id));
     ?>
     <div class="box-body">
+        <?php if (!$model->isNewRecord) { ?>
+            <div class="col-lg-12 col-md-12">
+                <div class="row mb10">
+                    <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New Subtitle', array("/site/recording/update", 'id' => $recording_model->Rcd_Id, 'tab' => '2'), array('class' => 'btn btn-success pull-right')) ?>
+                </div>
+            </div>
+        <?php } ?>
 
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Rcd_Subtitle_Name', array('class' => 'col-sm-2 control-label')); ?>

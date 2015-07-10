@@ -332,13 +332,4 @@ class RecordingController extends Controller {
             $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => 4));
         }
     }
-    
-    public function actionGetrecordingdetails() {
-        if(isset($_POST['guid'])){
-            $recording = Recording::model()->findByAttributes(array('Rcd_GUID'=> $_POST['guid']));
-            echo json_encode($recording->attributes);
-        }
-        exit;
-    }
-
 }

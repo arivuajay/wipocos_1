@@ -35,7 +35,7 @@ class SoundCarrierRightholder extends CActiveRecord {
             array('Sound_Car_Id, Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID', 'required'),
             array('Sound_Car_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID', 'length', 'max' => 40),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Sound_Car_Work_Type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Sound_Car_Right_Id, Sound_Car_Id, Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -55,6 +55,9 @@ class SoundCarrierRightholder extends CActiveRecord {
             ),
             'rightholderWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Right_Work_GUID',
                 'foreignKey' => array('Sound_Car_Right_Work_GUID' => 'Work_GUID')
+            ),
+            'rightholderRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Right_Work_GUID',
+                'foreignKey' => array('Sound_Car_Right_Work_GUID' => 'Rcd_GUID')
             ),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
@@ -127,6 +130,15 @@ class SoundCarrierRightholder extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public function distinctWorks($sound_car_id) {
+        $works = SoundCarrierRightholder::model()->findAll(array(
+            'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Work_Type',
+            'distinct' => true,
+            'condition' => "t.Sound_Car_Id = $sound_car_id"
+        ));
+        return $works;
     }
 
 }
