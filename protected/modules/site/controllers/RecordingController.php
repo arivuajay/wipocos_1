@@ -213,7 +213,6 @@ class RecordingController extends Controller {
         $model = Recording::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        $model->setDuration();
         return $model;
     }
 

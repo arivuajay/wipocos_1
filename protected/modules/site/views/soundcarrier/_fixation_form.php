@@ -16,7 +16,7 @@
         if($work->Sound_Car_Work_Type == 'W'){
             $titles[$work->rightholderWork->Work_GUID] = $work->rightholderWork->Work_Org_Title;
         }else if($work->Sound_Car_Work_Type == 'R'){
-            $titles[$work->rightholderWork->Rcd_GUID] = $work->rightholderWork->Rcd_Title;
+            $titles[$work->rightholderRecord->Rcd_GUID] = $work->rightholderRecord->Rcd_Title;
         }
     }
     
