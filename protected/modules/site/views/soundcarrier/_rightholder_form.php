@@ -99,7 +99,7 @@
                     </div>
                     <div class="box-footer">
                         <div class="form-group">
-                            <?php echo CHtml::button('Add', array('class' => 'btn btn-primary', 'id' => 'add-performer')); ?>
+                            <?php echo CHtml::button('Add', array('class' => 'btn btn-primary', 'id' => 'add-performer', 'disabled' => true)); ?>
                             <?php // echo CHtml::resetButton('Clear', array('class' => 'btn btn-danger')); ?>
                         </div>
                     </div>
@@ -206,6 +206,9 @@ $js = <<< EOD
         $('body').on('click','#work_search tr', function(){
             $("#link-performer-div").removeClass('hide');
         });
+        $('body').on('click','#link-performer tr', function(){
+            $("#add-performer").attr('disabled', false);
+        });
         
         $("#add-performer").on('click', function(){
             _performer = $("#link-performer tbody").find('.highlight');
@@ -215,10 +218,14 @@ $js = <<< EOD
             work_uid = $("#work_search tbody").find('.highlight').data('uid');
             work_name = $("#work_search tbody").find('.highlight').data('name');
 
-            //Check already exists
+            //Check already exists and not empty
             chk = $('#linked-holders tr[data-uid="'+uid+'"][data-work_uid="'+work_uid+'"]').length;
             if(chk != 0){
-                alert(name+" already assigned to "+work_name);
+                alert(name+" already assigned to "+work_name + '!!!');
+                return false;
+            }
+            if(uid == null){
+                alert("No Performer selected !!!");
                 return false;
             }
             //end
@@ -239,6 +246,7 @@ $js = <<< EOD
             _tr += "</tr>";
             $('#linked-holders tbody').append(_tr);
             _performer.removeClass('highlight');
+            $("#add-performer").attr('disabled', true);
             checkSave();
             key++;
         });
