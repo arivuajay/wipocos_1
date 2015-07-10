@@ -16,7 +16,7 @@
  * The followings are the available model relations:
  * @property SoundCarrier $soundCar
  */
-class SoundCarrierRightholder extends RActiveRecord {
+class SoundCarrierRightholder extends CActiveRecord {
 
     /**
      * @return string the associated database table name
@@ -50,6 +50,12 @@ class SoundCarrierRightholder extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
+            'rightholderPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Sound_Car_Right_Acc_GUID',
+                'foreignKey' => array('Sound_Car_Right_Acc_GUID' => 'Perf_GUID')
+            ),
+            'rightholderWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Right_Work_GUID',
+                'foreignKey' => array('Sound_Car_Right_Work_GUID' => 'Work_GUID')
+            ),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );

@@ -1,8 +1,9 @@
 <div class="box box-primary">
     <?php
+    $sound_car_id = $sound_car_model->Sound_Car_Id;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'work-rightholder-search-form',
-        'action' => $this->createUrl('/site/work/update', array('id' => $work_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/work/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -41,7 +42,7 @@
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'work-rightholder-search-form',
-        'action' => $this->createUrl('/site/work/update', array('id' => $work_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/work/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -59,7 +60,7 @@
                         <h3 class="box-title">Performers</h3>
                     </div>
                     <?php
-                    $performers = PerformerAccount::model()->findAll();
+                    $rightholders = PerformerAccount::model()->findAll();
                     ?>
                     <div class="box-body">
                         <div class="form-group">
@@ -74,19 +75,17 @@
                         <div class="form-group">
                             <table class="table table-striped table-bordered table-datatable selectable" id="link-performer">
                                 <thead>
-                                    <tr>
-                                        <th>Rightholder Name</th>
-                                        <th>Internal Code</th>
-                                    </tr>
+                                    <th>Rightholder Name</th>
+                                    <th>Internal Code</th>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    if (!empty($performers)) {
-                                        foreach ($performers as $key => $performer) {
+                                    if (!empty($rightholders)) {
+                                        foreach ($rightholders as $key => $rightholder) {
                                             ?>
-                                            <tr data-uid="<?php echo $performer->Perf_GUID ?>" data-name="<?php echo $performer->fullname ?>" data-intcode = "<?php echo $performer->Perf_Internal_Code ?>">
-                                                <td><?php echo $performer->fullname; ?></td>
-                                                <td><?php echo $performer->Perf_Internal_Code; ?></td>
+                                            <tr data-uid="<?php echo $rightholder->Perf_GUID ?>" data-name="<?php echo $rightholder->fullname ?>" data-intcode = "<?php echo $rightholder->Perf_Internal_Code ?>">
+                                                <td><?php echo $rightholder->fullname; ?></td>
+                                                <td><?php echo $rightholder->Perf_Internal_Code; ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -120,29 +119,34 @@
                     <div class="box-body">
                         <table class="table table-striped table-bordered" id="linked-holders">
                             <thead>
-                                <tr>
-                                    <th>Rightholder Name</th>
-                                    <th>Internal Code</th>
-                                    <th>Action</th>
-                                </tr>
+                            <th>Work</th>
+                            <th>Rightholder Name</th>
+                            <th>Internal Code</th>
+                            <th>Action</th>
                             </thead>
                             <tbody>
                                 <?php
-                                if ($work_model->soundCarrierRightholders) {
-                                    foreach ($work_model->soundCarrierRightholders as $key => $performer) {
+                                $i = 0;
+                                if ($sound_car_model->soundCarrierRightholders) {
+                                    foreach ($sound_car_model->soundCarrierRightholders as $rightholder) {
                                         ?>
-                                        <tr data-uid="<?php echo $performer->Perf_GUID ?>" data-name="<?php echo $performer->fullname ?>" data-intcode = "<?php echo $performer->Perf_Internal_Code ?>">
-                                            <td><?php echo $performer->fullname; ?></td>
-                                            <td><?php echo $performer->Perf_Internal_Code; ?></td>
+                                        <tr data-uid="<?php echo $rightholder->rightholderPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->rightholderPerformer->fullname ?>" data-intcode="<?php echo $rightholder->rightholderPerformer->Perf_Internal_Code ?>" data-work_uid="<?php echo $rightholder->rightholderWork->Work_GUID ?>">
+                                            <td><?php echo $rightholder->rightholderWork->Work_Org_Title; ?></td>
+                                            <td><?php echo $rightholder->rightholderPerformer->fullname; ?></td>
+                                            <td><?php echo $rightholder->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                            <td>
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
+                                            </td>
                                             <td class="hide">
                                                 <?php
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Id]", $member->Sound_Car_Id);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_GUID]", $member->Sound_Car_Right_Work_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Acc_GUID]", $member->Sound_Car_Right_Acc_GUID);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Id]", $rightholder->Sound_Car_Id);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Work_GUID]", $rightholder->Sound_Car_Right_Work_GUID);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$i}][Sound_Car_Right_Acc_GUID]", $rightholder->Sound_Car_Right_Acc_GUID);
                                                 ?>
                                             </td>
                                         </tr>
                                         <?php
+                                    $i++;
                                     }
                                 } else {
                                     echo "<tr id='norecord_tr'><td colspan='8'>No data created</td></tr>";
@@ -174,6 +178,7 @@ $search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchworks");
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
+        key = $i;
         $('#search_button').on("click", function(){
             if($("#is_work").is(':checked') == false && $("#is_publ").is(':checked') == false){
                 $("#chkbox_err").removeClass("hide");
@@ -195,32 +200,64 @@ $js = <<< EOD
             });
         });
         
-        $('body').on('click','#search_result tr, #link-performer tr', function(){
+        $('body').on('click','#work_search tr, #link-performer tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
         });
-        $('body').on('click','#search_result tr', function(){
+        $('body').on('click','#work_search tr', function(){
             $("#link-performer-div").removeClass('hide');
         });
         
         $("#add-performer").on('click', function(){
-            $("#linked-holders #norecord_tr").remove();
-        
-            $("#link-performer").removeClass('highlight');
-        
             _performer = $("#link-performer tbody").find('.highlight');
             uid = _performer.data('uid');
             name = _performer.data('name');
             intcode = _performer.data('intcode');
-        
-            tr = '<tr data-uid="'+uid+'" data-name="'+name+'" data-intcode="'+intcode+'">';
-            tr += '<td>'+name+'</td>';
-            tr += '<td>'+intcode+'</td>';
-            tr += '<td><a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a></td>';
-            tr += "</tr>";
-            $('#linked-holders tbody').append(tr);
-            _performer.addClass('hide');
+            work_uid = $("#work_search tbody").find('.highlight').data('uid');
+            work_name = $("#work_search tbody").find('.highlight').data('name');
+
+            //Check already exists
+            chk = $('#linked-holders tr[data-uid="'+uid+'"][data-work_uid="'+work_uid+'"]').length;
+            if(chk != 0){
+                alert(name+" already assigned to "+work_name);
+                return false;
+            }
+            //end
+            
+            $("#linked-holders #norecord_tr").remove();
+            $("#link-performer").removeClass('highlight');
+            _tr = '<tr data-uid="'+uid+'" data-name="'+name+'" data-intcode="'+intcode+'" data-work_uid="'+work_uid+'">';
+            _tr += '<td>'+work_name+'</td>';
+            _tr += '<td>'+name+'</td>';
+            _tr += '<td>'+intcode+'</td>';
+            _tr += '<td><a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a></td>';
+            _tr += '<td class="hide">';
+            _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Id]" value="$sound_car_id" />';
+            _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Work_GUID]" value="'+work_uid+'" />';
+            _tr += '<input type="hidden" name="SoundCarrierRightholder['+key+'][Sound_Car_Right_Acc_GUID]" value="'+uid+'" />';
+            _tr += '</td>';
+
+            _tr += "</tr>";
+            $('#linked-holders tbody').append(_tr);
+            _performer.removeClass('highlight');
+            checkSave();
+            key++;
         });
+        
+        $('body').on('click','#linked-holders .row-delete', function(){
+            _tr = $(this).closest('tr');
+            $('#link-performer tr[data-intcode="'+_tr.data('intcode')+'"]').removeClass('hide');
+            _tr.remove();
+            checkSave();
+        });
+        
+        
     });
+        
+    function checkSave(){
+        _count = $("#linked-holders tbody tr").length;
+        $("#right_ajax_submit").attr("disabled", _count == 0);
+    }
+        
 EOD;
 Yii::app()->clientScript->registerScript('_right_form', $js);
 ?>

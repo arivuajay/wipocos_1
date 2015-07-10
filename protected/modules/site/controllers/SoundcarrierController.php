@@ -35,7 +35,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -58,9 +58,10 @@ class SoundcarrierController extends Controller {
         $sub_title_model = SoundCarrierSubtitle::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
         $publication_model = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $biograph_model = SoundCarrierBiography::model()->findByAttributes(array('Sound_Car_Id' => $id));
+        $members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code', array(':int_code' => $model->Sound_Car_Id));
 
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model');
+        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model', 'members');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();
@@ -119,7 +120,7 @@ class SoundcarrierController extends Controller {
 
         $right_holder_exists = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
         $right_holder_model = new SoundCarrierRightholder;
-        
+
         $biograph_upload_model = new SoundCarrierBiographUploads;
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model));
@@ -288,6 +289,44 @@ class SoundcarrierController extends Controller {
             $works = Work::model()->findAll($criteria);
         }
         $this->renderPartial('_search_works', compact('works'));
+    }
+
+    public function actionInsertright() {
+        if (isset($_POST['SoundCarrierRightholder']) && !empty($_POST['SoundCarrierRightholder'])) {
+            $end = end($_POST['SoundCarrierRightholder']);
+            $sound_car_id = $end['Sound_Car_Id'];
+            
+            $created_by = $updated_by = '';
+            $created_date = date('Y-m-d H:i:s');
+            $updated_by = "0000-00-00 00:00:00";
+            $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id));
+            if(empty($holders)){
+                $created_by = Yii::app()->user->id;
+            }else{
+                $created_by = $holders[0]->Created_By;
+                $created_date = $holders[0]->Created_Date;
+                $updated_by = Yii::app()->user->id;
+                $updated_date = date('Y-m-d H:i:s');
+            }
+            
+            SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id));
+            $valid = true;
+            foreach ($_POST['SoundCarrierRightholder'] as $values) {
+                $model = new SoundCarrierRightholder;
+                $model->attributes = $values;
+                $model->setAttribute('Created_By', $created_by);
+                $model->setAttribute('Updated_By', $updated_by);
+                $model->setAttribute('Created_Date', $created_date);
+                $model->setAttribute('Rowversion', $updated_date);
+                $valid = $valid && $model->save(false);
+                if ($valid)
+                    Myclass::addAuditTrail("Created Right Holder saved for {$model->soundCar->Sound_Car_Title} successfully.", "fa fa-at");
+            }
+            if ($valid)
+                Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
+            $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => 7));
+        }
+        exit;
     }
 
     /**

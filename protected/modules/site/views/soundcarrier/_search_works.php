@@ -16,7 +16,7 @@
                 </div>
                 <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
                     <div class="col-lg-12 col-md-12 row">
-                        <table id="search_result" class="table table-bordered selectable table-datatable">
+                        <table id="work_search" class="table table-bordered selectable table-datatable">
                             <thead>
                                 <tr>
                                     <th>Orginial Title</th>

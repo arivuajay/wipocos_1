@@ -45,7 +45,7 @@ $this->breadcrumbs = array(
     <?php }
     ?>
     <?php if ($export) { ?>
-        <h3 class="text-center">SoundCarrier <?php echo $this->title ?></h3>
+        <h3 class="text-center"><?php echo $this->title ?></h3>
         <?php
     }
     ?>
@@ -252,6 +252,49 @@ $this->breadcrumbs = array(
             echo 'No data created';
         }
         ?>
+    </div>
+    
+    <div class="user-view col-lg-12">
+        <h4>Right Holders</h4>
+        <?php
+        if (!empty($members)) {
+            ?>
+            <div>
+                <span>Created By: <?php echo $members[0]->createdBy->name?></span><br />
+                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br /><br />
+            </div>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Work</th>
+                            <th>Right Holder name</th>
+                            <th>Internal Code</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php
+                        foreach ($members as $key => $member) {
+                            ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $member->rightholderWork->Work_Org_Title; ?></td>
+                                <td><?php echo $member->rightholderPerformer->fullname; ?></td>
+                                <td><?php echo $member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $member->rightholderPerformer->Perf_Acc_Id)); ?></td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
     </div>
 
 </div>
