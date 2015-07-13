@@ -13,9 +13,9 @@
     
     $titles = array();
     foreach ($works as $work){
-        if($work->Sound_Car_Work_Type == 'W'){
+        if($work->Sound_Car_Right_Work_Type == 'W'){
             $titles[$work->rightholderWork->Work_GUID] = $work->rightholderWork->Work_Org_Title;
-        }else if($work->Sound_Car_Work_Type == 'R'){
+        }else if($work->Sound_Car_Right_Work_Type == 'R'){
             $titles[$work->rightholderRecord->Rcd_GUID] = $work->rightholderRecord->Rcd_Title;
         }
     }

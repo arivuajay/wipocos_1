@@ -28,7 +28,7 @@
                                 if ($works) {
                                     foreach ($works as $key => $work) {
                                         ?>
-                                        <tr data-urole="WK" data-uid="<?php echo $work->Work_GUID ?>" data-name="<?php echo $work->Work_Org_Title; ?>" data-intcode = "<?php echo $work->Work_Internal_Code ?>">
+                                        <tr data-urole="WK" data-uid="<?php echo $work->Work_GUID ?>" data-name="<?php echo $work->Work_Org_Title; ?>" data-intcode = "<?php echo $work->Work_Internal_Code ?>" data-work-uid="<?php echo $work->Work_GUID ?>" data-work-name="<?php echo $work->Work_Org_Title ?>" >
                                             <td><?php echo $work->Work_Org_Title ?></td>
                                             <td><?php echo $work->Work_Internal_Code ?></td>
                                         </tr>

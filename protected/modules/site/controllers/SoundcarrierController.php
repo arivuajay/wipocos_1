@@ -121,13 +121,13 @@ class SoundcarrierController extends Controller {
             $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
         }
 
-        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Work_Type' => 'W'));
-        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Work_Type' => 'R'));
+        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'W'));
+        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R'));
         $right_holder_model = new SoundCarrierRightholder;
 
         $biograph_upload_model = new SoundCarrierBiographUploads;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model));
+        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model, $right_holder_model));
 
         if (isset($_POST['SoundCarrier'])) {
             $model->attributes = $_POST['SoundCarrier'];
@@ -194,7 +194,7 @@ class SoundcarrierController extends Controller {
             }
         }
         
-        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model_1', 'right_holder_model_2', 'right_holder_exists_1', 'right_holder_exists_2'));
+        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model', 'right_holder_exists_1', 'right_holder_exists_2'));
     }
 
     /**
@@ -345,7 +345,7 @@ class SoundcarrierController extends Controller {
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_by = "0000-00-00 00:00:00";
-            $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Work_Type' => $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type']));
+            $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Right_Work_Type' => $end['Sound_Car_Right_Work_Type']));
             if(empty($holders)){
                 $created_by = Yii::app()->user->id;
             }else{
@@ -355,7 +355,7 @@ class SoundcarrierController extends Controller {
                 $updated_date = date('Y-m-d H:i:s');
             }
             
-            SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Work_Type' => $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type']));
+            SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Right_Work_Type' => $end['Sound_Car_Right_Work_Type']));
             $valid = true;
             foreach ($_POST['SoundCarrierRightholder'] as $values) {
                 $model = new SoundCarrierRightholder;
@@ -370,7 +370,7 @@ class SoundcarrierController extends Controller {
             }
             if ($valid)
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
-            $tab = $_POST['SoundCarrierRightholder'][0]['Sound_Car_Work_Type'] == 'W' ? 7 : 8;
+            $tab = $end['Sound_Car_Right_Work_Type'] == 'W' ? 7 : 8;
             $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => $tab));
         }
         exit;
@@ -427,7 +427,7 @@ class SoundcarrierController extends Controller {
      * @param SoundCarrier $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form' || $_POST['ajax'] === 'sound-carrier-fixations-form')) {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form' || $_POST['ajax'] === 'sound-carrier-fixations-form' || $_POST['ajax'] === 'sound-carrier-rightholder-form-1' || $_POST['ajax'] === 'sound-carrier-rightholder-form-2')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

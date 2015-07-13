@@ -7,7 +7,7 @@
  * @property integer $Sound_Car_Right_Id
  * @property integer $Sound_Car_Id
  * @property string $Sound_Car_Right_Work_GUID
- * @property string $Sound_Car_Right_Acc_GUID
+ * @property string $Sound_Car_Right_Member_GUID
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -18,6 +18,7 @@
  */
 class SoundCarrierRightholder extends CActiveRecord {
 
+    public $Sound_Car_Right_Member_Internal_Code;
     /**
      * @return string the associated database table name
      */
@@ -32,13 +33,18 @@ class SoundCarrierRightholder extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Id, Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID', 'required'),
-            array('Sound_Car_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID', 'length', 'max' => 40),
-            array('Created_Date, Rowversion, Sound_Car_Work_Type', 'safe'),
+            array('Sound_Car_Id, Sound_Car_Right_Role, Sound_Car_Right_Equal_Share, Sound_Car_Right_Equal_Org_Id, Sound_Car_Right_Blank_Share, Sound_Car_Right_Blank_Org_Id', 'required'),
+            array('Sound_Car_Id, Sound_Car_Right_Role, Sound_Car_Right_Equal_Org_Id, Sound_Car_Right_Blank_Org_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Sound_Car_Right_Work_GUID, Sound_Car_Right_Member_GUID', 'length', 'max' => 40),
+            array('Sound_Car_Right_Work_Type', 'length', 'max' => 1),
+//            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'length', 'max' => 10),
+            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 10, 'integerOnly' => false),
+            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code', 'safe'),
+            array('Sound_Car_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
+            array('Sound_Car_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Sound_Car_Right_Id, Sound_Car_Id, Sound_Car_Right_Work_GUID, Sound_Car_Right_Acc_GUID, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Sound_Car_Right_Id, Sound_Car_Id, Sound_Car_Right_Work_GUID, Sound_Car_Right_Member_GUID, Sound_Car_Right_Work_Type, Sound_Car_Right_Role, Sound_Car_Right_Equal_Share, Sound_Car_Right_Equal_Org_Id, Sound_Car_Right_Blank_Share, Sound_Car_Right_Blank_Org_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,8 +56,8 @@ class SoundCarrierRightholder extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
-            'rightholderPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Sound_Car_Right_Acc_GUID',
-                'foreignKey' => array('Sound_Car_Right_Acc_GUID' => 'Perf_GUID')
+            'rightholderPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Sound_Car_Right_Member_GUID',
+                'foreignKey' => array('Sound_Car_Right_Member_GUID' => 'Perf_GUID')
             ),
             'rightholderWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Right_Work_GUID',
                 'foreignKey' => array('Sound_Car_Right_Work_GUID' => 'Work_GUID')
@@ -59,6 +65,9 @@ class SoundCarrierRightholder extends CActiveRecord {
             'rightholderRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Right_Work_GUID',
                 'foreignKey' => array('Sound_Car_Right_Work_GUID' => 'Rcd_GUID')
             ),
+            'soundCarRightBlankOrg' => array(self::BELONGS_TO, 'Organization', 'Sound_Car_Right_Blank_Org_Id'),
+            'soundCarRightEqualOrg' => array(self::BELONGS_TO, 'Organization', 'Sound_Car_Right_Equal_Org_Id'),
+            'soundCarRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Sound_Car_Right_Role'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -72,7 +81,12 @@ class SoundCarrierRightholder extends CActiveRecord {
             'Sound_Car_Right_Id' => 'Sound Car Right',
             'Sound_Car_Id' => 'Sound Car',
             'Sound_Car_Right_Work_GUID' => 'Sound Car Right Work Guid',
-            'Sound_Car_Right_Acc_GUID' => 'Sound Car Right Acc Guid',
+            'Sound_Car_Right_Member_GUID' => 'Sound Car Right Acc Guid',
+            'Sound_Car_Right_Role' => 'Role',
+            'Sound_Car_Right_Equal_Share' => 'Points',
+            'Sound_Car_Right_Equal_Org_Id' => 'Organization',
+            'Sound_Car_Right_Blank_Share' => 'Points',
+            'Sound_Car_Right_Blank_Org_Id' => 'Organization',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -100,7 +114,7 @@ class SoundCarrierRightholder extends CActiveRecord {
         $criteria->compare('Sound_Car_Right_Id', $this->Sound_Car_Right_Id);
         $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
         $criteria->compare('Sound_Car_Right_Work_GUID', $this->Sound_Car_Right_Work_GUID, true);
-        $criteria->compare('Sound_Car_Right_Acc_GUID', $this->Sound_Car_Right_Acc_GUID, true);
+        $criteria->compare('Sound_Car_Right_Member_GUID', $this->Sound_Car_Right_Member_GUID, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('Created_By', $this->Created_By);
@@ -134,7 +148,7 @@ class SoundCarrierRightholder extends CActiveRecord {
 
     public function distinctWorks($sound_car_id) {
         $works = SoundCarrierRightholder::model()->findAll(array(
-            'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Work_Type',
+            'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
             'distinct' => true,
             'condition' => "t.Sound_Car_Id = $sound_car_id"
         ));

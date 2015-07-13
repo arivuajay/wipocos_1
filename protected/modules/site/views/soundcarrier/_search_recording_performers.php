@@ -48,7 +48,7 @@
                     <div class="row">
                     <div class="form-group">
                         <div class="col-lg-10">
-                            <?php echo CHtml::button('Add', array('class' => 'btn btn-primary', 'id' => 'add-performer-rec', 'disabled' => true)); ?>
+                            <?php // echo CHtml::button('Add', array('class' => 'btn btn-primary', 'id' => 'add-performer-rec', 'disabled' => true)); ?>
                         </div>
                         <div class="col-lg-2">
                             <?php
