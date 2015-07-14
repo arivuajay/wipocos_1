@@ -1,32 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "{{sound_carrier_documentation}}".
+ * This is the model class for table "{{recording_session_biograph_uploads}}".
  *
- * The followings are the available columns in table '{{sound_carrier_documentation}}':
- * @property integer $Sound_Car_Doc_Id
- * @property integer $Sound_Car_Id
- * @property integer $Sound_Car_Doc_Status_Id
- * @property integer $Sound_Car_Doc_Type_Id
- * @property string $Sound_Car_Doc_Sign_Date
- * @property string $Sound_Car_Doc_File
- * @property string $Created_Date
+ * The followings are the available columns in table '{{recording_session_biograph_uploads}}':
+ * @property integer $Rcd_Ses_Biogrph_Upl_Id
+ * @property integer $Rcd_Ses_Biogrph_Id
+ * @property string $Rcd_Ses_Biogrph_Upl_File
+ * @property string $Rcd_Ses_Biogrph_Upl_Description
+ * @property string $Created
  * @property string $Rowversion
  * @property integer $Created_By
  * @property integer $Updated_By
  *
  * The followings are the available model relations:
- * @property MasterDocumentStatus $soundCarDocStatus
- * @property MasterDocument $soundCarDocType
- * @property SoundCarrier $soundCar
+ * @property RecordingSessionBiography $rcdSesBiogrph
  */
-class SoundCarrierDocumentation extends RActiveRecord {
+class RecordingSessionBiographUploads extends RActiveRecord {
 
+    const IMAGE_SIZE = 2;
+    const ACCESS_TYPES = 'jpg,png,jpeg,gif';
+    const ACCESS_TYPES_WID = 'jpeg|jpg|gif|png';
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{sound_carrier_documentation}}';
+        return '{{recording_session_biograph_uploads}}';
     }
 
     /**
@@ -36,13 +35,14 @@ class SoundCarrierDocumentation extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Sound_Car_Doc_Sign_Date', 'required'),
-            array('Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Sound_Car_Doc_File', 'length', 'max' => 255),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Rcd_Ses_Biogrph_Id, Rcd_Ses_Biogrph_Upl_File', 'required'),
+            array('Rcd_Ses_Biogrph_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Rcd_Ses_Biogrph_Upl_File', 'length', 'max' => 500),
+            array('Rcd_Ses_Biogrph_Upl_File', 'file', 'types' => self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
+            array('Rcd_Ses_Biogrph_Upl_Description, Created, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Sound_Car_Doc_Id, Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Sound_Car_Doc_Sign_Date, Sound_Car_Doc_File, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Rcd_Ses_Biogrph_Upl_Id, Rcd_Ses_Biogrph_Id, Rcd_Ses_Biogrph_Upl_File, Rcd_Ses_Biogrph_Upl_Description, Created, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -53,9 +53,7 @@ class SoundCarrierDocumentation extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'soundCarDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Sound_Car_Doc_Status_Id'),
-            'soundCarDocType' => array(self::BELONGS_TO, 'MasterDocument', 'Sound_Car_Doc_Type_Id'),
-            'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
+            'rcdSesBiogrph' => array(self::BELONGS_TO, 'RecordingSessionBiography', 'Rcd_Ses_Biogrph_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -66,13 +64,11 @@ class SoundCarrierDocumentation extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Sound_Car_Doc_Id' => 'Sound Car Doc',
-            'Sound_Car_Id' => 'Sound Car',
-            'Sound_Car_Doc_Status_Id' => 'Documentary Status',
-            'Sound_Car_Doc_Type_Id' => 'Type',
-            'Sound_Car_Doc_Sign_Date' => 'Date of Signature',
-            'Sound_Car_Doc_File' => 'File',
-            'Created_Date' => 'Created Date',
+            'Rcd_Ses_Biogrph_Upl_Id' => 'Rcd Ses Biogrph Upl',
+            'Rcd_Ses_Biogrph_Id' => 'Rcd Ses Biogrph',
+            'Rcd_Ses_Biogrph_Upl_File' => 'File',
+            'Rcd_Ses_Biogrph_Upl_Description' => 'Description',
+            'Created' => 'Created',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
@@ -96,13 +92,11 @@ class SoundCarrierDocumentation extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Sound_Car_Doc_Id', $this->Sound_Car_Doc_Id);
-        $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
-        $criteria->compare('Sound_Car_Doc_Status_Id', $this->Sound_Car_Doc_Status_Id);
-        $criteria->compare('Sound_Car_Doc_Type_Id', $this->Sound_Car_Doc_Type_Id);
-        $criteria->compare('Sound_Car_Doc_Sign_Date', $this->Sound_Car_Doc_Sign_Date, true);
-        $criteria->compare('Sound_Car_Doc_File', $this->Sound_Car_Doc_File, true);
-        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rcd_Ses_Biogrph_Upl_Id', $this->Rcd_Ses_Biogrph_Upl_Id);
+        $criteria->compare('Rcd_Ses_Biogrph_Id', $this->Rcd_Ses_Biogrph_Id);
+        $criteria->compare('Rcd_Ses_Biogrph_Upl_File', $this->Rcd_Ses_Biogrph_Upl_File, true);
+        $criteria->compare('Rcd_Ses_Biogrph_Upl_Description', $this->Rcd_Ses_Biogrph_Upl_Description, true);
+        $criteria->compare('Created', $this->Created, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('Created_By', $this->Created_By);
         $criteria->compare('Updated_By', $this->Updated_By);
@@ -119,7 +113,7 @@ class SoundCarrierDocumentation extends RActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return SoundCarrierDocumentation the static model class
+     * @return RecordingSessionBiographUploads the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -133,4 +127,12 @@ class SoundCarrierDocumentation extends RActiveRecord {
         ));
     }
 
+    public function behaviors() {
+        return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'Rcd_Ses_Biogrph_Upl_File',
+            )
+        );
+    }
 }

@@ -495,12 +495,22 @@ class Myclass extends CController {
 
     public static function getMasterStudio($is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)
-            $media = CHtml::listData(MasterStudio::model()->isActive(array('order' => 'Studio_Name'))->findAll(), 'Master_Studio_Id', 'Studio_Name');
+            $studio = CHtml::listData(MasterStudio::model()->isActive(array('order' => 'Studio_Name'))->findAll(), 'Master_Studio_Id', 'Studio_Name');
         else
-            $media = CHtml::listData(MasterStudio::model()->findAll(array('order' => 'Studio_Name')), 'Master_Studio_Id', 'Studio_Name');
+            $studio = CHtml::listData(MasterStudio::model()->findAll(array('order' => 'Studio_Name')), 'Master_Studio_Id', 'Studio_Name');
         if ($key != NULL)
-            return $media[$key];
-        return $media;
+            return $studio[$key];
+        return $studio;
+    }
+
+    public static function getMasterDestination($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $dist = CHtml::listData(MasterDestination::model()->isActive(array('order' => 'Dist_Name'))->findAll(), 'Master_Dist_Id', 'Dist_Name');
+        else
+            $dist = CHtml::listData(MasterDestination::model()->findAll(array('order' => 'Dist_Name')), 'Master_Dist_Id', 'Dist_Name');
+        if ($key != NULL)
+            return $dist[$key];
+        return $dist;
     }
 
     //end

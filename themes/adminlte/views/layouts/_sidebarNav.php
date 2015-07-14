@@ -109,6 +109,7 @@
                         array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'visible' => UserIdentity::checkAccess($_id, 'work', 'view'), 'active' => $work_com_active['work']),
                         array('label' => '<i class="fa fa-volume-up"></i> <span>Recordings</span>', 'url' => array('/site/recording/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-headphones"></i> <span>Sound Carriers</span>', 'url' => array('/site/soundcarrier/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-file-audio-o"></i> <span>Recording Sessions</span>', 'url' => array('/site/recordingsession/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-warning"></i> <span>Contract Expiry</span>', 'url' => array('/site/work/contractexpiry'), 'visible' => UserIdentity::checkAccess($_id, 'contractexpiry', 'view'), 'active' => $work_com_active['contractexpiry']),
                     ),
                 ),

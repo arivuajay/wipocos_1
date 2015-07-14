@@ -29,6 +29,8 @@ class InternalcodeGenerate extends CActiveRecord {
     const SOUND_CARRIER_CODE = 'S';
     const SOUND_CARRIER_PUBLISHING_CODE = 'SP';
 
+    const RECORDING_SESSION_CODE = 'RS';
+    
     public $fullcode;
 
     public function getFullcode() {

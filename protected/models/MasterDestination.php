@@ -1,34 +1,33 @@
 <?php
 
 /**
- * This is the model class for table "{{sound_carrier_documentation}}".
+ * This is the model class for table "{{master_destination}}".
  *
- * The followings are the available columns in table '{{sound_carrier_documentation}}':
- * @property integer $Sound_Car_Doc_Id
- * @property integer $Sound_Car_Id
- * @property integer $Sound_Car_Doc_Status_Id
- * @property integer $Sound_Car_Doc_Type_Id
- * @property string $Sound_Car_Doc_Sign_Date
- * @property string $Sound_Car_Doc_File
+ * The followings are the available columns in table '{{master_destination}}':
+ * @property integer $Master_Dist_Id
+ * @property string $Dist_Name
+ * @property string $Dist_Code
+ * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
  * @property integer $Updated_By
- *
- * The followings are the available model relations:
- * @property MasterDocumentStatus $soundCarDocStatus
- * @property MasterDocument $soundCarDocType
- * @property SoundCarrier $soundCar
  */
-class SoundCarrierDocumentation extends RActiveRecord {
+class MasterDestination extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{sound_carrier_documentation}}';
+        return '{{master_destination}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -36,13 +35,15 @@ class SoundCarrierDocumentation extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Sound_Car_Doc_Sign_Date', 'required'),
-            array('Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Sound_Car_Doc_File', 'length', 'max' => 255),
+            array('Dist_Name', 'required'),
+            array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Dist_Name', 'length', 'max' => 100),
+            array('Dist_Code', 'length', 'max' => 50),
+            array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Sound_Car_Doc_Id, Sound_Car_Id, Sound_Car_Doc_Status_Id, Sound_Car_Doc_Type_Id, Sound_Car_Doc_Sign_Date, Sound_Car_Doc_File, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Master_Dist_Id, Dist_Name, Dist_Code, Active, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -53,11 +54,6 @@ class SoundCarrierDocumentation extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'soundCarDocStatus' => array(self::BELONGS_TO, 'MasterDocumentStatus', 'Sound_Car_Doc_Status_Id'),
-            'soundCarDocType' => array(self::BELONGS_TO, 'MasterDocument', 'Sound_Car_Doc_Type_Id'),
-            'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -66,12 +62,10 @@ class SoundCarrierDocumentation extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'Sound_Car_Doc_Id' => 'Sound Car Doc',
-            'Sound_Car_Id' => 'Sound Car',
-            'Sound_Car_Doc_Status_Id' => 'Documentary Status',
-            'Sound_Car_Doc_Type_Id' => 'Type',
-            'Sound_Car_Doc_Sign_Date' => 'Date of Signature',
-            'Sound_Car_Doc_File' => 'File',
+            'Master_Dist_Id' => 'Master Dist',
+            'Dist_Name' => 'Dist Name',
+            'Dist_Code' => 'Dist Code',
+            'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -96,12 +90,10 @@ class SoundCarrierDocumentation extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('Sound_Car_Doc_Id', $this->Sound_Car_Doc_Id);
-        $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
-        $criteria->compare('Sound_Car_Doc_Status_Id', $this->Sound_Car_Doc_Status_Id);
-        $criteria->compare('Sound_Car_Doc_Type_Id', $this->Sound_Car_Doc_Type_Id);
-        $criteria->compare('Sound_Car_Doc_Sign_Date', $this->Sound_Car_Doc_Sign_Date, true);
-        $criteria->compare('Sound_Car_Doc_File', $this->Sound_Car_Doc_File, true);
+        $criteria->compare('Master_Dist_Id', $this->Master_Dist_Id);
+        $criteria->compare('Dist_Name', $this->Dist_Name, true);
+        $criteria->compare('Dist_Code', $this->Dist_Code, true);
+        $criteria->compare('Active', $this->Active, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('Created_By', $this->Created_By);
@@ -119,7 +111,7 @@ class SoundCarrierDocumentation extends RActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return SoundCarrierDocumentation the static model class
+     * @return MasterDestination the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

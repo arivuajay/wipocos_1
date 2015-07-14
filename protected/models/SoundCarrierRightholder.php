@@ -38,7 +38,7 @@ class SoundCarrierRightholder extends CActiveRecord {
             array('Sound_Car_Right_Work_GUID, Sound_Car_Right_Member_GUID', 'length', 'max' => 40),
             array('Sound_Car_Right_Work_Type', 'length', 'max' => 1),
 //            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'length', 'max' => 10),
-            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 10, 'integerOnly' => false),
+            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
             array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code', 'safe'),
             array('Sound_Car_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Sound_Car_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),

@@ -51,6 +51,8 @@ class SoundCarrierFixations extends RActiveRecord {
             array('Sound_Car_Fix_GUID', 'length', 'max' => 40),
             array('duration_hours', 'durationValidate'),
             array('Sound_Car_Fix_GUID', 'checkUnique'),
+            array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
+            array('duration_hours', 'numerical', 'min' => 0),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Sound_Car_Fix_Work_Type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

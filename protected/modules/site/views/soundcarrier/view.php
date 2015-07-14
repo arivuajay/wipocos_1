@@ -132,7 +132,7 @@ $this->breadcrumbs = array(
                             <?php if ($export == false) { ?>
                                 <td>
                                     <?php
-                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update/id/' . $sub_title->Sound_Car_Id . '/tab/2/edit/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update/id/' . $sub_title->Sound_Car_Id . '/tab/4/edit/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
                                     echo "&nbsp;&nbsp;";
                                     echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/subtitledelete/id/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                     ?>
@@ -145,6 +145,37 @@ $this->breadcrumbs = array(
             <?php
         } else {
             echo 'No Sub Titles created';
+        }
+        ?>
+        <h4>Documentation</h4>
+        <?php
+        if (!empty($document_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $document_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    array(
+                        'name' => 'Sound_Car_Doc_Status_Id',
+                        'value' => $document_model->soundCarDocStatus->Document_Sts_Name
+                    ),
+                    array(
+                        'name' => 'Sound_Car_Doc_Type_Id',
+                        'value' => $document_model->soundCarDocType->Doc_Name
+                    ),
+                    'Sound_Car_Doc_Sign_Date',
+                    'Sound_Car_Doc_File',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($document_model->createdBy->name) ? $document_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($document_model->updatedBy->name) ? $document_model->updatedBy->name : ''
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
         }
         ?>
     </div>
@@ -332,11 +363,14 @@ $this->breadcrumbs = array(
                 <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
-                            <th>Work</th>
                             <th>Right Holder name</th>
                             <th>Internal Code</th>
+                            <th>Work</th>
+                            <th>Role</th>
+                            <th>Equal Remuneration Points</th>
+                            <th>Blank Levy Points</th>
                             <?php if ($export == false) { ?>
-                                <th>Action</th>
+                                <!--<th>Action</th>-->
                             <?php } ?>
                         </tr>
                         <?php
@@ -344,11 +378,14 @@ $this->breadcrumbs = array(
                             ?>
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $work_member->rightholderWork->Work_Org_Title; ?></td>
                                 <td><?php echo $work_member->rightholderPerformer->fullname; ?></td>
                                 <td><?php echo $work_member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                <td><?php echo $work_member->rightholderWork->Work_Org_Title; ?></td>
+                                <td><?php echo $work_member->soundCarRightRole->rolename; ?></td>
+                                <td><?php echo $work_member->Sound_Car_Right_Equal_Share; ?></td>
+                                <td><?php echo $work_member->Sound_Car_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderPerformer->Perf_Acc_Id)); ?></td>
+                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>
@@ -374,11 +411,14 @@ $this->breadcrumbs = array(
                 <table class="table table-striped table-bordered">
                     <tbody><tr>
                             <th>#</th>
-                            <th>Work</th>
                             <th>Right Holder name</th>
                             <th>Internal Code</th>
+                            <th>Recording</th>
+                            <th>Role</th>
+                            <th>Equal Remuneration Points</th>
+                            <th>Blank Levy Points</th>
                             <?php if ($export == false) { ?>
-                                <th>Action</th>
+                                <!--<th>Action</th>-->
                             <?php } ?>
                         </tr>
                         <?php
@@ -386,11 +426,14 @@ $this->breadcrumbs = array(
                             ?>
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $rcd_member->rightholderRecord->Rcd_Title; ?></td>
                                 <td><?php echo $rcd_member->rightholderPerformer->fullname; ?></td>
                                 <td><?php echo $rcd_member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                <td><?php echo $rcd_member->rightholderRecord->Rcd_Title; ?></td>
+                                <td><?php echo $rcd_member->soundCarRightRole->rolename; ?></td>
+                                <td><?php echo $rcd_member->Sound_Car_Right_Equal_Share; ?></td>
+                                <td><?php echo $rcd_member->Sound_Car_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>
+                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>

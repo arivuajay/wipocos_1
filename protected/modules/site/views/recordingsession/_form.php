@@ -1,11 +1,6 @@
 <?php
-/* @var $this SoundcarrierController */
-/* @var $model SoundCarrier */
-/* @var $form CActiveForm */
-?>
-<?php
-/* @var $this WorkController */
-/* @var $model Work */
+/* @var $this RecordingsessionController */
+/* @var $model RecordingSession */
 /* @var $form CActiveForm */
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -19,23 +14,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 $languages = Myclass::getMasterLanguage();
 $types = Myclass::getMasterType();
-$labels = Myclass::getMasterLabel();
 $mediums = Myclass::getMasterMedium();
 $countries = Myclass::getMasterCountry();
-$manfs = Myclass::getMasterManufacturer();
 $studios = Myclass::getMasterStudio();
-
-if (!$model->isNewRecord) {
-    $works = (new SoundCarrierRightholder)->distinctWorks($model->Sound_Car_Id);
-    $titles = array();
-    foreach ($works as $work) {
-        if ($work->Sound_Car_Right_Work_Type == 'W') {
-            $titles[$work->rightholderWork->Work_GUID] = $work->rightholderWork->Work_Org_Title;
-        } else if ($work->Sound_Car_Right_Work_Type == 'R') {
-            $titles[$work->rightholderRecord->Rcd_GUID] = $work->rightholderRecord->Rcd_Title;
-        }
-    }
-}
+$factors = Myclass::getMasterFactor();
+$destinations = Myclass::getMasterDestination();
 ?>
 
 <div class="row">
@@ -55,12 +38,8 @@ if (!$model->isNewRecord) {
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Works</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Recordings</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if ($fix_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if ($pub_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -68,7 +47,7 @@ if (!$model->isNewRecord) {
                     <div class="box box-primary">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
-                            'id' => 'sound-carrier-form',
+                            'id' => 'recording-session-form',
                             'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
@@ -79,52 +58,53 @@ if (!$model->isNewRecord) {
                         <div class="col-lg-5">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Internal_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Internal_Code'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Internal_Code', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Internal_Code'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Title', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Title', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Title'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Title', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Title', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Title'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Language_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Language_Id'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Language_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Language_Id', $languages, array('class' => 'form-control', 'prompt' => '')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Language_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Standardized_Code', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Standardized_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Standardized_Code'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Orchestra', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Orchestra', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Orchestra'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Catelog', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Catelog', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Catelog'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Ref_Medium', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Ref_Medium', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Ref_Medium'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Barcode', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Barcode', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Barcode'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Hours', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Hours', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Hours'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Distributor', array('class' => '')); ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Distributor', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Distributor'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Record_Date', array('class' => '')); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Record_Date', array('class' => 'form-control date')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Record_Date'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Label_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Label_Id', $labels, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Label_Id'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Studio_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Studio_Id', $studios, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Studio_Id'); ?>
                                 </div>
+
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -132,65 +112,59 @@ if (!$model->isNewRecord) {
                             <div class="box-body">
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Medium', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Medium', $mediums, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Medium'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Producer', array('class' => '')); ?>
+                                    <?php echo $form->hiddenField($model, 'Rcd_Ses_Producer'); ?>
+                                    <?php echo CHtml::textField('producer', $model->recordingSessionProducer->Pro_Corporate_Name, array('class' => 'form-control popup', 'size' => 60, 'maxlength' => 100, 'onkeypress' => 'return false', 'data-popup' => 'producerbutton')) ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Producer'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Type_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Type_Id', $types, array('class' => 'form-control', 'prompt' => '')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Type_Id'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Main_Artist', array('class' => '')); ?>
+                                    <?php echo $form->hiddenField($model, 'Rcd_Ses_Main_Artist'); ?>
+                                    <?php echo CHtml::textField('main_artist', $model->recordingSessionMainArtist->fullname, array('class' => 'form-control popup', 'size' => 60, 'maxlength' => 100, 'onkeypress' => 'return false', 'data-popup' => 'artistbutton')) ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Main_Artist'); ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Medium_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Medium_Id', $mediums, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Medium_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Main_Artist', array('class' => '')); ?>
-                                    <?php echo $form->hiddenField($model, 'Sound_Car_Main_Artist'); ?>
-                                    <?php echo CHtml::textField('main_artist', $model->soundCarMainArtist->fullname, array('class' => 'form-control popup', 'size' => 60, 'maxlength' => 100, 'onkeypress' => 'return false', 'data-popup' => 'artistbutton')) ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Main_Artist'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Type_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Type_Id', $types, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Type_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Producer', array('class' => '')); ?>
-                                    <?php echo $form->hiddenField($model, 'Sound_Car_Producer'); ?>
-                                    <?php echo CHtml::textField('producer', $model->soundCarProducer->Pro_Corporate_Name, array('class' => 'form-control popup', 'size' => 60, 'maxlength' => 100, 'onkeypress' => 'return false', 'data-popup' => 'producerbutton')) ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Producer'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Destination_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Destination_Id', $destinations, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Destination_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Product_Country_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Product_Country_Id', $countries, array('class' => 'form-control popup')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Product_Country_Id'); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Country_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Country_Id', $countries, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Country_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Year', array('class' => '')); ?>
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Factor_Id', array('class' => '')); ?>
+                                    <?php echo $form->dropDownList($model, 'Rcd_Ses_Factor_Id', $factors, array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Factor_Id'); ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Rcd_Ses_Release_Year', array('class' => '')); ?>
                                     <?php
                                     $year = date('Y');
-                                    if ($model->Sound_Car_Year != NULL && $model->Sound_Car_Year != '0000') {
-                                        $year = $model->Sound_Car_Year;
+                                    if ($model->Rcd_Ses_Release_Year != NULL && $model->Rcd_Ses_Release_Year != '0000') {
+                                        $year = $model->Rcd_Ses_Release_Year;
                                     }
                                     ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4, 'value' => $year)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Year'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Release_Year', array('class' => '')); ?>
-                                    <?php
-                                    $year = date('Y');
-                                    if ($model->Sound_Car_Release_Year != NULL && $model->Sound_Car_Release_Year != '0000') {
-                                        $year = $model->Sound_Car_Release_Year;
-                                    }
-                                    ?>
-                                    <?php echo $form->textField($model, 'Sound_Car_Release_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4, 'value' => $year)); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Release_Year'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Sound_Car_Manf_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Sound_Car_Manf_Id', $manfs, array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($model, 'Sound_Car_Manf_Id'); ?>
+                                    <?php echo $form->textField($model, 'Rcd_Ses_Release_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4, 'value' => $year)); ?>
+                                    <?php echo $form->error($model, 'Rcd_Ses_Release_Year'); ?>
                                 </div>
 
                             </div>
@@ -209,49 +183,21 @@ if (!$model->isNewRecord) {
                 <div class="tab-pane" id="tab_2">
                     <?php
                     if ($doc_tab_validation) {
-                        $this->renderPartial('_documentation_form', array('model' => $document_model, 'sound_car_model' => $model));
+                        $this->renderPartial('_documentation_form', array('model' => $document_model, 'record_ses_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if ($pub_tab_validation) {
-                        $this->renderPartial('_publication_form', array('model' => $publication_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios, 'titles' => $titles));
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'record_ses_model' => $model, 'languages' => $languages, 'types' => $types));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_4">
                     <?php
                     if ($other_tab_validation) {
-                        $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'sound_car_model' => $model, 'languages' => $languages, 'types' => $types));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_5">
-                    <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'sound_car_model' => $model, 'biograph_upload_model' => $biograph_upload_model));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_6">
-                    <?php
-                    if ($fix_tab_validation) {
-                        $this->renderPartial('_fixation_form', array('model' => $fixation_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios, 'titles' => $titles));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_7">
-                    <?php
-                    if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form_1', array('model' => $right_holder_model, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_1));
-                    }
-                    ?>
-                </div>
-                <div class="tab-pane" id="tab_8">
-                    <?php
-                    if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form_2', array('model' => $right_holder_model, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_2));
+                        $this->renderPartial('_biography_form', array('model' => $biograph_model, 'record_ses_model' => $model, 'biograph_upload_model' => $biograph_upload_model));
                     }
                     ?>
                 </div>
@@ -320,7 +266,7 @@ $this->beginWidget(
                         $("#art-modelerror").html("Select Alteast one Artist");
                     }else{
                         $("#art-modelerror").html("");
-                        $("#SoundCarrier_Sound_Car_Main_Artist").val(_row.data("id"));
+                        $("#RecordingSession_Rcd_Ses_Main_Artist").val(_row.data("id"));
                         $("#main_artist").val(_row.data("name"));
                         $("#artist-dismiss").trigger("click");
                     }
@@ -415,7 +361,7 @@ $this->beginWidget(
                         $("#pro-modelerror").html("Select Alteast one Producer");
                     }else{
                         $("#pro-modelerror").html("");
-                        $("#SoundCarrier_Sound_Car_Producer").val(_row.data("id"));
+                        $("#RecordingSession_Rcd_Ses_Producer").val(_row.data("id"));
                         $("#producer").val(_row.data("name"));
                         $("#producer-dismiss").trigger("click");
                     }

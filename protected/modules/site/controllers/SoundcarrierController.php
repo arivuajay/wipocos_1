@@ -62,9 +62,10 @@ class SoundcarrierController extends Controller {
         $rcd_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'R'));
         $fixations = SoundCarrierFixations::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
         $publications = SoundCarrierPublication::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
+        $document_model = SoundCarrierDocumentation::model()->findByAttributes(array('Sound_Car_Id' => $id));
 
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model', 'work_members', 'rcd_members', 'publications', 'fixations');
+        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model', 'work_members', 'rcd_members', 'publications', 'fixations', 'document_model');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();

@@ -52,11 +52,23 @@ class SoundCarrierPublication extends RActiveRecord {
             array('Sound_Car_Publ_Internal_Code', 'length', 'max' => 100),
             array('Sound_Car_Publ_Year', 'length', 'max' => 4),
             array('Sound_Car_Publ_Year', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
+            array('Sound_Car_Publ_GUID', 'checkUnique'),
             array('Created_Date, Rowversion, Sound_Car_Publ_GUID, Sound_Car_Publ_Work_Type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Sound_Car_Publ_Id, Sound_Car_Id, Sound_Car_Publ_Internal_Code, Sound_Car_Publ_Year, Sound_Car_Publ_Country_Id, Sound_Car_Publ_Prod_Nation_Id, Sound_Car_Publ_Studio, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
+    }
+
+    public function checkUnique($attribute, $params) {
+        $checkExists = array();
+        if ($this->isNewRecord) {
+            $checkExists = self::model()->findByAttributes(array('Sound_Car_Id' => $this->Sound_Car_Id, 'Sound_Car_Publ_GUID' => $this->Sound_Car_Publ_GUID));
+        }else{
+            $checkExists = self::model()->find("Sound_Car_Publ_Id != :id And Sound_Car_Id = :sound_car_id And Sound_Car_Publ_GUID = :guid", array(':id' => $this->Sound_Car_Publ_Id, ':sound_car_id' => $this->Sound_Car_Id, ':guid' => $this->Sound_Car_Publ_GUID));
+        }
+        if (!empty($checkExists))
+            $this->addError($attribute, "This Title has already been taken.");
     }
 
     /**
@@ -72,8 +84,8 @@ class SoundCarrierPublication extends RActiveRecord {
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
-            'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Rcd_GUID')),
-            'soundCarWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Work_GUID')),
+            'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Publ_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Rcd_GUID')),
+            'soundCarWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Publ_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Work_GUID')),
         );
     }
 

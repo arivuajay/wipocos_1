@@ -1,41 +1,41 @@
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'soundcarrier-biography-form',
+        'id' => 'recordingsession-biography-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
         ),
         'enableAjaxValidation' => true,
     ));
-    echo $form->hiddenField($model, 'Sound_Car_Id', array('value' => $sound_car_model->Sound_Car_Id));
+    echo $form->hiddenField($model, 'Rcd_Ses_Id', array('value' => $record_ses_model->Rcd_Ses_Id));
     ?>
     <div class="box-body">
         <?php if (!$model->isNewRecord) { ?>
             <div class="col-lg-12 col-md-12">
                 <div class="row mb10">
-                    <?php // echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New Upload', array("/site/soundcarrier/update", 'id' => $sound_car_model->Sound_Car_Id, 'tab' => '5'), array('class' => 'btn btn-success pull-right')) ?>
+                    <?php // echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New Upload', array("/site/recordingsession/update", 'id' => $record_ses_model->Rcd_Ses_Id, 'tab' => '5'), array('class' => 'btn btn-success pull-right')) ?>
                 </div>
             </div>
         <?php } ?>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Sound_Car_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($model, 'Rcd_Ses_Biogrph_Annotation', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textArea($model, 'Sound_Car_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
-                <?php echo $form->error($model, 'Sound_Car_Biogrph_Annotation'); ?>
+                <?php echo $form->textArea($model, 'Rcd_Ses_Biogrph_Annotation', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->error($model, 'Rcd_Ses_Biogrph_Annotation'); ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($biograph_upload_model, 'Sound_Car_Biogrph_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($biograph_upload_model, 'Rcd_Ses_Biogrph_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
                 <?php
-                    $max_size = SoundCarrierBiographUploads::IMAGE_SIZE;
+                    $max_size = RecordingSessionBiographUploads::IMAGE_SIZE;
                 $this->widget('CMultiFileUpload', array(
                     'model' => $biograph_upload_model,
-                    'name' => 'Sound_Car_Biogrph_Upl_File',
-                    'accept' => SoundCarrierBiographUploads::ACCESS_TYPES_WID,
+                    'name' => 'Rcd_Ses_Biogrph_Upl_File',
+                    'accept' => RecordingSessionBiographUploads::ACCESS_TYPES_WID,
                     'duplicate' => 'Duplicate file!',
                     'denied' => 'Invalid file extension',
                     'options' => array(
@@ -50,15 +50,15 @@
                     )
                 ));
                 ?>
-                <?php echo $form->error($biograph_upload_model, 'Sound_Car_Biogrph_Upl_File'); ?>
+                <?php echo $form->error($biograph_upload_model, 'Rcd_Ses_Biogrph_Upl_File'); ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo $form->labelEx($biograph_upload_model, 'Sound_Car_Biogrph_Upl_Description', array('class' => 'col-sm-2 control-label')); ?>
+            <?php echo $form->labelEx($biograph_upload_model, 'Rcd_Ses_Biogrph_Upl_Description', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textArea($biograph_upload_model, 'Sound_Car_Biogrph_Upl_Description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
-                <?php echo $form->error($biograph_upload_model, 'Sound_Car_Biogrph_Upl_Description'); ?>
+                <?php echo $form->textArea($biograph_upload_model, 'Rcd_Ses_Biogrph_Upl_Description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->error($biograph_upload_model, 'Rcd_Ses_Biogrph_Upl_Description'); ?>
             </div>
         </div>
         
@@ -74,7 +74,7 @@
 </div>
 
 <?php
-$uploaded_files = SoundCarrierBiographUploads::model()->findAll('Sound_Car_Biogrph_Id = :bio_id', array(':bio_id' => $model->Sound_Car_Biogrph_Id));
+$uploaded_files = RecordingSessionBiographUploads::model()->findAll('Rcd_Ses_Biogrph_Id = :bio_id', array(':bio_id' => $model->Rcd_Ses_Biogrph_Id));
 if (!empty($uploaded_files)) {
     ?>
     <div class="box box-success">
@@ -98,14 +98,14 @@ if (!empty($uploaded_files)) {
                             $i = $key + 1
                             ?>
                             <td><?php echo $i ?>.</td>
-                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "SoundCarrier Biograph {$i}" ?></a></td>
-                            <td><?php echo $uploaded_file->Sound_Car_Biogrph_Upl_Description?></td>
+                            <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "RecordingSession Biograph {$i}" ?></a></td>
+                            <td><?php echo $uploaded_file->Rcd_Ses_Biogrph_Upl_Description?></td>
                             <td><?php echo $uploaded_file->Created?></td>
                             <td>
                                 <?php
-                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/soundcarrier/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/recordingsession/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/biofiledelete/', 'id' => $uploaded_file->Sound_Car_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/biofiledelete/', 'id' => $uploaded_file->Rcd_Ses_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
                                 ?>
                             </td>
