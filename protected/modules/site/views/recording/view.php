@@ -139,9 +139,9 @@ $this->breadcrumbs = array(
                             <?php if ($export == false) { ?>
                                 <td>
                                     <?php
-                                    echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $sub_title->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $sub_title->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
                                     echo "&nbsp;&nbsp;";
-                                    echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                     ?>
                                 </td>
                             <?php } ?>
@@ -209,9 +209,9 @@ $this->breadcrumbs = array(
                 <?php if ($export == false) { ?>
                                             <td>
                     <?php
-                    echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $link->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
+                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $link->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
                     echo "&nbsp;&nbsp;";
-                    echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                     ?>
                                             </td>
                 <?php } ?>
@@ -271,7 +271,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $member->Rcd_Right_Blank_Share; ?></td>
                                 <td><?php echo $member->rcdRightEqualOrg->Org_Abbrevation; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
+                                    <td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', $url); ?></td>
                                 <?php } ?>
                             </tr>
                         <?php } ?>

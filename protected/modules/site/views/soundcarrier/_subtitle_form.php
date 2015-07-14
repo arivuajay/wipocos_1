@@ -83,9 +83,9 @@ if (!empty($sub_titles)) {
                             <td><?php echo $sub_title->updatedBy->name ?></td>
                             <td>
                                 <?php
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update' , 'id' => $sound_car_model->Sound_Car_Id , 'tab' => 4, 'edit' => $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update' , 'id' => $sound_car_model->Sound_Car_Id , 'tab' => 4, 'edit' => $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/subtitledelete' , 'id' => $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/subtitledelete' , 'id' => $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
                             </td>
                         </tr>

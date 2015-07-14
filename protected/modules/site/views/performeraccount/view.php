@@ -216,7 +216,7 @@ if ($export == false) {
                                 <td><?php echo $recording->rcd->Rcd_Title ?></td>
                                 <td><?php echo $recording->rcd->Rcd_Internal_Code ?></td>
                                 <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/recording/view', 'id' => $recording->Rcd_Id)); ?></td>
+                                    <td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/recording/view', 'id' => $recording->Rcd_Id)); ?></td>
                                 <?php } ?>
                             </tr>
                         <?php } ?>
@@ -429,7 +429,7 @@ if ($export == false) {
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/biofiledelete/', 'id' => $uploaded_file->Perf_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/biofiledelete/', 'id' => $uploaded_file->Perf_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
                                 ?>
                             </td>
@@ -475,11 +475,11 @@ if ($export == false) {
                                         $file_path = $uploaded_file->getFilePath();
                                         echo CHtml::link('<i class="fa fa-download"></i>', array('/site/performeraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                         echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                        echo MyHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
                                         echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/performeraccount/update/id/' . $model->Perf_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Perf_Upl_Id), array('title' => 'Edit'));
+                                        echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/performeraccount/update/id/' . $model->Perf_Acc_Id . '/tab/8/fileedit/' . $uploaded_file->Perf_Upl_Id), array('title' => 'Edit'));
                                         echo "&nbsp;&nbsp;";
-                                        echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/filedelete/id/' . $uploaded_file->Perf_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                        echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/performeraccount/filedelete/id/' . $uploaded_file->Perf_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                         ?>
                                     </td>
                                 <?php } ?>

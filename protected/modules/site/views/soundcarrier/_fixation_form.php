@@ -9,17 +9,6 @@
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Sound_Car_Id', array('value' => $sound_car_model->Sound_Car_Id));
-    $works = (new SoundCarrierRightholder)->distinctWorks($sound_car_model->Sound_Car_Id);
-    
-    $titles = array();
-    foreach ($works as $work){
-        if($work->Sound_Car_Right_Work_Type == 'W'){
-            $titles[$work->rightholderWork->Work_GUID] = $work->rightholderWork->Work_Org_Title;
-        }else if($work->Sound_Car_Right_Work_Type == 'R'){
-            $titles[$work->rightholderRecord->Rcd_GUID] = $work->rightholderRecord->Rcd_Title;
-        }
-    }
-    
     echo $form->hiddenField($model, 'Sound_Car_Fix_Work_Type');
 //    $titles = CHtml::listData(Recording::model()->findAll(), 'Rcd_GUID', 'Rcd_Title');
     ?>
@@ -170,9 +159,9 @@ if (!empty($fixations)) {
                             <td><?php echo $fixation->updatedBy->name ?></td>
                             <td>
                                 <?php
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update' , 'id' => $sound_car_model->Sound_Car_Id , 'tab' => 6, 'fixedit' => $fixation->Sound_Car_Fix_Id), array('title' => 'Edit'));
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update' , 'id' => $sound_car_model->Sound_Car_Id , 'tab' => 6, 'fixedit' => $fixation->Sound_Car_Fix_Id), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/fixationdelete' , 'id' => $fixation->Sound_Car_Fix_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/fixationdelete' , 'id' => $fixation->Sound_Car_Fix_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
                             </td>
                         </tr>

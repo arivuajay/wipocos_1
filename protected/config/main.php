@@ -89,6 +89,9 @@ return array(
                 ),
             )
         ),
+        'request' => array(
+            'enableCsrfValidation' => false,
+        ),
     ),
     // application-level parameters that can be accessed
     //setting the basic language value

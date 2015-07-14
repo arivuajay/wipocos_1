@@ -74,9 +74,9 @@ if (!empty($links)) {
                             <td><?php echo $link->rcdProd->Pro_Corporate_Name ?></td>
                             <td>
                                 <?php
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $recording_model->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $recording_model->Rcd_Id . '/tab/5/edit_link/' . $link->Rcd_Link_Id), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/linkdelete/id/' . $link->Rcd_Link_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
                             </td>
                         </tr>

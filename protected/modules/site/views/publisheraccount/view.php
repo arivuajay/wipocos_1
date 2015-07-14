@@ -193,7 +193,7 @@ if ($export == false) {
                                 <td><?php echo $work->work->Work_Org_Title ?></td>
                                 <td><?php echo $work->work->Work_Internal_Code ?></td>
                                 <?php if ($export == false) { ?>
-                                    <td><?php echo CHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
+                                    <td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/work/view', 'id' => $work->Work_Id)); ?></td>
                                 <?php } ?>
                             </tr>
                         <?php } ?>
@@ -408,7 +408,7 @@ if ($export == false) {
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/publisheraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/publisheraccount/biofiledelete/', 'id' => $uploaded_file->Pub_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/publisheraccount/biofiledelete/', 'id' => $uploaded_file->Pub_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
                                 ?>
                             </td>

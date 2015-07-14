@@ -35,7 +35,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -58,10 +58,13 @@ class SoundcarrierController extends Controller {
         $sub_title_model = SoundCarrierSubtitle::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
         $publication_model = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $biograph_model = SoundCarrierBiography::model()->findByAttributes(array('Sound_Car_Id' => $id));
-        $members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code', array(':int_code' => $model->Sound_Car_Id));
+        $work_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'W'));
+        $rcd_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'R'));
+        $fixations = SoundCarrierFixations::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
+        $publications = SoundCarrierPublication::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
 
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model', 'members');
+        $compact = compact('model', 'export', 'sub_title_model', 'publication_model', 'biograph_model', 'work_members', 'rcd_members', 'publications', 'fixations');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();
@@ -87,8 +90,8 @@ class SoundcarrierController extends Controller {
             $model->attributes = $_POST['SoundCarrier'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created SoundCarrier successfully.", "headphones");
-                Yii::app()->user->setFlash('success', 'SoundCarrier Created Successfully!!!');
-                $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => $tab));
+                Yii::app()->user->setFlash('success', 'SoundCarrier Created Successfully!!! Please Fill Documentation');
+                $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => 2));
             }
         }
 
@@ -102,7 +105,7 @@ class SoundcarrierController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1, $edit = NULL, $fixedit = NULL) {
+    public function actionUpdate($id, $tab = 1, $edit = NULL, $fixedit = NULL, $pubedit = NULL) {
         $model = $this->loadModel($id);
         $sub_title_model = $edit == NULL ? new SoundCarrierSubtitle : SoundCarrierSubtitle::model()->findByAttributes(array('Sound_Car_Subtitle_Id' => $edit));
 
@@ -112,8 +115,11 @@ class SoundcarrierController extends Controller {
         $biograph_exists = SoundCarrierBiography::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new SoundCarrierBiography : $biograph_exists;
 
-        $publication_exists = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
-        $publication_model = empty($publication_exists) ? new SoundCarrierPublication : $publication_exists;
+        $publication_model = new SoundCarrierPublication;
+        if($pubedit != NULL){
+            $publication_exists = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Publ_Id' => $pubedit));
+            $publication_model = empty($publication_exists) ? new SoundCarrierPublication : $publication_exists;
+        }
 
         $fixation_model = new SoundCarrierFixations;
         if($fixedit != NULL){
@@ -169,7 +175,10 @@ class SoundcarrierController extends Controller {
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Updated SoundCarrier Documentation successfully.", "headphones");
                 Yii::app()->user->setFlash('success', 'Sound Carrier Documentation Updated Successfully!!!');
-                $this->redirect(array('/site/soundcarrier/update', 'tab' => '2', 'id' => $model->Sound_Car_Id));
+                $doc_tab = 2;
+//                if(empty($right_holder_exists_1) || empty($right_holder_exists_1))
+//                    $doc_tab = 7;
+                $this->redirect(array('/site/soundcarrier/update', 'tab' => $doc_tab, 'id' => $model->Sound_Car_Id));
             }
         } elseif (isset($_POST['SoundCarrierSubtitle'])) {
             $sub_title_model->attributes = $_POST['SoundCarrierSubtitle'];
@@ -294,6 +303,26 @@ class SoundcarrierController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted Sound Carrier Fixation {$model->soundCar->Sound_Car_Title} successfully.");
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/soundcarrier/update', 'id' => $model->soundCar->Sound_Car_Id, 'tab' => 6));
+        }
+    }
+
+    public function actionPublicationdelete($id) {
+        try {
+            $model = SoundCarrierPublication::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Sound Carrier Publication {$model->soundCar->Sound_Car_Title} successfully.", "headphones");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Sound Carrier Publication {$model->soundCar->Sound_Car_Title} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/soundcarrier/update', 'id' => $model->soundCar->Sound_Car_Id, 'tab' => 3));
         }
     }
 

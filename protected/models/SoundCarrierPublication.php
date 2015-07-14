@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{sound_carrier_publication}}':
  * @property integer $Sound_Car_Publ_Id
  * @property integer $Sound_Car_Id
+ * @property string $Sound_Car_Publ_GUID
  * @property string $Sound_Car_Publ_Internal_Code
  * @property string $Sound_Car_Publ_Year
  * @property integer $Sound_Car_Publ_Country_Id
@@ -46,12 +47,12 @@ class SoundCarrierPublication extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Id, Sound_Car_Publ_Internal_Code, Sound_Car_Publ_Year, Sound_Car_Publ_Country_Id, Sound_Car_Publ_Prod_Nation_Id, Sound_Car_Publ_Studio', 'required'),
+            array('Sound_Car_Id, Sound_Car_Publ_Internal_Code, Sound_Car_Publ_Year, Sound_Car_Publ_Country_Id, Sound_Car_Publ_Prod_Nation_Id, Sound_Car_Publ_Studio, Sound_Car_Publ_GUID', 'required'),
             array('Sound_Car_Id, Sound_Car_Publ_Country_Id, Sound_Car_Publ_Prod_Nation_Id, Sound_Car_Publ_Studio, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Sound_Car_Publ_Internal_Code', 'length', 'max' => 100),
             array('Sound_Car_Publ_Year', 'length', 'max' => 4),
             array('Sound_Car_Publ_Year', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Sound_Car_Publ_GUID, Sound_Car_Publ_Work_Type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Sound_Car_Publ_Id, Sound_Car_Id, Sound_Car_Publ_Internal_Code, Sound_Car_Publ_Year, Sound_Car_Publ_Country_Id, Sound_Car_Publ_Prod_Nation_Id, Sound_Car_Publ_Studio, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -71,6 +72,8 @@ class SoundCarrierPublication extends RActiveRecord {
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
+            'soundCarRecord' => array(self::BELONGS_TO, 'Recording', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Rcd_GUID')),
+            'soundCarWork' => array(self::BELONGS_TO, 'Work', 'Sound_Car_Fix_GUID', 'foreignKey' => array('Sound_Car_Publ_GUID' => 'Work_GUID')),
         );
     }
 
@@ -81,6 +84,7 @@ class SoundCarrierPublication extends RActiveRecord {
         return array(
             'Sound_Car_Publ_Id' => 'Sound Car Publ',
             'Sound_Car_Id' => 'Sound Car',
+            'Sound_Car_Publ_GUID' => 'Title',
             'Sound_Car_Publ_Internal_Code' => 'Internal Code',
             'Sound_Car_Publ_Year' => 'Year',
             'Sound_Car_Publ_Country_Id' => 'Country',

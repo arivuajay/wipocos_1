@@ -24,6 +24,17 @@ $mediums = Myclass::getMasterMedium();
 $countries = Myclass::getMasterCountry();
 $manfs = Myclass::getMasterManufacturer();
 $studios = Myclass::getMasterStudio();
+
+$works = (new SoundCarrierRightholder)->distinctWorks($model->Sound_Car_Id);
+$titles = array();
+foreach ($works as $work){
+    if($work->Sound_Car_Right_Work_Type == 'W'){
+        $titles[$work->rightholderWork->Work_GUID] = $work->rightholderWork->Work_Org_Title;
+    }else if($work->Sound_Car_Right_Work_Type == 'R'){
+        $titles[$work->rightholderRecord->Rcd_GUID] = $work->rightholderRecord->Rcd_Title;
+    }
+}
+
 ?>
 
 <div class="row">
@@ -31,21 +42,22 @@ $studios = Myclass::getMasterStudio();
         <?php
         $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = true;
         if (!$model->isNewRecord) {
-            $doc_tab_validation = !$model->isNewRecord;
-            $rgt_tab_validation = !$model->isNewRecord;
+            $doc_tab_validation = true;
+            $rgt_tab_validation = !$document_model->isNewRecord;
+            $fix_tab_validation = $pub_tab_validation = !empty($right_holder_exists_1) || !empty($right_holder_exists_2);
             $other_tab_validation = true;
         } else {
-            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = false;
+            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $fix_tab_validation = $pub_tab_validation = false;
         }
         ?>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Works</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Recordings</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Works</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders - Recordings</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($fix_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($pub_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
@@ -195,15 +207,15 @@ $studios = Myclass::getMasterStudio();
                 </div>
                 <div class="tab-pane" id="tab_2">
                     <?php
-                    if ($other_tab_validation) {
+                    if ($doc_tab_validation) {
                         $this->renderPartial('_documentation_form', array('model' => $document_model, 'sound_car_model' => $model));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_3">
                     <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_publication_form', array('model' => $publication_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios));
+                    if ($pub_tab_validation) {
+                        $this->renderPartial('_publication_form', array('model' => $publication_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios, 'titles' => $titles));
                     }
                     ?>
                 </div>
@@ -223,21 +235,21 @@ $studios = Myclass::getMasterStudio();
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
-                    if ($other_tab_validation) {
-                        $this->renderPartial('_fixation_form', array('model' => $fixation_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios));
+                    if ($fix_tab_validation) {
+                        $this->renderPartial('_fixation_form', array('model' => $fixation_model, 'sound_car_model' => $model, 'countries' => $countries, 'studios' => $studios, 'titles' => $titles));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_7">
                     <?php
-                    if ($other_tab_validation) {
+                    if ($rgt_tab_validation) {
                         $this->renderPartial('_rightholder_form_1', array('model' => $right_holder_model, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_1));
                     }
                     ?>
                 </div>
                 <div class="tab-pane" id="tab_8">
                     <?php
-                    if ($other_tab_validation) {
+                    if ($rgt_tab_validation) {
                         $this->renderPartial('_rightholder_form_2', array('model' => $right_holder_model, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_2));
                     }
                     ?>

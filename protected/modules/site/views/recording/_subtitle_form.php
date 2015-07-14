@@ -83,9 +83,9 @@ if (!empty($sub_titles)) {
                             <td><?php echo $sub_title->updatedBy->name ?></td>
                             <td>
                                 <?php
-                                echo CHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $recording_model->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $recording_model->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
                             </td>
                         </tr>

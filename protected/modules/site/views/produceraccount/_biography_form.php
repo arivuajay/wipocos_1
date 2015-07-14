@@ -149,7 +149,7 @@ if (!empty($uploaded_files)) {
                                 <?php
                                 echo CHtml::link('<i class="fa fa-download"></i>', array('/site/produceraccount/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
                                 echo "&nbsp;&nbsp;";
-                                echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/produceraccount/biofiledelete/', 'id' => $uploaded_file->Pro_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/produceraccount/biofiledelete/', 'id' => $uploaded_file->Pro_Biogrph_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 $this->widget("ext.magnific-popup.EMagnificPopup", array('target' => ".popup-link{$i}"));
                                 ?>
                             </td>

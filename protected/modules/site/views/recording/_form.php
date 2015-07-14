@@ -126,7 +126,6 @@ $labels = Myclass::getMasterLabel();
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <?php echo $form->textField($model, 'duration_hours', array('class' => 'form-control')); ?>
-                                            <?php echo $form->error($model, 'duration_hours'); ?>
                                         </div>
                                         <div class="col-lg-4">
                                             <?php echo $form->textField($model, 'duration_minutes', array('class' => 'form-control')); ?>
@@ -137,6 +136,10 @@ $labels = Myclass::getMasterLabel();
                                             <?php echo $form->error($model, 'duration_seconds'); ?>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <?php echo $form->error($model, 'duration_hours'); ?>
                                 </div>
 
                                 <div class="form-group">
