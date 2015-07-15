@@ -2,7 +2,7 @@
 /* @var $this MasterdestinationController */
 /* @var $model MasterDestination */
 
-$this->title='Update Master Destinations: '. $model->Master_Dist_Id;
+$this->title='Update Master Destinations: '. $model->Dist_Name;
 $this->breadcrumbs=array(
 	'Master Destinations'=>array('index'),
 	'Update Master Destinations',

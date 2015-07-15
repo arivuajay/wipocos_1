@@ -148,6 +148,40 @@ $this->breadcrumbs = array(
             echo 'No data created';
         }
         ?>
+                <h4>Folio</h4>
+        <?php
+        if (!empty($folios)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo RecordingSessionFolio::model()->getAttributeLabel('Rcd_Ses_Folio_Name') ?></th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($folios as $key => $folio) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $folio->Rcd_Ses_Folio_Name ?></td>
+                            <td><?php echo $folio->createdBy->name ?></td>
+                            <td><?php echo $folio->updatedBy->name ?></td>
+                            <td>
+                                <?php
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update', 'id' => $folio->Rcd_Ses_Id, 'tab' => 6, 'foledit' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/foliodelete', 'id' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
     </div>
     <div class="user-view col-lg-6">
         <h4>Documentation</h4>
@@ -243,7 +277,56 @@ $this->breadcrumbs = array(
                     <?php } ?>
                 </tbody>
             </table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+
+    <div class="user-view col-lg-12">
+        <h4>Right Holders</h4>
         <?php
+        if (!empty($rcd_members)) {
+            ?>
+            <div>
+                <span>Created By: <?php echo $rcd_members[0]->createdBy->name ?></span><br />
+                <span>Updated By: <?php echo $rcd_members[0]->updatedBy->name ?></span><br /><br />
+            </div>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Right Holder name</th>
+                            <th>Internal Code</th>
+                            <th>Recording</th>
+                            <th>Role</th>
+                            <th>Equal Remuneration Points</th>
+                            <th>Blank Levy Points</th>
+                            <?php if ($export == false) { ?>
+                                        <!--<th>Action</th>-->
+                            <?php } ?>
+                        </tr>
+                        <?php
+                        foreach ($rcd_members as $key => $rcd_member) {
+                            ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $rcd_member->rightholderPerformer->fullname; ?></td>
+                                <td><?php echo $rcd_member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                <td><?php echo $rcd_member->rightholderRecord->Rcd_Title; ?></td>
+                                <td><?php echo $rcd_member->rcdSesRightRole->rolename; ?></td>
+                                <td><?php echo $rcd_member->Rcd_Ses_Right_Equal_Share; ?></td>
+                                <td><?php echo $rcd_member->Rcd_Ses_Right_Blank_Share; ?></td>
+                                <?php if ($export == false) { ?>
+                                            <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
         } else {
             echo 'No data created';
         }

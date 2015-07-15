@@ -100,7 +100,7 @@ class UserIdentity extends CUserIdentity {
                 $insert_actions = array('create', 'insertright', 'insertlabel');
                 $update_actions = array('update');
                 $view_actions = array('index', 'view', 'download', 'print', 'pdf', 'searchright', 'contractexpiry');
-                $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove', 'publicationdelete', 'fixationdelete');
+                $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove', 'publicationdelete', 'fixationdelete', 'foliodelete');
                 $other_actions = array();
 
                 if (in_array($action, $insert_actions)) {

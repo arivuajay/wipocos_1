@@ -175,10 +175,17 @@ class SoundcarrierController extends Controller {
             $document_model->attributes = $_POST['SoundCarrierDocumentation'];
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Updated SoundCarrier Documentation successfully.", "headphones");
-                Yii::app()->user->setFlash('success', 'Sound Carrier Documentation Updated Successfully!!!');
                 $doc_tab = 2;
-//                if(empty($right_holder_exists_1) || empty($right_holder_exists_1))
-//                    $doc_tab = 7;
+                $message = 'Sound Carrier Documentation Updated Successfully!!!';
+                if(empty($right_holder_exists_2)){
+                    $doc_tab = 8;
+                    $message = 'Sound Carrier Documentation Updated Successfully!!!. Please Fill RightHolders - Recordings';
+                    if(empty($right_holder_exists_1)){
+                        $message = 'Sound Carrier Documentation Updated Successfully!!!. Please Fill RightHolders - Works';
+                        $doc_tab = 7;
+                    }
+                }
+                Yii::app()->user->setFlash('success', $message);
                 $this->redirect(array('/site/soundcarrier/update', 'tab' => $doc_tab, 'id' => $model->Sound_Car_Id));
             }
         } elseif (isset($_POST['SoundCarrierSubtitle'])) {

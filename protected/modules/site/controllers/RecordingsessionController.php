@@ -35,7 +35,7 @@ class RecordingsessionController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete', 'insertright', 'foliodelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -59,9 +59,11 @@ class RecordingsessionController extends Controller {
         $sub_title_model = RecordingSessionSubtitle::model()->findAllByAttributes(array('Rcd_Ses_Id' => $id));
         $biograph_model = RecordingSessionBiography::model()->findByAttributes(array('Rcd_Ses_Id' => $id));
         $document_model = RecordingSessionDocumentation::model()->findByAttributes(array('Rcd_Ses_Id' => $id));
+        $rcd_members = RecordingSessionRightholder::model()->findAll('Rcd_Ses_Id = :int_code And Rcd_Ses_Right_Work_Type = :work_type', array(':int_code' => $model->Rcd_Ses_Id, ':work_type' => 'R'));
+        $folios = RecordingSessionFolio::model()->findAllByAttributes(array('Rcd_Ses_Id' => $id));
         
         $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
-        $compact = compact('model', 'export', 'sub_title_model', 'biograph_model', 'document_model');
+        $compact = compact('model', 'export', 'sub_title_model', 'biograph_model', 'document_model', 'rcd_members', 'folios');
         if ($export) {
             $mPDF1 = Yii::app()->ePdf->mpdf();
             $stylesheet = $this->pdfStyles();
@@ -88,7 +90,7 @@ class RecordingsessionController extends Controller {
             if ($model->save()) {
                 Myclass::addAuditTrail("Created RecordingSession successfully.", "user");
                 Yii::app()->user->setFlash('success', 'RecordingSession Created Successfully!!!');
-                $this->redirect(array('/site/recordingsession/index'));
+                $this->redirect(array('/site/recordingsession/update', 'tab' => 1, 'id' => $model->Rcd_Ses_Id));
             }
         }
 
@@ -102,9 +104,10 @@ class RecordingsessionController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1, $edit = NULL, $fixedit = NULL, $pubedit = NULL) {
+    public function actionUpdate($id, $tab = 1, $edit = NULL, $foledit = NULL) {
         $model = $this->loadModel($id);
         $sub_title_model = $edit == NULL ? new RecordingSessionSubtitle : RecordingSessionSubtitle::model()->findByAttributes(array('Rcd_Ses_Subtitle_Id' => $edit));
+        $folio_model = $foledit == NULL ? new RecordingSessionFolio : RecordingSessionFolio::model()->findByAttributes(array('Rcd_Ses_Folio_Id' => $foledit));
 
         $document_exists = RecordingSessionDocumentation::model()->findByAttributes(array('Rcd_Ses_Id' => $id));
         $document_model = empty($document_exists) ? new RecordingSessionDocumentation : $document_exists;
@@ -112,9 +115,12 @@ class RecordingsessionController extends Controller {
         $biograph_exists = RecordingSessionBiography::model()->findByAttributes(array('Rcd_Ses_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new RecordingSessionBiography : $biograph_exists;
         
+        $right_holder_exists = RecordingSessionRightholder::model()->findAllByAttributes(array('Rcd_Ses_Id' => $id, 'Rcd_Ses_Right_Work_Type' => 'R'));
+        $right_holder_model = new RecordingSessionRightholder;
+        
         $biograph_upload_model = new RecordingSessionBiographUploads;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $document_model, $biograph_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $document_model, $biograph_model, $right_holder_model, $folio_model));
 
         if (isset($_POST['RecordingSession'])) {
             $model->attributes = $_POST['RecordingSession'];
@@ -168,9 +174,16 @@ class RecordingsessionController extends Controller {
 //                    $doc_tab = 7;
                 $this->redirect(array('/site/recordingsession/update', 'tab' => $doc_tab, 'id' => $model->Rcd_Ses_Id));
             }
+        } elseif (isset($_POST['RecordingSessionFolio'])) {
+            $folio_model->attributes = $_POST['RecordingSessionFolio'];
+            if ($folio_model->save()) {
+                Myclass::addAuditTrail("Saved RecordingSession Folio successfully.", "file-audio-o");
+                Yii::app()->user->setFlash('success', 'Recording Session Folio Saved Successfully!!!');
+                $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => 6));
+            }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model', 'right_holder_exists', 'right_holder_model', 'folio_model'));
     }
 
     /**
@@ -181,7 +194,17 @@ class RecordingsessionController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            $uploads = $model->recordingSessionBiographies->recordingSessionBiographUploads;
             $model->delete();
+            //file remove
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $path = UPLOAD_DIR . $upload->Rcd_Ses_Biogrph_Upl_File;
+                    if (is_file($path))
+                        unlink($path);
+                }
+            }
+            //end
             Myclass::addAuditTrail("Deleted RecordingSession successfully.", "user");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
@@ -254,7 +277,6 @@ class RecordingsessionController extends Controller {
         $model = RecordingSessionBiographUploads::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        $bio_id = $model->Rcd_Ses_Biogrph_Id;
 
         $model->setUploadDirectory(UPLOAD_DIR);
         try {
@@ -273,6 +295,68 @@ class RecordingsessionController extends Controller {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->rcdSesBiogrph->rcdSes->Rcd_Ses_Title} successfully.");
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/recordingsession/update', 'id' => $model->rcdSesBiogrph->Rcd_Ses_Id, 'tab' => 4));
         }
+    }
+    
+    public function actionFoliodelete($id) {
+        $model = RecordingSessionFolio::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+
+        try {
+            $model->delete();
+            Myclass::addAuditTrail("Deleted a Folio from {$model->rcdSes->Rcd_Ses_Title} successfully.", "file-audio-o");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted a Folio from {$model->rcdSes->Rcd_Ses_Title} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => 6));
+        }
+    }
+    
+    public function actionInsertright() {
+        if (isset($_POST['RecordingSessionRightholder']) && !empty($_POST['RecordingSessionRightholder'])) {
+            $end = end($_POST['RecordingSessionRightholder']);
+            $record_ses_id = $end['Rcd_Ses_Id'];
+            
+            $created_by = $updated_by = '';
+            $created_date = date('Y-m-d H:i:s');
+            $updated_by = "0000-00-00 00:00:00";
+            $holders = RecordingSessionRightholder::model()->findAllByAttributes(array('Rcd_Ses_Id' => $record_ses_id, 'Rcd_Ses_Right_Work_Type' => $end['Rcd_Ses_Right_Work_Type']));
+            if(empty($holders)){
+                $created_by = Yii::app()->user->id;
+            }else{
+                $created_by = $holders[0]->Created_By;
+                $created_date = $holders[0]->Created_Date;
+                $updated_by = Yii::app()->user->id;
+                $updated_date = date('Y-m-d H:i:s');
+            }
+            
+            RecordingSessionRightholder::model()->deleteAllByAttributes(array('Rcd_Ses_Id' => $record_ses_id, 'Rcd_Ses_Right_Work_Type' => $end['Rcd_Ses_Right_Work_Type']));
+            $valid = true;
+            foreach ($_POST['RecordingSessionRightholder'] as $values) {
+                $model = new RecordingSessionRightholder;
+                $model->attributes = $values;
+                $model->setAttribute('Created_By', $created_by);
+                $model->setAttribute('Updated_By', $updated_by);
+                $model->setAttribute('Created_Date', $created_date);
+                $model->setAttribute('Rowversion', $updated_date);
+                $valid = $valid && $model->save(false);
+                if ($valid)
+                    Myclass::addAuditTrail("Created Right Holder saved for {$model->rcdSes->Rcd_Ses_Title} successfully.", "fa file-audio-o");
+            }
+            if ($valid)
+                Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
+            $tab = $end['Rcd_Ses_Right_Work_Type'] == 'W' ? 1 : 5;
+            $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => $tab));
+        }
+        exit;
     }
     /**
      * Returns the data model based on the primary key given in the GET variable.
@@ -293,7 +377,7 @@ class RecordingsessionController extends Controller {
      * @param RecordingSession $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form')) {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form' || $_POST['ajax'] === 'session-rightholder-form-2' || $_POST['ajax'] === 'recording-session-folio-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

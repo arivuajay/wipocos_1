@@ -68,6 +68,7 @@ class RecordingSession extends RActiveRecord {
             array('Rcd_Ses_Title, Rcd_Ses_Internal_Code, Rcd_Ses_Orchestra, Rcd_Ses_Ref_Medium', 'length', 'max' => 50),
             array('Rcd_Ses_Release_Year', 'length', 'max' => 4),
             array('Rcd_Ses_Internal_Code', 'unique'),
+            array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Ses_Id, Rcd_Ses_GUID, Rcd_Ses_Title, Rcd_Ses_Internal_Code, Rcd_Ses_Language_Id, Rcd_Ses_Orchestra, Rcd_Ses_Ref_Medium, Rcd_Ses_Hours, Rcd_Ses_Record_Date, Rcd_Ses_Studio_Id, Rcd_Ses_Producer, Rcd_Ses_Main_Artist, Rcd_Ses_Medium_Id, Rcd_Ses_Type_Id, Rcd_Ses_Destination_Id, Rcd_Ses_Country_Id, Rcd_Ses_Factor_Id, Rcd_Ses_Release_Year', 'safe', 'on' => 'search'),
@@ -185,4 +186,10 @@ class RecordingSession extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::RECORDING_SESSION_CODE);
+        }
+        return parent::afterSave();
+    }
 }

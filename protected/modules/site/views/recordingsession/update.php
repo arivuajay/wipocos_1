@@ -10,4 +10,5 @@ $this->breadcrumbs=array(
 ?>
 
 <div class="user-create">
-    <?php $this->renderPartial('_form', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model')); ?></div>
+    <?php $this->renderPartial('_form', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model', 'right_holder_exists', 'right_holder_model', 'folio_model')); ?>
+</div>

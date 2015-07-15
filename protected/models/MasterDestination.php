@@ -35,7 +35,7 @@ class MasterDestination extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Dist_Name', 'required'),
+            array('Dist_Name, Dist_Code', 'required'),
             array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Dist_Name', 'length', 'max' => 100),
             array('Dist_Code', 'length', 'max' => 50),
@@ -63,8 +63,8 @@ class MasterDestination extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_Dist_Id' => 'Master Dist',
-            'Dist_Name' => 'Dist Name',
-            'Dist_Code' => 'Dist Code',
+            'Dist_Name' => 'Destination',
+            'Dist_Code' => 'Code',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

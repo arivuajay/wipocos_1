@@ -1,9 +1,9 @@
 <div class="box box-primary" id="rght_2">
     <?php
-    $sound_car_id = $sound_car_model->Sound_Car_Id;
+    $sound_car_id = $record_ses_model->Rcd_Ses_Id;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'record-rightholder-search-form-rec-2',
-        'action' => $this->createUrl('/site/soundcarrier/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/recordingsession/update', array('id' => $record_ses_model->Rcd_Ses_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -42,7 +42,7 @@
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'record-rightholder-search-form-rec',
-        'action' => $this->createUrl('/site/soundcarrier/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '7')),
+        'action' => $this->createUrl('/site/recordingsession/update', array('id' => $record_ses_model->Rcd_Ses_Id, 'tab' => '7')),
         'method' => 'get',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal', 'onsubmit' => "return false;"),
     ));
@@ -58,8 +58,8 @@
     
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'sound-carrier-rightholder-form-2',
-        'action' => $this->createUrl('/site/soundcarrier/update', array('id' => $sound_car_model->Sound_Car_Id, 'tab' => '8')),
+        'id' => 'session-rightholder-form-2',
+        'action' => $this->createUrl('/site/recordingsession/update', array('id' => $record_ses_model->Rcd_Ses_Id, 'tab' => '8')),
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
@@ -67,11 +67,11 @@
         ),
         'enableAjaxValidation' => true,
     ));
-    echo $form->hiddenField($model, 'Sound_Car_Id', array('value' => $sound_car_model->Sound_Car_Id));
-    echo $form->hiddenField($model, 'Sound_Car_Right_Member_Internal_Code');
-    echo $form->hiddenField($model, 'Sound_Car_Right_Member_GUID');
-    echo $form->hiddenField($model, 'Sound_Car_Right_Work_GUID');
-    echo $form->hiddenField($model, 'Sound_Car_Right_Work_Type', array('value' => 'R'));
+    echo $form->hiddenField($model, 'Rcd_Ses_Id', array('value' => $record_ses_model->Rcd_Ses_Id));
+    echo $form->hiddenField($model, 'Rcd_Ses_Right_Member_Internal_Code');
+    echo $form->hiddenField($model, 'Rcd_Ses_Right_Member_GUID');
+    echo $form->hiddenField($model, 'Rcd_Ses_Right_Work_GUID');
+    echo $form->hiddenField($model, 'Rcd_Ses_Right_Work_Type', array('value' => 'R'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
     
@@ -82,14 +82,14 @@
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Sound_Car_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
+                            <?php echo $form->labelEx($model, 'Rcd_Ses_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
                                 $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
-                                echo $form->dropDownList($model, 'Sound_Car_Right_Role', array(), array('class' => 'form-control default-role'));
-                                echo $form->dropDownList($model, 'Sound_Car_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
+                                echo $form->dropDownList($model, 'Rcd_Ses_Right_Role', array(), array('class' => 'form-control default-role'));
+                                echo $form->dropDownList($model, 'Rcd_Ses_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
-                                <?php echo $form->error($model, 'Sound_Car_Right_Role'); ?>
+                                <?php echo $form->error($model, 'Rcd_Ses_Right_Role'); ?>
                             </div>
                         </div>
                     </div>
@@ -107,15 +107,15 @@
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Sound_Car_Right_Equal_Share', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Sound_Car_Right_Equal_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
-                            <?php echo $form->error($model, 'Sound_Car_Right_Equal_Share'); ?>
+                            <?php echo $form->labelEx($model, 'Rcd_Ses_Right_Equal_Share', array('class' => '')); ?>
+                            <?php echo $form->textField($model, 'Rcd_Ses_Right_Equal_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->error($model, 'Rcd_Ses_Right_Equal_Share'); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Sound_Car_Right_Equal_Org_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Sound_Car_Right_Equal_Org_Id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
-                            <?php echo $form->error($model, 'Sound_Car_Right_Equal_Org_Id'); ?>
+                            <?php echo $form->labelEx($model, 'Rcd_Ses_Right_Equal_Org_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Rcd_Ses_Right_Equal_Org_Id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
+                            <?php echo $form->error($model, 'Rcd_Ses_Right_Equal_Org_Id'); ?>
                         </div>
 
                     </div>
@@ -133,15 +133,15 @@
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Sound_Car_Right_Blank_Share', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Sound_Car_Right_Blank_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
-                            <?php echo $form->error($model, 'Sound_Car_Right_Blank_Share'); ?>
+                            <?php echo $form->labelEx($model, 'Rcd_Ses_Right_Blank_Share', array('class' => '')); ?>
+                            <?php echo $form->textField($model, 'Rcd_Ses_Right_Blank_Share', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->error($model, 'Rcd_Ses_Right_Blank_Share'); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Sound_Car_Right_Blank_Org_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Sound_Car_Right_Blank_Org_Id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
-                            <?php echo $form->error($model, 'Sound_Car_Right_Blank_Org_Id'); ?>
+                            <?php echo $form->labelEx($model, 'Rcd_Ses_Right_Blank_Org_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Rcd_Ses_Right_Blank_Org_Id', $organizations, array('class' => 'form-control', 'readonly' => 'readonly')); ?>
+                            <?php echo $form->error($model, 'Rcd_Ses_Right_Blank_Org_Id'); ?>
                         </div>
                     </div>
                 </div>
@@ -155,8 +155,8 @@
                     <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-primary', 'id' => 'right_insert')); ?>
                 </div>
                 <div class="col-lg-11 help-block">
-                    <?php echo $form->error($model, 'Sound_Car_Right_Member_GUID'); ?>
-                    <?php echo $form->error($model, 'Sound_Car_Right_Work_GUID'); ?>
+                    <?php echo $form->error($model, 'Rcd_Ses_Right_Member_GUID'); ?>
+                    <?php echo $form->error($model, 'Rcd_Ses_Right_Work_GUID'); ?>
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
         <div class="col-lg-12">
             <div class="box-body">
                 <div class="form-group foundation">
-                    <?php echo CHtml::form(array('/site/soundcarrier/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
+                    <?php echo CHtml::form(array('/site/recordingsession/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
                         <h3 class="box-title">Linked Rightholders</h3>
                     </div>
@@ -192,25 +192,25 @@
                                             <td><?php echo $member->rightholderPerformer->fullname; ?></td>
                                             <td><?php echo $member->rightholderPerformer->Perf_Internal_Code; ?></td>
                                             <td><?php echo $member->rightholderRecord->Rcd_Title; ?></td>
-                                            <td><?php echo $member->soundCarRightRole->rolename; ?></td>
-                                            <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
-                                            <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
+                                            <td><?php echo $member->rcdSesRightRole->rolename; ?></td>
+                                            <td><?php echo $member->Rcd_Ses_Right_Equal_Share; ?></td>
+                                            <td><?php echo $member->Rcd_Ses_Right_Blank_Share; ?></td>
                                             <td>
-                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-mcshare' => $member->Sound_Car_Right_Equal_Share, 'data-brshare' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-mcshare' => $member->Rcd_Ses_Right_Equal_Share, 'data-brshare' => $member->Rcd_Ses_Right_Blank_Share)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
                                                 <?php
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Id]", $member->Sound_Car_Id);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Member_GUID]", $member->Sound_Car_Right_Member_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_GUID]", $member->Sound_Car_Right_Work_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Member_Internal_Code]", $member->rightholderPerformer->Perf_Internal_Code);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Role]", $member->Sound_Car_Right_Role, array('data-rcd' => $member->Sound_Car_Right_Role, 'class' => 'rcd'));
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Equal_Share]", $member->Sound_Car_Right_Equal_Share);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Equal_Org_Id]", $member->Sound_Car_Right_Equal_Org_Id);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Share]", $member->Sound_Car_Right_Blank_Share);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Org_Id]", $member->Sound_Car_Right_Blank_Org_Id);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_Type]", $member->Sound_Car_Right_Work_Type);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Id]", $member->Rcd_Ses_Id);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Member_GUID]", $member->Rcd_Ses_Right_Member_GUID);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Work_GUID]", $member->Rcd_Ses_Right_Work_GUID);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Member_Internal_Code]", $member->rightholderPerformer->Perf_Internal_Code);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Role]", $member->Rcd_Ses_Right_Role, array('data-rcd' => $member->Rcd_Ses_Right_Role, 'class' => 'rcd'));
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Equal_Share]", $member->Rcd_Ses_Right_Equal_Share);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Equal_Org_Id]", $member->Rcd_Ses_Right_Equal_Org_Id);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Blank_Share]", $member->Rcd_Ses_Right_Blank_Share);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Blank_Org_Id]", $member->Rcd_Ses_Right_Blank_Org_Id);
+                                                echo CHtml::hiddenField("RecordingSessionRightholder[{$key}][Rcd_Ses_Right_Work_Type]", $member->Rcd_Ses_Right_Work_Type);
                                                 ?>
                                             </td>
                                         </tr>
@@ -324,6 +324,7 @@ $this->beginWidget(
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecords");
 $search_performer_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecordperformers");
+$get_roles_point_url = Yii::app()->createAbsoluteUrl("site/sharedefinitionperrole/getpoint");
 
 $js = <<< EOD
     var rowCount2 = $('#linked-holders-rec tbody tr').length;
@@ -342,8 +343,8 @@ $js = <<< EOD
                 success:function(data){
                     $("#search_right_result_rec").html(data);
                     $('#rght_2 .user-role-dropdown select.performer-role').val('');
-                    $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
-                    $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Work_GUID').val('');
+                    $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val('');
+                    $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val('');
                     $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
                     $("#link-performer-rec-div").addClass('hide');
                },
@@ -361,7 +362,7 @@ $js = <<< EOD
         });
         $('body').on('click','#record_search tbody tr', function(){
             $("#link-performer-rec-div").removeClass('hide');
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Work_GUID').val($(this).data('uid'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val($(this).data('uid'));
             $.ajax({
                 type: 'GET',
                 url: '$search_performer_url',
@@ -377,8 +378,8 @@ $js = <<< EOD
         });
         $('body').on('click','#link-performer-rec tr', function(){
             $("#add-performer-rec").attr('disabled', false);
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val($(this).data('uid'));
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_Internal_Code').val($(this).data('intcode'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val($(this).data('uid'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_Internal_Code').val($(this).data('intcode'));
         });
         
         $('body').on('click','#temp_click_new_performer', function(){
@@ -417,9 +418,9 @@ $js = <<< EOD
             _brshare = $(this).data('brshare');
             _mcshare =  $(this).data('mcshare');
 
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_brshare);
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_mcshare);
-            console.log($('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share').val(_brshare);
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Share').val(_mcshare);
+            console.log($('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share'));
         
             $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
         
@@ -430,15 +431,15 @@ $js = <<< EOD
         
         $('body').on('click','#linked-holders-rec tr', function(){
             _work_uid =  $(this).data('work-uid');
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Work_GUID').val(_work_uid);
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val(_work_uid);
         });
         
         $('body').on('click','#linked-holders-rec tr, #link-performer-rec tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
             _intcode =  $(this).data('intcode');
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val(_uid);
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_Internal_Code').val(_intcode);
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val(_uid);
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_Internal_Code').val(_intcode);
             $('#rght_2 .user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('#rght_2 .user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
         });
@@ -507,35 +508,35 @@ $js = <<< EOD
                     name = name.replace("[","[" + rowCount2 + "][");
                     //set hidden form values
                     
-                    if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Role]"){
+                    if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Role]"){
                         tr += '<td class="hide"><input class="rcd" data-rcd = "' + value['value'] + '" type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }else{
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }
 
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]"){
                         tr += '<td>';
                     }
                     var td_content = '';
-                    if (value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Equal_Share]" || value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Blank_Share]") {
+                    if (value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Share]" || value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Share]") {
                         td_content = parseFloat(value['value']).toFixed(2);
-                    }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Role]"){
+                    }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Role]"){
                         td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
-                    }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Id]"){
+                    }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Id]"){
                         td_content = chk_tr.length == 1 ? chk_tr.data('name') : _name;
-                    }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Member_Internal_Code]"){
+                    }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Member_Internal_Code]"){
                         td_content = chk_tr.length == 1 ? _intcode : value['value'];
-                    }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Work_GUID]"){
+                    }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Work_GUID]"){
                         td_content = chk_tr.length == 1 ? chk_tr.data('work-name') : _work_name;
                     }
                     tr += td_content;
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]"){
                         tr += '</td>';
                     }
                 }
             });
-            _mcshare = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
-            _brshare = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
+            _mcshare = $("#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Share").val();
+            _brshare = $("#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share").val();
         
             tr += '<td>';
             tr += '<a href="#role-foundation" data-mcshare="'+_mcshare+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
@@ -550,7 +551,7 @@ $js = <<< EOD
             }
             rowCount2++;
         
-            $('#sound-carrier-rightholder-form-2')[0].reset();
+            $('#session-rightholder-form-2')[0].reset();
             $('#rght_2 .loader').hide();
             $("#rght_2 #right_insert").removeAttr("disabled");
             $("#rght_2 #right_insert").val('Add');
@@ -559,6 +560,22 @@ $js = <<< EOD
             checkShare2();
         }
         return false;
+    }
+        
+    function getPoint(_id, _form_id){
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '$get_roles_point_url',
+            data:{id: _id},
+            success:function(data){
+                $("#rght_"+_form_id+" #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share").val(data.equ_remn);
+                $("#rght_"+_form_id+" #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Share").val(data.blk_tp);
+           },
+            error: function(data) {
+                alert("Something went wrong. Try again");
+            },
+        });
     }
         
 EOD;

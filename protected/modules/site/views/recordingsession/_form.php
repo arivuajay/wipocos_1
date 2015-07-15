@@ -38,8 +38,10 @@ $destinations = Myclass::getMasterDestination();
             <ul class="nav nav-tabs">
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Folio</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -198,6 +200,20 @@ $destinations = Myclass::getMasterDestination();
                     <?php
                     if ($other_tab_validation) {
                         $this->renderPartial('_biography_form', array('model' => $biograph_model, 'record_ses_model' => $model, 'biograph_upload_model' => $biograph_upload_model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_5">
+                    <?php
+                    if ($rgt_tab_validation) {
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'record_ses_model' => $model, 'exists_model' => $right_holder_exists));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_6">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_folio_form', array('model' => $folio_model, 'record_ses_model' => $model));
                     }
                     ?>
                 </div>

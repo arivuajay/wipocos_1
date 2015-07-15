@@ -36,7 +36,7 @@ class SoundCarrierBiographUploads extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Biogrph_Id, Sound_Car_Biogrph_Upl_File', 'required'),
+            array('Sound_Car_Biogrph_Id', 'required'),
             array('Sound_Car_Biogrph_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Sound_Car_Biogrph_Upl_File', 'file', 'types' => self::ACCESS_TYPES, 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::IMAGE_SIZE, 'tooLarge' => 'File should be smaller than ' . self::IMAGE_SIZE . 'MB'),
             array('Sound_Car_Biogrph_Upl_File', 'length', 'max' => 500),

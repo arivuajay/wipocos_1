@@ -64,10 +64,10 @@ class SoundCarrier extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_GUID, Sound_Car_Title, Sound_Car_Internal_Code, Sound_Car_Standardized_Code, Sound_Car_Medium, Sound_Car_Main_Artist, Sound_Car_Producer, Sound_Car_Product_Country_Id, Sound_Car_Year, Sound_Car_Release_Year, Sound_Car_Manf_Id', 'required'),
+            array('Sound_Car_GUID, Sound_Car_Title, Sound_Car_Internal_Code, Sound_Car_Medium, Sound_Car_Main_Artist, Sound_Car_Producer, Sound_Car_Product_Country_Id, Sound_Car_Year, Sound_Car_Release_Year, Sound_Car_Manf_Id', 'required'),
             array('Sound_Car_Language_Id, Sound_Car_Type_Id, Sound_Car_Product_Country_Id, Sound_Car_Manf_Id, Created_By, Updated_By, Sound_Car_Main_Artist, Sound_Car_Producer, Sound_Car_Medium', 'numerical', 'integerOnly' => true),
             array('Sound_Car_GUID', 'length', 'max' => 50),
-            array('Sound_Car_Title, Sound_Car_Internal_Code, Sound_Car_Standardized_Code', 'unique'),
+            array('Sound_Car_Title, Sound_Car_Internal_Code', 'unique'),
             array('Sound_Car_Title, Sound_Car_Barcode', 'length', 'max' => 255),
             array('Sound_Car_Internal_Code, Sound_Car_Standardized_Code, Sound_Car_Catelog, Sound_Car_Distributor', 'length', 'max' => 100),
             array('Sound_Car_Label_Id', 'length', 'max' => 20),
