@@ -262,7 +262,7 @@ $this->beginWidget(
             <table class="table table-bordered selectable" id="rightperformertable">
                 <thead>
                     <tr>
-                        <th>Corporate Name</th>
+                        <th>Name</th>
                         <th>Internal Code</th>
                     </tr>
                 </thead>
@@ -369,6 +369,8 @@ $js = <<< EOD
                 data:{rcd_guid: $(this).data('uid')},
                 success:function(data){
                     $("#link-performer-rec-div").html(data);
+                    $("#rightperformertable tbody tr").removeClass('hide highlight');
+                    $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val('');
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -393,7 +395,7 @@ $js = <<< EOD
             tr += '</tr>';
             chk_tr = $("#rightperformertable tbody").find("[data-uid='" + _uid + "']");
             if(chk_tr.length > 0){
-                chk_tr.remove();
+                chk_tr.addClass('hide');
             }
             _insert_table = $('#link-performer-rec tbody');
             _insert_table.append(tr);

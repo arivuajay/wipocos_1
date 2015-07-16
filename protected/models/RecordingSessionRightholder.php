@@ -161,4 +161,12 @@ class RecordingSessionRightholder extends RActiveRecord {
         ));
     }
 
+    public function distinctWorks($record_ses_id) {
+        $works = self::model()->findAll(array(
+            'select' => 't.Rcd_Ses_Right_Work_GUID, t.Rcd_Ses_Right_Work_Type',
+            'distinct' => true,
+            'condition' => "t.Rcd_Ses_Id = $record_ses_id"
+        ));
+        return $works;
+    }
 }

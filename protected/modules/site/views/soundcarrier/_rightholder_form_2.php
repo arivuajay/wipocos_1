@@ -262,7 +262,7 @@ $this->beginWidget(
             <table class="table table-bordered selectable" id="rightperformertable">
                 <thead>
                     <tr>
-                        <th>Corporate Name</th>
+                        <th>Name</th>
                         <th>Internal Code</th>
                     </tr>
                 </thead>

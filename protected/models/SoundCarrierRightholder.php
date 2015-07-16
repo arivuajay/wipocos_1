@@ -147,7 +147,7 @@ class SoundCarrierRightholder extends CActiveRecord {
     }
 
     public function distinctWorks($sound_car_id) {
-        $works = SoundCarrierRightholder::model()->findAll(array(
+        $works = self::model()->findAll(array(
             'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
             'distinct' => true,
             'condition' => "t.Sound_Car_Id = $sound_car_id"
