@@ -378,14 +378,14 @@ $this->breadcrumbs = array(
                             ?>
                             <tr>
                                 <td><?php echo $key + 1 ?>.</td>
-                                <td><?php echo $work_member->rightholderPerformer->fullname; ?></td>
-                                <td><?php echo $work_member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                <td><?php echo $work_member->rightholderAuthor->fullname; ?></td>
+                                <td><?php echo $work_member->rightholderAuthor->Auth_Internal_Code; ?></td>
                                 <td><?php echo $work_member->rightholderWork->Work_Org_Title; ?></td>
                                 <td><?php echo $work_member->soundCarRightRole->rolename; ?></td>
                                 <td><?php echo $work_member->Sound_Car_Right_Equal_Share; ?></td>
                                 <td><?php echo $work_member->Sound_Car_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
+                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderAuthor->Auth_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>

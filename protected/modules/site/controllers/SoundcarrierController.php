@@ -58,8 +58,8 @@ class SoundcarrierController extends Controller {
         $sub_title_model = SoundCarrierSubtitle::model()->findAllByAttributes(array('Sound_Car_Id' => $id));
         $publication_model = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Id' => $id));
         $biograph_model = SoundCarrierBiography::model()->findByAttributes(array('Sound_Car_Id' => $id));
-        $work_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'W'));
-        $rcd_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'R'));
+        $work_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type And Sound_Car_Right_Member_Type = :member', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'W', ':member' => 'A'));
+        $rcd_members = SoundCarrierRightholder::model()->findAll('Sound_Car_Id = :int_code And Sound_Car_Right_Work_Type = :work_type And Sound_Car_Right_Member_Type = :member', array(':int_code' => $model->Sound_Car_Id, ':work_type' => 'R', ':member' => 'P'));
         $fixations = SoundCarrierFixations::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
         $publications = SoundCarrierPublication::model()->findAll('Sound_Car_Id = :soundCar_id', array(':soundCar_id' => $model->Sound_Car_Id));
         $document_model = SoundCarrierDocumentation::model()->findByAttributes(array('Sound_Car_Id' => $id));
@@ -128,8 +128,8 @@ class SoundcarrierController extends Controller {
             $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
         }
 
-        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'W'));
-        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R'));
+        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'W', 'Sound_Car_Right_Member_Type' => 'A'));
+        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R', 'Sound_Car_Right_Member_Type' => 'P'));
         $right_holder_model = new SoundCarrierRightholder;
 
         $biograph_upload_model = new SoundCarrierBiographUploads;

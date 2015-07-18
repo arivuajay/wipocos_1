@@ -18,9 +18,9 @@
                     <p class="help-inline">Enter the begin of the name or internal code or one of the following criteria:</p>
                     <div class="col-lg-6">
                         <div class="box-body">
-                            <div class="form-group">
+                            <div class="form-group hide">
                                 <?php echo CHtml::label('Work', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_work', ($_REQUEST['is_work'] == 1), array('class' => 'form-control', 'id' => 'is_work')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_work', (/*$_REQUEST['is_work'] == 1*/true), array('class' => 'form-control', 'id' => 'is_work')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err" class="errorMessage hide">Select Work</div>
                             </div>
                             <div class="form-group">
@@ -56,10 +56,10 @@
             <div class="box-body">
                 <div class="form-group foundation">
                     <div class="box-header">
-                        <h3 class="box-title">Performers</h3>
+                        <h3 class="box-title">Authors</h3>
                     </div>
                     <?php
-                    $members = PerformerAccount::model()->findAll();
+                    $members = AuthorAccount::model()->findAll();
                     ?>
                     <div class="box-body">
                         <div class="form-group">
@@ -82,9 +82,9 @@
                                     if (!empty($members)) {
                                         foreach ($members as $key => $member) {
                                             ?>
-                                            <tr data-uid="<?php echo $member->Perf_GUID ?>" data-name="<?php echo $member->fullname ?>" data-intcode = "<?php echo $member->Perf_Internal_Code ?>">
+                                            <tr data-uid="<?php echo $member->Auth_GUID ?>" data-name="<?php echo $member->fullname ?>" data-intcode = "<?php echo $member->Auth_Internal_Code ?>">
                                                 <td><?php echo $member->fullname; ?></td>
-                                                <td><?php echo $member->Perf_Internal_Code; ?></td>
+                                                <td><?php echo $member->Auth_Internal_Code; ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -117,6 +117,7 @@
     echo $form->hiddenField($model, 'Sound_Car_Right_Member_GUID');
     echo $form->hiddenField($model, 'Sound_Car_Right_Work_GUID');
     echo $form->hiddenField($model, 'Sound_Car_Right_Work_Type', array('value' => 'W'));
+    echo $form->hiddenField($model, 'Sound_Car_Right_Member_Type', array('value' => 'A'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
     
@@ -130,7 +131,7 @@
                             <?php echo $form->labelEx($model, 'Sound_Car_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Sound_Car_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Sound_Car_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
@@ -233,9 +234,9 @@
                                 if (!empty($exists_model)) {
                                     foreach ($exists_model as $key => $member) {
                                         ?>
-                                        <tr data-uid="<?php echo $member->rightholderPerformer->Perf_GUID ?>" data-name="<?php echo $member->rightholderPerformer->fullname ?>" data-intcode="<?php echo $member->rightholderPerformer->Perf_Internal_Code ?>" data-work-uid="<?php echo $member->rightholderWork->Work_GUID ?>" data-work-name="<?php echo $member->rightholderWork->Work_Org_Title ?>">
-                                            <td><?php echo $member->rightholderPerformer->fullname; ?></td>
-                                            <td><?php echo $member->rightholderPerformer->Perf_Internal_Code; ?></td>
+                                        <tr data-uid="<?php echo $member->rightholderAuthor->Auth_GUID ?>" data-name="<?php echo $member->rightholderAuthor->fullname ?>" data-intcode="<?php echo $member->rightholderAuthor->Auth_Internal_Code ?>" data-work-uid="<?php echo $member->rightholderWork->Work_GUID ?>" data-work-name="<?php echo $member->rightholderWork->Work_Org_Title ?>">
+                                            <td><?php echo $member->rightholderAuthor->fullname; ?></td>
+                                            <td><?php echo $member->rightholderAuthor->Auth_Internal_Code; ?></td>
                                             <td><?php echo $member->rightholderWork->Work_Org_Title; ?></td>
                                             <td><?php echo $member->soundCarRightRole->rolename; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
@@ -249,13 +250,14 @@
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Id]", $member->Sound_Car_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Member_GUID]", $member->Sound_Car_Right_Member_GUID);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_GUID]", $member->Sound_Car_Right_Work_GUID);
-                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Member_Internal_Code]", $member->rightholderPerformer->Perf_Internal_Code);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Member_Internal_Code]", $member->rightholderAuthor->Auth_Internal_Code);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Role]", $member->Sound_Car_Right_Role, array('data-rcd' => $member->Sound_Car_Right_Role, 'class' => 'rcd'));
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Equal_Share]", $member->Sound_Car_Right_Equal_Share);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Equal_Org_Id]", $member->Sound_Car_Right_Equal_Org_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Share]", $member->Sound_Car_Right_Blank_Share);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Org_Id]", $member->Sound_Car_Right_Blank_Org_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_Type]", $member->Sound_Car_Right_Work_Type);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Member_Type]", $member->Sound_Car_Right_Member_Type);
                                                 ?>
                                             </td>
                                         </tr>
@@ -423,7 +425,7 @@ $js = <<< EOD
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }
 
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_Type]"){
                         tr += '<td>';
                     }
                     var td_content = '';
@@ -439,7 +441,7 @@ $js = <<< EOD
                         td_content = chk_tr.length == 1 ? chk_tr.data('work-name') : _work_name;
                     }
                     tr += td_content;
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_Type]"){
                         tr += '</td>';
                     }
                 }

@@ -18,9 +18,9 @@
                     <p class="help-inline">Enter the begin of the name or internal code or one of the following criteria:</p>
                     <div class="col-lg-6">
                         <div class="box-body">
-                            <div class="form-group">
+                            <div class="form-group hide">
                                 <?php echo CHtml::label('Record', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_record', ($_REQUEST['is_record'] == 1), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_record', (/*$_REQUEST['is_record'] == 1*/true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err_rec" class="errorMessage hide">Select Record</div>
                             </div>
                             <div class="form-group">

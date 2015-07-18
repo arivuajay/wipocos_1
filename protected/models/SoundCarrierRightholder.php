@@ -39,7 +39,7 @@ class SoundCarrierRightholder extends CActiveRecord {
             array('Sound_Car_Right_Work_Type', 'length', 'max' => 1),
 //            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'length', 'max' => 10),
             array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
-            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code', 'safe'),
+            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code, Sound_Car_Right_Member_Type', 'safe'),
             array('Sound_Car_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Sound_Car_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             // The following rule is used by search().
@@ -56,6 +56,9 @@ class SoundCarrierRightholder extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
+            'rightholderAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Sound_Car_Right_Member_GUID',
+                'foreignKey' => array('Sound_Car_Right_Member_GUID' => 'Auth_GUID')
+            ),
             'rightholderPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Sound_Car_Right_Member_GUID',
                 'foreignKey' => array('Sound_Car_Right_Member_GUID' => 'Perf_GUID')
             ),

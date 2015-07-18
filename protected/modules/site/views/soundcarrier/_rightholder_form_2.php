@@ -18,9 +18,9 @@
                     <p class="help-inline">Enter the begin of the name or internal code or one of the following criteria:</p>
                     <div class="col-lg-6">
                         <div class="box-body">
-                            <div class="form-group">
+                            <div class="form-group hide">
                                 <?php echo CHtml::label('Record', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_record', ($_REQUEST['is_record'] == 1), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_record', (/*$_REQUEST['is_record'] == 1*/true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err_rec" class="errorMessage hide">Select Record</div>
                             </div>
                             <div class="form-group">
@@ -72,6 +72,7 @@
     echo $form->hiddenField($model, 'Sound_Car_Right_Member_GUID');
     echo $form->hiddenField($model, 'Sound_Car_Right_Work_GUID');
     echo $form->hiddenField($model, 'Sound_Car_Right_Work_Type', array('value' => 'R'));
+    echo $form->hiddenField($model, 'Sound_Car_Right_Member_Type', array('value' => 'P'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
     
@@ -211,6 +212,7 @@
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Share]", $member->Sound_Car_Right_Blank_Share);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Blank_Org_Id]", $member->Sound_Car_Right_Blank_Org_Id);
                                                 echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Work_Type]", $member->Sound_Car_Right_Work_Type);
+                                                echo CHtml::hiddenField("SoundCarrierRightholder[{$key}][Sound_Car_Right_Member_Type]", $member->Sound_Car_Right_Member_Type);
                                                 ?>
                                             </td>
                                         </tr>
@@ -368,6 +370,8 @@ $js = <<< EOD
                 data:{rcd_guid: $(this).data('uid')},
                 success:function(data){
                     $("#link-performer-rec-div").html(data);
+                    $("#rightperformertable tbody tr").removeClass('hide highlight');
+                    $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -392,7 +396,7 @@ $js = <<< EOD
             tr += '</tr>';
             chk_tr = $("#rightperformertable tbody").find("[data-uid='" + _uid + "']");
             if(chk_tr.length > 0){
-                chk_tr.remove();
+                chk_tr.addClass('hide');
             }
             _insert_table = $('#link-performer-rec tbody');
             _insert_table.append(tr);
@@ -513,7 +517,7 @@ $js = <<< EOD
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }
 
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_Type]"){
                         tr += '<td>';
                     }
                     var td_content = '';
@@ -529,7 +533,7 @@ $js = <<< EOD
                         td_content = chk_tr.length == 1 ? chk_tr.data('work-name') : _work_name;
                     }
                     tr += td_content;
-                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]"){
+                    if(value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Equal_Org_id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Blank_Org_Id]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_GUID]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Work_Type]" && value['name'] != "SoundCarrierRightholder[Sound_Car_Right_Member_Type]"){
                         tr += '</td>';
                     }
                 }

@@ -2,7 +2,7 @@
 /* @var $this MasterstudioController */
 /* @var $model MasterStudio */
 
-$this->title='Update Master Studios: '. $model->Studio_Id;
+$this->title='Update Master Studios: '. $model->Studio_Name;
 $this->breadcrumbs=array(
 	'Master Studios'=>array('index'),
 	'Update Master Studios',
