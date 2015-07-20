@@ -29,6 +29,7 @@ class InternalcodegenerateController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin'),
+//                'expression' => 'false',
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -142,7 +143,6 @@ class InternalcodegenerateController extends Controller {
      */
     public function actionIndex() {
         $search = false;
-
         $model = new InternalcodeGenerate();
         $searchModel = new InternalcodeGenerate('search');
         $searchModel->unsetAttributes();  // clear any default values
