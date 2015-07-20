@@ -220,16 +220,16 @@ class Group extends RActiveRecord {
 
     protected function beforeSave() {
         if($this->isNewRecord){
-            $type = $this->Group_Is_Performer == '1' ? 'GP' : 'GA';
+            $type = $this->Group_Is_Performer == '1' ? InternalcodeGenerate::PERFORMER_GROUP_CODE : InternalcodeGenerate::AUTHOR_GROUP_CODE;
             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
             $this->Group_Internal_Code = $gen_int_code->Fullcode;
         }
         return parent::beforeSave();
     }
-    
+
     protected function afterSave() {
         if($this->isNewRecord){
-            $type = $this->Group_Is_Performer == '1' ? 'GP' : 'GA';
+            $type = $this->Group_Is_Performer == '1' ? InternalcodeGenerate::PERFORMER_GROUP_CODE : InternalcodeGenerate::AUTHOR_GROUP_CODE;
             InternalcodeGenerate::model()->codeIncreament($type);
         }
         return parent::afterSave();

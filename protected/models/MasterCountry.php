@@ -38,7 +38,7 @@ class MasterCountry extends CActiveRecord {
             array('Country_Name', 'required'),
             array('Country_Name', 'length', 'max' => 45),
             array('Country_Two_Code', 'length', 'max' => 2),
-            array('Country_Three_Code', 'length', 'max' => 3),
+            array('Country_Three_Code', 'length', 'max' => 4),
             array('Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
@@ -54,7 +54,25 @@ class MasterCountry extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-        );
+            'authorAccounts' => array(self::HAS_MANY, 'AuthorAccount', 'Auth_Birth_Country_Id'),
+            'groups' => array(self::HAS_MANY, 'Group', 'Group_Country_Id'),
+            'groupRepresentatives' => array(self::HAS_MANY, 'GroupRepresentative', 'Group_Country_Id'),
+            'organizations' => array(self::HAS_MANY, 'Organization', 'Org_Country_Id'),
+            'performerAccounts' => array(self::HAS_MANY, 'PerformerAccount', 'Perf_Birth_Country_Id'),
+            'producerAccounts' => array(self::HAS_MANY, 'ProducerAccount', 'Pro_Country_Id'),
+            'producerAccountAddresses' => array(self::HAS_MANY, 'ProducerAccountAddress', 'Pro_Addr_Country_Id'),
+            'publisherAccounts' => array(self::HAS_MANY, 'PublisherAccount', 'Pub_Country_Id'),
+            'publisherAccountAddresses' => array(self::HAS_MANY, 'PublisherAccountAddress', 'Pub_Addr_Country_Id'),
+            'publisherGroups' => array(self::HAS_MANY, 'PublisherGroup', 'Pub_Group_Country_Id'),
+            'recordings' => array(self::HAS_MANY, 'Recording', 'Rcd_Product_Country_Id'),
+            'recordings1' => array(self::HAS_MANY, 'Recording', 'Rcd_Record_Country_id'),
+            'recordingPublications' => array(self::HAS_MANY, 'RecordingPublication', 'Rcd_Publ_Country_Id'),
+            'recordingSessions' => array(self::HAS_MANY, 'RecordingSession', 'Rcd_Ses_Country_Id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Country_Id'),
+            'soundCarriers' => array(self::HAS_MANY, 'SoundCarrier', 'Sound_Car_Product_Country_Id'),
+            'soundCarrierFixations' => array(self::HAS_MANY, 'SoundCarrierFixations', 'Sound_Car_Fix_Country_Id'),
+            'soundCarrierPublications' => array(self::HAS_MANY, 'SoundCarrierPublication', 'Sound_Car_Publ_Country_Id'),
+            );
     }
 
     /**
@@ -123,4 +141,23 @@ class MasterCountry extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorAccounts', 'groups', 'groupRepresentatives', 'performerAccounts', 'producerAccounts',
+            'producerAccountAddresses', 'publisherAccounts', 'publisherAccountAddresses', 'publisherGroups', 'recordings', 'recordings1',
+            'recordingPublications', 'recordingSessions', 'soundCarriers', 'soundCarrierFixations', 'soundCarrierPublications');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Country_Name', "This Country is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

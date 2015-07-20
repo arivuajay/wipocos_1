@@ -50,6 +50,15 @@ class MasterType extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'recordings' => array(self::HAS_MANY, 'Recording', 'Rcd_Type_Id'),
+            'recordingSessions' => array(self::HAS_MANY, 'RecordingSession', 'Rcd_Ses_Type_Id'),
+            'recordingSessionSubtitles' => array(self::HAS_MANY, 'RecordingSessionSubtitle', 'Rcd_Ses_Subtitle_Type_Id'),
+            'recordingSubtitles' => array(self::HAS_MANY, 'RecordingSubtitle', 'Rcd_Subtitle_Type_Id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Type_Id'),
+            'soundCarriers' => array(self::HAS_MANY, 'SoundCarrier', 'Sound_Car_Type_Id'),
+            'soundCarrierSubtitles' => array(self::HAS_MANY, 'SoundCarrierSubtitle', 'Sound_Car_Subtitle_Type_Id'),
+            'works' => array(self::HAS_MANY, 'Work', 'Work_Type_Id'),
+            'workSubtitles' => array(self::HAS_MANY, 'WorkSubtitle', 'Work_Subtitle_Type_Id'),
         );
     }
 
@@ -115,4 +124,22 @@ class MasterType extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('recordings', 'recordingSessions', 'recordingSessionSubtitles', 'recordingSubtitles', 'soundCarriers',
+            'soundCarrierSubtitles', 'works', 'workSubtitles');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Type_Name', "This Type is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

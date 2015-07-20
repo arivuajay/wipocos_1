@@ -50,6 +50,10 @@ class MasterLegalForm extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'groups' => array(self::HAS_MANY, 'Group', 'Group_Legal_Form_Id'),
+            'producerAccounts' => array(self::HAS_MANY, 'ProducerAccount', 'Pro_Legal_Form_id'),
+            'publisherAccounts' => array(self::HAS_MANY, 'PublisherAccount', 'Pub_Legal_Form_id'),
+            'publisherGroups' => array(self::HAS_MANY, 'PublisherGroup', 'Pub_Group_Legal_Form_Id'),
         );
     }
 
@@ -115,4 +119,21 @@ class MasterLegalForm extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('groups', 'producerAccounts', 'publisherAccounts', 'publisherGroups');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Legal_Form_Name', "This Legal Form is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

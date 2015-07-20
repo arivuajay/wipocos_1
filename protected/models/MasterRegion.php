@@ -50,6 +50,14 @@ class MasterRegion extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorManageRights' => array(self::HAS_MANY, 'AuthorManageRights', 'Auth_Mnge_Region_Id'),
+            'groupManageRights' => array(self::HAS_MANY, 'GroupManageRights', 'Group_Mnge_Region_Id'),
+            'performerRelatedRights' => array(self::HAS_MANY, 'PerformerRelatedRights', 'Perf_Rel_Region_Id'),
+            'producerRelatedRights' => array(self::HAS_MANY, 'ProducerRelatedRights', 'Pro_Rel_Region_Id'),
+            'publisherGroupManageRights' => array(self::HAS_MANY, 'PublisherGroupManageRights', 'Pub_Group_Mnge_Region_Id'),
+            'publisherManageRights' => array(self::HAS_MANY, 'PublisherManageRights', 'Pub_Mnge_Region_Id'),
+            'publisherRelatedRights' => array(self::HAS_MANY, 'PublisherRelatedRights', 'Pub_Rel_Region_Id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Region_Id'),
         );
     }
 
@@ -115,4 +123,22 @@ class MasterRegion extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorManageRights', 'groupManageRights', 'performerRelatedRights', 'producerRelatedRights', 'publisherGroupManageRights',
+            'publisherManageRights', 'publisherRelatedRights');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Region_Name', "This Region is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

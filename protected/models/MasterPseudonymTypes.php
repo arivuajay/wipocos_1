@@ -50,6 +50,12 @@ class MasterPseudonymTypes extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorPseudonyms' => array(self::HAS_MANY, 'AuthorPseudonym', 'Auth_Pseudo_Type_Id'),
+            'groupPseudonyms' => array(self::HAS_MANY, 'GroupPseudonym', 'Group_Pseudo_Type_Id'),
+            'performerPseudonyms' => array(self::HAS_MANY, 'PerformerPseudonym', 'Perf_Pseudo_Type_Id'),
+            'producerPseudonyms' => array(self::HAS_MANY, 'ProducerPseudonym', 'Pro_Pseudo_Type_Id'),
+            'publisherGroupPseudonyms' => array(self::HAS_MANY, 'PublisherGroupPseudonym', 'Pub_Group_Pseudo_Type_Id'),
+            'publisherPseudonyms' => array(self::HAS_MANY, 'PublisherPseudonym', 'Pub_Pseudo_Type_Id'),
         );
     }
 
@@ -115,4 +121,21 @@ class MasterPseudonymTypes extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorPseudonyms', 'groupPseudonyms', 'performerPseudonyms', 'producerPseudonyms', 'publisherGroupPseudonyms', 'publisherPseudonyms');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Pseudo_Code', "This  Pseudonym Type is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

@@ -50,6 +50,8 @@ class MasterMaritalStatus extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorAccounts' => array(self::HAS_MANY, 'AuthorAccount', 'Auth_Marital_Status_Id'),
+            'performerAccounts' => array(self::HAS_MANY, 'PerformerAccount', 'Perf_Marital_Status_Id'),
         );
     }
 
@@ -115,4 +117,21 @@ class MasterMaritalStatus extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorAccounts', 'performerAccounts');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Marital_State', "This Marital Status is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

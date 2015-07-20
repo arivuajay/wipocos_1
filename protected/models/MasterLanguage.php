@@ -143,4 +143,23 @@ class MasterLanguage extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorAccounts', 'groups', 'performerAccounts', 'producerAccounts', 'publisherAccounts', 'publisherGroups',
+            'recordings', 'recordingSessions', 'recordingSessionSubtitles', 'recordingSubtitles', 'soundCarriers',
+            'soundCarrierSubtitles', 'works', 'workSubtitles');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Lang_Name', "This Language is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

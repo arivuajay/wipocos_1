@@ -53,6 +53,7 @@ class MasterManufacturer extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'soundCarriers' => array(self::HAS_MANY, 'SoundCarrier', 'Sound_Car_Manf_Id'),
         );
     }
 
@@ -122,4 +123,21 @@ class MasterManufacturer extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('soundCarriers');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Manf_Name', "This Manufacturer is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

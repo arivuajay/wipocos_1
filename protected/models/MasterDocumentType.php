@@ -127,4 +127,21 @@ class MasterDocumentType extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('docTypeStatus', 'societies');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Doc_Type_Name', "This Document Type is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

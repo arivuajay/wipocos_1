@@ -57,6 +57,9 @@ class MasterStudio extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'recordingSessions' => array(self::HAS_MANY, 'RecordingSession', 'Rcd_Ses_Studio_Id'),
+            'soundCarrierFixations' => array(self::HAS_MANY, 'SoundCarrierFixations', 'Sound_Car_Fix_Studio'),
+            'soundCarrierPublications' => array(self::HAS_MANY, 'SoundCarrierPublication', 'Sound_Car_Publ_Studio'),
         );
     }
 
@@ -130,4 +133,21 @@ class MasterStudio extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('recordingSessions', 'soundCarrierFixations', 'soundCarrierPublications');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Studio_Name', "This Studio is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

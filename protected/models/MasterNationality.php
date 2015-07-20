@@ -62,6 +62,7 @@ class MasterNationality extends CActiveRecord {
             'organizations' => array(self::HAS_MANY, 'Organization', 'Org_Nation_Id'),
             'performerAccounts' => array(self::HAS_MANY, 'PerformerAccount', 'Perf_Nationality_Id'),
             'recordingPublications' => array(self::HAS_MANY, 'RecordingPublication', 'Rcd_Publ_Prod_Nation_Id'),
+            'soundCarrierPublications' => array(self::HAS_MANY, 'SoundCarrierPublication', 'Sound_Car_Publ_Prod_Nation_Id'),
         );
     }
 
@@ -129,4 +130,21 @@ class MasterNationality extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorAccounts', 'performerAccounts', 'recordingPublications', 'soundCarrierPublications');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Nation_Name', "This Nationality is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

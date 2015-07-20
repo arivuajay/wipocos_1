@@ -52,6 +52,12 @@ class MasterPaymentMethod extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorPaymentMethods' => array(self::HAS_MANY, 'AuthorPaymentMethod', 'Auth_Pay_Method_id'),
+            'groupPaymentMethods' => array(self::HAS_MANY, 'GroupPaymentMethod', 'Group_Pay_Method_id'),
+            'performerPaymentMethods' => array(self::HAS_MANY, 'PerformerPaymentMethod', 'Perf_Pay_Method_id'),
+            'producerPaymentMethods' => array(self::HAS_MANY, 'ProducerPaymentMethod', 'Pro_Pay_Method_id'),
+            'publisherPaymentMethods' => array(self::HAS_MANY, 'PublisherPaymentMethod', 'Pub_Pay_Method_id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Payment_Id'),
         );
     }
 
@@ -119,4 +125,21 @@ class MasterPaymentMethod extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorPaymentMethods', 'groupPaymentMethods', 'performerPaymentMethods', 'producerPaymentMethods', 'publisherPaymentMethods');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Paymode_Name', "This Payment Method is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

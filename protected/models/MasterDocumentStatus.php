@@ -56,6 +56,10 @@ class MasterDocumentStatus extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'masterDocumentTypes' => array(self::HAS_MANY, 'MasterDocumentType', 'Doc_Type_Status_Id'),
+            'recordings' => array(self::HAS_MANY, 'Recording', 'Rcd_Doc_Status_Id'),
+            'recordingSessionDocumentations' => array(self::HAS_MANY, 'RecordingSessionDocumentation', 'Rcd_Ses_Doc_Status_Id'),
+            'soundCarrierDocumentations' => array(self::HAS_MANY, 'SoundCarrierDocumentation', 'Sound_Car_Doc_Status_Id'),
+            'workDocumentations' => array(self::HAS_MANY, 'WorkDocumentation', 'Work_Doc_Status_Id'),
         );
     }
 
@@ -125,4 +129,21 @@ class MasterDocumentStatus extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('recordings', 'recordingSessionDocumentations', 'soundCarrierDocumentations', 'workDocumentations');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Document_Sts_Name', "This Document Status is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

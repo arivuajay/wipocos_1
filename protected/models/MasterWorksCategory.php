@@ -50,6 +50,13 @@ class MasterWorksCategory extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'authorManageRights' => array(self::HAS_MANY, 'AuthorManageRights', 'Auth_Mnge_Avl_Work_Cat_Id'),
+            'groupManageRights' => array(self::HAS_MANY, 'GroupManageRights', 'Group_Mnge_Avl_Work_Cat_Id'),
+            'performerRelatedRights' => array(self::HAS_MANY, 'PerformerRelatedRights', 'Perf_Rel_Avl_Work_Cat_Id'),
+            'producerRelatedRights' => array(self::HAS_MANY, 'ProducerRelatedRights', 'Pro_Rel_Avl_Work_Cat_Id'),
+            'publisherGroupManageRights' => array(self::HAS_MANY, 'PublisherGroupManageRights', 'Pub_Group_Mnge_Avl_Work_Cat_Id'),
+            'publisherManageRights' => array(self::HAS_MANY, 'PublisherManageRights', 'Pub_Mnge_Avl_Work_Cat_Id'),
+            'publisherRelatedRights' => array(self::HAS_MANY, 'PublisherRelatedRights', 'Pub_Rel_Avl_Work_Cat_Id'),
         );
     }
 
@@ -115,4 +122,22 @@ class MasterWorksCategory extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('authorManageRights', 'groupManageRights', 'performerRelatedRights', 'producerRelatedRights', 'publisherGroupManageRights',
+            'publisherManageRights', 'publisherRelatedRights');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Work_Category_Name', "This Work Category is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

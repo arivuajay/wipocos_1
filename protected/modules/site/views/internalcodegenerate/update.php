@@ -2,10 +2,10 @@
 /* @var $this InternalcodegenerateController */
 /* @var $model InternalcodeGenerate */
 
-$this->title='Update Internalcode Generates: '. $model->Gen_Inter_Code_Id;
+$this->title='Update Code Definition Master: '. $model->Gen_Inter_Code;
 $this->breadcrumbs=array(
 	'Internalcode Generates'=>array('index'),
-	'Update Internalcode Generates',
+	'Update Code Definition Master ',
 );
 ?>
 

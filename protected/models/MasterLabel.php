@@ -52,6 +52,9 @@ class MasterLabel extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'producerLabelOwners' => array(self::HAS_MANY, 'ProducerLabelOwner', 'Label_Id'),
+            'recordings' => array(self::HAS_MANY, 'Recording', 'Rcd_Label_Id'),
+            'soundCarriers' => array(self::HAS_MANY, 'SoundCarrier', 'Sound_Car_Label_Id'),
         );
     }
 
@@ -119,4 +122,21 @@ class MasterLabel extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('producerLabelOwners', 'recordings', 'soundCarriers');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Label_Name', "This Label is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

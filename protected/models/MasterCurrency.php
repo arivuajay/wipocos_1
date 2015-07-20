@@ -56,6 +56,7 @@ class MasterCurrency extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'organizations' => array(self::HAS_MANY, 'Organization', 'Org_Currency_Id'),
+            'societies' => array(self::HAS_MANY, 'Society', 'Society_Currency_Id'),
         );
     }
 
@@ -123,4 +124,21 @@ class MasterCurrency extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+//        $relations = array();
+//        
+//        $validate = false;
+//        if(MASTER_EDIT_VALIDATION){
+//            foreach ($relations as $key => $relation) {
+//                if(!empty($this->$relation)){
+//                    $validate = true;
+//                    break;
+//                }
+//            }
+//            $relation = BaseInflector::camel2words($relation, ' ');
+//            if($validate)
+//                $this->addError('Currency_Name', "This Currency is already linked with {$relation}. So you can't Edit this record.");
+//        }
+        return parent::beforeValidate();
+    }
 }

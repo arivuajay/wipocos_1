@@ -54,6 +54,7 @@ class MasterDestination extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'recordingSessions' => array(self::HAS_MANY, 'RecordingSession', 'Rcd_Ses_Destination_Id'),
         );
     }
 
@@ -125,4 +126,21 @@ class MasterDestination extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('recordingSessions');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Dist_Name', "This Destination is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }
