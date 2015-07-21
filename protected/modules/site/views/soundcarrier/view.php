@@ -98,55 +98,23 @@ $this->breadcrumbs = array(
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
                 ),
                 array(
+                    'name' => 'Created_Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
                     'name' => 'Updated_By',
                     'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
                 ),
             ),
         ));
         ?>
-        <h4 class="box-title">Sub Titles</h4>
-        <?php
-        if (!empty($sub_title_model)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Name') ?></th>
-                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Type_Id') ?></th>
-                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Language_Id') ?></th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <?php if ($export == false) { ?>
-                            <th>Action</th>
-                        <?php } ?>
-                    </tr>
-                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $sub_title->Sound_Car_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->soundCarSubtitleType->Type_Name ?></td>
-                            <td><?php echo $sub_title->soundCarSubtitleLanguage->Lang_Name ?></td>
-                            <td><?php echo $sub_title->createdBy->name ?></td>
-                            <td><?php echo $sub_title->updatedBy->name ?></td>
-                            <?php if ($export == false) { ?>
-                                <td>
-                                    <?php
-                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update/id/' . $sub_title->Sound_Car_Id . '/tab/4/edit/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
-                                    echo "&nbsp;&nbsp;";
-                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/subtitledelete/id/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                    ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <?php
-        } else {
-            echo 'No Sub Titles created';
-        }
-        ?>
+    </div>
+
+    <div class="user-view col-lg-6">
         <h4>Documentation</h4>
         <?php
         if (!empty($document_model)) {
@@ -169,114 +137,19 @@ $this->breadcrumbs = array(
                         'value' => isset($document_model->createdBy->name) ? $document_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $document_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($document_model->updatedBy->name) ? $document_model->updatedBy->name : ''
                     ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $document_model->Rowversion
+                    ),
                 ),
             ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-    </div>
-
-    <div class="user-view col-lg-6">
-        <h4>Publication</h4>
-        <?php
-        if (!empty($publications)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_GUID') ?></th>
-                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Internal_Code') ?></th>
-                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Year') ?></th>
-<!--                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Country_Id') ?></th>
-                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Prod_Nation_Id') ?></th>
-                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Studio') ?></th>-->
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($publications as $key => $publication) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td>
-                                <?php
-                                if ($publication->Sound_Car_Publ_Work_Type == 'W') {
-                                    echo $publication->soundCarWork->Work_Org_Title;
-                                } else {
-                                    echo $publication->soundCarRecord->Rcd_Title;
-                                }
-                                ?>
-                            </td>
-                            <td><?php echo $publication->Sound_Car_Publ_Internal_Code ?></td>
-                            <td><?php echo $publication->Sound_Car_Publ_Year ?></td>
-<!--                            <td><?php echo $publication->soundCarPublCountry->Country_Name ?></td>
-                            <td><?php echo $publication->soundCarPublProdNation->Nation_Name ?></td>
-                            <td><?php echo $publication->soundCarPublStudio->Studio_Name ?></td>-->
-                            <td><?php echo $publication->createdBy->name ?></td>
-                            <td><?php echo $publication->updatedBy->name ?></td>
-                            <td>
-                                <?php
-                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update', 'id' => $publication->Sound_Car_Id, 'tab' => 3, 'pubedit' => $publication->Sound_Car_Publ_Id), array('title' => 'Edit'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/publicationdelete', 'id' => $publication->Sound_Car_Publ_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody></table>
-            <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4>Fixation</h4>
-        <?php
-        if (!empty($fixations)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_GUID') ?></th>
-                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Duration') ?></th>
-<!--                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Date') ?></th>
-                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Studio') ?></th>
-                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Country_Id') ?></th>-->
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($fixations as $key => $fixation) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td>
-                                <?php
-                                if($fixation->Sound_Car_Fix_Work_Type == 'W'){
-                                    echo $fixation->soundCarWork->Work_Org_Title;
-                                }else{
-                                    echo $fixation->soundCarRecord->Rcd_Title;
-                                }
-                                ?>
-                            </td>
-                            <td><?php echo $fixation->Sound_Car_Fix_Duration ?></td>
-<!--                            <td><?php echo $fixation->Sound_Car_Fix_Date ?></td>
-                            <td><?php echo $fixation->soundCarFixStudio->Studio_Name ?></td>
-                            <td><?php echo $fixation->soundCarFixCountry->Country_Name ?></td>-->
-                            <td><?php echo $fixation->createdBy->name ?></td>
-                            <td><?php echo $fixation->updatedBy->name ?></td>
-                            <td>
-                                <?php
-                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update' , 'id' => $fixation->Sound_Car_Id , 'tab' => 6, 'fixedit' => $fixation->Sound_Car_Fix_Id), array('title' => 'Edit'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/fixationdelete' , 'id' => $fixation->Sound_Car_Fix_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody></table>
-            <?php
         } else {
             echo 'No data created';
         }
@@ -294,8 +167,16 @@ $this->breadcrumbs = array(
                         'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
                     ),
                 ),
             ));
@@ -351,13 +232,175 @@ $this->breadcrumbs = array(
     </div>
 
     <div class="user-view col-lg-12">
+                <h4>Publication</h4>
+        <?php
+        if (!empty($publications)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_GUID') ?></th>
+                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Internal_Code') ?></th>
+                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Year') ?></th>
+    <!--                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Country_Id') ?></th>
+                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Prod_Nation_Id') ?></th>
+                        <th><?php echo SoundCarrierPublication::model()->getAttributeLabel('Sound_Car_Publ_Studio') ?></th>-->
+                        <th>Created By</th>
+                        <th>Updated By</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($publications as $key => $publication) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td>
+                                <?php
+                                if ($publication->Sound_Car_Publ_Work_Type == 'W') {
+                                    echo $publication->soundCarWork->Work_Org_Title;
+                                } else {
+                                    echo $publication->soundCarRecord->Rcd_Title;
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $publication->Sound_Car_Publ_Internal_Code ?></td>
+                            <td><?php echo $publication->Sound_Car_Publ_Year ?></td>
+        <!--                            <td><?php echo $publication->soundCarPublCountry->Country_Name ?></td>
+                            <td><?php echo $publication->soundCarPublProdNation->Nation_Name ?></td>
+                            <td><?php echo $publication->soundCarPublStudio->Studio_Name ?></td>-->
+                            <td><?php echo $publication->createdBy->name ?></td>
+                            <td><?php echo $publication->updatedBy->name ?></td>
+                            <td>
+                                <?php
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update', 'id' => $publication->Sound_Car_Id, 'tab' => 3, 'pubedit' => $publication->Sound_Car_Publ_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/publicationdelete', 'id' => $publication->Sound_Car_Publ_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
+                <h4>Fixation</h4>
+        <?php
+        if (!empty($fixations)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_GUID') ?></th>
+                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Duration') ?></th>
+    <!--                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Date') ?></th>
+                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Studio') ?></th>
+                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Country_Id') ?></th>-->
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($fixations as $key => $fixation) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td>
+                                <?php
+                                if ($fixation->Sound_Car_Fix_Work_Type == 'W') {
+                                    echo $fixation->soundCarWork->Work_Org_Title;
+                                } else {
+                                    echo $fixation->soundCarRecord->Rcd_Title;
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $fixation->Sound_Car_Fix_Duration ?></td>
+        <!--                            <td><?php echo $fixation->Sound_Car_Fix_Date ?></td>
+                            <td><?php echo $fixation->soundCarFixStudio->Studio_Name ?></td>
+                            <td><?php echo $fixation->soundCarFixCountry->Country_Name ?></td>-->
+                            <td><?php echo $fixation->createdBy->name ?></td>
+                            <td><?php echo $fixation->Created_Date ?></td>
+                            <td><?php echo $fixation->updatedBy->name ?></td>
+                            <td><?php echo $fixation->Rowversion ?></td>
+                            <td>
+                                <?php
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update', 'id' => $fixation->Sound_Car_Id, 'tab' => 6, 'fixedit' => $fixation->Sound_Car_Fix_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/fixationdelete', 'id' => $fixation->Sound_Car_Fix_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
+                <h4 class="box-title">Sub Titles</h4>
+        <?php
+        if (!empty($sub_title_model)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Name') ?></th>
+                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Type_Id') ?></th>
+                        <th><?php echo SoundCarrierSubtitle::model()->getAttributeLabel('Sound_Car_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <?php if ($export == false) { ?>
+                            <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $sub_title->Sound_Car_Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->soundCarSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->soundCarSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->Created_Date ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
+                            <td><?php echo $sub_title->Rowversion ?></td>
+                            <?php if ($export == false) { ?>
+                                <td>
+                                    <?php
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/soundcarrier/update/id/' . $sub_title->Sound_Car_Id . '/tab/4/edit/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Edit'));
+                                    echo "&nbsp;&nbsp;";
+                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/soundcarrier/subtitledelete/id/' . $sub_title->Sound_Car_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    ?>
+                                </td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No Sub Titles created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
         <h4>Right Holders - Works</h4>
         <?php
         if (!empty($work_members)) {
             ?>
             <div>
                 <span>Created By: <?php echo $work_members[0]->createdBy->name ?></span><br />
-                <span>Updated By: <?php echo $work_members[0]->updatedBy->name ?></span><br /><br />
+                <span>Created Date: <?php echo $work_members[0]->Created_Date ?></span><br />
+                <span>Updated By: <?php echo $work_members[0]->updatedBy->name ?></span><br />
+                <span>Updated Date: <?php echo $work_members[0]->Rowversion ?></span><br /><br />
             </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">
@@ -370,7 +413,7 @@ $this->breadcrumbs = array(
                             <th>Equal Remuneration Points</th>
                             <th>Blank Levy Points</th>
                             <?php if ($export == false) { ?>
-                                <!--<th>Action</th>-->
+                                                        <!--<th>Action</th>-->
                             <?php } ?>
                         </tr>
                         <?php
@@ -385,7 +428,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $work_member->Sound_Car_Right_Equal_Share; ?></td>
                                 <td><?php echo $work_member->Sound_Car_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderAuthor->Auth_Acc_Id)); ?></td>-->
+                                                            <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $work_member->rightholderAuthor->Auth_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>
@@ -405,7 +448,9 @@ $this->breadcrumbs = array(
             ?>
             <div>
                 <span>Created By: <?php echo $rcd_members[0]->createdBy->name ?></span><br />
-                <span>Updated By: <?php echo $rcd_members[0]->updatedBy->name ?></span><br /><br />
+                <span>Created Date: <?php echo $rcd_members[0]->Created_Date ?></span><br />
+                <span>Updated By: <?php echo $rcd_members[0]->updatedBy->name ?></span><br />
+                <span>Updated Date: <?php echo $rcd_members[0]->Rowversion ?></span><br /><br />
             </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">
@@ -418,7 +463,7 @@ $this->breadcrumbs = array(
                             <th>Equal Remuneration Points</th>
                             <th>Blank Levy Points</th>
                             <?php if ($export == false) { ?>
-                                <!--<th>Action</th>-->
+                                                        <!--<th>Action</th>-->
                             <?php } ?>
                         </tr>
                         <?php
@@ -433,7 +478,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $rcd_member->Sound_Car_Right_Equal_Share; ?></td>
                                 <td><?php echo $rcd_member->Sound_Car_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
+                                                            <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>

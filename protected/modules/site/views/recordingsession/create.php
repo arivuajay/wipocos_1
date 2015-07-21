@@ -2,9 +2,9 @@
 /* @var $this RecordingsessionController */
 /* @var $model RecordingSession */
 
-$this->title='Create Recording Sessions';
+$this->title='Create Recording Session Sheets';
 $this->breadcrumbs=array(
-	'Recording Sessions'=>array('index'),
+	'Recording Session Sheets'=>array('index'),
 	$this->title,
 );
 ?>

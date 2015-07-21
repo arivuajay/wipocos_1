@@ -28,10 +28,10 @@ $destinations = Myclass::getMasterDestination();
         if (!$model->isNewRecord) {
             $doc_tab_validation = true;
             $rgt_tab_validation = !$document_model->isNewRecord;
-            $fix_tab_validation = $pub_tab_validation = !empty($right_holder_exists_1) || !empty($right_holder_exists_2);
+            $folio_tab_validation = !$document_model->isNewRecord && !empty($right_holder_exists);
             $other_tab_validation = true;
         } else {
-            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $fix_tab_validation = $pub_tab_validation = false;
+            $other_tab_validation = $doc_tab_validation = $rgt_tab_validation = $folio_tab_validation = $pub_tab_validation = false;
         }
         ?>
         <div class="nav-tabs-custom">
@@ -39,11 +39,11 @@ $destinations = Myclass::getMasterDestination();
                 <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Recordings</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($folio_tab_validation) echo 'data-toggle="tab"'; ?>>List of Folios</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_6" href="#tab_6" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>List of Folios</a></li>
-                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right holder</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders in Production</a></li>
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Recording List</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -214,7 +214,7 @@ $destinations = Myclass::getMasterDestination();
                 </div>
                 <div class="tab-pane" id="tab_6">
                     <?php
-                    if ($other_tab_validation) {
+                    if ($folio_tab_validation) {
                         $this->renderPartial('_folio_form', array('model' => $folio_model, 'record_ses_model' => $model));
                     }
                     ?>

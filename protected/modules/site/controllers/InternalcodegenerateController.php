@@ -28,8 +28,7 @@ class InternalcodegenerateController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin'),
-//                'expression' => 'false',
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'setup', 'validateData'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -111,6 +110,43 @@ class InternalcodegenerateController extends Controller {
         $this->render('update', array(
             'model' => $model,
         ));
+    }
+
+    public function actionSetup() {
+        $model = new InternalcodeGenerate;
+        $int_codes = InternalcodeGenerate::model()->findAll();
+//        // Uncomment the following line if AJAX validation is needed
+//        $this->performAjaxValidation($model);
+
+        if (isset($_POST['InternalcodeGenerate'])) {
+            $validate = true;
+            foreach ($_POST['InternalcodeGenerate'] as $key => $int_code) {
+                $model = $this->loadModel($int_code['Gen_Inter_Code_Id']);
+                $model->attributes = $int_code;
+                $validate = $validate && $model->validate();
+                if($validate){
+                    $model->save();
+                }else{
+                    break;
+                }
+            }
+            if($validate){
+                Myclass::addAuditTrail("Updated InternalcodeGenerate successfully.", "user");
+                Yii::app()->user->setFlash('success', 'InternalcodeGenerate Updated Successfully!!!');
+                $this->redirect(array('/site/internalcodegenerate/setup'));
+            }
+        }
+
+        $this->render('setup', compact('model', 'int_codes'));
+    }
+
+    public function actionValidateData($value, $name, $pad) {
+        $model = new InternalcodeGenerate;
+        $model->setAttribute('Gen_Code_Pad', $pad);
+        $model->setAttribute($name, $value);
+        $model->validate();
+        echo CHtml::error($model, $name);
+        Yii::app()->end();
     }
 
     /**

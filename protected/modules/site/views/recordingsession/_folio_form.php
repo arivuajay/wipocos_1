@@ -20,8 +20,18 @@
         <?php } ?>
 
         <div class="form-group">
+            <label class="col-sm-2 control-label required">Recording Session</label>
+            <div class="col-sm-3">
+                <?php echo CHtml::textField('Title', $record_ses_model->Rcd_Ses_Title, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+            <div class="col-sm-3">
+                <?php echo CHtml::textField('Internal Code', $record_ses_model->Rcd_Ses_Internal_Code, array('class' => 'form-control', 'disabled' => true)) ?>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
             <?php echo $form->labelEx($model, 'Rcd_Ses_Folio_Name', array('class' => 'col-sm-2 control-label')); ?>
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <?php echo $form->textField($model, 'Rcd_Ses_Folio_Name', array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Rcd_Ses_Folio_Name'); ?>
             </div>
@@ -52,7 +62,9 @@ if (!empty($folios)) {
                         <th style="width: 10px">#</th>
                         <th><?php echo $model->getAttributeLabel('Rcd_Ses_Folio_Name') ?></th>
                         <th>Created By</th>
+                        <th>Created Date</th>
                         <th>Updated By</th>
+                        <th>Updated Date</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($folios as $key => $folio) { ?>
@@ -60,7 +72,9 @@ if (!empty($folios)) {
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $folio->Rcd_Ses_Folio_Name ?></td>
                             <td><?php echo $folio->createdBy->name ?></td>
+                            <td><?php echo $folio->Created_Date ?></td>
                             <td><?php echo $folio->updatedBy->name ?></td>
+                            <td><?php echo $folio->Rowversion ?></td>
                             <td>
                                 <?php
                                 echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update' , 'id' => $record_ses_model->Rcd_Ses_Id , 'tab' => 6, 'foledit' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Edit'));

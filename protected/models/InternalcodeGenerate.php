@@ -44,7 +44,7 @@ class InternalcodeGenerate extends RActiveRecord {
     }
 
     public function getFullcode() {
-        $soc_prefix = $this->soceity->Society_Code;
+        $soc_prefix = $this->Gen_Soc_Id;
         $role_prefix = $this->Gen_Prefix;
         $int_code = str_pad($this->Gen_Inter_Code,$this->Gen_Code_Pad,'0',STR_PAD_LEFT);
 //        $role_suffix = $this->Gen_Suffix;
@@ -75,11 +75,11 @@ class InternalcodeGenerate extends RActiveRecord {
         return array(
             array('Gen_Inter_Code, Gen_Prefix, Gen_Soc_Id', 'required'),
             array('Gen_User_Type', 'unique'),
-            array('Gen_Inter_Code, Gen_Soc_Id', 'numerical', 'integerOnly' => true),
+            array('Gen_Inter_Code', 'numerical', 'integerOnly' => true),
             array('Gen_User_Type', 'length', 'max'=>4),
             array('Gen_Inter_Code', 'length', 'min'=> $this->Gen_Code_Pad, 'max'=> $this->Gen_Code_Pad),
             array('Gen_Inter_Code', 'numerical', 'min'=> 1, 'max'=> 9999999),
-            array('Gen_Prefix, Gen_Suffix', 'length', 'max' => 3),
+            array('Gen_Prefix, Gen_Suffix, Gen_Soc_Id', 'length', 'max' => 3),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -94,7 +94,7 @@ class InternalcodeGenerate extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'soceity' => array(self::BELONGS_TO, 'Society', 'Gen_Soc_Id'),
+//            'soceity' => array(self::BELONGS_TO, 'Society', 'Gen_Soc_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -107,6 +107,7 @@ class InternalcodeGenerate extends RActiveRecord {
         return array(
             'Gen_Inter_Code_Id' => 'Inter Code',
             'Gen_User_Type' => 'Module',
+            'Gen_Soc_Id' => 'Soceity',
             'Gen_Prefix' => 'Prefix',
             'Gen_Inter_Code' => 'Internal Code',
             'Gen_Suffix' => 'Suffix',
@@ -193,12 +194,12 @@ class InternalcodeGenerate extends RActiveRecord {
             self::WORK_CODE => 'Work',
             self::RECORDING_CODE => 'Recording',
             self::RECORDING_PUBLISHING_CODE => 'Recording Publishing',
-            self::RECORDING_SESSION_CODE => 'Recording Session',
+            self::RECORDING_SESSION_CODE => 'Recording Session Sheet',
             self::SOUND_CARRIER_CODE => 'Sound Carrier',
             self::SOUND_CARRIER_PUBLISHING_CODE => 'Sound Carrier Publishing',
         );
         
-        if(isset($this->Gen_User_Type))
+        if($user_type == NULL && isset($this->Gen_User_Type))
             $user_type = $this->Gen_User_Type;
         
         if($user_type != NULL)

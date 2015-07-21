@@ -76,7 +76,7 @@
     ?>
     
     <a name="role-foundation">&nbsp;</a>
-    <div class="col-lg-12">
+    <div class="col-lg-12 hide role_entry">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-body">
@@ -98,7 +98,7 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-6 hide role_entry">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -124,7 +124,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6 hide role_entry">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -148,7 +148,7 @@
             </div>
         </div>
     </div>
-    <div class="box-footer">
+    <div class="box-footer hide role_entry">
         <div class="form-group">
             <div class="col-lg-12">
                 <div class="col-lg-1">
@@ -382,6 +382,13 @@ $js = <<< EOD
             $("#add-performer-rec").attr('disabled', false);
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val($(this).data('uid'));
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_Internal_Code').val($(this).data('intcode'));
+            $('#rght_2 .user-role-dropdown select.performer-role').val($(this).data('rcdrole'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share').val($(this).data('eqlshare'));
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Share').val($(this).data('blkshare'));
+            $(this).attr('data-eqlorg') ? $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Org_Id').val($(this).data('eqlorg')) : '';
+            $(this).attr('data-blkorg') ? $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Org_Id').val($(this).data('blkorg')) : '';
+            $(this).attr('data-blkorg') ? $('.role_entry').addClass('hide') : $('.role_entry').removeClass('hide');
+            $('.box-footer.role_entry').removeClass('hide');
         });
         
         $('body').on('click','#temp_click_new_performer', function(){
@@ -429,6 +436,7 @@ $js = <<< EOD
             _tr = $(this).closest('tr');
             _role = _tr.find('.rcd').data('rcd');
             _role !== null ? $('#rght_2 .user-role-dropdown select.performer-role').val(_role) : '';
+            $('.role_entry').removeClass('hide');
         });
         
         $('body').on('click','#linked-holders-rec tr', function(){
@@ -523,7 +531,8 @@ $js = <<< EOD
                     if (value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Share]" || value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Share]") {
                         td_content = parseFloat(value['value']).toFixed(2);
                     }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Role]"){
-                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
+                        td_content = $('select[name="' + value['name'] + '"] option:selected').text();
+//                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
                     }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Id]"){
                         td_content = chk_tr.length == 1 ? chk_tr.data('name') : _name;
                     }else if(value['name'] == "RecordingSessionRightholder[Rcd_Ses_Right_Member_Internal_Code]"){
@@ -559,6 +568,7 @@ $js = <<< EOD
             $("#rght_2 #right_insert").val('Add');
             $('#rght_2 .user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('#rght_2 .user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
+            $('.role_entry').addClass('hide');
             checkShare2();
         }
         return false;

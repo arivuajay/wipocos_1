@@ -2,10 +2,10 @@
 /* @var $this RecordingsessionController */
 /* @var $model RecordingSession */
 
-$this->title='Update Recording Sessions: '. $model->Rcd_Ses_Title;
+$this->title='Update Recording Session Sheets: '. $model->Rcd_Ses_Title;
 $this->breadcrumbs=array(
-	'Recording Sessions'=>array('index'),
-	'Update Recording Sessions',
+	'Recording Session Sheets'=>array('index'),
+	'Update Recording Session Sheets',
 );
 ?>
 

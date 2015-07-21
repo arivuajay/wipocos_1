@@ -16,7 +16,7 @@
  * The followings are the available model relations:
  * @property SoundCarrier $soundCar
  */
-class SoundCarrierRightholder extends CActiveRecord {
+class SoundCarrierRightholder extends RActiveRecord {
 
     public $Sound_Car_Right_Member_Internal_Code;
     /**

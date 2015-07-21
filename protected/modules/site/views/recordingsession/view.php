@@ -4,7 +4,7 @@
 
 $this->title = 'View RecordingSession:' . $model->Rcd_Ses_Title;
 $this->breadcrumbs = array(
-    'Recording Sessions' => array('index'),
+    'Recording Session Sheets' => array('index'),
     'View ' . 'RecordingSession',
 );
 ?>
@@ -102,86 +102,25 @@ $this->breadcrumbs = array(
                     'value' => isset($model->rcdSesFactor->Factor) ? $model->rcdSesFactor->Factor : 'Not Set'
                 ),
                 'Rcd_Ses_Release_Year',
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created_Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
+                ),
             ),
         ));
         ?>
-        <h4 class="box-title">Sub Titles</h4>
-        <?php
-        if (!empty($sub_title_model)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Name') ?></th>
-                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Type_Id') ?></th>
-                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Language_Id') ?></th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <?php if ($export == false) { ?>
-                            <th>Action</th>
-                        <?php } ?>
-                    </tr>
-                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $sub_title->Rcd_Ses_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->rcdSesSubtitleType->Type_Name ?></td>
-                            <td><?php echo $sub_title->rcdSesSubtitleLanguage->Lang_Name ?></td>
-                            <td><?php echo $sub_title->createdBy->name ?></td>
-                            <td><?php echo $sub_title->updatedBy->name ?></td>
-                            <?php if ($export == false) { ?>
-                                <td>
-                                    <?php
-                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update/id/' . $sub_title->Rcd_Ses_Id . '/tab/2/edit/' . $sub_title->Rcd_Ses_Subtitle_Id), array('title' => 'Edit'));
-                                    echo "&nbsp;&nbsp;";
-                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/filedelete/id/' . $sub_title->Rcd_Ses_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                    ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-                <h4>Folio</h4>
-        <?php
-        if (!empty($folios)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo RecordingSessionFolio::model()->getAttributeLabel('Rcd_Ses_Folio_Name') ?></th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($folios as $key => $folio) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $folio->Rcd_Ses_Folio_Name ?></td>
-                            <td><?php echo $folio->createdBy->name ?></td>
-                            <td><?php echo $folio->updatedBy->name ?></td>
-                            <td>
-                                <?php
-                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update', 'id' => $folio->Rcd_Ses_Id, 'tab' => 6, 'foledit' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Edit'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/foliodelete', 'id' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody></table>
-            <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
     </div>
     <div class="user-view col-lg-6">
         <h4>Documentation</h4>
@@ -206,8 +145,16 @@ $this->breadcrumbs = array(
                         'value' => isset($document_model->createdBy->name) ? $document_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $document_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($document_model->updatedBy->name) ? $document_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $document_model->Rowversion
                     ),
                 ),
             ));
@@ -228,8 +175,16 @@ $this->breadcrumbs = array(
                         'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
                     ),
                 ),
             ));
@@ -286,13 +241,104 @@ $this->breadcrumbs = array(
     </div>
 
     <div class="user-view col-lg-12">
+                <h4 class="box-title">Sub Titles</h4>
+        <?php
+        if (!empty($sub_title_model)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Name') ?></th>
+                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Type_Id') ?></th>
+                        <th><?php echo RecordingSessionSubtitle::model()->getAttributeLabel('Rcd_Ses_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <?php if ($export == false) { ?>
+                            <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $sub_title->Rcd_Ses_Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->rcdSesSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->rcdSesSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->Created_Date ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
+                            <td><?php echo $sub_title->Rowversion ?></td>
+                            <?php if ($export == false) { ?>
+                                <td>
+                                    <?php
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update/id/' . $sub_title->Rcd_Ses_Id . '/tab/2/edit/' . $sub_title->Rcd_Ses_Subtitle_Id), array('title' => 'Edit'));
+                                    echo "&nbsp;&nbsp;";
+                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/filedelete/id/' . $sub_title->Rcd_Ses_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    ?>
+                                </td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+    </div>
+    <div class="user-view col-lg-12">
+                <h4>Folio</h4>
+        <?php
+        if (!empty($folios)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo RecordingSessionFolio::model()->getAttributeLabel('Rcd_Ses_Folio_Name') ?></th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($folios as $key => $folio) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $folio->Rcd_Ses_Folio_Name ?></td>
+                            <td><?php echo $folio->createdBy->name ?></td>
+                            <td><?php echo $folio->Created_Date ?></td>
+                            <td><?php echo $folio->updatedBy->name ?></td>
+                            <td><?php echo $folio->Rowversion ?></td>
+                            <td>
+                                <?php
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update', 'id' => $folio->Rcd_Ses_Id, 'tab' => 6, 'foledit' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/foliodelete', 'id' => $folio->Rcd_Ses_Folio_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
         <h4>Right Holders</h4>
         <?php
         if (!empty($rcd_members)) {
             ?>
             <div>
                 <span>Created By: <?php echo $rcd_members[0]->createdBy->name ?></span><br />
-                <span>Updated By: <?php echo $rcd_members[0]->updatedBy->name ?></span><br /><br />
+                <span>Created Date: <?php echo $rcd_members[0]->Created_Date ?></span><br />
+                <span>Updated By: <?php echo $rcd_members[0]->updatedBy->name ?></span><br />
+                <span>Updated Date: <?php echo $rcd_members[0]->Rowversion ?></span><br /><br />
             </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">
@@ -305,7 +351,7 @@ $this->breadcrumbs = array(
                             <th>Equal Remuneration Points</th>
                             <th>Blank Levy Points</th>
                             <?php if ($export == false) { ?>
-                                        <!--<th>Action</th>-->
+                                                <!--<th>Action</th>-->
                             <?php } ?>
                         </tr>
                         <?php
@@ -320,7 +366,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $rcd_member->Rcd_Ses_Right_Equal_Share; ?></td>
                                 <td><?php echo $rcd_member->Rcd_Ses_Right_Blank_Share; ?></td>
                                 <?php if ($export == false) { ?>
-                                            <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
+                                                    <!--<td><?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/performeraccount/view', 'id' => $rcd_member->rightholderPerformer->Perf_Acc_Id)); ?></td>-->
                                 <?php } ?>
                             </tr>
                         <?php } ?>

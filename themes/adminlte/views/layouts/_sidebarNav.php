@@ -62,6 +62,7 @@
                     'items' => array(
                         array('label' => '<i class="fa fa-usd"></i> <span>Currencies</span>', 'url' => array('/site/mastercurrency/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-globe"></i> <span>Countries</span>', 'url' => array('/site/mastercountry/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-barcode"></i> <span>Code Definition</span>', 'url' => array('/site/internalcodegenerate/setup'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-binoculars"></i> <span>Destination</span>', 'url' => array('/site/masterdestination/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-file-code-o"></i> <span>Document Status</span>', 'url' => array('/site/masterdocumentstatus/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-file-audio-o"></i> <span>Document Type</span>', 'url' => array('/site/masterdocumenttype/index'), 'visible' => '1', 'active' => '0'),
@@ -110,7 +111,7 @@
                         array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'visible' => UserIdentity::checkAccess($_id, 'work', 'view'), 'active' => $work_com_active['work']),
                         array('label' => '<i class="fa fa-volume-up"></i> <span>Recordings</span>', 'url' => array('/site/recording/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-headphones"></i> <span>Sound Carriers</span>', 'url' => array('/site/soundcarrier/index'), 'visible' => '1', 'active' => '0'),
-                        array('label' => '<i class="fa fa-file-audio-o"></i> <span>Recording Sessions</span>', 'url' => array('/site/recordingsession/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-file-audio-o"></i> <span>Recording Session Sheets</span>', 'url' => array('/site/recordingsession/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-warning"></i> <span>Contract Expiry</span>', 'url' => array('/site/work/contractexpiry'), 'visible' => UserIdentity::checkAccess($_id, 'contractexpiry', 'view'), 'active' => $work_com_active['contractexpiry']),
                     ),
                 ),

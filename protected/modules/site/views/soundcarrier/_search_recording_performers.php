@@ -29,7 +29,7 @@
                                     foreach ($rightholders as $key => $rightholder) {
                                         if (!empty($rightholder->recordingPerformer)) {
                                             ?>
-                                            <tr data-uid="<?php echo $rightholder->recordingPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->recordingPerformer->fullname ?>" data-intcode = "<?php echo $rightholder->recordingPerformer->Perf_Internal_Code ?>">
+                                            <tr data-uid="<?php echo $rightholder->recordingPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->recordingPerformer->fullname ?>" data-intcode = "<?php echo $rightholder->recordingPerformer->Perf_Internal_Code ?>" data-rcdrole = "<?php echo $rightholder->Rcd_Right_Role ?>" data-eqlshare = "<?php echo $rightholder->Rcd_Right_Equal_Share ?>" data-eqlorg = "<?php echo $rightholder->Rcd_Right_Equal_Org_id ?>" data-blkshare = "<?php echo $rightholder->Rcd_Right_Blank_Share ?>" data-blkorg = "<?php echo $rightholder->Rcd_Right_Blank_Org_Id ?>">
                                                 <td><?php echo $rightholder->recordingPerformer->fullname; ?></td>
                                                 <td><?php echo $rightholder->recordingPerformer->Perf_Internal_Code; ?></td>
                                             </tr>

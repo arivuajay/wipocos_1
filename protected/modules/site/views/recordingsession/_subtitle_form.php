@@ -70,7 +70,9 @@ if (!empty($sub_titles)) {
                         <th><?php echo $model->getAttributeLabel('Rcd_Ses_Subtitle_Type_Id') ?></th>
                         <th><?php echo $model->getAttributeLabel('Rcd_Ses_Subtitle_Language_Id') ?></th>
                         <th>Created By</th>
+                        <th>Created Date</th>
                         <th>Updated By</th>
+                        <th>Updated Date</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($sub_titles as $key => $sub_title) { ?>
@@ -80,7 +82,9 @@ if (!empty($sub_titles)) {
                             <td><?php echo $sub_title->rcdSesSubtitleType->Type_Name ?></td>
                             <td><?php echo $sub_title->rcdSesSubtitleLanguage->Lang_Name ?></td>
                             <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->Created_Date ?></td>
                             <td><?php echo $sub_title->updatedBy->name ?></td>
+                            <td><?php echo $sub_title->Rowversion ?></td>
                             <td>
                                 <?php
                                 echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update' , 'id' => $record_ses_model->Rcd_Ses_Id , 'tab' => 3, 'edit' => $sub_title->Rcd_Ses_Subtitle_Id), array('title' => 'Edit'));

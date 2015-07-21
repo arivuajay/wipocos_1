@@ -89,8 +89,8 @@ class RecordingsessionController extends Controller {
             $model->attributes = $_POST['RecordingSession'];
             if ($model->save()) {
                 Myclass::addAuditTrail("Created RecordingSession successfully.", "user");
-                Yii::app()->user->setFlash('success', 'RecordingSession Created Successfully!!!');
-                $this->redirect(array('/site/recordingsession/update', 'tab' => 1, 'id' => $model->Rcd_Ses_Id));
+                Yii::app()->user->setFlash('success', 'RecordingSession Created Successfully. Please Fill the Doucmentation!!!');
+                $this->redirect(array('/site/recordingsession/update', 'tab' => 2, 'id' => $model->Rcd_Ses_Id));
             }
         }
 
@@ -133,7 +133,7 @@ class RecordingsessionController extends Controller {
             $sub_title_model->attributes = $_POST['RecordingSessionSubtitle'];
             if ($sub_title_model->save()) {
                 Myclass::addAuditTrail("Saved RecordingSession Subtitle successfully.", "file-audio-o");
-                Yii::app()->user->setFlash('success', 'Recording Session Subtitle Saved Successfully!!!');
+                Yii::app()->user->setFlash('success', 'Recording Session Sheet Subtitle Saved Successfully!!!');
                 $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => 3));
             }
         } elseif (isset($_POST['RecordingSessionBiography'])) {
@@ -160,25 +160,34 @@ class RecordingsessionController extends Controller {
                     }
                 }
 
-                Myclass::addAuditTrail("Saved Recording Session Biography successfully.", "file-audio-o");
-                Yii::app()->user->setFlash('success', 'Recording Session Biography Saved Successfully!!!');
+                Myclass::addAuditTrail("Saved Recording Session Sheet Biography successfully.", "file-audio-o");
+                Yii::app()->user->setFlash('success', 'Recording Session Sheet Biography Saved Successfully!!!');
                 $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => 4));
             }
         } elseif (isset($_POST['RecordingSessionDocumentation'])) {
             $document_model->attributes = $_POST['RecordingSessionDocumentation'];
             if ($document_model->save()) {
                 Myclass::addAuditTrail("Updated RecordingSession Documentation successfully.", "file-audio-o");
-                Yii::app()->user->setFlash('success', 'Recording Session Documentation Updated Successfully!!!');
+                Yii::app()->user->setFlash('success', 'Recording Session Sheet Documentation Updated Successfully!!!');
                 $doc_tab = 2;
-//                if(empty($right_holder_exists_1) || empty($right_holder_exists_1))
-//                    $doc_tab = 7;
+                $message = 'Recording Session Documentation Updated Successfully!!!';
+                if(empty($right_holder_exists_2)){
+                    $doc_tab = 5;
+                    $message = 'Recording Session Documentation Updated Successfully!!!. Please Fill Recordings';
+                }
+                Yii::app()->user->setFlash('success', $message);
+                $this->redirect(array('/site/recordingsession/update', 'tab' => $doc_tab, 'id' => $model->Rcd_Ses_Id));
+                
+                $doc_tab = 2;
+                if(empty($right_holder_exists_1) || empty($right_holder_exists_1))
+                    $doc_tab = 7;
                 $this->redirect(array('/site/recordingsession/update', 'tab' => $doc_tab, 'id' => $model->Rcd_Ses_Id));
             }
         } elseif (isset($_POST['RecordingSessionFolio'])) {
             $folio_model->attributes = $_POST['RecordingSessionFolio'];
             if ($folio_model->save()) {
                 Myclass::addAuditTrail("Saved RecordingSession Folio successfully.", "file-audio-o");
-                Yii::app()->user->setFlash('success', 'Recording Session Folio Saved Successfully!!!');
+                Yii::app()->user->setFlash('success', 'Recording Session Sheet Folio Saved Successfully!!!');
                 $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => 6));
             }
         }
@@ -257,7 +266,7 @@ class RecordingsessionController extends Controller {
         try {
             $model = RecordingSessionSubtitle::model()->findByPk($id);
             $model->delete();
-            Myclass::addAuditTrail("Deleted Recording Session subtitle {$model->Rcd_Ses_Subtitle_Name} successfully.", "file-audio-o");
+            Myclass::addAuditTrail("Deleted Recording Session Sheet subtitle {$model->Rcd_Ses_Subtitle_Name} successfully.", "file-audio-o");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
@@ -351,9 +360,19 @@ class RecordingsessionController extends Controller {
                 if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->rcdSes->Rcd_Ses_Title} successfully.", "fa file-audio-o");
             }
+
+            $folio_exists = RecordingSessionFolio::model()->findByAttributes(array('Rcd_Ses_Id' => $record_ses_id));
+            if(!empty($folio_exists)){
+                $tab = 5;
+                $message = 'RightHolder Saved Successfully';
+            }else{
+                $tab = 6;
+                $message = 'RightHolder Saved Successfully. Please Fill List of Folio!!!';
+            }
             if ($valid)
-                Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
-            $tab = $end['Rcd_Ses_Right_Work_Type'] == 'W' ? 1 : 5;
+                Yii::app()->user->setFlash('success', $message);
+            
+            $tab = !empty($folio_exists) ? 5 : 6;
             $this->redirect(array('/site/recordingsession/update', 'id' => $model->Rcd_Ses_Id, 'tab' => $tab));
         }
         exit;

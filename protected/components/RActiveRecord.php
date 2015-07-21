@@ -10,4 +10,10 @@ class RActiveRecord extends CActiveRecord {
         }
         return parent::beforeSave();
     }
+    
+    protected function afterFind() {
+        if($this->Rowversion == '0000-00-00 00:00:00')
+            $this->Rowversion = '';
+        parent::afterFind();
+    }
 }

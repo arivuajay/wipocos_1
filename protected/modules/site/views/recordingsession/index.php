@@ -2,9 +2,9 @@
 /* @var $this RecordingsessionController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Recording Sessions';
+$this->title = 'Recording Session Sheets';
 $this->breadcrumbs = array(
-    'Recording Sessions',
+    'Recording Session Sheets',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -281,7 +281,7 @@ $destinations = Myclass::getMasterDestination();
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Recording Sessions</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Recording Session Sheets</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );
