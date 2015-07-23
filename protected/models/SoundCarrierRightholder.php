@@ -153,7 +153,16 @@ class SoundCarrierRightholder extends RActiveRecord {
         $works = self::model()->findAll(array(
             'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
             'distinct' => true,
-            'condition' => "t.Sound_Car_Id = $sound_car_id"
+            'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'W'"
+        ));
+        return $works;
+    }
+
+    public function distinctRecordings($sound_car_id) {
+        $works = self::model()->findAll(array(
+            'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
+            'distinct' => true,
+            'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'R'"
         ));
         return $works;
     }

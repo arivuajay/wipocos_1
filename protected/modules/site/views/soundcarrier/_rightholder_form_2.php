@@ -197,7 +197,7 @@
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
                                             <td>
-                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-mcshare' => $member->Sound_Car_Right_Equal_Share, 'data-brshare' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit 2", 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-blk_share' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -426,11 +426,11 @@ $js = <<< EOD
         $('body').on('click','#rght_2 .holder-edit', function(){
             $("#rght_2 #right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
-            _brshare = $(this).data('brshare');
-            _mcshare =  $(this).data('mcshare');
+            _blk_share = $(this).data('blk_share');
+            _eql_share =  $(this).data('eql_share');
 
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_brshare);
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_mcshare);
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_eql_share);
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_blk_share);
             console.log($('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share'));
         
             $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
@@ -548,11 +548,11 @@ $js = <<< EOD
                     }
                 }
             });
-            _mcshare = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
-            _brshare = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
+            _eql_share = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
+            _blk_share = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
         
             tr += '<td>';
-            tr += '<a href="#role-foundation" data-mcshare="'+_mcshare+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+            tr += '<a href="#role-foundation" data-eql_share="'+_eql_share+'" data-blk_share="'+_blk_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
         

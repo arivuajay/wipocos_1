@@ -35,6 +35,8 @@ class InternalcodeGenerate extends RActiveRecord {
     const SOUND_CARRIER_PUBLISHING_CODE = 'SP';
     const RECORDING_SESSION_CODE = 'RS';
     
+    const INSPECTOR_CODE = 'IS';
+    
     public $fullcode;
     
     public $virtualinternalcode;
@@ -197,6 +199,7 @@ class InternalcodeGenerate extends RActiveRecord {
             self::RECORDING_SESSION_CODE => 'Recording Session Sheet',
             self::SOUND_CARRIER_CODE => 'Sound Carrier',
             self::SOUND_CARRIER_PUBLISHING_CODE => 'Sound Carrier Publishing',
+            self::INSPECTOR_CODE => 'Inspectors',
         );
         
         if($user_type == NULL && isset($this->Gen_User_Type))

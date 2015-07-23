@@ -20,7 +20,7 @@
                         <div class="box-body">
                             <div class="form-group hide">
                                 <?php echo CHtml::label('Work', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_work', (/*$_REQUEST['is_work'] == 1*/true), array('class' => 'form-control', 'id' => 'is_work')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_work', (/* $_REQUEST['is_work'] == 1 */true), array('class' => 'form-control', 'id' => 'is_work')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err" class="errorMessage hide">Select Work</div>
                             </div>
                             <div class="form-group">
@@ -51,56 +51,16 @@
     </div>
     <?php $this->endWidget(); ?>
 
-    <div class="row hide" id="link-performer-div">
-        <div class="col-lg-12">
-            <div class="box-body">
-                <div class="form-group foundation">
-                    <div class="box-header">
-                        <h3 class="box-title">Authors</h3>
-                    </div>
-                    <?php
-                    $members = AuthorAccount::model()->findAll();
-                    ?>
-                    <div class="box-body">
-                        <div class="form-group">
-                            <label for="base_table_search" class="control-label required">Search</label>
-                            <div>
-                                <input type="text" id="base_table_search" class="form-control" style="width: 50%">
-                            </div>
-                        </div>
-                    </div>
+    <div class="row hide" id="link-author-div">
 
-                    <div class="box-body" style="max-height: 300px; overflow-y: scroll">
-                        <div class="form-group">
-                            <table class="table table-striped table-bordered table-datatable selectable" id="link-performer">
-                                <thead>
-                                    <th>Rightholder Name</th>
-                                    <th>Internal Code</th>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($members)) {
-                                        foreach ($members as $key => $member) {
-                                            ?>
-                                            <tr data-uid="<?php echo $member->Auth_GUID ?>" data-name="<?php echo $member->fullname ?>" data-intcode = "<?php echo $member->Auth_Internal_Code ?>">
-                                                <td><?php echo $member->fullname; ?></td>
-                                                <td><?php echo $member->Auth_Internal_Code; ?></td>
-                                            </tr>
-                                            <?php
-                                        }
-                                    } else {
-                                        echo "<tr id='norecord_tr'><td colspan='8'>No data created</td></tr>";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="col-lg-1">
+            <input type="button" value="Add all Authors" id="right_insert_auto" class="btn btn-primary hide">
         </div>
     </div>
-    
+
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'sound-carrier-rightholder-form-1',
@@ -120,9 +80,9 @@
     echo $form->hiddenField($model, 'Sound_Car_Right_Member_Type', array('value' => 'A'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
-    
+
     <a name="role-foundation">&nbsp;</a>
-    <div class="col-lg-12">
+    <div class="col-lg-12 hide role_entry_author">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-body">
@@ -131,7 +91,7 @@
                             <?php echo $form->labelEx($model, 'Sound_Car_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
-                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Sound_Car_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Sound_Car_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
@@ -144,7 +104,7 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-6 hide role_entry_author">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -170,7 +130,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6 hide role_entry_author">
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -194,7 +154,7 @@
             </div>
         </div>
     </div>
-    <div class="box-footer">
+    <div class="box-footer hide role_entry_author">
         <div class="form-group">
             <div class="col-lg-12">
                 <div class="col-lg-1">
@@ -233,16 +193,28 @@
                                 $i = 0;
                                 if (!empty($exists_model)) {
                                     foreach ($exists_model as $key => $member) {
+                                        if($member->Sound_Car_Right_Member_Type == 'A'){
+                                            $uid = $member->rightholderAuthor->Auth_GUID;
+                                            $name = $member->rightholderAuthor->fullname;
+                                            $internal_code = $member->rightholderAuthor->Auth_Internal_Code;
+                                        }else if($member->Sound_Car_Right_Member_Type == 'P'){
+                                            $uid = $member->rightholderPerformer->Perf_GUID;
+                                            $name = $member->rightholderPerformer->fullname;
+                                            $internal_code = $member->rightholderPerformer->Perf_Internal_Code;
+                                        }
                                         ?>
-                                        <tr data-uid="<?php echo $member->rightholderAuthor->Auth_GUID ?>" data-name="<?php echo $member->rightholderAuthor->fullname ?>" data-intcode="<?php echo $member->rightholderAuthor->Auth_Internal_Code ?>" data-work-uid="<?php echo $member->rightholderWork->Work_GUID ?>" data-work-name="<?php echo $member->rightholderWork->Work_Org_Title ?>">
-                                            <td><?php echo $member->rightholderAuthor->fullname; ?></td>
-                                            <td><?php echo $member->rightholderAuthor->Auth_Internal_Code; ?></td>
+                                        <tr data-uid="<?php echo $uid ?>" data-name="<?php echo $name ?>" data-intcode="<?php echo $internal_code ?>" data-work-uid="<?php echo $member->rightholderWork->Work_GUID ?>" data-work-name="<?php echo $member->rightholderWork->Work_Org_Title ?>">
+                                            <td><?php echo $name; ?></td>
+                                            <td><?php echo $internal_code; ?></td>
                                             <td><?php echo $member->rightholderWork->Work_Org_Title; ?></td>
                                             <td><?php echo $member->soundCarRightRole->rolename; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
                                             <td>
-                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-mcshare' => $member->Sound_Car_Right_Equal_Share, 'data-brshare' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
+                                                <?php 
+                                                if($member->Sound_Car_Right_Member_Type == 'P'){
+                                                    echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-blk_share' => $member->Sound_Car_Right_Blank_Share, 'data-eql_share' => $member->Sound_Car_Right_Equal_Share));
+                                                }?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -262,7 +234,7 @@
                                             </td>
                                         </tr>
                                         <?php
-                                    $i++;
+                                        $i++;
                                     }
                                 } else {
                                     echo "<tr id='norecord_tr'><td colspan='8'>No data created</td></tr>";
@@ -289,7 +261,87 @@
 </div>
 
 <?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'rightauthorModal')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>Performer</h4>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="rightauthortable_base_table_search" class="control-label required">Search</label>
+        <div>
+            <input type="text" id="rightauthortable_base_table_search" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <div style="max-height: 300px; overflow-y: scroll">
+            <table class="table table-bordered selectable" id="rightauthortable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Internal Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $users = PerformerAccount::model()->findAll();
+                    foreach ($users as $key => $user) {
+                        ?>
+                        <tr data-uid="<?php echo $user->Perf_GUID ?>" data-name="<?php echo $user->fullname ?>" data-intcode = "<?php echo $user->Perf_Internal_Code ?>">
+                            <td><?php echo $user->fullname; ?></td>
+                            <td><?php echo $user->Perf_Internal_Code; ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>    
+    </div>
+</div>
+
+<div class="modal-footer">
+    <p class="errorMessage text-center col-sm-8" id="pro-modelerror"></p>
+    <?php
+    $this->widget(
+            'booster.widgets.TbButton', array(
+        'context' => 'primary',
+        'label' => 'Set Performer',
+        'url' => '#',
+        'htmlOptions' => array(
+            'id' => 'new_author_add',
+            'onclick' => '{    
+                    _row = $("#rightauthortable").find(".highlight");
+                    if(_row.length == 0){
+                        $("#pro-modelerror").html("Select Alteast one Performer");
+                    }else{
+                        $("#temp_click_new_author").trigger("click");
+                    }
+                }'
+        ),
+            )
+    );
+    ?>
+    <?php
+    $this->widget(
+            'booster.widgets.TbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'author-dismiss'),
+            )
+    );
+    ?>
+    <a id="temp_click_new_author" class="hide">Click me !!!!!</a>
+</div>
+
+<?php $this->endWidget(); ?>
+
+<?php
 $search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchworks");
+$search_author_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchworkauthors");
 $get_roles_point_url = Yii::app()->createAbsoluteUrl("site/sharedefinitionperrole/getpoint");
 
 $js = <<< EOD
@@ -319,19 +371,61 @@ $js = <<< EOD
             });
         });
         
-        $('body').on('click','#work_search tr, #link-performer tr', function(){
+        $('body').on('click','#work_search tr, #link-performer tr, #rightauthortable tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             $('#rght_1 .user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('#rght_1 .user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
         });
-        $('body').on('click','#work_search tr', function(){
-            $("#link-performer-div").removeClass('hide');
+        $('body').on('click','#work_search tbody tr', function(){
+            $("#link-author-div").removeClass('hide');
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Work_GUID').val($(this).data('uid'));
+            $.ajax({
+                type: 'GET',
+                url: '$search_author_url',
+                data:{work_guid: $(this).data('uid')},
+                success:function(data){
+                    $("#link-author-div").html(data);
+                    $("#rightauthortable tbody tr").removeClass('hide highlight');
+                    $('.role_entry_author').addClass('hide');
+                    $('#right_insert_auto').addClass('hide');
+                    $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
+                    if($('#link-performer tbody tr').length > 0){
+                        $('#right_insert_auto').removeClass('hide');
+                    }
+                },
+                error: function(data) {
+                    alert("Something went wrong. Try again");
+                },
+                dataType:'html'
+            });
         });
-        $('body').on('click','#link-performer tr', function(){
+        
+        $('body').on('click','#right_insert_auto', function(){
+            $('#link-performer tbody tr').each(function( index ) {
+                $(this).removeClass('highlight');
+                if($(this).attr('data-blkorg')){
+                    insertRightAuto($(this).data());
+                }
+            });
+        });
+        
+        $('body').on('click','#link-performer tbody tr', function(){
+            if($(this).hasClass('new_perf_tr')){
+                $('.role_entry_author').removeClass('hide');
+                $('#right_insert_auto').addClass('hide');
+            }else{
+                $('.role_entry_author').addClass('hide');
+                $('#right_insert_auto').removeClass('hide');
+            }
             $("#add-performer").attr('disabled', false);
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val($(this).data('uid'));
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_Internal_Code').val($(this).data('intcode'));
+            console.log($(this));
+            $('#rght_1 .user-role-dropdown select.performer-role').val($(this).data('rcdrole'));
+            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val($(this).data('eqlshare'));
+            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val($(this).data('blkshare'));
+            $(this).attr('data-eqlorg') ? $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Org_Id').val($(this).data('eqlorg')) : '';
+            $(this).attr('data-blkorg') ? $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Org_Id').val($(this).data('blkorg')) : '';
         });
         
         $('body').on('click','#linked-holders .row-delete', function(){
@@ -348,17 +442,18 @@ $js = <<< EOD
         $('body').on('click','#rght_1 .holder-edit', function(){
             $("#rght_1 #right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
-            _brshare = $(this).data('brshare');
-            _mcshare =  $(this).data('mcshare');
+            _eql_share = $(this).data('eql_share');
+            _blk_share =  $(this).data('blk_share');
 
-            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_brshare);
-            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_mcshare);
+            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_eql_share);
+            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_blk_share);
         
             $("#work_search tr, #link-performer tr").removeClass('highlight');
         
             _tr = $(this).closest('tr');
             _role = _tr.find('.rcd').data('rcd');
             _role !== null ? $('#rght_1 .user-role-dropdown select.performer-role').val(_role) : '';
+            $('.role_entry_author').removeClass('hide');
         });
         
         $('body').on('click','#linked-holders tr', function(){
@@ -374,6 +469,26 @@ $js = <<< EOD
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_Internal_Code').val(_intcode);
             $('#rght_1 .user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('#rght_1 .user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
+        });
+        
+        $('body').on('click','#temp_click_new_author', function(){
+            _table = $('#rightauthortable tbody').find('.highlight');
+            _uid = _table.data('uid');
+            _intcode = _table.data('intcode');
+            _name = _table.data('name');
+            var tr = '<tr data-intcode="'+_intcode+'" data-name="'+_name+'" data-uid="'+_uid+'" class="new_perf_tr">';
+            tr += '<td>'+_name+'</td>';
+            tr += '<td>'+_intcode+'</td>';
+            tr += '</tr>';
+            chk_tr = $("#rightauthortable tbody").find("[data-uid='" + _uid + "']");
+            if(chk_tr.length > 0){
+                chk_tr.addClass('hide');
+            }
+            _insert_table = $('#link-performer tbody');
+            _insert_table.append(tr);
+            _insert_table.find('tr:last').trigger('click');
+            $('#author-dismiss').trigger('click');
+            $('#SoundCarrierRightholder_Sound_Car_Right_Member_Type').val('P');
         });
     });
 
@@ -432,7 +547,8 @@ $js = <<< EOD
                     if (value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Equal_Share]" || value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Blank_Share]") {
                         td_content = parseFloat(value['value']).toFixed(2);
                     }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Role]"){
-                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
+                        td_content = $('select[name="' + value['name'] + '"] option:selected').text();
+//                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
                     }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Id]"){
                         td_content = chk_tr.length == 1 ? chk_tr.data('name') : _name;
                     }else if(value['name'] == "SoundCarrierRightholder[Sound_Car_Right_Member_Internal_Code]"){
@@ -446,11 +562,11 @@ $js = <<< EOD
                     }
                 }
             });
-            _mcshare = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
-            _brshare = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
+            _blk_share = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
+            _eql_share = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
         
             tr += '<td>';
-            tr += '<a href="#role-foundation" data-mcshare="'+_mcshare+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+            tr += '<a href="#role-foundation" data-blk_share="'+_blk_share+'" data-eql_share="'+_eql_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
         
@@ -498,6 +614,53 @@ $js = <<< EOD
             },
         });
     }
+        
+    function insertRightAuto(data){
+        $('#rght_1 #norecord_tr').remove();
+        _work = $('#work_search tbody tr.highlight');
+        chk_tr = $("#rght_1 #linked-holders").find("[data-uid='" + data.uid + "'][data-work-uid='" + _work.data("work-uid") + "']");
+        if(chk_tr.length > 0){
+            var tr = '';
+        }else{
+            var tr = '<tr data-work-name="'+_work.data("work-name")+'" data-work-uid="'+_work.data("work-uid")+'" data-intcode="'+data.intcode+'" data-name="'+data.name+'" data-uid="'+data.uid+'">';
+        }
+        
+        tr += '<td>'+data.name+'</td>';
+        tr += '<td>'+data.intcode+'</td>';
+        tr += '<td>'+_work.data("work-name")+'</td>';
+        tr += '<td>'+data.rcdrolename+'</td>';
+        tr += '<td>'+data.eqlshare+'</td>';
+        tr += '<td>'+data.blkshare+'</td>';
+//        tr += '<td><a href="#role-foundation" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+        tr += '<td>';
+        tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';
+        
+        //hidden fields//
+        tr += '<td class="hide">'
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Id]" value="$sound_car_id">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Member_GUID]" value="'+data.uid+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Work_GUID]" value="'+_work.data("work-uid")+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Member_Internal_Code]" value="'+data.intcode+'">';
+        tr += '<input class="rcd" data-rcd = "'+data.rcdrole+'" type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Role]" value="'+data.rcdrole+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Equal_Share]" value="'+data.eqlshare+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Equal_Org_Id]" value="'+data.eqlorg+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Blank_Share]" value="'+data.blkshare+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Blank_Org_Id]" value="'+data.blkorg+'">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Work_Type]" value="W">';
+        tr += '<input type="hidden" name="SoundCarrierRightholder['+rowCount+'][Sound_Car_Right_Member_Type]" value="A">';
+        tr += '</td>';
+        //End //
+        
+        if(chk_tr.length > 0){
+            chk_tr.html(tr);
+        }else{
+            tr += '</tr>';
+            $('#rght_1 #linked-holders tbody').append(tr);
+        }
+        rowCount++;
+        checkShare();
+    }
+        
         
 EOD;
 Yii::app()->clientScript->registerScript('_right_form', $js);

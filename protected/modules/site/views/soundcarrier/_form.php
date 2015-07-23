@@ -61,6 +61,10 @@ if (!$model->isNewRecord) {
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($pub_tab_validation) echo 'data-toggle="tab"'; ?>>Publication</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_9" href="#tab_9" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Work List</a></li>
+                <li><a id="a_tab_10" href="#tab_10" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Work's Right Holders</a></li>
+                <li><a id="a_tab_11" href="#tab_11" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Recording List</a></li>
+                <li><a id="a_tab_12" href="#tab_12" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Recording's Right Holders</a></li>
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
@@ -252,6 +256,34 @@ if (!$model->isNewRecord) {
                     <?php
                     if ($rgt_tab_validation) {
                         $this->renderPartial('_rightholder_form_2', array('model' => $right_holder_model, 'sound_car_model' => $model, 'exists_model' => $right_holder_exists_2));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_9">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_work_list', array('model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_10">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_rightholder_work_production_list', array('model' => $model, 'exists_model' => $right_holder_exists_1));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_11">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_recording_list', array('model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_12">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_rightholder_recording_production_list', array('model' => $model, 'exists_model' => $right_holder_exists_2));
                     }
                     ?>
                 </div>

@@ -35,7 +35,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete', 'searchworkauthors'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -128,8 +128,8 @@ class SoundcarrierController extends Controller {
             $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
         }
 
-        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'W', 'Sound_Car_Right_Member_Type' => 'A'));
-        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R', 'Sound_Car_Right_Member_Type' => 'P'));
+        $right_holder_exists_1 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'W'));
+        $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R'));
         $right_holder_model = new SoundCarrierRightholder;
 
         $biograph_upload_model = new SoundCarrierBiographUploads;
@@ -374,8 +374,19 @@ class SoundcarrierController extends Controller {
         $this->renderPartial('_search_recording_performers', compact('recording'));
     }
 
+    public function actionSearchworkauthors() {
+        if(isset($_REQUEST['work_guid']))
+            $work = Work::model()->findByAttributes (array('Work_GUID' => $_REQUEST['work_guid']));
+        $this->renderPartial('_search_work_authors', compact('work'));
+    }
+
     public function actionInsertright() {
         if (isset($_POST['SoundCarrierRightholder']) && !empty($_POST['SoundCarrierRightholder'])) {
+//            echo '<pre>';
+//            print_r($_POST['SoundCarrierRightholder']);
+//            exit;
+
+
             $end = end($_POST['SoundCarrierRightholder']);
             $sound_car_id = $end['Sound_Car_Id'];
             
@@ -402,9 +413,11 @@ class SoundcarrierController extends Controller {
                 $model->setAttribute('Created_Date', $created_date);
                 $model->setAttribute('Rowversion', $updated_date);
                 $valid = $valid && $model->save(false);
+//                var_dump($model->getErrors());
                 if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->soundCar->Sound_Car_Title} successfully.", "fa fa-at");
             }
+//            exit;
             if ($valid)
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
             $tab = $end['Sound_Car_Right_Work_Type'] == 'W' ? 7 : 8;

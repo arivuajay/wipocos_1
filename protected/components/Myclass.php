@@ -72,6 +72,7 @@ class Myclass extends CController {
             $exist_count += SoundCarrier::model()->countByAttributes(array('Sound_Car_GUID' => $new_guid));
             $exist_count += RecordingSession::model()->countByAttributes(array('Rcd_Ses_GUID' => $new_guid));
             $exist_count += CustomerUser::model()->countByAttributes(array('User_Cust_GUID' => $new_guid));
+            $exist_count += Inspector::model()->countByAttributes(array('Insp_GUID' => $new_guid));
 
             if ($exist_count > 0) {
                 $old_guid = $new_guid;

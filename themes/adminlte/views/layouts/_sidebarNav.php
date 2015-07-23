@@ -122,6 +122,7 @@
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
                         array('label' => '<i class="fa fa-user"></i> <span>Users & Customers</span>', 'url' => array('/site/customeruser/index'), 'visible' => 1, 'active' => 0),
+                        array('label' => '<i class="fa fa-shield"></i> <span>Inspectors</span>', 'url' => array('/site/inspector/index'), 'visible' => 1, 'active' => 0),
                     ),
                 ),
             ),
