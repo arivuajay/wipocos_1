@@ -70,6 +70,8 @@ class Myclass extends CController {
             $exist_count += Work::model()->countByAttributes(array('Work_GUID' => $new_guid));
             $exist_count += Recording::model()->countByAttributes(array('Rcd_GUID' => $new_guid));
             $exist_count += SoundCarrier::model()->countByAttributes(array('Sound_Car_GUID' => $new_guid));
+            $exist_count += RecordingSession::model()->countByAttributes(array('Rcd_Ses_GUID' => $new_guid));
+            $exist_count += CustomerUser::model()->countByAttributes(array('User_Cust_GUID' => $new_guid));
 
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
@@ -511,6 +513,16 @@ class Myclass extends CController {
         if ($key != NULL)
             return $dist[$key];
         return $dist;
+    }
+
+    public static function getMasterPlace($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $place = CHtml::listData(MasterPlace::model()->isActive(array('order' => 'Place_Name'))->findAll(), 'Master_Place_Id', 'Place_Name');
+        else
+            $place = CHtml::listData(MasterPlace::model()->findAll(array('order' => 'Place_Name')), 'Master_Place_Id', 'Place_Name');
+        if ($key != NULL)
+            return $place[$key];
+        return $place;
     }
 
     //end
