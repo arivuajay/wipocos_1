@@ -15,7 +15,7 @@
         <div class="alert alert-success alert-dismissable">
             <!--<i class="fa fa-check"></i>-->
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <b><?php echo $auth_count; ?> Authors Added to Linked Rightholders !</b>
+            <b><?php echo $auth_count; ?> Author<?php echo $auth_count > 1 ? 's' : ''?> Added to Linked Rightholders !</b>
         </div>
         <div class="box-body">
             <div class="form-group foundation">

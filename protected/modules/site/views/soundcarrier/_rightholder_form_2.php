@@ -76,7 +76,7 @@
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
     
-    <a name="role-foundation">&nbsp;</a>
+    <a name="role-foundation-rec">&nbsp;</a>
     <div class="col-lg-12 hide role_entry">
         <div class="box-body">
             <div class="form-group foundation">
@@ -197,7 +197,7 @@
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
                                             <td>
-                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit 2", 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-blk_share' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation-rec', array('class' => "holder-edit 2", 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-blk_share' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -373,6 +373,7 @@ $js = <<< EOD
                     $("#rightperformertable tbody tr").removeClass('hide highlight');
                     $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
                     $('.box-footer.role_entry').removeClass('hide');
+                    $('.role_entry').addClass('hide');
                     $('#link-performer-rec tbody tr').each(function( index ) {
                         $(this).removeClass('highlight');
                         if($(this).attr('data-blkorg')){
@@ -388,6 +389,13 @@ $js = <<< EOD
             });
         });
         $('body').on('click','#link-performer-rec tr', function(){
+            if($(this).hasClass('new_perf_tr')){
+                $('.role_entry').removeClass('hide');
+//                $('#right_insert_auto').addClass('hide');
+            }else{
+                $('.role_entry').addClass('hide');
+//                $('#right_insert_auto').removeClass('hide');
+            }
             $("#add-performer-rec").attr('disabled', false);
             $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val($(this).data('uid'));
             $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_Internal_Code').val($(this).data('intcode'));
@@ -405,7 +413,7 @@ $js = <<< EOD
             _uid = _table.data('uid');
             _intcode = _table.data('intcode');
             _name = _table.data('name');
-            var tr = '<tr data-intcode="'+_intcode+'" data-name="'+_name+'" data-uid="'+_uid+'">';
+            var tr = '<tr data-intcode="'+_intcode+'" data-name="'+_name+'" data-uid="'+_uid+'" class="new_perf_tr">';
             tr += '<td>'+_name+'</td>';
             tr += '<td>'+_intcode+'</td>';
             tr += '</tr>';
@@ -558,7 +566,7 @@ $js = <<< EOD
             _blk_share = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
         
             tr += '<td>';
-            tr += '<a href="#role-foundation" data-eql_share="'+_eql_share+'" data-blk_share="'+_blk_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+            tr += '<a href="#role-foundation-rec" data-eql_share="'+_eql_share+'" data-blk_share="'+_blk_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
         
@@ -585,8 +593,7 @@ $js = <<< EOD
     function insertRightAuto2(data){
         $('#rght_2 #norecord_tr_rec').remove();
         _work = $('#record_search tbody tr.highlight');
-        console.log(_work);
-        chk_tr = $("#rght_2 #link-performer-rec").find("[data-uid='" + data.uid + "'][data-work-uid='" + _work.data("work-uid") + "']");
+        chk_tr = $("#rght_2 #linked-holders-rec").find("[data-uid='" + data.uid + "'][data-work-uid='" + _work.data("work-uid") + "']");
         if(chk_tr.length > 0){
             var tr = '';
         }else{
@@ -599,7 +606,7 @@ $js = <<< EOD
         tr += '<td>'+data.rcdrolename+'</td>';
         tr += '<td>'+data.eqlshare+'</td>';
         tr += '<td>'+data.blkshare+'</td>';
-//        tr += '<td><a href="#role-foundation" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+//        tr += '<td><a href="#role-foundation-rec" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
         tr += '<td>';
         tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';
         

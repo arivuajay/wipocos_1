@@ -15,7 +15,7 @@
         <div class="alert alert-success alert-dismissable">
             <!--<i class="fa fa-check"></i>-->
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <b><?php echo $perf_count; ?> Performers Added to Linked Rightholders !</b>
+            <b><?php echo $perf_count; ?> Performer<?php echo $perf_count > 1 ? 's' : ''?> Added to Linked Rightholders !</b>
         </div>
         <div class="box-body">
             <div class="form-group foundation">
