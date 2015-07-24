@@ -28,7 +28,7 @@
                                 if ($recordings) {
                                     foreach ($recordings as $key => $recording) {
                                         ?>
-                                        <tr data-urole="WK" data-uid="<?php echo $recording->Rcd_GUID ?>" data-name="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-work-uid="<?php echo $recording->Rcd_GUID ?>" data-work-name="<?php echo $recording->Rcd_Title ?>" >
+                                        <tr data-urole="RC" data-uid="<?php echo $recording->Rcd_GUID ?>" data-name="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-work-uid="<?php echo $recording->Rcd_GUID ?>" data-work-name="<?php echo $recording->Rcd_Title ?>" >
                                             <td><?php echo $recording->Rcd_Title ?></td>
                                             <td><?php echo $recording->Rcd_Internal_Code ?></td>
                                         </tr>

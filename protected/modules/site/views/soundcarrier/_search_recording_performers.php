@@ -2,14 +2,21 @@
     <?php
     $rightholders = $recording->recordingRightholders;
     $not_empty = true;
+    $perf_count = 0;
     foreach ($rightholders as $key => $rightholder) {
         if (!empty($rightholder->recordingPerformer)) {
-            $not_empty = false;
-            break;
+            if ($not_empty)
+                $not_empty = false;
+            $perf_count++;
         }
     }
     if (!$not_empty) {
         ?>
+        <div class="alert alert-success alert-dismissable">
+            <!--<i class="fa fa-check"></i>-->
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <b><?php echo $perf_count; ?> Performers Added to Linked Rightholders !</b>
+        </div>
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
@@ -29,7 +36,7 @@
                                     foreach ($rightholders as $key => $rightholder) {
                                         if (!empty($rightholder->recordingPerformer)) {
                                             ?>
-                                            <tr data-uid="<?php echo $rightholder->recordingPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->recordingPerformer->fullname ?>" data-intcode = "<?php echo $rightholder->recordingPerformer->Perf_Internal_Code ?>" data-rcdrole = "<?php echo $rightholder->Rcd_Right_Role ?>" data-eqlshare = "<?php echo $rightholder->Rcd_Right_Equal_Share ?>" data-eqlorg = "<?php echo $rightholder->Rcd_Right_Equal_Org_id ?>" data-blkshare = "<?php echo $rightholder->Rcd_Right_Blank_Share ?>" data-blkorg = "<?php echo $rightholder->Rcd_Right_Blank_Org_Id ?>">
+                                            <tr data-rcdrolename = "<?php echo $rightholder->rcdRightRole->namewithcode ?>" data-uid="<?php echo $rightholder->recordingPerformer->Perf_GUID ?>" data-name="<?php echo $rightholder->recordingPerformer->fullname ?>" data-intcode = "<?php echo $rightholder->recordingPerformer->Perf_Internal_Code ?>" data-rcdrole = "<?php echo $rightholder->Rcd_Right_Role ?>" data-eqlshare = "<?php echo $rightholder->Rcd_Right_Equal_Share ?>" data-eqlorg = "<?php echo $rightholder->Rcd_Right_Equal_Org_id ?>" data-blkshare = "<?php echo $rightholder->Rcd_Right_Blank_Share ?>" data-blkorg = "<?php echo $rightholder->Rcd_Right_Blank_Org_Id ?>">
                                                 <td><?php echo $rightholder->recordingPerformer->fullname; ?></td>
                                                 <td><?php echo $rightholder->recordingPerformer->Perf_Internal_Code; ?></td>
                                             </tr>

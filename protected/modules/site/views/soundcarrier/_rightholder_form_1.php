@@ -55,11 +55,11 @@
 
     </div>
 
-    <div class="col-lg-12">
+<!--    <div class="col-lg-12">
         <div class="col-lg-1">
             <input type="button" value="Add all Authors" id="right_insert_auto" class="btn btn-primary hide">
         </div>
-    </div>
+    </div>-->
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -387,11 +387,18 @@ $js = <<< EOD
                     $("#link-author-div").html(data);
                     $("#rightauthortable tbody tr").removeClass('hide highlight');
                     $('.role_entry_author').addClass('hide');
-                    $('#right_insert_auto').addClass('hide');
+//                    $('#right_insert_auto').addClass('hide');
                     $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
-                    if($('#link-performer tbody tr').length > 0){
-                        $('#right_insert_auto').removeClass('hide');
-                    }
+//                    if($('#link-performer tbody tr').length > 0){
+//                        $('#right_insert_auto').removeClass('hide');
+//                    }
+                    $('#link-performer tbody tr').each(function( index ) {
+                        $(this).removeClass('highlight');
+                        if($(this).attr('data-blkorg')){
+                            insertRightAuto($(this).data());
+                        }
+//                        $(this).remove();
+                    });
                 },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -400,22 +407,22 @@ $js = <<< EOD
             });
         });
         
-        $('body').on('click','#right_insert_auto', function(){
-            $('#link-performer tbody tr').each(function( index ) {
-                $(this).removeClass('highlight');
-                if($(this).attr('data-blkorg')){
-                    insertRightAuto($(this).data());
-                }
-            });
-        });
+//        $('body').on('click','#right_insert_auto', function(){
+//            $('#link-performer tbody tr').each(function( index ) {
+//                $(this).removeClass('highlight');
+//                if($(this).attr('data-blkorg')){
+//                    insertRightAuto($(this).data());
+//                }
+//            });
+//        });
         
         $('body').on('click','#link-performer tbody tr', function(){
             if($(this).hasClass('new_perf_tr')){
                 $('.role_entry_author').removeClass('hide');
-                $('#right_insert_auto').addClass('hide');
+//                $('#right_insert_auto').addClass('hide');
             }else{
                 $('.role_entry_author').addClass('hide');
-                $('#right_insert_auto').removeClass('hide');
+//                $('#right_insert_auto').removeClass('hide');
             }
             $("#add-performer").attr('disabled', false);
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val($(this).data('uid'));
