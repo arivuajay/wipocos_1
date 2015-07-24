@@ -31,6 +31,7 @@ class Inspector extends RActiveRecord {
         if($this->isNewRecord){
             $this->Insp_GUID = Myclass::guid(false);
             $this->Insp_Nationality_Id = DEFAULT_NATIONALITY_ID;
+            $this->Insp_Region_Id = DEFAULT_REGION_ID;
             $this->Insp_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::INSPECTOR_CODE))->Fullcode;
         }
     }

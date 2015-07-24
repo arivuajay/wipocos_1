@@ -35,6 +35,7 @@ return array(
 
     'DEFAULT_COUNTRY_ID' => '2',
     'DEFAULT_NATIONALITY_ID' => '2',
+    'DEFAULT_REGION_ID' => '1',
     'DEFAULT_LANGUAGE_ID' => '5',
 
     'DEFAULT_AUTHOR_RIGHT_HOLDER_ID' => '1',

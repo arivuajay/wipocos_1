@@ -36,6 +36,7 @@ class InternalcodeGenerate extends RActiveRecord {
     const RECORDING_SESSION_CODE = 'RS';
     
     const INSPECTOR_CODE = 'IS';
+    const TARIFF_CONTRACT_CODE = 'TF';
     
     public $fullcode;
     

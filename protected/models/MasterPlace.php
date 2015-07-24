@@ -56,6 +56,8 @@ class MasterPlace extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'customerUsers' => array(self::HAS_MANY, 'CustomerUser', 'User_Cust_Place_Id'),
+            'tariffContracts' => array(self::HAS_MANY, 'TariffContracts', 'Tarf_Cont_Event_Place_Id'),
         );
     }
 
@@ -127,4 +129,21 @@ class MasterPlace extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('customerUsers', 'tariffContracts');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Place_Name', "This Type is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }
