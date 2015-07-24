@@ -7,12 +7,14 @@ $works = (new SoundCarrierRightholder)->distinctWorks($model->Sound_Car_Id);
     </div>
     <div class="box-body no-padding">
         <table class="table table-striped table-bordered">
-            <tbody>
+            <thead>
                 <tr>
                     <th style="width: 10px">#</th>
                     <th>Title</th>
                     <th>Internal Code</th>
                 </tr>
+            </thead>
+            <tbody>
                 <?php
                 if (!empty($works)) {
                     foreach ($works as $key => $work) {

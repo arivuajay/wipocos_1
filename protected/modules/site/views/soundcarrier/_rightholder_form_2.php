@@ -444,8 +444,8 @@ $js = <<< EOD
             _blk_share = $(this).data('blk_share');
             _eql_share =  $(this).data('eql_share');
 
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_eql_share);
-            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_blk_share);
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_blk_share);
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_eql_share);
         
             $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
         

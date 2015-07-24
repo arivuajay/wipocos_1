@@ -1,6 +1,6 @@
 <div class="box box-primary" id="rght_2">
     <?php
-    $sound_car_id = $record_ses_model->Rcd_Ses_Id;
+    $rcd_ses_id = $record_ses_model->Rcd_Ses_Id;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'record-rightholder-search-form-rec-2',
         'action' => $this->createUrl('/site/recordingsession/update', array('id' => $record_ses_model->Rcd_Ses_Id, 'tab' => '7')),
@@ -371,6 +371,13 @@ $js = <<< EOD
                     $("#link-performer-rec-div").html(data);
                     $("#rightperformertable tbody tr").removeClass('hide highlight');
                     $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val('');
+                    $('#link-performer-rec tbody tr').each(function( index ) {
+                        $(this).removeClass('highlight');
+                        if($(this).attr('data-blkorg')){
+                            insertRightAuto2($(this).data());
+                        }
+//                        $(this).remove();
+                    });
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -379,6 +386,13 @@ $js = <<< EOD
             });
         });
         $('body').on('click','#link-performer-rec tr', function(){
+            if($(this).hasClass('new_perf_tr')){
+                $('.role_entry').removeClass('hide');
+//                $('#right_insert_auto').addClass('hide');
+            }else{
+                $('.role_entry').addClass('hide');
+//                $('#right_insert_auto').removeClass('hide');
+            }
             $("#add-performer-rec").attr('disabled', false);
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val($(this).data('uid'));
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_Internal_Code').val($(this).data('intcode'));
@@ -396,7 +410,7 @@ $js = <<< EOD
             _uid = _table.data('uid');
             _intcode = _table.data('intcode');
             _name = _table.data('name');
-            var tr = '<tr data-intcode="'+_intcode+'" data-name="'+_name+'" data-uid="'+_uid+'">';
+            var tr = '<tr data-intcode="'+_intcode+'" data-name="'+_name+'" data-uid="'+_uid+'" class="new_perf_tr">';
             tr += '<td>'+_name+'</td>';
             tr += '<td>'+_intcode+'</td>';
             tr += '</tr>';
@@ -424,12 +438,11 @@ $js = <<< EOD
         $('body').on('click','#rght_2 .holder-edit', function(){
             $("#rght_2 #right_insert").val('Edit');
             $(this).closest('tr').trigger('click');
-            _brshare = $(this).data('brshare');
-            _mcshare =  $(this).data('mcshare');
+            _mcshare = $(this).data('brshare');
+            _brshare =  $(this).data('mcshare');
 
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share').val(_brshare);
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Share').val(_mcshare);
-            console.log($('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Share'));
         
             $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
         
@@ -589,6 +602,53 @@ $js = <<< EOD
             },
         });
     }
+        
+    function insertRightAuto2(data){
+        $('#rght_2 #norecord_tr_rec').remove();
+        _work = $('#record_search tbody tr.highlight');
+        chk_tr = $("#rght_2 #linked-holders-rec").find("[data-uid='" + data.uid + "'][data-work-uid='" + _work.data("work-uid") + "']");
+        if(chk_tr.length > 0){
+            var tr = '';
+        }else{
+            var tr = '<tr data-work-name="'+_work.data("work-name")+'" data-work-uid="'+_work.data("work-uid")+'" data-intcode="'+data.intcode+'" data-name="'+data.name+'" data-uid="'+data.uid+'">';
+        }
+        
+        tr += '<td>'+data.name+'</td>';
+        tr += '<td>'+data.intcode+'</td>';
+        tr += '<td>'+_work.data("work-name")+'</td>';
+        tr += '<td>'+data.rcdrolename+'</td>';
+        tr += '<td>'+data.eqlshare+'</td>';
+        tr += '<td>'+data.blkshare+'</td>';
+//        tr += '<td><a href="#role-foundation-rec" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+        tr += '<td>';
+        tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';
+        
+        //hidden fields//
+        tr += '<td class="hide">'
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Id]" value="$rcd_ses_id">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Member_GUID]" value="'+data.uid+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Work_GUID]" value="'+_work.data("work-uid")+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Member_Internal_Code]" value="'+data.intcode+'">';
+        tr += '<input class="rcd" data-rcd = "'+data.rcdrole+'" type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Role]" value="'+data.rcdrole+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Equal_Share]" value="'+data.eqlshare+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Equal_Org_Id]" value="'+data.eqlorg+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Blank_Share]" value="'+data.blkshare+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Blank_Org_Id]" value="'+data.blkorg+'">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Work_Type]" value="R">';
+        tr += '<input type="hidden" name="RecordingSessionRightholder['+rowCount2+'][Rcd_Ses_Right_Member_Type]" value="P">';
+        tr += '</td>';
+        //End //
+        
+        if(chk_tr.length > 0){
+            chk_tr.html(tr);
+        }else{
+            tr += '</tr>';
+            $('#rght_2 #linked-holders-rec tbody').append(tr);
+        }
+        rowCount2++;
+        checkShare2();
+    }
+        
         
 EOD;
 Yii::app()->clientScript->registerScript('_right_form_2', $js);

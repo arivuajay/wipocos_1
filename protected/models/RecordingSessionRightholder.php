@@ -46,7 +46,7 @@ class RecordingSessionRightholder extends RActiveRecord {
             array('Rcd_Ses_Id, Rcd_Ses_Right_Role, Rcd_Ses_Right_Equal_Org_Id, Rcd_Ses_Right_Blank_Org_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Ses_Right_Work_GUID, Rcd_Ses_Right_Member_GUID', 'length', 'max' => 40),
             array('Rcd_Ses_Right_Work_Type', 'length', 'max' => 1),
-            array('Rcd_Ses_Right_Equal_Share, Rcd_Ses_Right_Blank_Share', 'length', 'max' => 10),
+            array('Rcd_Ses_Right_Equal_Share, Rcd_Ses_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
             array('Rcd_Ses_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Rcd_Ses_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             array('Created_Date, Rowversion, Rcd_Ses_Right_Member_Internal_Code', 'safe'),

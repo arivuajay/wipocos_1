@@ -382,11 +382,6 @@ class SoundcarrierController extends Controller {
 
     public function actionInsertright() {
         if (isset($_POST['SoundCarrierRightholder']) && !empty($_POST['SoundCarrierRightholder'])) {
-//            echo '<pre>';
-//            print_r($_POST['SoundCarrierRightholder']);
-//            exit;
-
-
             $end = end($_POST['SoundCarrierRightholder']);
             $sound_car_id = $end['Sound_Car_Id'];
             
@@ -413,11 +408,9 @@ class SoundcarrierController extends Controller {
                 $model->setAttribute('Created_Date', $created_date);
                 $model->setAttribute('Rowversion', $updated_date);
                 $valid = $valid && $model->save(false);
-//                var_dump($model->getErrors());
                 if ($valid)
                     Myclass::addAuditTrail("Created Right Holder saved for {$model->soundCar->Sound_Car_Title} successfully.", "fa fa-at");
             }
-//            exit;
             if ($valid)
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
             $tab = $end['Sound_Car_Right_Work_Type'] == 'W' ? 7 : 8;
