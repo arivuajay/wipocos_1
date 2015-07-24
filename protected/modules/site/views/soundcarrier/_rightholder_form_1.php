@@ -213,7 +213,7 @@
                                             <td>
                                                 <?php 
                                                 if($member->Sound_Car_Right_Member_Type == 'P'){
-                                                    echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-blk_share' => $member->Sound_Car_Right_Blank_Share, 'data-eql_share' => $member->Sound_Car_Right_Equal_Share));
+                                                    echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-blk_share' => $member->Sound_Car_Right_Blank_Share, 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-mem_type' => $member->Sound_Car_Right_Member_Type));
                                                 }?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
@@ -454,6 +454,7 @@ $js = <<< EOD
 
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share').val(_eql_share);
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share').val(_blk_share);
+            $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_Type').val($(this).data('mem_type'));
         
             $("#work_search tr, #link-performer tr").removeClass('highlight');
         
@@ -571,9 +572,10 @@ $js = <<< EOD
             });
             _blk_share = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
             _eql_share = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
+            _mem_type = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_Type").val();
         
             tr += '<td>';
-            tr += '<a href="#role-foundation" data-blk_share="'+_blk_share+'" data-eql_share="'+_eql_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+            tr += '<a href="#role-foundation" data-blk_share="'+_blk_share+'" data-eql_share="'+_eql_share+'" data-mem_type="'+_mem_type+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
         
