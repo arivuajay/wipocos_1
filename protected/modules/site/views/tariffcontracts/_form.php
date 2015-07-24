@@ -18,7 +18,7 @@
             ));
             ?>
             <div class="box-body">
-                <div class="form-group foundation" style="margin: 5px;">
+                <div class="form-group foundation" style="margin: 9px;">
                     <div class="box-header">
                         <h3 class="box-title">Search</h3>
                     </div>
@@ -44,14 +44,14 @@
                     </div>
                 </div>
 
-                <div class="form-group foundation" style="margin: 5px;">
+                <div class="form-group foundation" style="margin: 9px;">
                     <div class="box-header">
                         <h3 class="box-title">User</h3>
                     </div>
                     <div class="box-body"></div>
                 </div>
 
-                <div class="form-group foundation" style="margin: 5px;">
+                <div class="form-group foundation" style="margin: 9px;">
                     <div class="box-header">
                         <h3 class="box-title">Agreement</h3>
                     </div>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="form-group foundation" style="margin: 5px;">
+                <div class="form-group foundation" style="margin: 9px;">
                     <div class="box-header">
                         <h3 class="box-title">Establishment</h3>
                     </div>
