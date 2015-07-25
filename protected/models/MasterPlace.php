@@ -57,7 +57,7 @@ class MasterPlace extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'customerUsers' => array(self::HAS_MANY, 'CustomerUser', 'User_Cust_Place_Id'),
-            'tariffContracts' => array(self::HAS_MANY, 'TariffContracts', 'Tarf_Cont_Event_Place_Id'),
+            'tariffContracts' => array(self::HAS_MANY, 'TariffContracts', 'Tarf_Cont_Event_Id'),
         );
     }
 

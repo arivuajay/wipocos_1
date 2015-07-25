@@ -103,7 +103,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Equal Remuneration Points</h3>
+                    <h3 class="box-title">Equitable Remuneration Points</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -179,9 +179,9 @@
                             <th>Internal Code</th>
                             <th>Recording</th>
                             <th>Role</th>
-                            <th>Equal Remuneration Points</th>
+                            <th>Equitable Remuneration Points</th>
                             <th>Blank Levy Points</th>
-                            <th>Action</th>
+                            <th class="hide">Action</th>
                             </thead>
                             <tbody>
                                 <?php
@@ -196,7 +196,7 @@
                                             <td><?php echo $member->soundCarRightRole->rolename; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
-                                            <td>
+                                            <td class="hide">
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation-rec', array('class' => "holder-edit 2", 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-blk_share' => $member->Sound_Car_Right_Blank_Share)); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
@@ -565,7 +565,7 @@ $js = <<< EOD
             _eql_share = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Share").val();
             _blk_share = $("#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
         
-            tr += '<td>';
+            tr += '<td class="hide">';
             tr += '<a href="#role-foundation-rec" data-eql_share="'+_eql_share+'" data-blk_share="'+_blk_share+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
@@ -607,7 +607,7 @@ $js = <<< EOD
         tr += '<td>'+data.eqlshare+'</td>';
         tr += '<td>'+data.blkshare+'</td>';
 //        tr += '<td><a href="#role-foundation-rec" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
-        tr += '<td>';
+        tr += '<td class="hide">';
         tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';
         
         //hidden fields//

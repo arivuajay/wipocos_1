@@ -117,7 +117,7 @@ class SoundCarrier extends RActiveRecord {
             'Sound_Car_Language_Id' => 'Language',
             'Sound_Car_Internal_Code' => 'Internal Code',
             'Sound_Car_Standardized_Code' => 'Standardized Code',
-            'Sound_Car_Catelog' => 'Catelog',
+            'Sound_Car_Catelog' => 'Catalog',
             'Sound_Car_Barcode' => 'Bar code',
             'Sound_Car_Distributor' => 'Distributor',
             'Sound_Car_Label_Id' => 'Label',
@@ -208,5 +208,4 @@ class SoundCarrier extends RActiveRecord {
         }
         return parent::afterSave();
     }
-
 }

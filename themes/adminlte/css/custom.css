@@ -89,3 +89,7 @@ table.selectable tbody tr.highlight td { background-color: #f56954; cursor: poin
     border-top: 2px solid #F56954 !important;
     border: 2px solid #F56954;
 }
+
+.hide_tip{
+    cursor: pointer;
+}

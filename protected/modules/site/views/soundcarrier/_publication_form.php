@@ -27,7 +27,7 @@
             </div>
         </div>
         
-        <div class="form-group">
+        <div class="form-group hide">
             <?php echo CHtml::label('Internal Code', '', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php 
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group hide">
             <?php echo CHtml::label('ISRC Code', '', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo CHtml::textField('Publ Recording ISRC Code', $isrc, array('class' => 'form-control', 'disabled' => true)) ?>

@@ -55,12 +55,6 @@
 
     </div>
 
-<!--    <div class="col-lg-12">
-        <div class="col-lg-1">
-            <input type="button" value="Add all Authors" id="right_insert_auto" class="btn btn-primary hide">
-        </div>
-    </div>-->
-
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'sound-carrier-rightholder-form-1',
@@ -108,7 +102,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Equal Remuneration Points</h3>
+                    <h3 class="box-title">Equitable Remuneration Points</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -184,20 +178,20 @@
                             <th>Internal Code</th>
                             <th>Work</th>
                             <th>Role</th>
-                            <th>Equal Remuneration Points</th>
+                            <th>Equitable Remuneration Points</th>
                             <th>Blank Levy Points</th>
-                            <th>Action</th>
+                            <th class="hide">Action</th>
                             </thead>
                             <tbody>
                                 <?php
                                 $i = 0;
                                 if (!empty($exists_model)) {
                                     foreach ($exists_model as $key => $member) {
-                                        if($member->Sound_Car_Right_Member_Type == 'A'){
+                                        if ($member->Sound_Car_Right_Member_Type == 'A') {
                                             $uid = $member->rightholderAuthor->Auth_GUID;
                                             $name = $member->rightholderAuthor->fullname;
                                             $internal_code = $member->rightholderAuthor->Auth_Internal_Code;
-                                        }else if($member->Sound_Car_Right_Member_Type == 'P'){
+                                        } else if ($member->Sound_Car_Right_Member_Type == 'P') {
                                             $uid = $member->rightholderPerformer->Perf_GUID;
                                             $name = $member->rightholderPerformer->fullname;
                                             $internal_code = $member->rightholderPerformer->Perf_Internal_Code;
@@ -210,11 +204,12 @@
                                             <td><?php echo $member->soundCarRightRole->rolename; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
                                             <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
-                                            <td>
-                                                <?php 
-                                                if($member->Sound_Car_Right_Member_Type == 'P'){
+                                            <td class="hide">
+                                                <?php
+                                                if ($member->Sound_Car_Right_Member_Type == 'P') {
                                                     echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => "holder-edit", 'data-blk_share' => $member->Sound_Car_Right_Blank_Share, 'data-eql_share' => $member->Sound_Car_Right_Equal_Share, 'data-mem_type' => $member->Sound_Car_Right_Member_Type));
-                                                }?>&nbsp;&nbsp;
+                                                }
+                                                ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -259,6 +254,33 @@
     </div>
 
 </div>
+
+<?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'rightHolder')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>RightHolders</h4>
+</div>
+<div class="modal-body">
+    <?php echo $this->renderPartial('_work_list', array('model' => $sound_car_model)); ?>
+</div>
+<?php $this->endWidget(); ?>
+<?php
+$this->widget(
+        'booster.widgets.TbButton', array(
+    'label' => 'Click me',
+    'context' => 'primary',
+    'htmlOptions' => array(
+        'data-toggle' => 'modal',
+        'data-target' => '#rightHolder',
+    ),
+        )
+);
+?>
+
 
 <?php
 $this->beginWidget(
@@ -335,6 +357,7 @@ $this->beginWidget(
     );
     ?>
     <a id="temp_click_new_author" class="hide">Click me !!!!!</a>
+
 </div>
 
 <?php $this->endWidget(); ?>
@@ -387,17 +410,12 @@ $js = <<< EOD
                     $("#link-author-div").html(data);
                     $("#rightauthortable tbody tr").removeClass('hide highlight');
                     $('.role_entry_author').addClass('hide');
-//                    $('#right_insert_auto').addClass('hide');
                     $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val('');
-//                    if($('#link-performer tbody tr').length > 0){
-//                        $('#right_insert_auto').removeClass('hide');
-//                    }
                     $('#link-performer tbody tr').each(function( index ) {
                         $(this).removeClass('highlight');
                         if($(this).attr('data-blkorg')){
                             insertRightAuto($(this).data());
                         }
-//                        $(this).remove();
                     });
                 },
                 error: function(data) {
@@ -407,22 +425,12 @@ $js = <<< EOD
             });
         });
         
-//        $('body').on('click','#right_insert_auto', function(){
-//            $('#link-performer tbody tr').each(function( index ) {
-//                $(this).removeClass('highlight');
-//                if($(this).attr('data-blkorg')){
-//                    insertRightAuto($(this).data());
-//                }
-//            });
-//        });
         
         $('body').on('click','#link-performer tbody tr', function(){
             if($(this).hasClass('new_perf_tr')){
                 $('.role_entry_author').removeClass('hide');
-//                $('#right_insert_auto').addClass('hide');
             }else{
                 $('.role_entry_author').addClass('hide');
-//                $('#right_insert_auto').removeClass('hide');
             }
             $("#add-performer").attr('disabled', false);
             $('#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val($(this).data('uid'));
@@ -574,22 +582,17 @@ $js = <<< EOD
             _eql_share = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Equal_Share").val();
             _mem_type = $("#rght_1 #SoundCarrierRightholder_Sound_Car_Right_Member_Type").val();
         
-            tr += '<td>';
+            tr += '<td class="hide">';
             tr += '<a href="#role-foundation" data-blk_share="'+_blk_share+'" data-eql_share="'+_eql_share+'" data-mem_type="'+_mem_type+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
         
             if(chk_tr.length > 0){
                 chk_tr.html(tr);
-//                chk_tr.html(tr).addClass('highlight_tr');
             }else{
                 tr += '</tr>';
                 $('#rght_1 #linked-holders tbody').append(tr);
-//                $('#linked-holders tbody').find("tr:last").addClass('highlight_tr');
             }
-            setTimeout(function(){ 
-//                $('#linked-holders tbody').find(".highlight_tr").removeClass('highlight_tr');
-            }, 3000);
             rowCount++;
         
             $('#sound-carrier-rightholder-form-1')[0].reset();
@@ -641,7 +644,7 @@ $js = <<< EOD
         tr += '<td>'+data.eqlshare+'</td>';
         tr += '<td>'+data.blkshare+'</td>';
 //        tr += '<td><a href="#role-foundation" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
-        tr += '<td>';
+        tr += '<td class="hide">';
         tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';
         
         //hidden fields//

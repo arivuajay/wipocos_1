@@ -62,7 +62,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Tarf_Cont_Pay_Id',
 		'Tarf_Cont_Portion',
 		'Tarf_Cont_Comment',
-		'Tarf_Cont_Event_Place_Id',
+		'Tarf_Cont_Event_Id',
 		'Tarf_Cont_Event_Date',
 		'Tarf_Cont_Event_Comment',
 		'Created_Date',

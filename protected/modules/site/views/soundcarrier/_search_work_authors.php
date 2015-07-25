@@ -67,6 +67,7 @@
                                         'id' => 'rightauthorbutton',
                                         'data-toggle' => 'modal',
                                         'data-target' => '#rightauthorModal',
+                                        'class' => 'hide'
                                     ),
                                         )
                                 );

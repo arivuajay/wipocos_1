@@ -102,7 +102,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Equal Remuneration Points</h3>
+                    <h3 class="box-title">Equitable Remuneration Points</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -178,7 +178,7 @@
                             <th>Internal Code</th>
                             <th>Recording</th>
                             <th>Role</th>
-                            <th>Equal Remuneration Points</th>
+                            <th>Equitable Remuneration Points</th>
                             <th>Blank Levy Points</th>
                             <th>Action</th>
                             </thead>

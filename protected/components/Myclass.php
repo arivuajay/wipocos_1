@@ -73,6 +73,7 @@ class Myclass extends CController {
             $exist_count += RecordingSession::model()->countByAttributes(array('Rcd_Ses_GUID' => $new_guid));
             $exist_count += CustomerUser::model()->countByAttributes(array('User_Cust_GUID' => $new_guid));
             $exist_count += Inspector::model()->countByAttributes(array('Insp_GUID' => $new_guid));
+            $exist_count += TariffContracts::model()->countByAttributes(array('Tarf_Cont_Id' => $new_guid));
 
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
@@ -524,6 +525,26 @@ class Myclass extends CController {
         if ($key != NULL)
             return $place[$key];
         return $place;
+    }
+
+    public static function getMasterTariff($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $tariff = CHtml::listData(MasterTariff::model()->isActive(array('order' => 'Tarif_Code'))->findAll(), 'Master_Tarif_Id', 'Tarif_Description');
+        else
+            $tariff = CHtml::listData(MasterTariff::model()->findAll(array('order' => 'Tarif_Code')), 'Master_Tarif_Id', 'Tarif_Description');
+        if ($key != NULL)
+            return $tariff[$key];
+        return $tariff;
+    }
+
+    public static function getMasterEventtype($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $events = CHtml::listData(MasterEventType::model()->isActive(array('order' => 'Evt_Type_Name'))->findAll(), 'Master_Evt_Type_Id', 'Evt_Type_Name');
+        else
+            $events = CHtml::listData(MasterEventType::model()->findAll(array('order' => 'Evt_Type_Name')), 'Master_Evt_Type_Id', 'Evt_Type_Name');
+        if ($key != NULL)
+            return $events[$key];
+        return $events;
     }
 
     //end

@@ -67,6 +67,7 @@
                                     'id' => 'rightperformerbutton',
                                     'data-toggle' => 'modal',
                                     'data-target' => '#rightperformerModal',
+                                    'class' => 'hide'
                                 ),
                                     )
                             );

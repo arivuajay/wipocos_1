@@ -53,7 +53,7 @@ class SoundCarrierFixations extends RActiveRecord {
             array('Sound_Car_Fix_GUID', 'checkUnique'),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Sound_Car_Fix_Work_Type', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Sound_Car_Fix_Work_Type, Sound_Car_Fix_ISRC', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Sound_Car_Fix_Id, Sound_Car_Id, Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'safe', 'on' => 'search'),
@@ -103,9 +103,10 @@ class SoundCarrierFixations extends RActiveRecord {
             'Sound_Car_Id' => 'Sound Car',
             'Sound_Car_Fix_GUID' => 'Title',
             'Sound_Car_Fix_Duration' => 'Duration',
-            'Sound_Car_Fix_Date' => 'Date',
+            'Sound_Car_Fix_Date' => 'Date of Fixation',
             'Sound_Car_Fix_Studio' => 'Studio',
             'Sound_Car_Fix_Country_Id' => 'Country of recording',
+            'Sound_Car_Fix_ISRC' => 'ISRC Code',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'duration_hours' => 'Hours',

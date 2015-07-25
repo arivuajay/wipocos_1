@@ -63,6 +63,7 @@ class MasterNationality extends CActiveRecord {
             'performerAccounts' => array(self::HAS_MANY, 'PerformerAccount', 'Perf_Nationality_Id'),
             'recordingPublications' => array(self::HAS_MANY, 'RecordingPublication', 'Rcd_Publ_Prod_Nation_Id'),
             'soundCarrierPublications' => array(self::HAS_MANY, 'SoundCarrierPublication', 'Sound_Car_Publ_Prod_Nation_Id'),
+            'inspectors' => array(self::HAS_MANY, 'Inspector', 'Insp_Nationality_Id'),
         );
     }
 
@@ -131,7 +132,7 @@ class MasterNationality extends CActiveRecord {
     }
 
     protected function beforeValidate() {
-        $relations = array('authorAccounts', 'performerAccounts', 'recordingPublications', 'soundCarrierPublications');
+        $relations = array('authorAccounts', 'performerAccounts', 'recordingPublications', 'soundCarrierPublications', 'inspectors');
         
         $validate = false;
         if(MASTER_EDIT_VALIDATION){

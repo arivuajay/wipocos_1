@@ -109,7 +109,7 @@ class WorkSubPublishing extends RActiveRecord {
             'Work_Sub_Sign_Date' => 'Date of signature',
             'Work_Sub_File' => 'File',
             'Work_Sub_References' => 'No or References',
-            'Work_Sub_Catelog_Number' => 'Catelogue Number',
+            'Work_Sub_Catelog_Number' => 'Catalogue Number',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Work_Sub_Tacit' => 'Tacit',

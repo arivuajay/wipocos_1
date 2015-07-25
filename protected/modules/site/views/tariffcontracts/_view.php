@@ -70,8 +70,8 @@
 	<?php echo CHtml::encode($data->Tarf_Cont_Comment); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_Event_Place_Id')); ?>:</b>
-	<?php echo CHtml::encode($data->Tarf_Cont_Event_Place_Id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_Event_Id')); ?>:</b>
+	<?php echo CHtml::encode($data->Tarf_Cont_Event_Id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_Event_Date')); ?>:</b>

@@ -57,7 +57,8 @@
         <div class="form-group">
             <?php echo CHtml::label('ISRC Code', '', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo CHtml::textField('Fix Recording ISRC Code', $isrc, array('class' => 'form-control', 'disabled' => true)) ?>
+                <?php echo $form->textField($model, 'Sound_Car_Fix_ISRC', array('class' => 'form-control')); ?>
+                <?php echo $form->error($model, 'Sound_Car_Fix_ISRC'); ?>
             </div>
         </div>
         <hr />
@@ -188,7 +189,7 @@ $js = <<< EOD
             dataType: 'JSON',
             success: function(data){
                 $('#Fix_Recording_Internal_Code').val(data.Internal_Code);
-                $('#Fix_Recording_ISRC_Code').val(data.Isrc_Code);
+//                $('#Fix_Recording_ISRC_Code').val(data.Isrc_Code);
                 $('#SoundCarrierFixations_Sound_Car_Fix_Work_Type').val(data.Work_Type);
                 $('#SoundCarrierFixations_duration_hours').val(data.duration_hours);
                 $('#SoundCarrierFixations_duration_minutes').val(data.duration_minutes);

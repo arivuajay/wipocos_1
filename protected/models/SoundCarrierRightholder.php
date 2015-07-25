@@ -12,12 +12,15 @@
  * @property string $Rowversion
  * @property integer $Created_By
  * @property integer $Updated_By
+ * @property string $workMatchRecords
  *
  * The followings are the available model relations:
  * @property SoundCarrier $soundCar
  */
 class SoundCarrierRightholder extends RActiveRecord {
 
+    public $workMatchRecords;
+    
     public $Sound_Car_Right_Member_Internal_Code;
     /**
      * @return string the associated database table name
@@ -39,7 +42,7 @@ class SoundCarrierRightholder extends RActiveRecord {
             array('Sound_Car_Right_Work_Type', 'length', 'max' => 1),
 //            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'length', 'max' => 10),
             array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
-            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code, Sound_Car_Right_Member_Type', 'safe'),
+            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code, Sound_Car_Right_Member_Type, workMatchRecords', 'safe'),
             array('Sound_Car_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Sound_Car_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             // The following rule is used by search().
@@ -94,6 +97,7 @@ class SoundCarrierRightholder extends RActiveRecord {
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
+            'workMatchRecords' => 'Right Holders',
         );
     }
 
@@ -116,6 +120,7 @@ class SoundCarrierRightholder extends RActiveRecord {
 
         $criteria->compare('Sound_Car_Right_Id', $this->Sound_Car_Right_Id);
         $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
+        $criteria->compare('Sound_Car_Right_Work_Type', $this->Sound_Car_Right_Work_Type);
         $criteria->compare('Sound_Car_Right_Work_GUID', $this->Sound_Car_Right_Work_GUID, true);
         $criteria->compare('Sound_Car_Right_Member_GUID', $this->Sound_Car_Right_Member_GUID, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
@@ -165,6 +170,34 @@ class SoundCarrierRightholder extends RActiveRecord {
             'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'R'"
         ));
         return $works;
+    }
+
+    public function workExportList($sound_car_id) {
+        $criteria = new CDbCriteria;
+//        $this->rules();
+//        $criteria->together = true;
+        $criteria->group = "t.Sound_Car_Right_Work_GUID";
+ 
+//        $criteria->select = array(
+//            't.Sound_Car_Right_Work_GUID', 't.Sound_Car_Right_Work_Type'
+//        );
+
+        $criteria->addCondition("t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'W'");
+//        $this->Sound_Car_Id = $sound_car_id;
+//        $this->Sound_Car_Right_Work_Type = 'W';
+//        $this->Sound_Car_Right_Work_Type = 'W';
+//        return $this->search();
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 5,   
+            )
+        ));
+    }
+    
+    public function getWorkMatchRecords() {
+        return '<table border="1" class="match_det_table"><thead><tr><th>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></tr></thead><tbody><tr><td>Vinodh Arumugam</td><td>CA</td><td>10.00 %</td><td>10.00 %</td></tr><tr><td>Robert Van</td><td>MC</td><td>20.00 %</td><td>20.00 %</td></tr><tr><td>VEGA Limited</td><td>E</td><td>50.00 %</td><td>50.00 %</td></tr><tr><td>Publisher 079</td><td>SE</td><td>20.00 %</td><td>20.00 %</td></tr></tbody></table>';
     }
 
 }

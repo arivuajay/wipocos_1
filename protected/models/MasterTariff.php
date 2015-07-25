@@ -30,6 +30,12 @@ class MasterTariff extends CActiveRecord {
         return '{{master_tariff}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'isActive' => array('condition' => "$alias.Active = '1'"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -43,7 +49,7 @@ class MasterTariff extends CActiveRecord {
             array('Tarif_Description', 'length', 'max' => 100),
             array('Tarif_Min_Tarif_Amount, Tarif_Max_Tarif_Amount, Tarif_Amount', 'numerical', 'integerOnly' => false),
             array('Tarif_Percentage', 'length', 'max' => 1),
-            array('Tarif_Comment, Created_Date, Rowversion', 'safe'),
+            array('Tarif_Comment, Created_Date, Rowversion, Active', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Master_Tarif_Id, Tarif_Code, Tarif_Description, Tarif_Min_Tarif_Amount, Tarif_Max_Tarif_Amount, Tarif_Amount, Tarif_Percentage, Tarif_Comment, Tarif_Currency_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -58,6 +64,7 @@ class MasterTariff extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'tarifCurrency' => array(self::BELONGS_TO, 'MasterCurrency', 'Tarif_Currency_Id'),
+            'tariffContracts' => array(self::HAS_MANY, 'TariffContracts', 'Tarf_Cont_Tariff_Id'),
         );
     }
 
@@ -139,4 +146,21 @@ class MasterTariff extends CActiveRecord {
         ));
     }
 
+    protected function beforeValidate() {
+        $relations = array('tariffContracts');
+        
+        $validate = false;
+        if(MASTER_EDIT_VALIDATION){
+            foreach ($relations as $key => $relation) {
+                if(!empty($this->$relation)){
+                    $validate = true;
+                    break;
+                }
+            }
+            $relation = BaseInflector::camel2words($relation, ' ');
+            if($validate)
+                $this->addError('Tarif_Code', "This Tariff is already linked with {$relation}. So you can't Edit this record.");
+        }
+        return parent::beforeValidate();
+    }
 }

@@ -92,8 +92,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Tarf_Cont_Event_Place_Id'); ?>
-		<?php echo $form->textField($model,'Tarf_Cont_Event_Place_Id',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Tarf_Cont_Event_Id'); ?>
+		<?php echo $form->textField($model,'Tarf_Cont_Event_Id',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

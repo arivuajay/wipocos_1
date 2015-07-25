@@ -241,7 +241,7 @@ $this->breadcrumbs = array(
                             <th>Right Holder name</th>
                             <th>Internal Code</th>
                             <th>Role</th>
-                            <th>Equal Remuneration Points</th>
+                            <th>Equitable Remuneration Points</th>
                             <!--<th>Organization</th>-->
                             <th>Blank Levy Points</th>
                             <th>Organization</th>

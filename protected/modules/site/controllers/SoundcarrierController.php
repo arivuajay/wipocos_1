@@ -16,6 +16,15 @@ class SoundcarrierController extends Controller {
         );
     }
 
+    public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Sound_Carrier_" . time() . ".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
+
     public function actions() {
         return array(
             'pdf' => 'application.components.actions.pdf',
@@ -117,13 +126,13 @@ class SoundcarrierController extends Controller {
         $biograph_model = empty($biograph_exists) ? new SoundCarrierBiography : $biograph_exists;
 
         $publication_model = new SoundCarrierPublication;
-        if($pubedit != NULL){
+        if ($pubedit != NULL) {
             $publication_exists = SoundCarrierPublication::model()->findByAttributes(array('Sound_Car_Publ_Id' => $pubedit));
             $publication_model = empty($publication_exists) ? new SoundCarrierPublication : $publication_exists;
         }
 
         $fixation_model = new SoundCarrierFixations;
-        if($fixedit != NULL){
+        if ($fixedit != NULL) {
             $fixation_exists = SoundCarrierFixations::model()->findByAttributes(array('Sound_Car_Fix_Id' => $fixedit));
             $fixation_model = empty($fixation_exists) ? new SoundCarrierFixations : $fixation_exists;
         }
@@ -177,10 +186,10 @@ class SoundcarrierController extends Controller {
                 Myclass::addAuditTrail("Updated SoundCarrier Documentation successfully.", "headphones");
                 $doc_tab = 2;
                 $message = 'Sound Carrier Documentation Updated Successfully!!!';
-                if(empty($right_holder_exists_2)){
+                if (empty($right_holder_exists_2)) {
                     $doc_tab = 8;
                     $message = 'Sound Carrier Documentation Updated Successfully!!!. Please Fill RightHolders - Recordings';
-                    if(empty($right_holder_exists_1)){
+                    if (empty($right_holder_exists_1)) {
                         $message = 'Sound Carrier Documentation Updated Successfully!!!. Please Fill RightHolders - Works';
                         $doc_tab = 7;
                     }
@@ -210,7 +219,14 @@ class SoundcarrierController extends Controller {
                 $this->redirect(array('/site/soundcarrier/update', 'id' => $model->Sound_Car_Id, 'tab' => '6'));
             }
         }
-        
+
+        if ($this->isExportRequest()) {
+            $this->exportCSV(array('Sound Carrier:'), null, false);
+            $this->exportCSV($right_holder_model->workExportList($model->Sound_Car_Id), 
+                    array('Sound_Car_Right_Work_GUID', 'workmatchrecords')
+            );
+        }
+
         $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model', 'right_holder_exists_1', 'right_holder_exists_2'));
     }
 
@@ -369,14 +385,14 @@ class SoundcarrierController extends Controller {
     }
 
     public function actionSearchrecordperformers() {
-        if(isset($_REQUEST['rcd_guid']))
-            $recording = Recording::model()->findByAttributes (array('Rcd_GUID' => $_REQUEST['rcd_guid']));
+        if (isset($_REQUEST['rcd_guid']))
+            $recording = Recording::model()->findByAttributes(array('Rcd_GUID' => $_REQUEST['rcd_guid']));
         $this->renderPartial('_search_recording_performers', compact('recording'));
     }
 
     public function actionSearchworkauthors() {
-        if(isset($_REQUEST['work_guid']))
-            $work = Work::model()->findByAttributes (array('Work_GUID' => $_REQUEST['work_guid']));
+        if (isset($_REQUEST['work_guid']))
+            $work = Work::model()->findByAttributes(array('Work_GUID' => $_REQUEST['work_guid']));
         $this->renderPartial('_search_work_authors', compact('work'));
     }
 
@@ -384,20 +400,20 @@ class SoundcarrierController extends Controller {
         if (isset($_POST['SoundCarrierRightholder']) && !empty($_POST['SoundCarrierRightholder'])) {
             $end = end($_POST['SoundCarrierRightholder']);
             $sound_car_id = $end['Sound_Car_Id'];
-            
+
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_by = "0000-00-00 00:00:00";
             $holders = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Right_Work_Type' => $end['Sound_Car_Right_Work_Type']));
-            if(empty($holders)){
+            if (empty($holders)) {
                 $created_by = Yii::app()->user->id;
-            }else{
+            } else {
                 $created_by = $holders[0]->Created_By;
                 $created_date = $holders[0]->Created_Date;
                 $updated_by = Yii::app()->user->id;
                 $updated_date = date('Y-m-d H:i:s');
             }
-            
+
             SoundCarrierRightholder::model()->deleteAllByAttributes(array('Sound_Car_Id' => $sound_car_id, 'Sound_Car_Right_Work_Type' => $end['Sound_Car_Right_Work_Type']));
             $valid = true;
             foreach ($_POST['SoundCarrierRightholder'] as $values) {
@@ -477,16 +493,16 @@ class SoundcarrierController extends Controller {
     }
 
     public function actionGetrecordingdetails() {
-        if(isset($_POST['guid'])){
-            $work = Recording::model()->findByAttributes(array('Rcd_GUID'=> $_POST['guid']));
-            if(empty($work)){
-                $work = Work::model()->findByAttributes(array('Work_GUID'=> $_POST['guid']));
+        if (isset($_POST['guid'])) {
+            $work = Recording::model()->findByAttributes(array('Rcd_GUID' => $_POST['guid']));
+            if (empty($work)) {
+                $work = Work::model()->findByAttributes(array('Work_GUID' => $_POST['guid']));
                 $int_code = $work->Work_Internal_Code;
                 $type = 'W';
                 $duration_hour = $work->duration_hours;
                 $duration_minute = $work->duration_minutes;
                 $duration_second = $work->duration_seconds;
-            }else{
+            } else {
                 $int_code = $work->Rcd_Internal_Code;
                 $isrw = '';
                 $type = 'R';
@@ -506,4 +522,5 @@ class SoundcarrierController extends Controller {
         }
         exit;
     }
+
 }
