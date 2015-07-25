@@ -85,7 +85,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="box-footer">
         <div class="form-group">
             <div class="col-sm-0 col-sm-offset-2">
-                <?php echo CHtml::submitButton($group_model->isNewRecord ? 'Create' : 'Update', array('id' => 'member-submit', 'class' => $group_model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'GroupMembers[submit]')); ?>
+                <?php echo CHtml::submitButton($group_model->isNewRecord ? 'Save' : 'Update', array('id' => 'member-submit', 'class' => $group_model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'GroupMembers[submit]')); ?>
             </div>
         </div>
     </div>

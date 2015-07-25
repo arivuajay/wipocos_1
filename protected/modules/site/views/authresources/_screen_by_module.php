@@ -84,6 +84,6 @@ $form = $this->beginWidget('CActiveForm', array(
     </div>
 </div>
 <div class="form-group">
-    <?php echo CHtml::submitButton(empty($exist_resources) ? 'Create' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+    <?php echo CHtml::submitButton(empty($exist_resources) ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
 </div>
 <?php $this->endWidget(); ?>

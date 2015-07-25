@@ -86,8 +86,8 @@ class SoundCarrierRightholder extends RActiveRecord {
         return array(
             'Sound_Car_Right_Id' => 'Sound Car Right',
             'Sound_Car_Id' => 'Sound Car',
-            'Sound_Car_Right_Work_GUID' => 'Sound Car Right Work Guid',
-            'Sound_Car_Right_Member_GUID' => 'Sound Car Right Acc Guid',
+            'Sound_Car_Right_Work_GUID' => 'Work',
+            'Sound_Car_Right_Member_GUID' => 'Member',
             'Sound_Car_Right_Role' => 'Role',
             'Sound_Car_Right_Equal_Share' => 'Points',
             'Sound_Car_Right_Equal_Org_Id' => 'Organization',
@@ -197,7 +197,23 @@ class SoundCarrierRightholder extends RActiveRecord {
     }
     
     public function getWorkMatchRecords() {
-        return '<table border="1" class="match_det_table"><thead><tr><th>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></tr></thead><tbody><tr><td>Vinodh Arumugam</td><td>CA</td><td>10.00 %</td><td>10.00 %</td></tr><tr><td>Robert Van</td><td>MC</td><td>20.00 %</td><td>20.00 %</td></tr><tr><td>VEGA Limited</td><td>E</td><td>50.00 %</td><td>50.00 %</td></tr><tr><td>Publisher 079</td><td>SE</td><td>20.00 %</td><td>20.00 %</td></tr></tbody></table>';
+        $table = '<table border="1" class="match_det_table">';
+        $table .= '<thead><th>Right Holders</th></thead>';
+        $table .= '<tbody>';
+        $rightholders = self::model()->findAllByAttributes(array(
+            'Sound_Car_Id' => $this->Sound_Car_Id, 
+            'Sound_Car_Right_Work_GUID' => $this->Sound_Car_Right_Work_GUID,
+            'Sound_Car_Right_Work_Type' => 'W'
+            ));
+            foreach ($rightholders as $rightholder) {
+                if($rightholder->Sound_Car_Right_Member_Type == 'A'){
+                    $table .= "<tr><td>{$rightholder->rightholderAuthor->fullname}</td></tr>";
+                }else if($rightholder->Sound_Car_Right_Member_Type == 'P'){
+                    $table .= "<tr><td>{$rightholder->rightholderPerformer->fullname}</td></tr>";
+                }
+            }
+        $table .= '</tbody></table>';
+        return $table;
     }
 
 }

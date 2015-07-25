@@ -47,7 +47,7 @@
 
         <!--    <div class="form-group">
                 <div class="col-sm-6 col-sm-offset-2">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
                 </div>
             </div>-->
 

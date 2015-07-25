@@ -229,7 +229,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             <div class="form-group">
                 <div class="col-lg-12">
                     <div class="col-lg-1">
-                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
                     </div>
                     <div class="col-lg-5">
                             <?php echo $form->error($model, 'Tarf_Cont_User_Id'); ?>

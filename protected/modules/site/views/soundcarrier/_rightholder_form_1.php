@@ -166,6 +166,37 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
+                <div class="form-group pull-right">
+            <?php
+            $this->beginWidget(
+                    'booster.widgets.TbModal', array('id' => 'rightHolder')
+            );
+            ?>
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h4>RightHolders</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->renderPartial('_work_list', array('model' => $sound_car_model)); ?>
+            </div>
+            <?php $this->endWidget(); ?>
+            <?php
+            $this->widget(
+                    'booster.widgets.TbButton', array(
+                'label' => 'View & Export',
+                'context' => 'primary',
+                'htmlOptions' => array(
+                    'data-toggle' => 'modal',
+                    'data-target' => '#rightHolder',
+                ),
+                    )
+            );
+            ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="box-body">
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/soundcarrier/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
@@ -254,33 +285,6 @@
     </div>
 
 </div>
-
-<?php
-$this->beginWidget(
-        'booster.widgets.TbModal', array('id' => 'rightHolder')
-);
-?>
-<div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h4>RightHolders</h4>
-</div>
-<div class="modal-body">
-    <?php echo $this->renderPartial('_work_list', array('model' => $sound_car_model)); ?>
-</div>
-<?php $this->endWidget(); ?>
-<?php
-$this->widget(
-        'booster.widgets.TbButton', array(
-    'label' => 'Click me',
-    'context' => 'primary',
-    'htmlOptions' => array(
-        'data-toggle' => 'modal',
-        'data-target' => '#rightHolder',
-    ),
-        )
-);
-?>
-
 
 <?php
 $this->beginWidget(

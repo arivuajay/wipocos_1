@@ -39,9 +39,19 @@
 $dataProvider = SoundCarrierRightholder::model()->workExportList($model->Sound_Car_Id);
 
 $gridColumns = array(
-    'Sound_Car_Right_Work_GUID',
-    'Sound_Car_Id',
-    'workmatchrecords'
+    array(
+        'name' => 'Work',
+        'type' => 'raw',
+        'value' => function ($data){
+            echo $data->rightholderWork->Work_Org_Title;
+        }
+    ),
+    array(
+        'name' => 'Right Holders',
+        'type' => 'raw',
+        'value' => '$data->getWorkmatchrecords()'
+    ),
+//    'workmatchrecords'
 );
 
 $export_btn = $this->renderExportGridButton('work-grid', '<i class="fa fa-file-excel-o"></i> Export', array('class' => 'btn btn-xs btn-danger  pull-right'));

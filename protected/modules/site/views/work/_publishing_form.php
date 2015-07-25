@@ -110,7 +110,7 @@
     <div class="box-footer">
         <div class="form-group">
             <div class="col-sm-0 col-sm-offset-2">
-                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
     </div>
@@ -174,7 +174,7 @@ if (!$model->isNewRecord) {
         <div class="box-footer">
             <div class="form-group">
                 <div class="col-sm-0 col-sm-offset-2">
-                    <?php echo CHtml::submitButton($upload_model->isNewRecord ? 'Create' : 'Update', array('class' => $upload_model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                    <?php echo CHtml::submitButton($upload_model->isNewRecord ? 'Save' : 'Update', array('class' => $upload_model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
                 </div>
             </div>
         </div>
