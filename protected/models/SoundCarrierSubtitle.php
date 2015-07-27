@@ -74,7 +74,7 @@ class SoundCarrierSubtitle extends RActiveRecord {
         return array(
             'Sound_Car_Subtitle_Id' => 'Sound Car Subtitle',
             'Sound_Car_Id' => 'Sound Car',
-            'Sound_Car_Subtitle_Name' => 'Title',
+            'Sound_Car_Subtitle_Name' => 'Subtitle',
             'Sound_Car_Subtitle_Type_Id' => 'Type',
             'Sound_Car_Subtitle_Language_Id' => 'Language',
             'Created_Date' => 'Created Date',

@@ -102,7 +102,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Equitable Remuneration Points</h3>
+                    <h3 class="box-title">Equitable Remuneration Shares</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -128,7 +128,7 @@
         <div class="box-body">
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Blank Levy Points</h3>
+                    <h3 class="box-title">Blank Levy Shares</h3>
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
@@ -209,8 +209,8 @@
                             <th>Internal Code</th>
                             <th>Work</th>
                             <th>Role</th>
-                            <th>Equitable Remuneration Points</th>
-                            <th>Blank Levy Points</th>
+                            <th>Public Performance & Broadcasting Shares</th>
+                            <th>Mechanical Shares</th>
                             <th class="hide">Action</th>
                             </thead>
                             <tbody>
@@ -233,8 +233,8 @@
                                             <td><?php echo $internal_code; ?></td>
                                             <td><?php echo $member->rightholderWork->Work_Org_Title; ?></td>
                                             <td><?php echo $member->soundCarRightRole->rolename; ?></td>
-                                            <td><?php echo $member->Sound_Car_Right_Equal_Share; ?></td>
-                                            <td><?php echo $member->Sound_Car_Right_Blank_Share; ?></td>
+                                            <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Sound_Car_Right_Equal_Share; ?>"><?php echo $member->Sound_Car_Right_Equal_Share; ?>%</span></td>
+                                            <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Sound_Car_Right_Blank_Share; ?>"><?php echo $member->Sound_Car_Right_Blank_Share; ?>%</span></td>
                                             <td class="hide">
                                                 <?php
                                                 if ($member->Sound_Car_Right_Member_Type == 'P') {
@@ -645,8 +645,8 @@ $js = <<< EOD
         tr += '<td>'+data.intcode+'</td>';
         tr += '<td>'+_work.data("work-name")+'</td>';
         tr += '<td>'+data.rcdrolename+'</td>';
-        tr += '<td>'+data.eqlshare+'</td>';
-        tr += '<td>'+data.blkshare+'</td>';
+        tr += '<td><span class="badge share_value" data-share="'+data.eqlshare+'">'+data.eqlshare+'%</span></td>';
+        tr += '<td><span class="badge share_value" data-share="'+data.blkshare+'">'+data.blkshare+'%</span></td>';
 //        tr += '<td><a href="#role-foundation" data-eql_share="'+data.eqlshare+'" data-blk_share="'+data.blkshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
         tr += '<td class="hide">';
         tr += '<a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>';

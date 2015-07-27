@@ -36,7 +36,7 @@
                                     foreach ($rightholders as $key => $rightholder) {
                                         if (!empty($rightholder->workAuthor)) {
                                             ?>
-                                            <tr data-uid="<?php echo $rightholder->workAuthor->Auth_GUID ?>" data-name="<?php echo $rightholder->workAuthor->fullname ?>" data-intcode = "<?php echo $rightholder->workAuthor->Auth_Internal_Code ?>" data-rcdrole = "<?php echo $rightholder->Work_Right_Role ?>" data-rcdrolename = "<?php echo $rightholder->workRightRole->namewithcode ?>" data-eqlshare = "1.00" data-eqlorg = "<?php echo $rightholder->Work_Right_Broad_Org_id ?>" data-blkshare = "1.00" data-blkorg = "<?php echo $rightholder->Work_Right_Mech_Org_Id ?>">
+                                            <tr data-uid="<?php echo $rightholder->workAuthor->Auth_GUID ?>" data-name="<?php echo $rightholder->workAuthor->fullname ?>" data-intcode = "<?php echo $rightholder->workAuthor->Auth_Internal_Code ?>" data-rcdrole = "<?php echo $rightholder->Work_Right_Role ?>" data-rcdrolename = "<?php echo $rightholder->workRightRole->namewithcode ?>" data-eqlshare = "<?php echo $rightholder->Work_Right_Broad_Share ?>" data-eqlorg = "<?php echo $rightholder->Work_Right_Broad_Org_id ?>" data-blkshare = "<?php echo $rightholder->Work_Right_Mech_Share ?>" data-blkorg = "<?php echo $rightholder->Work_Right_Mech_Org_Id ?>">
                                                 <td><?php echo $rightholder->workAuthor->fullname; ?></td>
                                                 <td><?php echo $rightholder->workAuthor->Auth_Internal_Code; ?></td>
                                             </tr>

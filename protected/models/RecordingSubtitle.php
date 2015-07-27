@@ -72,7 +72,7 @@ class RecordingSubtitle extends RActiveRecord {
         return array(
             'Rcd_Subtitle_Id' => 'Rcd Subtitle',
             'Rcd_Id' => 'Rcd',
-            'Rcd_Subtitle_Name' => 'Title',
+            'Rcd_Subtitle_Name' => 'Subtitle',
             'Rcd_Subtitle_Type_Id' => 'Type',
             'Rcd_Subtitle_Language_Id' => 'Language',
             'Created_Date' => 'Created Date',

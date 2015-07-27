@@ -527,7 +527,7 @@ $this->beginWidget(
 ?>
 <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
-    <h4>New Performer</h4>
+    <h4>New Producer</h4>
 </div>
 <div class="modal-body">
     <?php echo $this->renderPartial('_new_producer', array('model' => $producer_model, 'countries' => $countries)); ?>
@@ -644,8 +644,9 @@ $js = <<< EOD
                 data:form_data,
                 success:function(data){
                     if(data.sts == 'success'){
+                        console.log(data);
                         $('#producer-account-form')[0].reset();
-                        $('#ProducerAccount_Pro_Corporate_Name').val(data.new_int_code);
+                        $('#ProducerAccount_Pro_Internal_Code').val(data.new_int_code);
                         _pro_table = $('#producertable');
                         _pro_table.dataTable().fnAddData([
                             data.name,

@@ -73,7 +73,7 @@ class WorkSubtitle extends RActiveRecord {
         return array(
             'Work_Subtitle_Id' => 'Subtitle',
             'Work_Id' => 'Work',
-            'Work_Subtitle_Name' => 'Title',
+            'Work_Subtitle_Name' => 'Subtitle',
             'Work_Subtitle_Type_Id' => 'Type',
             'Work_Subtitle_Language_Id' => 'Language',
             'Created_Date' => 'Created Date',

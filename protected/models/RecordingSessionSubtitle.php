@@ -74,7 +74,7 @@ class RecordingSessionSubtitle extends RActiveRecord {
         return array(
             'Rcd_Ses_Subtitle_Id' => 'Subtitle',
             'Rcd_Ses_Id' => 'Rcd Ses',
-            'Rcd_Ses_Subtitle_Name' => 'Title',
+            'Rcd_Ses_Subtitle_Name' => 'Subtitle',
             'Rcd_Ses_Subtitle_Type_Id' => 'Type',
             'Rcd_Ses_Subtitle_Language_Id' => 'Language',
             'Created_Date' => 'Created Date',
