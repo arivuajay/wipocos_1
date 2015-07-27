@@ -44,7 +44,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete', 'searchworkauthors'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete', 'searchworkauthors', 'newperformer', 'newproducer'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -92,9 +92,11 @@ class SoundcarrierController extends Controller {
      */
     public function actionCreate() {
         $model = new SoundCarrier;
+        $performer_model = new PerformerAccount;
+        $producer_model = new ProducerAccount;
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(array($performer_model, $model, $producer_model));
 
         if (isset($_POST['SoundCarrier'])) {
             $model->attributes = $_POST['SoundCarrier'];
@@ -107,6 +109,8 @@ class SoundcarrierController extends Controller {
 
         $this->render('create', array(
             'model' => $model,
+            'performer_model' => $performer_model,
+            'producer_model' => $producer_model
         ));
     }
 
@@ -141,9 +145,12 @@ class SoundcarrierController extends Controller {
         $right_holder_exists_2 = SoundCarrierRightholder::model()->findAllByAttributes(array('Sound_Car_Id' => $id, 'Sound_Car_Right_Work_Type' => 'R'));
         $right_holder_model = new SoundCarrierRightholder;
 
+        $performer_model = new PerformerAccount;
+        $producer_model = new ProducerAccount;
+
         $biograph_upload_model = new SoundCarrierBiographUploads;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model, $right_holder_model));
+        $this->performAjaxValidation(array($model, $document_model, $biograph_model, $biograph_upload_model, $sub_title_model, $publication_model, $fixation_model, $right_holder_model, $performer_model, $producer_model));
 
         if (isset($_POST['SoundCarrier'])) {
             $model->attributes = $_POST['SoundCarrier'];
@@ -221,13 +228,23 @@ class SoundcarrierController extends Controller {
         }
 
         if ($this->isExportRequest()) {
-            $this->exportCSV(array('Sound Carrier:'), null, false);
-            $this->exportCSV($right_holder_model->workExportList($model->Sound_Car_Id), 
-                    array('Sound_Car_Right_Work_GUID', 'workmatchrecords')
-            );
+            if (isset($_REQUEST['type']) && in_array($_REQUEST['type'], array('W', 'R'))) {
+                $type = $_REQUEST['type'];
+                $record = 'workexportmatchrecords';
+                if ($type == 'W') {
+                    $w_title = 'worktitle';
+                    $title = 'Sound Carrier Works:';
+                } else if ($type == 'R') {
+                    $w_title = 'recordtitle';
+                    $title = 'Sound Carrier Recording:';
+                }
+                $this->exportCSV(array($title), null, false);
+                $this->exportCSV($right_holder_model->workExportList($model->Sound_Car_Id, $type), array($w_title, $record)
+                );
+            }
         }
 
-        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model', 'right_holder_exists_1', 'right_holder_exists_2'));
+        $this->render('update', compact('model', 'document_model', 'tab', 'biograph_model', 'biograph_upload_model', 'sub_title_model', 'publication_model', 'fixation_model', 'right_holder_model', 'right_holder_exists_1', 'right_holder_exists_2', 'performer_model', 'producer_model'));
     }
 
     /**
@@ -486,7 +503,7 @@ class SoundcarrierController extends Controller {
      * @param SoundCarrier $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form' || $_POST['ajax'] === 'sound-carrier-fixations-form' || $_POST['ajax'] === 'sound-carrier-rightholder-form-1' || $_POST['ajax'] === 'sound-carrier-rightholder-form-2')) {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'sound-carrier-form' || $_POST['ajax'] === 'soundcarrier-documentation-form' || $_POST['ajax'] === 'soundcarrier-biography-form' || $_POST['ajax'] === 'soundCar-subtitle-form' || $_POST['ajax'] === 'soundcarrier-publication-form' || $_POST['ajax'] === 'sound-carrier-fixations-form' || $_POST['ajax'] === 'sound-carrier-rightholder-form-1' || $_POST['ajax'] === 'sound-carrier-rightholder-form-2' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
@@ -521,6 +538,59 @@ class SoundcarrierController extends Controller {
             echo json_encode($ret);
         }
         exit;
+    }
+
+    public function actionNewperformer() {
+        $ret = array();
+        if (isset($_POST['PerformerAccount'])) {
+            $model = new PerformerAccount;
+            $model->attributes = $_POST['PerformerAccount'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Performer {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Perf_Acc_Id,
+                        'first_name' => $model->Perf_First_Name,
+                        'last_name' => $model->Perf_Sur_Name,
+                        'int_code' => $model->Perf_Internal_Code,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type",array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
+    }
+
+    public function actionNewproducer() {
+        $ret = array();
+        if (isset($_POST['ProducerAccount'])) {
+            $model = new ProducerAccount;
+            $model->attributes = $_POST['ProducerAccount'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Performer {$model->Pro_Corporate_Name} successfully.", "money");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Pro_Acc_Id,
+                        'name' => $model->Pro_Corporate_Name,
+                        'int_code' => $model->Pro_Internal_Code,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type",array(':type' => InternalcodeGenerate::PRODUCER_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
     }
 
 }

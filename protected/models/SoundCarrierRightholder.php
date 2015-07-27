@@ -13,6 +13,9 @@
  * @property integer $Created_By
  * @property integer $Updated_By
  * @property string $workMatchRecords
+ * @property string $workExportMatchRecords
+ * @property string $workTitle
+ * @property string $recordTitle
  *
  * The followings are the available model relations:
  * @property SoundCarrier $soundCar
@@ -20,8 +23,11 @@
 class SoundCarrierRightholder extends RActiveRecord {
 
     public $workMatchRecords;
-    
+    public $workExportMatchRecords;
+    public $workTitle;
+    public $recordTitle;
     public $Sound_Car_Right_Member_Internal_Code;
+
     /**
      * @return string the associated database table name
      */
@@ -42,7 +48,7 @@ class SoundCarrierRightholder extends RActiveRecord {
             array('Sound_Car_Right_Work_Type', 'length', 'max' => 1),
 //            array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'length', 'max' => 10),
             array('Sound_Car_Right_Equal_Share, Sound_Car_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
-            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code, Sound_Car_Right_Member_Type, workMatchRecords', 'safe'),
+            array('Created_Date, Rowversion, Sound_Car_Right_Member_Internal_Code, Sound_Car_Right_Member_Type, workMatchRecords, workExportMatchRecords', 'safe'),
             array('Sound_Car_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Sound_Car_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
             // The following rule is used by search().
@@ -97,7 +103,10 @@ class SoundCarrierRightholder extends RActiveRecord {
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
-            'workMatchRecords' => 'Right Holders',
+            'workmatchrecords' => 'Right Holders',
+            'workexportmatchrecords' => 'Right Holders',
+            'worktitle' => 'Work',
+            'recordtitle' => 'Recording',
         );
     }
 
@@ -158,62 +167,67 @@ class SoundCarrierRightholder extends RActiveRecord {
         $works = self::model()->findAll(array(
             'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
             'distinct' => true,
-            'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'W'"
+            'condition' => "t.Sound_Car_Id = $sound_car_id"
+//            'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'W'"
         ));
         return $works;
     }
 
-    public function distinctRecordings($sound_car_id) {
-        $works = self::model()->findAll(array(
-            'select' => 't.Sound_Car_Right_Work_GUID, t.Sound_Car_Right_Work_Type',
-            'distinct' => true,
-            'condition' => "t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'R'"
-        ));
-        return $works;
-    }
-
-    public function workExportList($sound_car_id) {
+    public function workExportList($sound_car_id, $type) {
         $criteria = new CDbCriteria;
-//        $this->rules();
-//        $criteria->together = true;
         $criteria->group = "t.Sound_Car_Right_Work_GUID";
- 
-//        $criteria->select = array(
-//            't.Sound_Car_Right_Work_GUID', 't.Sound_Car_Right_Work_Type'
-//        );
-
-        $criteria->addCondition("t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = 'W'");
-//        $this->Sound_Car_Id = $sound_car_id;
-//        $this->Sound_Car_Right_Work_Type = 'W';
-//        $this->Sound_Car_Right_Work_Type = 'W';
-//        return $this->search();
+        $criteria->addCondition("t.Sound_Car_Id = $sound_car_id And t.Sound_Car_Right_Work_Type = '{$type}'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 5,   
+                'pageSize' => 5,
             )
         ));
     }
-    
+
     public function getWorkMatchRecords() {
         $table = '<table border="1" class="match_det_table">';
-        $table .= '<thead><th>Right Holders</th></thead>';
         $table .= '<tbody>';
         $rightholders = self::model()->findAllByAttributes(array(
-            'Sound_Car_Id' => $this->Sound_Car_Id, 
+            'Sound_Car_Id' => $this->Sound_Car_Id,
             'Sound_Car_Right_Work_GUID' => $this->Sound_Car_Right_Work_GUID,
-            'Sound_Car_Right_Work_Type' => 'W'
-            ));
-            foreach ($rightholders as $rightholder) {
-                if($rightholder->Sound_Car_Right_Member_Type == 'A'){
-                    $table .= "<tr><td>{$rightholder->rightholderAuthor->fullname}</td></tr>";
-                }else if($rightholder->Sound_Car_Right_Member_Type == 'P'){
-                    $table .= "<tr><td>{$rightholder->rightholderPerformer->fullname}</td></tr>";
-                }
+            'Sound_Car_Right_Work_Type' => $this->Sound_Car_Right_Work_Type
+        ));
+        foreach ($rightholders as $rightholder) {
+            if ($rightholder->Sound_Car_Right_Member_Type == 'A') {
+                $table .= "<tr><td>{$rightholder->rightholderAuthor->fullname}</td></tr>";
+            } else if ($rightholder->Sound_Car_Right_Member_Type == 'P') {
+                $table .= "<tr><td>{$rightholder->rightholderPerformer->fullname}</td></tr>";
             }
+        }
         $table .= '</tbody></table>';
         return $table;
+    }
+
+    public function getWorkExportMatchRecords() {
+        $table = '';
+        $rightholders = self::model()->findAllByAttributes(array(
+            'Sound_Car_Id' => $this->Sound_Car_Id,
+            'Sound_Car_Right_Work_GUID' => $this->Sound_Car_Right_Work_GUID,
+            'Sound_Car_Right_Work_Type' => $this->Sound_Car_Right_Work_Type
+        ));
+        foreach ($rightholders as $rightholder) {
+            if ($rightholder->Sound_Car_Right_Member_Type == 'A') {
+                $table .= "{$rightholder->rightholderAuthor->fullname}\r";
+            } else if ($rightholder->Sound_Car_Right_Member_Type == 'P') {
+                $table .= "{$rightholder->rightholderPerformer->fullname}\r";
+            }
+        }
+        return $table;
+    }
+
+    public function getWorkTitle() {
+        return $this->rightholderWork->Work_Org_Title;
+    }
+
+    public function getRecordTitle() {
+        return $this->rightholderRecord->Rcd_Title;
     }
 
 }

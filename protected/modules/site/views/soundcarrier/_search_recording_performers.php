@@ -60,7 +60,7 @@
                         <div class="col-lg-2">
                             <?php
                             $this->widget(
-                                    'booster.widgets.TbButton', array(
+                                    'application.components.MyTbButton', array(
                                 'label' => 'New Performer',
                                 'context' => 'success',
                                 'htmlOptions' => array(

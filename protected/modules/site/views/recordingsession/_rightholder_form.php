@@ -288,7 +288,7 @@ $this->beginWidget(
     <p class="errorMessage text-center col-sm-8" id="pro-modelerror"></p>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'context' => 'primary',
         'label' => 'Set Performer',
         'url' => '#',
@@ -308,7 +308,7 @@ $this->beginWidget(
     ?>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'label' => 'Close',
         'url' => '#',
         'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'performer-dismiss'),

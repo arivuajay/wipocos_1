@@ -287,7 +287,7 @@ $this->beginWidget(
     <p class="errorMessage text-center col-sm-8" id="art-modelerror"></p>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'context' => 'primary',
         'label' => 'Set Main Artist',
         'url' => '#',
@@ -309,7 +309,7 @@ $this->beginWidget(
     ?>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'label' => 'Close',
         'url' => '#',
         'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'artist-dismiss'),
@@ -321,7 +321,7 @@ $this->beginWidget(
 <?php $this->endWidget(); ?>
 <?php
 $this->widget(
-        'booster.widgets.TbButton', array(
+        'application.components.MyTbButton', array(
     'label' => 'Main Artist',
     'context' => 'primary',
     'htmlOptions' => array(
@@ -382,7 +382,7 @@ $this->beginWidget(
     <p class="errorMessage text-center col-sm-8" id="pro-modelerror"></p>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'context' => 'primary',
         'label' => 'Set Producer',
         'url' => '#',
@@ -404,7 +404,7 @@ $this->beginWidget(
     ?>
     <?php
     $this->widget(
-            'booster.widgets.TbButton', array(
+            'application.components.MyTbButton', array(
         'label' => 'Close',
         'url' => '#',
         'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'producer-dismiss'),
@@ -416,7 +416,7 @@ $this->beginWidget(
 <?php $this->endWidget(); ?>
 <?php
 $this->widget(
-        'booster.widgets.TbButton', array(
+        'application.components.MyTbButton', array(
     'label' => 'Producer',
     'context' => 'primary',
     'htmlOptions' => array(
