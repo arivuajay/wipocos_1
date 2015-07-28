@@ -93,3 +93,7 @@ table.selectable tbody tr.highlight td { background-color: #f56954; cursor: poin
 .hide_tip{
     cursor: pointer;
 }
+
+.datepicker{
+    z-index: 1100 !important;
+}

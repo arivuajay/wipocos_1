@@ -209,7 +209,7 @@
                             <th>Internal Code</th>
                             <th>Work</th>
                             <th>Role</th>
-                            <th>Public Performance & Broadcasting Shares</th>
+                            <th>Performance Shares</th>
                             <th>Mechanical Shares</th>
                             <th class="hide">Action</th>
                             </thead>
