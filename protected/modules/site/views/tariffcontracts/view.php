@@ -90,22 +90,22 @@ $this->breadcrumbs = array(
             ),
             'Tarf_Cont_Event_Date',
             'Tarf_Cont_Event_Comment',
-                array(
-                    'name' => 'Created_By',
-                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
-                ),
-                array(
-                    'name' => 'Created_Date',
-                    'value' => $model->Created_Date
-                ),
-                array(
-                    'name' => 'Updated_By',
-                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
-                ),
-                array(
-                    'name' => 'Updated Date',
-                    'value' => $model->Rowversion
-                ),
+            array(
+                'name' => 'Created_By',
+                'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+            ),
+            array(
+                'name' => 'Created_Date',
+                'value' => $model->Created_Date
+            ),
+            array(
+                'name' => 'Updated_By',
+                'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+            ),
+            array(
+                'name' => 'Updated Date',
+                'value' => $model->Rowversion
+            ),
         ),
     ));
     ?>

@@ -8,6 +8,8 @@ $cs_pos_end = CClientScript::POS_END;
 
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
 <div class="box box-primary">
     <div class="col-lg-12 col-xs-12">
@@ -62,7 +64,40 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <div class="col-lg-12 col-xs-12">
         <div class="box-body">
             <div id="search_right_result">
+                <?php if (!$model->isNewRecord) { ?>
+                    <div class="form-group foundation">
+                        <div class="box-header">
+                            <div class="col-lg-12 col-md-12">
+                                <h3 class="box-title">Users</h3>
+                            </div>
 
+                        </div>
+                        <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
+                            <div class="col-lg-12 col-md-12 row">
+                                <table id="search_result" class="table table-bordered selectable table-datatable">
+                                    <thead>
+                                        <tr>
+                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
+                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Name'); ?></th>
+                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Address'); ?></th>
+                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Email'); ?></th>
+                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Telephone'); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="highlight" data-uid="<?php echo $model->tarfContUser->User_Cust_GUID ?>" data-id="<?php echo $model->tarfContUser->User_Cust_Id ?>" data-name="<?php echo $model->tarfContUser->User_Cust_Name; ?>">
+                                            <td><?php echo $model->tarfContUser->User_Cust_Code ?></td>
+                                            <td><?php echo $model->tarfContUser->User_Cust_Name ?></td>
+                                            <td><?php echo $model->tarfContUser->User_Cust_Address ?></td>
+                                            <td><?php echo $model->tarfContUser->User_Cust_Email ?></td>
+                                            <td><?php echo $model->tarfContUser->User_Cust_Telephone ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
 
             <div class="form-group foundation">
@@ -224,21 +259,19 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             </div>
         </div>
     </div>
-    <div class="col-lg-12">
-        <div class="box-footer">
+    <div class="box-footer">
             <div class="form-group">
                 <div class="col-lg-12">
                     <div class="col-lg-1">
                         <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
                     </div>
-                    <div class="col-lg-5">
-                            <?php echo $form->error($model, 'Tarf_Cont_User_Id'); ?>
+                    <div class="col-lg-11 help-block">
+                        <?php echo $form->error($model, 'Tarf_Cont_User_Id'); ?>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
-    </div>
 
     <?php $this->endWidget(); ?>
 </div>
@@ -256,7 +289,7 @@ $js = <<< EOD
                     url: '$search_url',
                     data:data,
                     success:function(data){
-                        $('#WorkRightholder_Work_Member_GUID').val('');
+                        $('#TariffContracts_Tarf_Cont_User_Id').val('');
                         $("#search_right_result").html(data);
                    },
                     error: function(data) {
