@@ -9,6 +9,8 @@ $this->breadcrumbs = array(
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
@@ -33,6 +35,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'action' => array('/site/tariffcontracts/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
+                    $cities = Myclass::getMasterCity();
+                    $tariffs = Myclass::getMasterTariff();
+                    $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
+                    $event_types = Myclass::getMasterEventtype();
+                    $payments = TariffContracts::model()->getPayment();
                     ?>
 
                     <div class="col-lg-4 col-md-4">
@@ -45,7 +52,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_City_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_City_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_City_Id', $cities, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_City_Id'); ?>
                         </div>
                     </div>
@@ -66,14 +73,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Tariff_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Tariff_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_Tariff_Id', $tariffs, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Tariff_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Insp_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Insp_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_Insp_Id', $inspectors, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Insp_Id'); ?>
                         </div>
                     </div>
@@ -94,28 +101,28 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_From', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_From', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Tarf_Cont_From', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_From'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_To', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_To', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Tarf_Cont_To', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_To'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Sign_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Sign_Date', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Sign_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Sign_Date'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Pay_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Pay_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_Pay_Id', $payments, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Pay_Id'); ?>
                         </div>
                     </div>
@@ -126,7 +133,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Portion'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4 hide">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Comment', array('class' => ' control-label')); ?>
                             <?php echo $form->textArea($searchModel, 'Tarf_Cont_Comment', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
@@ -136,18 +143,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Event_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Event_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_Event_Id', $event_types, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Event_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Event_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Event_Date', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Tarf_Cont_Event_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Event_Date'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4 hide">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Event_Comment', array('class' => ' control-label')); ?>
                             <?php echo $form->textArea($searchModel, 'Tarf_Cont_Event_Comment', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
@@ -178,7 +185,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Tarf_Cont_Internal_Code',
                 array(
                     'name' => 'Tarf_Cont_User_Id',
-                    'value' => function ($data){
+                    'value' => function ($data) {
                         echo $data->tarfContUser->User_Cust_Name;
                     }
                 ),
@@ -192,13 +199,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                'Tarf_Cont_Area',
                 array(
                     'name' => 'Tarf_Cont_Tariff_Id',
-                    'value' => function ($data){
+                    'value' => function ($data) {
                         echo $data->tarfContTariff->Tarif_Description;
                     }
                 ),
                 array(
                     'name' => 'Tarf_Cont_Insp_Id',
-                    'value' => function ($data){
+                    'value' => function ($data) {
                         echo $data->tarfContInsp->Insp_Name;
                     }
                 ),
@@ -265,13 +272,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
         $gridColumns = array(
 //            'Tarf_Cont_GUID',
-                'Tarf_Cont_Internal_Code',
-                array(
-                    'name' => 'Tarf_Cont_User_Id',
-                    'value' => function ($data){
-                        echo $data->tarfContUser->User_Cust_Name;
-                    }
-                ),
+            'Tarf_Cont_Internal_Code',
+            array(
+                'name' => 'Tarf_Cont_User_Id',
+                'value' => function ($data) {
+                    echo $data->tarfContUser->User_Cust_Name;
+                }
+            ),
 //                array(
 //                    'name' => 'Tarf_Cont_City_Id',
 //                    'value' => function ($data){
@@ -280,18 +287,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 //                ),
 //                'Tarf_Cont_District',
 //                'Tarf_Cont_Area',
-                array(
-                    'name' => 'Tarf_Cont_Tariff_Id',
-                    'value' => function ($data){
-                        echo $data->tarfContTariff->Tarif_Description;
-                    }
-                ),
-                array(
-                    'name' => 'Tarf_Cont_Insp_Id',
-                    'value' => function ($data){
-                        echo $data->tarfContInsp->Insp_Name;
-                    }
-                ),
+            array(
+                'name' => 'Tarf_Cont_Tariff_Id',
+                'value' => function ($data) {
+                    echo $data->tarfContTariff->Tarif_Description;
+                }
+            ),
+            array(
+                'name' => 'Tarf_Cont_Insp_Id',
+                'value' => function ($data) {
+                    echo $data->tarfContInsp->Insp_Name;
+                }
+            ),
             /*
               'Tarf_Cont_Insp_Id',
               'Tarf_Cont_Balance',
@@ -325,3 +332,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
     </div>
 </div>
+
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('index', $js);
+?>

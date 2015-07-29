@@ -410,8 +410,8 @@ $this->breadcrumbs = array(
                             <th>Internal Code</th>
                             <th>Work</th>
                             <th>Role</th>
-                            <th>Equitable Remuneration Points</th>
-                            <th>Blank Levy Points</th>
+                            <th>Performance Shares (%)</th>
+                            <th>Mechanical Shares (%)</th>
                             <?php if ($export == false) { ?>
                                                         <!--<th>Action</th>-->
                             <?php } ?>

@@ -6,7 +6,7 @@ class RActiveRecord extends CActiveRecord {
             $this->Created_By = Yii::app()->user->id;
         }else{
             $this->Updated_By = Yii::app()->user->id;
-            $this->Rowversion = date('Y-m-d H:i:s');
+            $this->Rowversion = new CDbExpression('NOW()');
         }
         return parent::beforeSave();
     }

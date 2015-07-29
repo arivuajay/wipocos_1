@@ -16,6 +16,12 @@ class DefaultController extends Controller {
         );
     }
 
+    public function actions() {
+        return array(
+            'download' => 'application.components.actions.download',
+        );
+    }
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -24,7 +30,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron', 'invoice'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -39,6 +45,19 @@ class DefaultController extends Controller {
 
     public function actionIndex() {
         $this->render('index');
+    }
+
+    public function actionInvoice() {
+//        $mail = new Sendmail;
+//        $trans_array = array(
+//            "{SITENAME}" => SITENAME,
+//            "{USERNAME}" => 'Prakash',
+//            "{EMAIL_ID}" => 'prakash.paramanandam@arkinfotec.com',
+//        );
+//        $message = $mail->getMessage('invoice', $trans_array);
+//        $Subject = $mail->translate('{SITENAME}: : Reminder');
+//        $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
+        $this->render('invoice');
     }
 
     public function actionLogin() {

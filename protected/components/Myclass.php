@@ -547,6 +547,16 @@ class Myclass extends CController {
         return $events;
     }
 
+    public static function getMasterCity($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $cities = CHtml::listData(MasterCity::model()->isActive(array('order' => 'City_Name'))->findAll(), 'Master_City_Id', 'City_Name');
+        else
+            $cities = CHtml::listData(MasterCity::model()->findAll(array('order' => 'City_Name')), 'Master_City_Id', 'City_Name');
+        if ($key != NULL)
+            return $cities[$key];
+        return $cities;
+    }
+
     //end
 
     public static function getAuthorconvertIgnorelist() {

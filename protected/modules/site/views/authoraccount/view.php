@@ -108,7 +108,7 @@ if ($export == false) {
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
                 ),
                 array(
-                    'name' => 'Created_Date',
+                    'name' => 'Created Date',
                     'value' => $model->Created_Date
                 ),
                 array(
@@ -432,8 +432,16 @@ if ($export == false) {
                         'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
                     ),
                 ),
             ));
@@ -467,7 +475,7 @@ if ($export == false) {
                             <td><?php echo $i ?>.</td>
                             <td><a class="<?php echo "popup-link{$i}" ?>" href="<?php echo $file_path ?>"><?php echo "Author Biograph {$i}" ?></a></td>
                             <td><?php echo $uploaded_file->Auth_Biogrph_Upl_Description ?></td>
-                            <td><?php echo $uploaded_file->Created_Date ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
                             <td><?php echo $uploaded_file->createdBy->name ?></td>
                             <td>
                                 <?php
@@ -515,7 +523,7 @@ if ($export == false) {
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $uploaded_file->Auth_Upl_Doc_Name ?></td>
                                 <td><?php echo $uploaded_file->createdBy->name ?></td>
-                                <td><?php echo $uploaded_file->Created ?></td>
+                                <td><?php echo $uploaded_file->Created_Date ?></td>
                                 <td><?php echo $uploaded_file->updatedBy->name ?></td>
                                 <td><?php echo $uploaded_file->Rowversion ?></td>
                                 <?php if ($export == false) { ?>

@@ -61,7 +61,7 @@ $this->breadcrumbs = array(
             ),
             array(
                 'name' => 'Tarf_Cont_City_Id',
-                'value' => $model->tarfContCity->Region_Name
+                'value' => $model->tarfContCity->City_Name
             ),
             'Tarf_Cont_District',
             'Tarf_Cont_Area',

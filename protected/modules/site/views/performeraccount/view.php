@@ -29,7 +29,6 @@ if ($export == false) {
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -106,14 +105,22 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->status
                 ),
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
-                    ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created_Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
+                ),
             ),
         ));
         ?>
@@ -155,8 +162,16 @@ if ($export == false) {
                         'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $address_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $address_model->Rowversion
                     ),
 //        array(
 //                'name' => 'Active',
@@ -246,8 +261,16 @@ if ($export == false) {
                         'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $payment_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $payment_model->Rowversion
                     ),
                 ),
             ));
@@ -274,8 +297,16 @@ if ($export == false) {
                         'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $psedonym_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $psedonym_model->Rowversion
                     ),
                 ),
             ));
@@ -305,8 +336,16 @@ if ($export == false) {
                         'value' => isset($death_model->createdBy->name) ? $death_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $death_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($death_model->updatedBy->name) ? $death_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $death_model->Rowversion
                     ),
                 ),
             ));
@@ -363,8 +402,16 @@ if ($export == false) {
                         'value' => isset($related_model->createdBy->name) ? $related_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $related_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($related_model->updatedBy->name) ? $related_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $related_model->Rowversion
                     ),
                 ),
             ));
@@ -388,8 +435,16 @@ if ($export == false) {
                         'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created_Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
                     ),
                 ),
             ));
@@ -400,7 +455,7 @@ if ($export == false) {
         <h4 class="box-title">Biography Uploaded Files</h4>
         <?php
         $uploaded_files = array();
-        if(!empty($biograph_model))
+        if (!empty($biograph_model))
             $uploaded_files = PerformerBiographUploads::model()->findAll('Perf_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Perf_Biogrph_Id));
         if (!empty($uploaded_files)) {
             ?>
@@ -437,7 +492,8 @@ if ($export == false) {
                     <?php } ?>
                 </tbody>
             </table>
-        <?php }else{
+            <?php
+        } else {
             echo 'No data created';
         }
         ?>
@@ -458,7 +514,9 @@ if ($export == false) {
                             <th style="width: 10px">#</th>
                             <th>Document Name</th>
                             <th>Created By</th>
+                            <th>Created Date</th>
                             <th>Updated By</th>
+                            <th>Updated Date</th>
                             <?php if ($export == false) { ?>
                                 <th>Action</th>
                             <?php } ?>
@@ -468,7 +526,9 @@ if ($export == false) {
                                 <td><?php echo $key + 1 ?>.</td>
                                 <td><?php echo $uploaded_file->Perf_Upl_Doc_Name ?></td>
                                 <td><?php echo $uploaded_file->createdBy->name ?></td>
+                                <td><?php echo $uploaded_file->Created_Date ?></td>
                                 <td><?php echo $uploaded_file->updatedBy->name ?></td>
+                                <td><?php echo $uploaded_file->Rowversion ?></td>
                                 <?php if ($export == false) { ?>
                                     <td>
                                         <?php

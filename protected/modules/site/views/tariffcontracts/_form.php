@@ -55,7 +55,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Tarf_Cont_User_Id');
-    $regions = Myclass::getMasterRegion();
+    $cities = Myclass::getMasterCity();
     $tariffs = Myclass::getMasterTariff();
     $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
     $event_types = Myclass::getMasterEventtype();
@@ -123,7 +123,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Tarf_Cont_City_Id', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">
-                            <?php echo $form->dropDownList($model, 'Tarf_Cont_City_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Tarf_Cont_City_Id', $cities, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_City_Id'); ?>
                         </div>
                     </div>
@@ -299,7 +299,7 @@ $js = <<< EOD
                 });
             });
 
-            $('body').on('click','#search_result tr', function(){
+            $('body').on('click','#search_result tbody tr', function(){
                 $(this).addClass('highlight').siblings().removeClass('highlight');
                 $('#TariffContracts_Tarf_Cont_User_Id').val($(this).data('id'));
             });

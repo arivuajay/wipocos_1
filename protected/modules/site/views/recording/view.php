@@ -102,8 +102,16 @@ $this->breadcrumbs = array(
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
                 ),
                 array(
+                    'name' => 'Created Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
                     'name' => 'Updated_By',
                     'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
                 ),
             ),
         ));
@@ -111,49 +119,6 @@ $this->breadcrumbs = array(
     </div>
 
     <div class="user-view col-lg-6">
-        <h4 class="box-title">Sub Titles</h4>
-        <?php
-        if (!empty($sub_title_model)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Name') ?></th>
-                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Type_Id') ?></th>
-                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Language_Id') ?></th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <?php if ($export == false) { ?>
-                            <th>Action</th>
-                        <?php } ?>
-                    </tr>
-                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $sub_title->Rcd_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->rcdSubtitleType->Type_Name ?></td>
-                            <td><?php echo $sub_title->rcdSubtitleLanguage->Lang_Name ?></td>
-                            <td><?php echo $sub_title->createdBy->name ?></td>
-                            <td><?php echo $sub_title->updatedBy->name ?></td>
-                            <?php if ($export == false) { ?>
-                                <td>
-                                    <?php
-                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $sub_title->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
-                                    echo "&nbsp;&nbsp;";
-                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                    ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <?php
-        } else {
-            echo 'No Sub Titles created';
-        }
-        ?>
         <h4>Publication</h4>
         <?php
         if (!empty($publication_model)) {
@@ -171,14 +136,22 @@ $this->breadcrumbs = array(
                         'name' => 'Rcd_Publ_Prod_Nation_Id',
                         'value' => isset($publication_model->rcdPublProdNation->Nation_Name) ? $publication_model->rcdPublProdNation->Nation_Name : 'Not Set'
                     ),
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($publication_model->createdBy->name) ? $publication_model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($publication_model->updatedBy->name) ? $publication_model->updatedBy->name : ''
-                    ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($publication_model->createdBy->name) ? $publication_model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created Date',
+                    'value' => $publication_model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($publication_model->updatedBy->name) ? $publication_model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $publication_model->Rowversion
+                ),
                 ),
             ));
         } else {
@@ -226,13 +199,65 @@ $this->breadcrumbs = array(
     </div>
 
     <div class="user-view col-lg-12">
+                <h4 class="box-title">Sub Titles</h4>
+        <?php
+        if (!empty($sub_title_model)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Name') ?></th>
+                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Type_Id') ?></th>
+                        <th><?php echo RecordingSubtitle::model()->getAttributeLabel('Rcd_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <?php if ($export == false) { ?>
+                            <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $sub_title->Rcd_Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->rcdSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->rcdSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->Created_Date ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
+                            <td><?php echo $sub_title->Rowversion ?></td>
+                            <?php if ($export == false) { ?>
+                                <td>
+                                    <?php
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recording/update/id/' . $sub_title->Rcd_Id . '/tab/2/edit/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Edit'));
+                                    echo "&nbsp;&nbsp;";
+                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recording/subtitledelete/id/' . $sub_title->Rcd_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    ?>
+                                </td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No Sub Titles created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
         <h4 class="box-title">Right Holders</h4>
         <?php
         if (!empty($members)) {
             ?>
             <div>
                 <span>Created By: <?php echo $members[0]->createdBy->name?></span><br />
-                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br /><br />
+                <span>Created Date: <?php echo $members[0]->Created_Date ?></span><br />
+                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br />
+                <span>Updated Date: <?php echo $members[0]->Rowversion?></span><br /><br />
             </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">

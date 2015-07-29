@@ -9,6 +9,8 @@ $this->breadcrumbs = array(
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
 
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
@@ -33,6 +35,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'action' => array('/site/inspector/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
+                    $regions = Myclass::getMasterRegion();
+                    $nationalities = Myclass::getMasterNationality();
                     ?>
 
                     <div class="col-lg-4 col-md-4">
@@ -59,14 +63,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Insp_DOB', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Insp_DOB', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Insp_DOB', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Insp_DOB'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Insp_Nationality_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Insp_Nationality_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Insp_Nationality_Id', $nationalities, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Insp_Nationality_Id'); ?>
                         </div>
                     </div>
@@ -87,14 +91,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Insp_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Insp_Date', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($searchModel, 'Insp_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Insp_Date'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Insp_Region_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Insp_Region_Id', array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Insp_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Insp_Region_Id'); ?>
                         </div>
                     </div>
@@ -122,12 +126,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Insp_Name',
                 'Insp_Occupation',
                 'Insp_DOB',
-            array(
-                'name' => 'Insp_Nationality_Id',
-                'value' => function($data){
-                    echo $data->inspNationality->Nation_Name;    
-                },
-            ),
+                array(
+                    'name' => 'Insp_Nationality_Id',
+                    'value' => function($data) {
+                        echo $data->inspNationality->Nation_Name;
+                    },
+                ),
                 /*
                   'Insp_Birth_Place',
                   'Insp_Identity_Number',
@@ -188,8 +192,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Insp_DOB',
             array(
                 'name' => 'Insp_Nationality_Id',
-                'value' => function($data){
-                    echo $data->inspNationality->Nation_Name;    
+                'value' => function($data) {
+                    echo $data->inspNationality->Nation_Name;
                 },
             ),
             /*
@@ -217,3 +221,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ?>
     </div>
 </div>
+
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('index', $js);
+?>

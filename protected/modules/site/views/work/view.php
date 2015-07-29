@@ -28,7 +28,6 @@ if ($export == false) {
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -86,14 +85,22 @@ if ($export == false) {
                     'type' => 'raw',
                     'value' => $model->Work_Unknown == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                 ),
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
-                    ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
+                ),
             ),
         ));
         ?>
@@ -129,73 +136,16 @@ if ($export == false) {
                         'value' => isset($document_model->createdBy->name) ? $document_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $document_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($document_model->updatedBy->name) ? $document_model->updatedBy->name : ''
                     ),
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4 class="box-title">Sub Titles</h4>
-        <?php
-        if (!empty($sub_title_model)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Name') ?></th>
-                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Type_Id') ?></th>
-                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Language_Id') ?></th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <?php if ($export == false) { ?>
-                            <th>Action</th>
-                        <?php } ?>
-                    </tr>
-                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
-                            <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
-                            <td><?php echo $sub_title->createdBy->name ?></td>
-                            <td><?php echo $sub_title->updatedBy->name ?></td>
-                            <?php if ($export == false) { ?>
-                                <td>
-                                    <?php
-                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update/id/' . $sub_title->Work_Id . '/tab/2/edit/' . $sub_title->Work_Subtitle_Id), array('title' => 'Edit'));
-                                    echo "&nbsp;&nbsp;";
-                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/id/' . $sub_title->Work_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                    ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <?php
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4>Biography</h4>
-        <?php
-        if (!empty($biograph_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $biograph_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-                    'Work_Biogrph_Annotation',
                     array(
-                        'name' => 'Created_By',
-                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                        'name' => 'Updated Date',
+                        'value' => $document_model->Rowversion
                     ),
                 ),
             ));
@@ -206,7 +156,7 @@ if ($export == false) {
         <h4>Biography Uploaded Files</h4>
         <?php
         $uploaded_files = array();
-        if(!empty($biograph_model))
+        if (!empty($biograph_model))
             $uploaded_files = WorkBiographUploads::model()->findAll('Work_Biogrph_Id = :bio_id', array(':bio_id' => $biograph_model->Work_Biogrph_Id));
         if (!empty($uploaded_files)) {
             ?>
@@ -243,12 +193,43 @@ if ($export == false) {
                     <?php } ?>
                 </tbody>
             </table>
-        <?php }else{
+        <?php
+        } else {
             echo 'No data created';
         }
         ?>
     </div>
     <div class="user-view col-lg-6">
+        <h4>Biography</h4>
+        <?php
+        if (!empty($biograph_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $biograph_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+                    'Work_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Created Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
         <h4>Publishing</h4>
         <?php
         if (!empty($publishing_model)) {
@@ -270,54 +251,19 @@ if ($export == false) {
                         'value' => isset($publishing_model->createdBy->name) ? $publishing_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $publishing_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($publishing_model->updatedBy->name) ? $publishing_model->updatedBy->name : ''
                     ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $publishing_model->Rowversion
+                    ),
                 ),
             ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-        <h4 class="box-title">Publishing Contract Files</h4>
-        <?php
-        $uploaded_files = array();
-        if (!empty($publishing_model))
-            $uploaded_files = WorkPublishingUploads::model()->findAll('Work_Pub_Id = :pub_id', array(':pub_id' => $publishing_model->Work_Pub_Id));
-        if (!empty($uploaded_files)) {
-            ?>
-            <table class="table table-striped table-bordered">
-                <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
-                        <tr>
-                            <td><?php echo $key + 1 ?>.</td>
-                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name == '' ? "Contract {$i}" : $uploaded_file->Work_Pub_Upl_Name ?></td>
-                            <td><?php echo $uploaded_file->Work_Pub_Upl_Description ?></td>
-                            <td><?php echo $uploaded_file->createdBy->name ?></td>
-                            <td><?php echo $uploaded_file->updatedBy->name ?></td>
-                            <td>
-                                <?php
-                                $file_path = $uploaded_file->getFilePath();
-                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
-                                echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody></table>
-            <?php
         } else {
             echo 'No data created';
         }
@@ -349,8 +295,16 @@ if ($export == false) {
                         'value' => isset($sub_publishing_model->createdBy->name) ? $sub_publishing_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $sub_publishing_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($sub_publishing_model->updatedBy->name) ? $sub_publishing_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $sub_publishing_model->Rowversion
                     ),
                 ),
             ));
@@ -358,7 +312,110 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
-        <h4 class="box-title">Sub-Publishing Contract Files</h4>
+    </div>
+
+    <div class="user-view col-lg-12">
+                <h4 class="box-title">Sub Titles</h4>
+        <?php
+        if (!empty($sub_title_model)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Name') ?></th>
+                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Type_Id') ?></th>
+                        <th><?php echo WorkSubtitle::model()->getAttributeLabel('Work_Subtitle_Language_Id') ?></th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <?php if ($export == false) { ?>
+                            <th>Action</th>
+                        <?php } ?>
+                    </tr>
+                    <?php foreach ($sub_title_model as $key => $sub_title) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
+                            <td><?php echo $sub_title->createdBy->name ?></td>
+                            <td><?php echo $sub_title->Created_Date ?></td>
+                            <td><?php echo $sub_title->updatedBy->name ?></td>
+                            <td><?php echo $sub_title->Rowversion ?></td>
+                            <?php if ($export == false) { ?>
+                                <td>
+                                    <?php
+                                    echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update/id/' . $sub_title->Work_Id . '/tab/2/edit/' . $sub_title->Work_Subtitle_Id), array('title' => 'Edit'));
+                                    echo "&nbsp;&nbsp;";
+                                    echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/id/' . $sub_title->Work_Subtitle_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                    ?>
+                                </td>
+                            <?php } ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+    <div class="user-view col-lg-12">
+                <h4 class="box-title">Publishing Contract Files</h4>
+        <?php
+        $uploaded_files = array();
+        if (!empty($publishing_model))
+            $uploaded_files = WorkPublishingUploads::model()->findAll('Work_Pub_Id = :pub_id', array(':pub_id' => $publishing_model->Work_Pub_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Name == '' ? "Contract {$i}" : $uploaded_file->Work_Pub_Upl_Name ?></td>
+                            <td><?php echo $uploaded_file->Work_Pub_Upl_Description ?></td>
+                            <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
+                            <td><?php echo $uploaded_file->updatedBy->name ?></td>
+                            <td><?php echo $uploaded_file->Rowversion ?></td>
+                            <td>
+                                <?php
+                                $file_path = $uploaded_file->getFilePath();
+                                echo CHtml::link('<i class="fa fa-download"></i>', array('/site/work/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/work/update', 'id' => $model->Work_Id, 'tab' => '5', 'fileedit' => $uploaded_file->Work_Pub_Upl_Id, 'umodel' => 'pub'), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/work/filedelete/', 'id' => $uploaded_file->Work_Pub_Upl_Id, 'delete_model' => 'WorkPublishingUploads', 'rel_model' => 'workPub', 'tab' => 5), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+    </div>
+    
+    <div class="user-view col-lg-12">
+                <h4 class="box-title">Sub-Publishing Contract Files</h4>
         <?php
         $uploaded_files = array();
         if (!empty($sub_publishing_model))
@@ -371,7 +428,9 @@ if ($export == false) {
                         <th>Name</th>
                         <th>Description</th>
                         <th>Created By</th>
+                        <th>Created Date</th>
                         <th>Updated By</th>
+                        <th>Updated Date</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
@@ -380,7 +439,9 @@ if ($export == false) {
                             <td><?php echo $uploaded_file->Work_Sub_Upl_Name ?></td>
                             <td><?php echo $uploaded_file->Work_Sub_Upl_Description ?></td>
                             <td><?php echo $uploaded_file->createdBy->name ?></td>
+                            <td><?php echo $uploaded_file->Created ?></td>
                             <td><?php echo $uploaded_file->updatedBy->name ?></td>
+                            <td><?php echo $uploaded_file->Rowversion ?></td>
                             <td>
                                 <?php
                                 $file_path = $uploaded_file->getFilePath();
@@ -401,16 +462,18 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
-    </div>
 
+    </div>
     <div class="user-view col-lg-12">
         <h4>Right Holders</h4>
         <?php
         if (!empty($members)) {
             ?>
             <div>
-                <span>Created By: <?php echo $members[0]->createdBy->name?></span><br />
-                <span>Updated By: <?php echo $members[0]->updatedBy->name?></span><br /><br />
+                <span>Created By: <?php echo $members[0]->createdBy->name ?></span><br />
+                <span>Created Date: <?php echo $members[0]->Created_Date ?></span><br />
+                <span>Updated By: <?php echo $members[0]->updatedBy->name ?></span><br />
+                <span>Updated Date: <?php echo $members[0]->Rowversion ?></span><br /><br />
             </div>
             <div class="box-body no-padding">
                 <table class="table table-striped table-bordered">

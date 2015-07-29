@@ -84,7 +84,7 @@ class TariffContracts extends RActiveRecord {
             'tarfContEvent' => array(self::BELONGS_TO, 'MasterEventType', 'Tarf_Cont_Event_Id'),
             'tarfContInsp' => array(self::BELONGS_TO, 'Inspector', 'Tarf_Cont_Insp_Id'),
             'tarfContTariff' => array(self::BELONGS_TO, 'MasterTariff', 'Tarf_Cont_Tariff_Id'),
-            'tarfContCity' => array(self::BELONGS_TO, 'MasterRegion', 'Tarf_Cont_City_Id'),
+            'tarfContCity' => array(self::BELONGS_TO, 'MasterCity', 'Tarf_Cont_City_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -195,6 +195,7 @@ class TariffContracts extends RActiveRecord {
             '2' => 'Biannual',
             '3' => 'Quarterly',
             '4' => 'Monthly',
+            '5' => 'Weekly',
         );
         if(isset($this->Tarf_Cont_Pay_Id))
             $key = $this->Tarf_Cont_Pay_Id;

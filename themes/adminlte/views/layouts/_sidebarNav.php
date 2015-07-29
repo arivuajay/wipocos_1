@@ -62,6 +62,7 @@
                     'items' => array(
                         array('label' => '<i class="fa fa-usd"></i> <span>Currencies</span>', 'url' => array('/site/mastercurrency/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-globe"></i> <span>Countries</span>', 'url' => array('/site/mastercountry/index'), 'visible' => '1', 'active' => '0'),
+                        array('label' => '<i class="fa fa-bank"></i> <span>Cities</span>', 'url' => array('/site/mastercity/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-barcode"></i> <span>Code Definition</span>', 'url' => array('/site/internalcodegenerate/setup'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-binoculars"></i> <span>Destination</span>', 'url' => array('/site/masterdestination/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-file-code-o"></i> <span>Document Status</span>', 'url' => array('/site/masterdocumentstatus/index'), 'visible' => '1', 'active' => '0'),

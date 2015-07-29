@@ -40,7 +40,6 @@ $this->breadcrumbs = array(
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -89,13 +88,13 @@ $this->breadcrumbs = array(
                 'Pub_Group_Internal_Code',
                 'Pub_Group_IPN_Base_Number',
                 'Pub_Group_IPI_Name_Number',
-                'Pub_Group_IPN_Number',
+//                'Pub_Group_IPN_Number',
                 'Pub_Group_Date',
                 'Pub_Group_Place',
-                array(
-                    'name' => 'Pub_Group_Country_Id',
-                    'value' => isset($model->pubGroupCountry->Country_Name) ? $model->pubGroupCountry->Country_Name : 'Not set'
-                ),
+//                array(
+//                    'name' => 'Pub_Group_Country_Id',
+//                    'value' => isset($model->pubGroupCountry->Country_Name) ? $model->pubGroupCountry->Country_Name : 'Not set'
+//                ),
                 array(
                     'name' => 'Pub_Group_Legal_Form_Id',
                     'value' => isset($model->pubGroupLegalForm->Legal_Form_Name) ? $model->pubGroupLegalForm->Legal_Form_Name : 'Not set'
@@ -109,14 +108,22 @@ $this->breadcrumbs = array(
                     'type' => 'raw',
                     'value' => $model->status
                 ),
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
-                    ),
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
+                ),
             ),
         ));
         ?>
@@ -164,8 +171,47 @@ $this->breadcrumbs = array(
                         'value' => isset($address_model->createdBy->name) ? $address_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $address_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($address_model->updatedBy->name) ? $address_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $address_model->Rowversion
+                    ),
+                ),
+            ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+        <h4>Biography</h4>
+        <?php
+        if (!empty($biograph_model)) {
+            $this->widget('zii.widgets.CDetailView', array(
+                'data' => $biograph_model,
+                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                'attributes' => array(
+//        'Pub_Group_Biogrph_Id',
+                    'Pub_Group_Biogrph_Annotation',
+                    array(
+                        'name' => 'Created_By',
+                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Created Date',
+                        'value' => $biograph_model->Created_Date
+                    ),
+                    array(
+                        'name' => 'Updated_By',
+                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $biograph_model->Rowversion
                     ),
                 ),
             ));
@@ -192,8 +238,16 @@ $this->breadcrumbs = array(
                         'value' => isset($payment_model->createdBy->name) ? $payment_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $payment_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($payment_model->updatedBy->name) ? $payment_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $payment_model->Rowversion
                     ),
                 ),
             ));
@@ -217,8 +271,16 @@ $this->breadcrumbs = array(
                         'value' => isset($rel_payment_exists->createdBy->name) ? $rel_payment_exists->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $rel_payment_exists->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($rel_payment_exists->updatedBy->name) ? $rel_payment_exists->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $rel_payment_exists->Rowversion
                     ),
                 ),
             ));
@@ -248,8 +310,16 @@ $this->breadcrumbs = array(
                         'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $psedonym_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
+                    ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $psedonym_model->Rowversion
                     ),
                 ),
             ));
@@ -307,9 +377,17 @@ $this->breadcrumbs = array(
                         'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
                     ),
                     array(
+                        'name' => 'Created Date',
+                        'value' => $managed_model->Created_Date
+                    ),
+                    array(
                         'name' => 'Updated_By',
                         'value' => isset($managed_model->updatedBy->name) ? $managed_model->updatedBy->name : ''
                     ),
+                    array(
+                        'name' => 'Updated Date',
+                        'value' => $managed_model->Rowversion
+                    ),
                 ),
             ));
         } else {
@@ -318,29 +396,6 @@ $this->breadcrumbs = array(
         ?>
 
 
-        <h4>Biography</h4>
-        <?php
-        if (!empty($biograph_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $biograph_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Pub_Group_Biogrph_Id',
-                    'Pub_Group_Biogrph_Annotation',
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($biograph_model->createdBy->name) ? $biograph_model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($biograph_model->updatedBy->name) ? $biograph_model->updatedBy->name : ''
-                    ),
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
         <h4>Biography Uploaded Files</h4>
         <?php
         $uploaded_files = array();
