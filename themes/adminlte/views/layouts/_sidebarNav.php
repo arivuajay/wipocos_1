@@ -127,6 +127,7 @@
                         array('label' => '<i class="fa fa-cny"></i> <span>Customer Tariffication</span>', 'url' => array('/site/tariffcontracts/index'), 'visible' => 1, 'active' => 0),
                     ),
                 ),
+                array('label' => '<i class="fa fa-envelope"></i> <span>Invoice Sample</span>', 'url' => array('/site/default/invoice'), 'visible' => 1, 'active' => 0),
             ),
             'htmlOptions' => array('class' => 'sidebar-menu')
         ));

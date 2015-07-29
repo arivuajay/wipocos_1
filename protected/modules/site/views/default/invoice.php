@@ -39,15 +39,15 @@
                         <td>Barathpur</td>
                     </tr>
                     <tr>
-                        <th>District</th>
+                        <th>District:</th>
                         <td>Rajastan</td>
                     </tr>
                     <tr>
-                        <th>Area</th>
+                        <th>Area:</th>
                         <td>Brij</td>
                     </tr>
                     <tr>
-                        <th>Tariff Code</th>
+                        <th>Tariff Code:</th>
                         <td>ANNUAL FIXED AMOUNT</td>
                     </tr>
                     <tr>
@@ -56,7 +56,7 @@
                     </tr>
                     <tr>
                         <th>Balance:</th>
-                        <td>$265.24</td>
+                        <td>265.24</td>
                     </tr>
                 </table>
             </div>
@@ -71,7 +71,7 @@
                     <td>Close</td>
                 </tr>
                 <tr>
-                    <th>Date</th>
+                    <th>Date:</th>
                     <td>20-01-2015</td>
                 </tr>
             </table>
@@ -89,18 +89,18 @@
                 <table class="table">
                     <tr>
                         <th style="width:50%">Amount to Pay:</th>
-                        <td>$250.30</td>
+                        <td>250.30</td>
                     </tr>
                     <tr>
-                        <th>From</th>
+                        <th>From:</th>
                         <td>20-01-2015</td>
                     </tr>
                     <tr>
-                        <th>To</th>
+                        <th>To:</th>
                         <td>20-01-2017</td>
                     </tr>
                     <tr>
-                        <th>Signature Date</th>
+                        <th>Date of signature:</th>
                         <td>20-01-2017</td>
                     </tr>
                     <tr>
@@ -109,7 +109,7 @@
                     </tr>
                     <tr>
                         <th>Portion:</th>
-                        <td>$265.24</td>
+                        <td>265.24</td>
                     </tr>
                 </table>
                 <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
