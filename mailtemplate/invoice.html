@@ -1,133 +1,111 @@
-<tr>
-    <td>
-       
-<!-- Main content -->
-<section class="content invoice">
-    <!-- title row -->
-    <div class="row">
-        <div class="col-xs-12">
-            <h2 class="page-header">
-                <i class="fa fa-globe"></i> Wipocos.
-                <small class="pull-right">Date: <?php echo date('d-m-Y'); ?></small>
-            </h2>
-        </div><!-- /.col -->
+<div class="row invoice-info" style="margin-right: -15px;margin-left: -15px;">
+    <div class="col-sm-6 invoice-col" style="width: 45%;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;float: left;">
+        <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">User Details:</p>
+        <address style="margin-bottom: 20px;font-style: normal;line-height: 1.42857143;">
+            <strong>{CUST_NAME}</strong><br>
+            {CUST_ADDRESS}<br>
+            Phone: {CUST_PHONE}<br>
+            Fax: {CUST_FAX}<br>
+            Website: {CUST_WEBSITE}<br>
+            Email: {CUST_EMAIL}
+        </address>
     </div>
-    <!-- info row -->
-    <div class="row invoice-info">
-        <div class="col-sm-6 invoice-col">
-            User Details
-            <address>
-                <strong>FULBARI F.M. 100.6 MHZ (#9104)</strong><br>
-                Bharathpur<br>
-                Chitwan<br>
-                Phone: (555) 539-1037<br/>
-                Email: john.doe@example.com
-            </address>
-        </div><!-- /.col -->
-        <div class="col-sm-6 invoice-col">
-            <b>Invoice #007612</b><br/>
-            <b>Contract Number:</b> SOC-I-1051548<br/>
-        </div><!-- /.col -->
-    </div><!-- /.row -->
+    <div class="col-sm-6 invoice-col" style="width: 45%;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;float: left;">
+        <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">Agreement:</p>
+        <b>Invoice #{INVOICE_NO}</b><br>
+        <b>Date:</b> {GEN_DATE}<br>
+        <b>Contract Number:</b> {CONTRACT_NO}<br>
+    </div>
+</div>
+<div class="clearfix" style="clear: both;"></div>
 
-    <div class="row">
-        <div class="col-xs-6 table-responsive">
-            <p class="lead">Establishment:</p>
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th style="width:50%">City:</th>
-                        <td>Barathpur</td>
-                    </tr>
-                    <tr>
-                        <th>District</th>
-                        <td>Rajastan</td>
-                    </tr>
-                    <tr>
-                        <th>Area</th>
-                        <td>Brij</td>
-                    </tr>
-                    <tr>
-                        <th>Tariff Code</th>
-                        <td>ANNUAL FIXED AMOUNT</td>
-                    </tr>
-                    <tr>
-                        <th>Inspector:</th>
-                        <td>George C</td>
-                    </tr>
-                    <tr>
-                        <th>Balance:</th>
-                        <td>$265.24</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-xs-6">
-
-            <p class="lead">Event:</p>
-            <table class="table">
+<div class="row" style="margin-right: -15px;margin-left: -15px;">
+    <div class="col-xs-6 table-responsive" style="float: left;min-height: 1px;overflow-x: auto;padding-left: 15px;padding-right: 15px;position: relative;width: 45%;">
+        <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">Establishment:</p>
+        <div class="table-responsive" style="min-height: .01%;overflow-x: auto;">
+            <table class="table" style="width: 100%;max-width: 100%;margin-bottom: 20px;text-align: left;border-collapse: collapse !important;">
                 <tr>
-                    <th style="width:50%">Type:</th>
-                    <td>Close</td>
+                    <th style="width: 50%;border-bottom: 1px solid #cccccc;padding: 8px;">City:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_CITY}</td>
                 </tr>
                 <tr>
-                    <th>Date</th>
-                    <td>20-01-2015</td>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">District:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_DISTRICT}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Area:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_AREA}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Tariff Code:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_TARIF_CODE}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Inspector:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_INSP}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Balance:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_BALANCE}</td>
                 </tr>
             </table>
-            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                <b>Comment:</b> Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+        </div>
+    </div>
+
+    <div class="col-xs-6" style="float: left;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;width: 45%;">
+
+        <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">Event:</p>
+        <table class="table" style="width: 100%;max-width: 100%;margin-bottom: 20px;text-align: left;border-collapse: collapse !important;">
+            <tr>
+                <th style="width: 50%;border-bottom: 1px solid #cccccc;padding: 8px;">Type:</th>
+                <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_TYPE}</td>
+            </tr>
+            <tr>
+                <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Date:</th>
+                <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_EVE_DATE}</td>
+            </tr>
+        </table>
+        <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;color: #777;min-height: 20px;padding: 9px;margin-bottom: 20px;background-color: #f5f5f5;border: 1px solid #e3e3e3;border-radius: 3px;-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);">
+            <b>Comment:</b> {TAR_EVE_COMMENT}
+        </p>
+
+    </div>
+</div>
+
+<div class="row" style="margin-right: -15px;margin-left: -15px;">
+    <div class="col-xs-12" style="float: left;width: 100%;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;">
+        <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">Royalty:</p>
+        <div class="table-responsive" style="min-height: .01%;overflow-x: auto;">
+            <table class="table" style="width: 100%;max-width: 100%;margin-bottom: 20px;text-align: left;border-collapse: collapse !important;">
+                <tr>
+                    <th style="width: 50%;border-bottom: 1px solid #cccccc;padding: 8px;">Amount to Pay:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_TO_PAY}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">From:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_FROM}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">To:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_TO}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Date of signature:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_SIGN}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Payment:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_PAYMENT}</td>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 1px solid #cccccc;padding: 8px;">Portion:</th>
+                    <td style="border-bottom: 1px solid #cccccc;padding: 8px;">{TAR_PORTION}</td>
+                </tr>
+            </table>
+            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;color: #777;min-height: 20px;padding: 9px;margin-bottom: 20px;background-color: #f5f5f5;border: 1px solid #e3e3e3;border-radius: 3px;-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);">
+                <b>Comment:</b> {TAR_ROY_COMMENT}
             </p>
-
         </div>
+
     </div>
-
-    <div class="row">
-        <div class="col-xs-12">
-            <p class="lead">Royalty:</p>
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th style="width:50%">Amount to Pay:</th>
-                        <td>$250.30</td>
-                    </tr>
-                    <tr>
-                        <th>From</th>
-                        <td>20-01-2015</td>
-                    </tr>
-                    <tr>
-                        <th>To</th>
-                        <td>20-01-2017</td>
-                    </tr>
-                    <tr>
-                        <th>Signature Date</th>
-                        <td>20-01-2017</td>
-                    </tr>
-                    <tr>
-                        <th>Payment:</th>
-                        <td>Monthly</td>
-                    </tr>
-                    <tr>
-                        <th>Portion:</th>
-                        <td>$265.24</td>
-                    </tr>
-                </table>
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                    <b>Comment:</b> Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                </p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- this row will not appear when printing -->
-<!--    <div class="row no-print">
-        <div class="col-xs-12">
-            <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Print</button>
-            <button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment</button>
-            <button class="btn btn-primary pull-right" style="margin-right: 5px;"><i class="fa fa-download"></i> Generate PDF</button>
-        </div>
-    </div>-->
-</section>
-
+</div>

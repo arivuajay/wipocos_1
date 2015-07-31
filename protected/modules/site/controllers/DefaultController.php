@@ -30,7 +30,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron', 'invoice'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -38,6 +38,7 @@ class DefaultController extends Controller {
                 'users' => array('@'),
             ),
             array('deny', // deny all users
+                'actions' => array('invoice'),
                 'users' => array('*'),
             ),
         );
@@ -48,15 +49,15 @@ class DefaultController extends Controller {
     }
 
     public function actionInvoice() {
-//        $mail = new Sendmail;
-//        $trans_array = array(
-//            "{SITENAME}" => SITENAME,
-//            "{USERNAME}" => 'Prakash',
-//            "{EMAIL_ID}" => 'prakash.paramanandam@arkinfotec.com',
-//        );
-//        $message = $mail->getMessage('invoice', $trans_array);
-//        $Subject = $mail->translate('{SITENAME}: : Reminder');
-//        $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
+        $mail = new Sendmail;
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => 'Prakash',
+            "{EMAIL_ID}" => 'prakash.paramanandam@arkinfotec.com',
+        );
+        $message = $mail->getMessage('invoice', $trans_array);
+        $Subject = $mail->translate('{SITENAME}: : Reminder');
+        $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
         $this->render('invoice');
     }
 

@@ -82,6 +82,39 @@ class TariffcontractsController extends Controller {
         if (isset($_POST['TariffContracts'])) {
             $model->attributes = $_POST['TariffContracts'];
             if ($model->save()) {
+                $mail = new Sendmail;
+                $trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{GEN_DATE}" => date('Y-m-d'),
+                    "{CUST_NAME}" => $model->tarfContUser->User_Cust_Name,
+                    "{CUST_ADDRESS}" => $model->tarfContUser->User_Cust_Address,
+                    "{CUST_PHONE}" => $model->tarfContUser->User_Cust_Telephone,
+                    "{CUST_FAX}" => $model->tarfContUser->User_Cust_Fax,
+                    "{CUST_WEBSITE}" => $model->tarfContUser->User_Cust_Website,
+                    "{CUST_EMAIL}" => $model->tarfContUser->User_Cust_Email,
+                    "{INVOICE_NO}" => '123123',
+                    "{CONTRACT_NO}" => $model->Tarf_Cont_Internal_Code,
+                    "{TAR_CITY}" => $model->tarfContCity->City_Name,
+                    "{TAR_DISTRICT}" => $model->Tarf_Cont_District,
+                    "{TAR_AREA}" => $model->Tarf_Cont_Area,
+                    "{TAR_TARIF_CODE}" => $model->tarfContTariff->Tarif_Description,
+                    "{TAR_INSP}" => $model->tarfContInsp->Insp_Name,
+                    "{TAR_BALANCE}" => $model->Tarf_Cont_Balance,
+                    "{TAR_TYPE}" => $model->tarfContEvent->Evt_Type_Name,
+                    "{TAR_EVE_DATE}" => $model->Tarf_Cont_Event_Date,
+                    "{TAR_EVE_COMMENT}" => $model->Tarf_Cont_Event_Comment,
+                    "{TAR_TO_PAY}" => $model->Tarf_Cont_Amt_Pay,
+                    "{TAR_FROM}" => $model->Tarf_Cont_From,
+                    "{TAR_TO}" => $model->Tarf_Cont_To,
+                    "{TAR_SIGN}" => $model->Tarf_Cont_Sign_Date,
+                    "{TAR_PAYMENT}" => $model->getPayment(),
+                    "{TAR_PORTION}" => $model->Tarf_Cont_Portion,
+                    "{TAR_ROY_COMMENT}" => $model->Tarf_Cont_Comment,
+                );
+                $message = $mail->getMessage('invoice', $trans_array);
+                $Subject = $mail->translate('{SITENAME}: : Invoice');
+                $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
+                
                 Myclass::addAuditTrail("Created TariffContracts successfully.", "user");
                 Yii::app()->user->setFlash('success', 'TariffContracts Created Successfully!!!');
                 $this->redirect(array('/site/tariffcontracts/index'));
