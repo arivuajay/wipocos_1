@@ -27,6 +27,10 @@
  */
 class RecordingSessionRightholder extends RActiveRecord {
 
+    public $workMatchRecords;
+    public $workExportMatchRecords;
+    public $workTitle;
+    public $recordTitle;
     public $Rcd_Ses_Right_Member_Internal_Code;
     /**
      * @return string the associated database table name
@@ -49,7 +53,7 @@ class RecordingSessionRightholder extends RActiveRecord {
             array('Rcd_Ses_Right_Equal_Share, Rcd_Ses_Right_Blank_Share', 'numerical', 'min' => 0, 'max' => 100, 'integerOnly' => false),
             array('Rcd_Ses_Right_Work_GUID', 'required', 'message' => 'Seacrh & select work before you save'),
             array('Rcd_Ses_Right_Member_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
-            array('Created_Date, Rowversion, Rcd_Ses_Right_Member_Internal_Code', 'safe'),
+            array('Created_Date, Rowversion, Rcd_Ses_Right_Member_Internal_Code, Rcd_Ses_Right_Member_Type, workMatchRecords, workExportMatchRecords', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Ses_Right_Id, Rcd_Ses_Id, Rcd_Ses_Right_Work_GUID, Rcd_Ses_Right_Member_GUID, Rcd_Ses_Right_Work_Type, Rcd_Ses_Right_Role, Rcd_Ses_Right_Equal_Share, Rcd_Ses_Right_Equal_Org_Id, Rcd_Ses_Right_Blank_Share, Rcd_Ses_Right_Blank_Org_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -67,6 +71,9 @@ class RecordingSessionRightholder extends RActiveRecord {
             'rcdSesRightEqualOrg' => array(self::BELONGS_TO, 'Organization', 'Rcd_Ses_Right_Equal_Org_Id'),
             'rcdSesRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Rcd_Ses_Right_Role'),
             'rcdSes' => array(self::BELONGS_TO, 'RecordingSession', 'Rcd_Ses_Id'),
+            'rightholderAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Rcd_Ses_Right_Member_GUID',
+                'foreignKey' => array('Rcd_Ses_Right_Member_GUID' => 'Auth_GUID')
+            ),
             'rightholderPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Ses_Right_Member_GUID',
                 'foreignKey' => array('Rcd_Ses_Right_Member_GUID' => 'Perf_GUID')
             ),
@@ -100,6 +107,10 @@ class RecordingSessionRightholder extends RActiveRecord {
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
+            'workmatchrecords' => 'Right Holders',
+            'workexportmatchrecords' => 'Right Holders',
+            'worktitle' => 'Work',
+            'recordtitle' => 'Recording',
         );
     }
 
@@ -169,4 +180,62 @@ class RecordingSessionRightholder extends RActiveRecord {
         ));
         return $works;
     }
+    
+    public function workExportList($rcd_ses_id, $type) {
+        $criteria = new CDbCriteria;
+        $criteria->group = "t.Rcd_Ses_Right_Work_GUID";
+        $criteria->addCondition("t.Rcd_Ses_Id = $rcd_ses_id And t.Rcd_Ses_Right_Work_Type = '{$type}'");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 5,
+            )
+        ));
+    }
+    
+    public function getWorkMatchRecords() {
+        $table = '<table border="1" class="match_det_table">';
+        $table .= '<tbody>';
+        $rightholders = self::model()->findAllByAttributes(array(
+            'Rcd_Ses_Id' => $this->Rcd_Ses_Id,
+            'Rcd_Ses_Right_Work_GUID' => $this->Rcd_Ses_Right_Work_GUID,
+            'Rcd_Ses_Right_Work_Type' => $this->Rcd_Ses_Right_Work_Type
+        ));
+        foreach ($rightholders as $rightholder) {
+            if ($rightholder->Rcd_Ses_Right_Member_Type == 'A') {
+                $table .= "<tr><td>{$rightholder->rightholderAuthor->fullname}</td></tr>";
+            } else if ($rightholder->Rcd_Ses_Right_Member_Type == 'P') {
+                $table .= "<tr><td>{$rightholder->rightholderPerformer->fullname}</td></tr>";
+            }
+        }
+        $table .= '</tbody></table>';
+        return $table;
+    }
+    
+    public function getWorkExportMatchRecords() {
+        $table = '';
+        $rightholders = self::model()->findAllByAttributes(array(
+            'Rcd_Ses_Id' => $this->Rcd_Ses_Id,
+            'Rcd_Ses_Right_Work_GUID' => $this->Rcd_Ses_Right_Work_GUID,
+            'Rcd_Ses_Right_Work_Type' => $this->Rcd_Ses_Right_Work_Type
+        ));
+        foreach ($rightholders as $rightholder) {
+            if ($rightholder->Rcd_Ses_Right_Member_Type == 'A') {
+                $table .= "{$rightholder->rightholderAuthor->fullname}\r";
+            } else if ($rightholder->Rcd_Ses_Right_Member_Type == 'P') {
+                $table .= "{$rightholder->rightholderPerformer->fullname}\r";
+            }
+        }
+        return $table;
+    }
+
+    public function getWorkTitle() {
+        return $this->rightholderWork->Work_Org_Title;
+    }
+
+    public function getRecordTitle() {
+        return $this->rightholderRecord->Rcd_Title;
+    }
+
 }

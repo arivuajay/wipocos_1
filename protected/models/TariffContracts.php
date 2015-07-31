@@ -7,6 +7,7 @@
  * @property integer $Tarf_Cont_Id
  * @property string $Tarf_Cont_GUID
  * @property string $Tarf_Cont_Internal_Code
+ * @property integer $Tarf_Invoice
  * @property integer $Tarf_Cont_City_Id
  * @property string $Tarf_Cont_District
  * @property string $Tarf_Cont_Area
@@ -37,14 +38,18 @@
  */
 class TariffContracts extends RActiveRecord {
 
+    const INVOICE_PAD = 7;
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Tarf_Cont_GUID = Myclass::guid(false);
             $this->Tarf_Cont_City_Id = DEFAULT_REGION_ID;
             $this->Tarf_Cont_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::TARIFF_CONTRACT_CODE))->Fullcode;
+            $this->Tarf_Invoice = Myclass::getTarifInvoice();
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -58,18 +63,20 @@ class TariffContracts extends RActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-         return array(
+        return array(
             array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date', 'required'),
-            array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly'=>true),
-            array('Tarf_Cont_User_Id', 'required', 'message'=>'Please select User'),
-            array('Tarf_Cont_GUID', 'length', 'max'=>40),
-            array('Tarf_Cont_Internal_Code', 'length', 'max'=>50),
-            array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max'=>100),
-            array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion', 'numerical', 'integerOnly'=>false),
-            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion', 'safe'),
+            array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
+            array('Tarf_Cont_GUID', 'length', 'max' => 40),
+            array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
+            array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
+            array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion', 'numerical', 'integerOnly' => false),
+            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
+            array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on'=>'search'),
+            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -197,10 +204,26 @@ class TariffContracts extends RActiveRecord {
             '4' => 'Monthly',
             '5' => 'Weekly',
         );
-        if(isset($this->Tarf_Cont_Pay_Id))
+        if (isset($this->Tarf_Cont_Pay_Id))
             $key = $this->Tarf_Cont_Pay_Id;
-        if($key != NULL)
+        if ($key != NULL)
             return $payments[$key];
         return $payments;
     }
+
+    protected function beforeSave() {
+        if($this->isNewRecord){
+            $this->Tarf_Invoice = Myclass::getTarifInvoice();
+        }
+        return parent::beforeSave();
+    }
+
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIFF_CONTRACT_CODE);
+        }
+
+        return parent::afterSave();
+    }
+
 }

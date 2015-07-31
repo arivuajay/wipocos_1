@@ -336,11 +336,11 @@ class Myclass extends CController {
     }
 
     public static function getMasterModule($is_active = TRUE, $key = NULL) {
-        if($is_active && $key == NULL)
+        if ($is_active && $key == NULL)
             $modules = CHtml::listData(MasterModule::model()->isActive()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
         else
             $modules = CHtml::listData(MasterModule::model()->findAll(array('order' => 'Module_Code')), 'Master_Module_ID', 'Description');
-            
+
         if ($key != NULL)
             return $modules[$key];
         return $modules;
@@ -608,7 +608,7 @@ class Myclass extends CController {
             if (isset($_REQUEST['role'])) {
                 $ret['publishergroup'] = $_REQUEST['role'] == 'publisher';
                 $ret['producergroup'] = $_REQUEST['role'] == 'producer';
-            }else if (isset($_REQUEST['type'])) {
+            } else if (isset($_REQUEST['type'])) {
                 $ret['publishergroup'] = $_REQUEST['type'] == 'publisher';
                 $ret['producergroup'] = $_REQUEST['type'] == 'producer';
             } elseif (isset($_REQUEST['id'])) {
@@ -619,4 +619,21 @@ class Myclass extends CController {
         }
         return $ret;
     }
+
+    public function getTarifInvoice() {
+        $count = TariffContracts::model()->count() + 1;
+        $new_inv_no = str_pad($count,  TariffContracts::INVOICE_PAD,'0',STR_PAD_LEFT);;
+        do {
+            $rf_no = TariffContracts::model()->findByAttributes(array('Tarf_Invoice' => $new_inv_no));
+            if (!empty($rf_no)) {
+                $check_inv_no = $rf_no->Tarf_Invoice;
+                $count++;
+                $new_inv_no = $count;
+            } else {
+                break;
+            }
+        } while ($check_inv_no != $new_inv_no);
+        return $new_inv_no;
+    }
+
 }

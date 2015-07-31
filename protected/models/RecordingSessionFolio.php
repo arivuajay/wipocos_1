@@ -33,15 +33,28 @@ class RecordingSessionFolio extends RActiveRecord {
         return array(
             array('Rcd_Ses_Id, Rcd_Ses_Folio_Name', 'required'),
             array('Rcd_Ses_Id, Rcd_Ses_Folio_Name, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Rcd_Ses_Folio_Name', 'unique',
-                'criteria' => array(
-                    'condition' => 'Rcd_Ses_Id= :Rcd_Ses_Id',
-                    'params' => array(':Rcd_Ses_Id' => $this->Rcd_Ses_Id))),
+//            array('Rcd_Ses_Folio_Name', 'unique'),
+//            array('Rcd_Ses_Folio_Name', 'unique',
+//                'criteria' => array(
+//                    'condition' => 'Rcd_Ses_Id= :Rcd_Ses_Id',
+//                    'params' => array(':Rcd_Ses_Id' => $this->Rcd_Ses_Id))),
+            array('Rcd_Ses_Folio_Name', 'uniqueFolio'),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Rcd_Ses_Folio_Id, Rcd_Ses_Id, Rcd_Ses_Folio_Name, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
+    }
+
+    public function uniqueFolio($attribute, $params) {
+        if ($this->isNewRecord) {
+            $folis_count = self::model()->countByAttributes(array('Rcd_Ses_Id' => $this->Rcd_Ses_Id, 'Rcd_Ses_Folio_Name' => $this->Rcd_Ses_Folio_Name));
+        } else {
+            $folis_count = self::model()->count("Rcd_Ses_Folio_Id != :folio_id And Rcd_Ses_Folio_Name = :folio_name And Rcd_Ses_Id = :rcd_id", array(':folio_id' => $this->Rcd_Ses_Folio_Id, ':folio_name' => $this->Rcd_Ses_Folio_Name, ':rcd_id' => $this->Rcd_Ses_Id));
+        }
+        if($folis_count > 0){
+            $this->addError($attribute, "This Folio name '{$this->Rcd_Ses_Folio_Name}' already Exists.");
+        }
     }
 
     /**

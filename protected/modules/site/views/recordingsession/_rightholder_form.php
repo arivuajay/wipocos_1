@@ -72,6 +72,7 @@
     echo $form->hiddenField($model, 'Rcd_Ses_Right_Member_GUID');
     echo $form->hiddenField($model, 'Rcd_Ses_Right_Work_GUID');
     echo $form->hiddenField($model, 'Rcd_Ses_Right_Work_Type', array('value' => 'R'));
+    echo $form->hiddenField($model, 'Rcd_Ses_Right_Member_Type', array('value' => 'P'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
     
@@ -166,10 +167,41 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
+                <div class="form-group pull-right">
+            <?php
+            $this->beginWidget(
+                    'booster.widgets.TbModal', array('id' => 'rightHolder')
+            );
+            ?>
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h4>RightHolders</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->renderPartial('_recording_list', array('model' => $record_ses_model)); ?>
+            </div>
+            <?php $this->endWidget(); ?>
+            <?php
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'View & Export',
+                'context' => 'primary',
+                'htmlOptions' => array(
+                    'data-toggle' => 'modal',
+                    'data-target' => '#rightHolder',
+                ),
+                    )
+            );
+            ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="box-body">
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/recordingsession/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">
-                        <h3 class="box-title">Linked Rightholders</h3>
+                        <h3 class="box-title">Linked Recordings</h3>
                     </div>
                     <div class="box-body">
                         <table class="table table-striped table-bordered" id="linked-holders-rec">
@@ -537,7 +569,7 @@ $js = <<< EOD
                         tr += '<td class="hide"><input type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }
 
-                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]"){
+                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_Type]"){
                         tr += '<td>';
                     }
                     var td_content = '';
@@ -554,7 +586,7 @@ $js = <<< EOD
                         td_content = chk_tr.length == 1 ? chk_tr.data('work-name') : _work_name;
                     }
                     tr += td_content;
-                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]"){
+                    if(value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Equal_Org_id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Blank_Org_Id]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_GUID]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Work_Type]" && value['name'] != "RecordingSessionRightholder[Rcd_Ses_Right_Member_Type]"){
                         tr += '</td>';
                     }
                 }

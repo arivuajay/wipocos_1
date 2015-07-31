@@ -25,6 +25,7 @@ return array(
     'PHP_SHORT_DATE_FORMAT' => 'Y-m-d',
 
     //Product Settings
+    'SITEBASEURL' => 'http://wipocos.byethost16.com',
     'UPLOAD_DIR' => 'uploads',
     'EMAILHEADERIMAGE' => '/themes/adminlte/img/header-logo.png',
 

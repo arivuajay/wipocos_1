@@ -16,6 +16,15 @@ class RecordingsessionController extends Controller {
         );
     }
 
+    public function behaviors() {
+        return array(
+            'exportableGrid' => array(
+                'class' => 'application.components.ExportableGridBehavior',
+                'filename' => "Recording_Sessin_" . time() . ".csv",
+//                'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
+        ));
+    }
+    
     public function actions() {
         return array(
             'pdf' => 'application.components.actions.pdf',
@@ -192,6 +201,22 @@ class RecordingsessionController extends Controller {
             }
         }
 
+        if ($this->isExportRequest()) {
+            if (isset($_REQUEST['type']) && in_array($_REQUEST['type'], array('W', 'R'))) {
+                $type = $_REQUEST['type'];
+                $record = 'workexportmatchrecords';
+                if ($type == 'W') {
+                    $w_title = 'worktitle';
+                    $title = 'Recording Session Works:';
+                } else if ($type == 'R') {
+                    $w_title = 'recordtitle';
+                    $title = 'Recording Session Recording:';
+                }
+                $this->exportCSV(array($title), null, false);
+                $this->exportCSV($right_holder_model->workExportList($model->Rcd_Ses_Id, $type), array($w_title, $record)
+                );
+            }
+        }
         $this->render('update', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model', 'right_holder_exists', 'right_holder_model', 'folio_model'));
     }
 
