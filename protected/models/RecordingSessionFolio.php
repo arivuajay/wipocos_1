@@ -53,7 +53,7 @@ class RecordingSessionFolio extends RActiveRecord {
             $folis_count = self::model()->count("Rcd_Ses_Folio_Id != :folio_id And Rcd_Ses_Folio_Name = :folio_name And Rcd_Ses_Id = :rcd_id", array(':folio_id' => $this->Rcd_Ses_Folio_Id, ':folio_name' => $this->Rcd_Ses_Folio_Name, ':rcd_id' => $this->Rcd_Ses_Id));
         }
         if($folis_count > 0){
-            $this->addError($attribute, "This Folio name '{$this->Rcd_Ses_Folio_Name}' already Exists.");
+            $this->addError($attribute, "This Folio '{$this->Rcd_Ses_Folio_Name}' already Exists.");
         }
     }
 

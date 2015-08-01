@@ -68,7 +68,7 @@ class RecordingSessionDocumentation extends RActiveRecord {
         return array(
             'Rcd_Ses_Doc_Id' => 'Rcd Ses Doc',
             'Rcd_Ses_Id' => 'Rcd Ses',
-            'Rcd_Ses_Doc_Status_Id' => 'Documentary Status',
+            'Rcd_Ses_Doc_Status_Id' => 'Status',
             'Rcd_Ses_Doc_Type_Id' => 'Type',
             'Rcd_Ses_Doc_Sign_Date' => 'Date of Signature',
             'Rcd_Ses_Doc_File' => 'File',

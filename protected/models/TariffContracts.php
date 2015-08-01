@@ -7,7 +7,7 @@
  * @property integer $Tarf_Cont_Id
  * @property string $Tarf_Cont_GUID
  * @property string $Tarf_Cont_Internal_Code
- * @property integer $Tarf_Invoice
+ * @property string $Tarf_Invoice
  * @property integer $Tarf_Cont_City_Id
  * @property string $Tarf_Cont_District
  * @property string $Tarf_Cont_Area
@@ -71,7 +71,7 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
             array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion', 'numerical', 'integerOnly' => false),
-            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
+//            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice', 'safe'),
             // The following rule is used by search().
@@ -211,12 +211,12 @@ class TariffContracts extends RActiveRecord {
         return $payments;
     }
 
-    protected function beforeSave() {
-        if($this->isNewRecord){
-            $this->Tarf_Invoice = Myclass::getTarifInvoice();
-        }
-        return parent::beforeSave();
-    }
+//    protected function beforeSave() {
+//        if($this->isNewRecord){
+//            $this->Tarf_Invoice = Myclass::getTarifInvoice();
+//        }
+//        return parent::beforeSave();
+//    }
 
     protected function afterSave() {
         if($this->isNewRecord){

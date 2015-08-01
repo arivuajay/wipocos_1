@@ -268,7 +268,23 @@ $this->beginWidget(
 </div>
 
 <div class="modal-footer">
-    <p class="errorMessage text-center col-sm-8" id="art-modelerror"></p>
+    <div class="col-sm-3">
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'New Artist',
+            'context' => 'success',
+            'htmlOptions' => array(
+                'id' => 'newartistbutton',
+                'data-toggle' => 'modal',
+                'data-target' => '#newartistModal',
+                'onclick' => '{$("#artist-dismiss").trigger("click");}'
+            ),
+                )
+        );
+        ?>
+    </div>
+    <p class="errorMessage text-center col-sm-5" id="art-modelerror"></p>
     <?php
     $this->widget(
             'application.components.MyTbButton', array(
@@ -286,7 +302,8 @@ $this->beginWidget(
                         $("#main_artist").val(_row.data("name"));
                         $("#artist-dismiss").trigger("click");
                     }
-                }'
+                }',
+            'id' => 'set_artist_btn'
         ),
             )
     );
@@ -317,6 +334,36 @@ $this->widget(
         )
 );
 ?>
+<!---End -->
+
+<!---New Performer Add Form -->
+<?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'newartistModal')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>New Artist</h4>
+</div>
+<div class="modal-body">
+    <?php echo $this->renderPartial('/soundcarrier/_new_performer', array('model' => $performer_model, 'countries' => $countries)); ?>
+</div>
+
+<?php
+$this->widget(
+        'application.components.MyTbButton', array(
+    'label' => 'Close',
+    'url' => '#',
+    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-artist-dismiss', 'class' => 'hide'),
+        )
+);
+
+$this->endWidget();
+?>
+<!---End -->
+
+
 
 <!--Producer Modal -->
 <?php
@@ -363,7 +410,23 @@ $this->beginWidget(
 </div>
 
 <div class="modal-footer">
-    <p class="errorMessage text-center col-sm-8" id="pro-modelerror"></p>
+    <div class="col-sm-3">
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'New Producer',
+            'context' => 'success',
+            'htmlOptions' => array(
+                'id' => 'newartistbutton',
+                'data-toggle' => 'modal',
+                'data-target' => '#newproducerModal',
+                'onclick' => '{$("#producer-dismiss").trigger("click");}'
+            ),
+                )
+        );
+        ?>
+    </div>
+    <p class="errorMessage text-center col-sm-5" id="prod-modelerror"></p>
     <?php
     $this->widget(
             'application.components.MyTbButton', array(
@@ -374,14 +437,15 @@ $this->beginWidget(
             'onclick' => '{    
                     _row = $("#producertable").find(".highlight");
                     if(_row.length == 0){
-                        $("#pro-modelerror").html("Select Alteast one Producer");
+                        $("#prod-modelerror").html("Select Alteast one Producer");
                     }else{
-                        $("#pro-modelerror").html("");
+                        $("#prod-modelerror").html("");
                         $("#RecordingSession_Rcd_Ses_Producer").val(_row.data("id"));
                         $("#producer").val(_row.data("name"));
                         $("#producer-dismiss").trigger("click");
                     }
-                }'
+                }',
+            'id' => 'set_producer_btn'
         ),
             )
     );
@@ -412,8 +476,39 @@ $this->widget(
         )
 );
 ?>
+<!---End -->
+
+<!---New Producer Add Form -->
+<?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'newproducerModal')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>New Producer</h4>
+</div>
+<div class="modal-body">
+    <?php echo $this->renderPartial('/soundcarrier/_new_producer', array('model' => $producer_model, 'countries' => $countries)); ?>
+</div>
 
 <?php
+$this->widget(
+        'application.components.MyTbButton', array(
+    'label' => 'Close',
+    'url' => '#',
+    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-producer-dismiss', 'class' => 'hide'),
+        )
+);
+
+$this->endWidget();
+?>
+<!---End -->
+
+<?php
+$new_performer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newperformer');
+$new_producer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newproducer');
+
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
@@ -460,6 +555,74 @@ $js = <<< EOD
             });
         }
      });
+        
+    function InsertNewPerformer(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_performer_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#performer-account-form')[0].reset();
+                        $('#PerformerAccount_Perf_Internal_Code').val(data.new_int_code);
+                        _art_table = $('#artisttable');
+                        _art_table.dataTable().fnAddData([
+                            data.first_name,
+                            data.last_name,
+                            data.int_code 
+                        ]);
+                        tr = _art_table.find("td:contains('"+data.int_code+"')").parent();
+                        tr.data('id', data.id);
+                        tr.data('name', data.first_name + ' ' + data.last_name);
+                        tr.trigger('click');
+                        $("#set_artist_btn").trigger( "click" );
+                        $("#new-artist-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+        
+    function InsertNewProducer(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_producer_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        console.log(data);
+                        $('#producer-account-form')[0].reset();
+                        $('#ProducerAccount_Pro_Internal_Code').val(data.new_int_code);
+                        _pro_table = $('#producertable');
+                        _pro_table.dataTable().fnAddData([
+                            data.name,
+                            data.int_code 
+                        ]);
+                        tr = _pro_table.find("td:contains('"+data.int_code+"')").parent();
+                        tr.data('id', data.id);
+                        tr.data('name', data.name);
+                        tr.trigger('click');
+                        $("#set_producer_btn").trigger( "click" );
+                        $("#new-producer-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+        
+        
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>

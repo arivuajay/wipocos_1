@@ -201,6 +201,7 @@ class InternalcodeGenerate extends RActiveRecord {
             self::SOUND_CARRIER_CODE => 'Sound Carrier',
             self::SOUND_CARRIER_PUBLISHING_CODE => 'Sound Carrier Publishing',
             self::INSPECTOR_CODE => 'Inspectors',
+            self::TARIFF_CONTRACT_CODE => 'Tariff Contracts',
         );
         
         if($user_type == NULL && isset($this->Gen_User_Type))
