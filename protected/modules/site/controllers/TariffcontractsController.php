@@ -112,7 +112,7 @@ class TariffcontractsController extends Controller {
                     "{TAR_ROY_COMMENT}" => $model->Tarf_Cont_Comment,
                 );
                 $message = $mail->getMessage('invoice', $trans_array);
-                $Subject = $mail->translate('{SITENAME}: : Invoice');
+                $Subject = $mail->translate("{SITENAME}: : Invoice #{$model->Tarf_Invoice}");
                 $mail->send($model->tarfContUser->User_Cust_Email, $Subject, $message);
                 
                 Myclass::addAuditTrail("Created TariffContracts successfully.", "user");

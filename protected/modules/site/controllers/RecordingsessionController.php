@@ -91,8 +91,10 @@ class RecordingsessionController extends Controller {
     public function actionCreate() {
         $model = new RecordingSession;
 
+        $performer_model = new PerformerAccount;
+        $producer_model = new ProducerAccount;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(array($model, $performer_model, $producer_model));
 
         if (isset($_POST['RecordingSession'])) {
             $model->attributes = $_POST['RecordingSession'];
@@ -103,9 +105,7 @@ class RecordingsessionController extends Controller {
             }
         }
 
-        $this->render('create', array(
-            'model' => $model,
-        ));
+        $this->render('create', compact('model', 'performer_model', 'producer_model'));
     }
 
     /**
