@@ -53,6 +53,10 @@ $this->breadcrumbs=array(
         'htmlOptions' => array('class'=>'table table-striped table-bordered'),
 	'attributes'=>array(
 //		'Master_City_Id',
+                array(
+                    'name' => 'Country_Id',
+                    'value' => $model->country->Country_Name
+                ),
 		'City_Code',
 		'City_Name',
 		array(

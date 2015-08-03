@@ -78,7 +78,7 @@ class Recording extends RActiveRecord {
             array('Rcd_Record_Type_Id, Rcd_Label_Id', 'length', 'max' => 20),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Rcd_Internal_Code, Rcd_GUID', 'unique'),
+            array('Rcd_Internal_Code, Rcd_GUID, Rcd_Title', 'unique'),
             array('duration_hours', 'durationValidate'),
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By, Rcd_GUID', 'safe'),
             // The following rule is used by search().

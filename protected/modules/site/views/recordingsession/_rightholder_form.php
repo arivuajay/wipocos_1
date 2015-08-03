@@ -20,7 +20,7 @@
                         <div class="box-body">
                             <div class="form-group hide">
                                 <?php echo CHtml::label('Record', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_record', (/*$_REQUEST['is_record'] == 1*/true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_record', (/* $_REQUEST['is_record'] == 1 */true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err_rec" class="errorMessage hide">Select Record</div>
                             </div>
                             <div class="form-group">
@@ -52,10 +52,61 @@
     </div>
     <?php $this->endWidget(); ?>
 
+    <div class="col-lg-12">
+        <div class="box-body">
+            <?php
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Recording',
+                'context' => 'success',
+                'htmlOptions' => array(
+                    'id' => 'newrecordingbutton',
+                    'class' => 'hide',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newrecordingModal',
+//            'onclick' => '{$("#producer-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+            ?>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="box-body">
+            <!---New Recording Add Form -->
+            <?php
+            $this->beginWidget(
+                    'booster.widgets.TbModal', array('id' => 'newrecordingModal')
+            );
+            ?>
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h4>New Recording</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->renderPartial('_new_recording', array('model' => $recording_model, 'languages' => $languages, 'types' => $types, 'countries' => $countries)); ?>
+            </div>
+
+            <?php
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Close',
+                'url' => '#',
+                'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-recording-dismiss', 'class' => 'hide'),
+                    )
+            );
+
+            $this->endWidget();
+            ?>
+            <!---End -->
+        </div>
+    </div>
+
     <div class="row hide" id="link-performer-rec-div">
 
     </div>
-    
+
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'session-rightholder-form-2',
@@ -75,7 +126,7 @@
     echo $form->hiddenField($model, 'Rcd_Ses_Right_Member_Type', array('value' => 'P'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
-    
+
     <a name="role-foundation">&nbsp;</a>
     <div class="col-lg-12 hide role_entry">
         <div class="box-body">
@@ -168,31 +219,33 @@
         <div class="col-lg-12">
             <div class="box-body">
                 <div class="form-group pull-right">
-            <?php
-            $this->beginWidget(
-                    'booster.widgets.TbModal', array('id' => 'rightHolder')
-            );
-            ?>
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">&times;</a>
-                <h4>RightHolders</h4>
-            </div>
-            <div class="modal-body">
-                <?php echo $this->renderPartial('_recording_list', array('model' => $record_ses_model)); ?>
-            </div>
-            <?php $this->endWidget(); ?>
-            <?php
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'View & Export',
-                'context' => 'primary',
-                'htmlOptions' => array(
-                    'data-toggle' => 'modal',
-                    'data-target' => '#rightHolder',
-                ),
-                    )
-            );
-            ?>
+                    <?php
+                    $this->beginWidget(
+                            'booster.widgets.TbModal', array('id' => 'rightHolder')
+                    );
+                    ?>
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">&times;</a>
+                        <h4>RightHolders</h4>
+                    </div>
+                    <div class="modal-body">
+                        <?php echo $this->renderPartial('_recording_list', array('model' => $record_ses_model)); ?>
+                    </div>
+                    <?php $this->endWidget(); ?>
+                    <?php
+                    if (!empty($exists_model)) {
+                        $this->widget(
+                                'application.components.MyTbButton', array(
+                            'label' => 'View & Export',
+                            'context' => 'primary',
+                            'htmlOptions' => array(
+                                'data-toggle' => 'modal',
+                                'data-target' => '#rightHolder',
+                            ),
+                                )
+                        );
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -356,7 +409,9 @@ $this->beginWidget(
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecords");
 $search_performer_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecordperformers");
+$search_all_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchallperformers");
 $get_roles_point_url = Yii::app()->createAbsoluteUrl("site/sharedefinitionperrole/getpoint");
+$new_recording_post = Yii::app()->createAbsoluteUrl('/site/recordingsession/newrecording');
 
 $js = <<< EOD
     var rowCount2 = $('#linked-holders-rec tbody tr').length;
@@ -379,6 +434,7 @@ $js = <<< EOD
                     $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val('');
                     $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
                     $("#link-performer-rec-div").addClass('hide');
+                    $('#newrecordingbutton').removeClass('hide');
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -395,27 +451,43 @@ $js = <<< EOD
         $('body').on('click','#record_search tbody tr', function(){
             $("#link-performer-rec-div").removeClass('hide');
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val($(this).data('uid'));
-            $.ajax({
-                type: 'GET',
-                url: '$search_performer_url',
-                data:{rcd_guid: $(this).data('uid')},
-                success:function(data){
-                    $("#link-performer-rec-div").html(data);
-                    $("#rightperformertable tbody tr").removeClass('hide highlight');
-                    $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val('');
-                    $('#link-performer-rec tbody tr').each(function( index ) {
-                        $(this).removeClass('highlight');
-                        if($(this).attr('data-blkorg')){
-                            insertRightAuto2($(this).data());
-                        }
-//                        $(this).remove();
-                    });
-               },
-                error: function(data) {
-                    alert("Something went wrong. Try again");
-                },
-                dataType:'html'
-            });
+            if($(this).data('new') == '0'){
+                $.ajax({
+                    type: 'GET',
+                    url: '$search_performer_url',
+                    data:{rcd_guid: $(this).data('uid')},
+                    success:function(data){
+                        $('.role_entry').addClass('hide');
+                        $("#link-performer-rec-div").html(data);
+                        $("#rightperformertable tbody tr").removeClass('hide highlight');
+                        $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val('');
+                        $('#link-performer-rec tbody tr').each(function( index ) {
+                            $(this).removeClass('highlight');
+                            if($(this).attr('data-blkorg')){
+                                insertRightAuto2($(this).data());
+                            }
+    //                        $(this).remove();
+                        });
+                   },
+                    error: function(data) {
+                        alert("Something went wrong. Try again");
+                    },
+                    dataType:'html'
+                });
+            }else if($(this).data('new') == '1'){
+                $.ajax({
+                    type: 'GET',
+                    url: '$search_all_url',
+                    success:function(data){
+                        $("#link-performer-rec-div").html(data);
+                        $('.role_entry').removeClass('hide');
+                   },
+                    error: function(data) {
+                        alert("Something went wrong. Try again");
+                    },
+                    dataType:'html'
+                });
+            }
         });
         $('body').on('click','#link-performer-rec tr', function(){
             if($(this).hasClass('new_perf_tr')){
@@ -434,6 +506,7 @@ $js = <<< EOD
             $(this).attr('data-eqlorg') ? $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Equal_Org_Id').val($(this).data('eqlorg')) : '';
             $(this).attr('data-blkorg') ? $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Blank_Org_Id').val($(this).data('blkorg')) : '';
             $(this).attr('data-blkorg') ? $('.role_entry').addClass('hide') : $('.role_entry').removeClass('hide');
+            $(this).attr('data-blkorg') ? $('.box-footer.role_entry').addClass('hide') : $('.box-footer.role_entry').removeClass('hide');
             $('.box-footer.role_entry').removeClass('hide');
         });
         
@@ -679,6 +752,36 @@ $js = <<< EOD
         }
         rowCount2++;
         checkShare2();
+    }
+        
+    function InsertNewRecording(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_recording_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#recording-form')[0].reset();
+                        $('#Recording_Rcd_Internal_Code').val(data.new_int_code);
+                        var tr = '<tr data-work-name="'+data.title+'" data-work-uid="'+data.guid+'" data-intcode="'+data.int_code+'" data-name="'+data.title+'" data-uid="'+data.guid+'" data-urole="'+data.role+'" data-new = "1">';
+                        tr += '<td>'+data.title+' (New)</td>';
+                        tr += '<td>'+data.int_code+'</td>';
+                        tr += '</tr>';
+                        $('#record_search tbody').append(tr);
+                        $('#new-recording-dismiss').trigger('click');
+                        inst_tr = $("#record_search tbody").find("[data-uid='" + data.guid + "']");
+                        inst_tr.trigger("click");
+                        $('.aft_search.errorMessage').addClass('hide');
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
     }
         
         

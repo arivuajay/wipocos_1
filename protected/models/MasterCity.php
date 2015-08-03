@@ -10,11 +10,20 @@
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ * @property integer $Country_Id
  * @property integer $Created_By
  * @property integer $Updated_By
+ * @property MasterCountry $country
+ * @property TariffContracts $tariffContracts
  */
 class MasterCity extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Country_Id = DEFAULT_COUNTRY_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -35,12 +44,12 @@ class MasterCity extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('City_Code, City_Name', 'required'),
+            array('City_Code, City_Name, Country_Id', 'required'),
             array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('City_Code', 'length', 'max' => 20),
             array('City_Name', 'length', 'max' => 100),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Country_Id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Master_City_Id, City_Code, City_Name, Active, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -55,6 +64,7 @@ class MasterCity extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'tariffContracts' => array(self::HAS_MANY, 'TariffContracts', 'Tarf_Cont_City_Id'),
+            'country' => array(self::BELONGS_TO, 'MasterCountry', 'Country_Id'),
         );
     }
 
@@ -64,6 +74,7 @@ class MasterCity extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_City_Id' => 'Master City',
+            'Country_Id' => 'Country',
             'City_Code' => 'City Code',
             'City_Name' => 'City Name',
             'Active' => 'Active',
@@ -92,6 +103,7 @@ class MasterCity extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('Master_City_Id', $this->Master_City_Id);
+        $criteria->compare('Country_Id', $this->Country_Id, true);
         $criteria->compare('City_Code', $this->City_Code, true);
         $criteria->compare('City_Name', $this->City_Name, true);
         $criteria->compare('Active', $this->Active, true);

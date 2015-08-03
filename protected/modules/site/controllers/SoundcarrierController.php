@@ -44,7 +44,7 @@ class SoundcarrierController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete', 'searchworkauthors', 'newperformer', 'newproducer'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'pdf', 'download', 'subtitledelete', 'searchworks', 'insertright', 'getrecordingdetails', 'fixationdelete', 'searchrecords', 'searchrecordperformers', 'publicationdelete', 'searchworkauthors', 'newperformer', 'newproducer', 'searchallperformers'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -399,6 +399,11 @@ class SoundcarrierController extends Controller {
             $recordings = Recording::model()->findAll($criteria);
         }
         $this->renderPartial('_search_recordings', compact('recordings'));
+    }
+
+    public function actionSearchallperformers() {
+        $performers = PerformerAccount::model()->findAll();
+        $this->renderPartial('_search_all_performers', compact('performers'));
     }
 
     public function actionSearchrecordperformers() {

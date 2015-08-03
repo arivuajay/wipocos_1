@@ -97,7 +97,7 @@ class UserIdentity extends CUserIdentity {
                 $auth_resources = AuthResources::model()->findByAttributes(array('Master_Role_ID' => $user->role, 'Master_Module_ID' => $screen->Module_ID, 'Master_Screen_ID' => $screen->Master_Screen_ID));
             }
             if (!empty($auth_resources)) {
-                $insert_actions = array('create', 'insertright', 'insertlabel', 'newperformer', 'newproducer');
+                $insert_actions = array('create', 'insertright', 'insertlabel', 'newperformer', 'newproducer', 'newrecording');
                 $update_actions = array('update');
                 $view_actions = array('index', 'view', 'download', 'print', 'pdf', 'searchright', 'contractexpiry');
                 $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove', 'publicationdelete', 'fixationdelete', 'foliodelete');

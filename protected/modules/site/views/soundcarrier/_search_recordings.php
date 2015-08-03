@@ -5,53 +5,56 @@
     </div>
 </div>-->
 <div class="col-lg-12">
-    <?php if (!empty($recordings)) { ?>
-        <div class="box-body">
-            <div class="form-group foundation">
-                <div class="box-header">
-                    <div class="col-lg-12 col-md-12">
-                        <h3 class="box-title">Recordings</h3>
-                    </div>
+    <div class="box-body">
+        <div class="form-group foundation">
+            <div class="box-header">
+                <div class="col-lg-12 col-md-12">
+                    <h3 class="box-title">Recordings</h3>
+                </div>
 
-                </div>
-                <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
-                    <div class="col-lg-12 col-md-12 row">
-                        <table id="record_search" class="table table-bordered selectable table-datatable">
-                            <thead>
-                                <tr>
-                                    <th>Orginial Title</th>
-                                    <th>Internal Code</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if ($recordings) {
-                                    foreach ($recordings as $key => $recording) {
-                                        ?>
-                                        <tr data-urole="RC" data-uid="<?php echo $recording->Rcd_GUID ?>" data-name="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-work-uid="<?php echo $recording->Rcd_GUID ?>" data-work-name="<?php echo $recording->Rcd_Title ?>" >
-                                            <td><?php echo $recording->Rcd_Title ?></td>
-                                            <td><?php echo $recording->Rcd_Internal_Code ?></td>
-                                        </tr>
-                                        <?php
-                                    }
+            </div>
+            <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
+                <div class="col-lg-12 col-md-12 row">
+                    <table id="record_search" class="table table-bordered selectable table-datatable">
+                        <thead>
+                            <tr>
+                                <th>Orginial Title</th>
+                                <th>Internal Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($recordings)) {
+                                foreach ($recordings as $key => $recording) {
+                                    ?>
+                                    <tr data-urole="RC" data-uid="<?php echo $recording->Rcd_GUID ?>" data-name="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-work-uid="<?php echo $recording->Rcd_GUID ?>" data-work-name="<?php echo $recording->Rcd_Title ?>" data-new = "0">
+                                        <td><?php echo $recording->Rcd_Title ?></td>
+                                        <td><?php echo $recording->Rcd_Internal_Code ?></td>
+                                    </tr>
+                                    <?php
                                 }
-                                ?>
-                            </tbody>
-                        </table>
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        <div class="col-lg-10">
+                            <?php
+                            if(empty($recordings)){
+                                echo '<div class="errorMessage text-center aft_search">No Recordings Found</div>';
+                            }
+                            ?>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <?php // echo CHtml::button('Select', array('class' => 'btn btn-primary')); ?>
+                        <?php // echo CHtml::resetButton('Clear', array('class' => 'btn btn-danger'));  ?>
                     </div>
                 </div>
-<!--                <div class="box-footer">
-                    <div class="col-lg-12 col-md-12">
-                        <div class="form-group">
-                            <?php echo CHtml::button('Select', array('class' => 'btn btn-primary')); ?>
-                            <?php echo CHtml::resetButton('Clear', array('class' => 'btn btn-danger')); ?>
-                        </div>
-                    </div>
-                </div>-->
             </div>
         </div>
-    <?php }else{
-        echo '<div class="errorMessage text-center">No Recordings Found</div>';
-    }
-    ?>
+    </div>
 </div>

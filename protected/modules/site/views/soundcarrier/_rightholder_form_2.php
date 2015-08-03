@@ -20,7 +20,7 @@
                         <div class="box-body">
                             <div class="form-group hide">
                                 <?php echo CHtml::label('Record', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_record', (/*$_REQUEST['is_record'] == 1*/true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
+                                <?php echo CHtml::checkBox('is_record', (/* $_REQUEST['is_record'] == 1 */true), array('class' => 'form-control', 'id' => 'is_record')); ?>&nbsp;&nbsp;
                                 <div id="chkbox_err_rec" class="errorMessage hide">Select Record</div>
                             </div>
                             <div class="form-group">
@@ -55,7 +55,7 @@
     <div class="row hide" id="link-performer-rec-div">
 
     </div>
-    
+
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'sound-carrier-rightholder-form-2',
@@ -75,7 +75,7 @@
     echo $form->hiddenField($model, 'Sound_Car_Right_Member_Type', array('value' => 'P'));
     $organizations = CHtml::listData(Organization::model()->findAll(), 'Org_Id', 'Org_Abbrevation');
     ?>
-    
+
     <a name="role-foundation-rec">&nbsp;</a>
     <div class="col-lg-12 hide role_entry">
         <div class="box-body">
@@ -168,31 +168,33 @@
         <div class="col-lg-12">
             <div class="box-body">
                 <div class="form-group pull-right">
-            <?php
-            $this->beginWidget(
-                    'booster.widgets.TbModal', array('id' => 'rightHolderrcd')
-            );
-            ?>
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">&times;</a>
-                <h4>RightHolders</h4>
-            </div>
-            <div class="modal-body">
-                <?php echo $this->renderPartial('_recording_list', array('model' => $sound_car_model)); ?>
-            </div>
-            <?php $this->endWidget(); ?>
-            <?php
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'View & Export',
-                'context' => 'primary',
-                'htmlOptions' => array(
-                    'data-toggle' => 'modal',
-                    'data-target' => '#rightHolderrcd',
-                ),
-                    )
-            );
-            ?>
+                    <?php
+                    $this->beginWidget(
+                            'booster.widgets.TbModal', array('id' => 'rightHolderrcd')
+                    );
+                    ?>
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">&times;</a>
+                        <h4>RightHolders</h4>
+                    </div>
+                    <div class="modal-body">
+                        <?php echo $this->renderPartial('_recording_list', array('model' => $sound_car_model)); ?>
+                    </div>
+                    <?php $this->endWidget(); ?>
+                    <?php
+                    if (!empty($exists_model)) {
+                        $this->widget(
+                                'application.components.MyTbButton', array(
+                            'label' => 'View & Export',
+                            'context' => 'primary',
+                            'htmlOptions' => array(
+                                'data-toggle' => 'modal',
+                                'data-target' => '#rightHolderrcd',
+                            ),
+                                )
+                        );
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -436,7 +438,8 @@ $js = <<< EOD
             $(this).attr('data-eqlorg') ? $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Equal_Org_Id').val($(this).data('eqlorg')) : '';
             $(this).attr('data-blkorg') ? $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Blank_Org_Id').val($(this).data('blkorg')) : '';
             $(this).attr('data-blkorg') ? $('.role_entry').addClass('hide') : $('.role_entry').removeClass('hide');
-            $('.box-footer.role_entry').removeClass('hide');
+            $(this).attr('data-blkorg') ? $('.box-footer.role_entry').addClass('hide') : $('.box-footer.role_entry').removeClass('hide');
+//            $('.box-footer.role_entry').removeClass('hide');
         });
         
         $('body').on('click','#temp_click_new_performer', function(){

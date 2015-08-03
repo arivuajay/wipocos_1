@@ -44,7 +44,7 @@ class RecordingsessionController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete', 'insertright', 'foliodelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete', 'insertright', 'foliodelete', 'newrecording'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -131,8 +131,9 @@ class RecordingsessionController extends Controller {
         
         $performer_model = new PerformerAccount;
         $producer_model = new ProducerAccount;
+        $recording_model = new Recording;
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $document_model, $biograph_model, $right_holder_model, $folio_model, $performer_model, $producer_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $document_model, $biograph_model, $right_holder_model, $folio_model, $performer_model, $producer_model, $recording_model));
 
         if (isset($_POST['RecordingSession'])) {
             $model->attributes = $_POST['RecordingSession'];
@@ -220,7 +221,7 @@ class RecordingsessionController extends Controller {
                 );
             }
         }
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model', 'right_holder_exists', 'right_holder_model', 'folio_model', 'performer_model', 'producer_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'document_model', 'biograph_model', 'biograph_upload_model', 'right_holder_exists', 'right_holder_model', 'folio_model', 'performer_model', 'producer_model', 'recording_model'));
     }
 
     /**
@@ -405,6 +406,34 @@ class RecordingsessionController extends Controller {
         }
         exit;
     }
+    
+    public function actionNewrecording() {
+        $ret = array();
+        if (isset($_POST['Recording'])) {
+            $model = new Recording;
+            $model->attributes = $_POST['Recording'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Recording {$model->Rcd_Title} successfully.", "volume-up");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Rcd_Id,
+                        'title' => $model->Rcd_Title,
+                        'int_code' => $model->Rcd_Internal_Code,
+                        'guid' => $model->Rcd_GUID,
+                        'role' => 'RC',
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type",array(':type' => InternalcodeGenerate::RECORDING_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
+    }
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -424,7 +453,7 @@ class RecordingsessionController extends Controller {
      * @param RecordingSession $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form' || $_POST['ajax'] === 'session-rightholder-form-2' || $_POST['ajax'] === 'recording-session-folio-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form')) {
+if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form' || $_POST['ajax'] === 'session-rightholder-form-2' || $_POST['ajax'] === 'recording-session-folio-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'recording-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

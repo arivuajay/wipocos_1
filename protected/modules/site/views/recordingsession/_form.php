@@ -206,7 +206,7 @@ $destinations = Myclass::getMasterDestination();
                 <div class="tab-pane" id="tab_5">
                     <?php
                     if ($rgt_tab_validation) {
-                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'record_ses_model' => $model, 'exists_model' => $right_holder_exists));
+                        $this->renderPartial('_rightholder_form', array('model' => $right_holder_model, 'record_ses_model' => $model, 'exists_model' => $right_holder_exists, 'recording_model' => $recording_model, 'languages' => $languages, 'types' => $types, 'countries' => $countries));
                     }
                     ?>
                 </div>
