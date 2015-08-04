@@ -317,7 +317,16 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{update}{delete}',
+                'template' => '{invoice}{view}{update}{delete}',
+                'buttons' => array(
+                    'invoice' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-file-text"></i>',
+                        'options' => array(
+                            'title' => 'View Invoice',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/tariffcontracts/invoice/id/".rawurlencode($data->Tarf_Cont_Id)))',
+                    ),
+                ),
             )
         );
 
@@ -326,7 +335,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
             'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Tariff Contracts</h3></div><div class="panel-body">{items}{pager}</div></div>',
-            'columns' => $gridColumns
+            'columns' => $gridColumns,
                 )
         );
         ?>

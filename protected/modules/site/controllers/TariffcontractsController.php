@@ -35,7 +35,7 @@ class TariffcontractsController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser', 'invoice'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -209,6 +209,11 @@ class TariffcontractsController extends Controller {
 
         $users = CustomerUser::model()->findAll($criteria);
         $this->renderPartial('_search_user', compact('users'));
+    }
+    
+    public function actionInvoice($id) {
+        $model = $this->loadModel($id);
+        $this->render('invoice', compact('model'));
     }
     
     /**

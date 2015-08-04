@@ -2,7 +2,7 @@
 /* @var $this TariffcontractsController */
 /* @var $model TariffContracts */
 
-$this->title = 'View TariffContracts: ' . $model->Tarf_Cont_Internal_Code;
+$this->title = 'View TariffContracts: ' . $model->Tarf_Invoice;
 $this->breadcrumbs = array(
     'Tariff Contracts' => array('index'),
     'View ' . 'TariffContracts',
