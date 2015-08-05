@@ -160,7 +160,7 @@ $regions = Myclass::getMasterRegion();
     <div class="form-group">
         <div class="col-lg-12">
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
-            <?php echo CHtml::button('Back', array('class' => 'btn btn-default', 'onclick' => '{$("#new-artist-dismiss").trigger("click"); $("#main_artist").trigger("click")}')); ?>
+            <?php echo CHtml::button('Back', array('class' => 'btn btn-default', 'onclick' => '{$("#new-performer-dismiss").trigger("click"); $("#rightperformerbutton").trigger("click")}')); ?>
         </div>
     </div>
 </div>

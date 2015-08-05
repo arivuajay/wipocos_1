@@ -31,7 +31,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-6">
                         <div class="box-body">
                             <div class="form-group">
-                                <?php echo CHtml::label('Search', '', array('class' => 'control-label')); ?>
+                                <?php echo CHtml::label('Search User', '', array('class' => 'control-label')); ?>
                                 <?php echo CHtml::textField('searach_text', $_REQUEST['fn'], array('class' => 'form-control')); ?>
                             </div>
                             <div class="form-group">

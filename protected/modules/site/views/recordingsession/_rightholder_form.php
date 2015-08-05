@@ -511,7 +511,6 @@ $js = <<< EOD
             $('#rght_2 .user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
         });
         $('body').on('click','#record_search tbody tr', function(){
-            $('#rightperformerbutton-div').removeClass('hide');
             $("#link-performer-rec-div").removeClass('hide');
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val($(this).data('uid'));
             if($(this).data('new') == '0'){
@@ -532,6 +531,7 @@ $js = <<< EOD
     //                        $(this).remove();
                         });
         
+                        $('#rightperformerbutton-div').removeClass('hide');
                         //hide alert
                         hide_alert();
                    },

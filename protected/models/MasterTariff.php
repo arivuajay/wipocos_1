@@ -56,6 +56,7 @@ class MasterTariff extends CActiveRecord {
             array('Tarif_Description', 'length', 'max' => 100),
             array('Tarif_Min_Tarif_Amount, Tarif_Max_Tarif_Amount, Tarif_Amount', 'numerical', 'integerOnly' => false),
             array('Tarif_Percentage', 'length', 'max' => 1),
+            array('Tarif_Code', 'unique'),
             array('Tarif_Comment, Created_Date, Rowversion, Active, Tarif_Internal_Code', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
