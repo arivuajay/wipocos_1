@@ -111,9 +111,9 @@ class TariffcontractsController extends Controller {
                     "{TAR_PORTION}" => $model->Tarf_Cont_Portion,
                     "{TAR_ROY_COMMENT}" => $model->Tarf_Cont_Comment,
                 );
-                $message = $mail->getMessage('invoice', $trans_array);
-                $Subject = $mail->translate("{SITENAME}: : Invoice #{$model->Tarf_Invoice}");
-                $mail->send($model->tarfContUser->User_Cust_Email, $Subject, $message);
+//                $message = $mail->getMessage('invoice', $trans_array);
+//                $Subject = $mail->translate("{SITENAME}: : Invoice #{$model->Tarf_Invoice}");
+//                $mail->send($model->tarfContUser->User_Cust_Email, $Subject, $message);
                 
                 Myclass::addAuditTrail("Created TariffContracts successfully.", "user");
                 Yii::app()->user->setFlash('success', 'TariffContracts Created Successfully!!!');

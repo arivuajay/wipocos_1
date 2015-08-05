@@ -56,6 +56,7 @@ $this->breadcrumbs = array(
         'attributes' => array(
 //            'User_Cust_Id',
 //            'User_Cust_GUID',
+            'User_Cust_Internal_Code',
             array(
                 'name' => 'User_Cust_Place_Id',
                 'value' => $model->userCustPlace->Place_Name,

@@ -64,7 +64,7 @@ class TariffContracts extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date', 'required'),
+            array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion', 'required'),
             array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
@@ -116,7 +116,7 @@ class TariffContracts extends RActiveRecord {
             'Tarf_Cont_From' => 'From',
             'Tarf_Cont_To' => 'To',
             'Tarf_Cont_Sign_Date' => 'Date of signature',
-            'Tarf_Cont_Pay_Id' => 'Payment',
+            'Tarf_Cont_Pay_Id' => 'Payment frequency',
             'Tarf_Cont_Portion' => 'Portion',
             'Tarf_Cont_Comment' => 'Comment',
             'Tarf_Cont_Event_Id' => 'Type',

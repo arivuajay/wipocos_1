@@ -44,7 +44,7 @@ class RecordingsessionController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete', 'insertright', 'foliodelete', 'newrecording'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'subtitledelete', 'biofiledelete', 'insertright', 'foliodelete', 'newrecording', 'searchrecordperformers', 'searchallperformers', 'searchrecords'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -434,6 +434,34 @@ class RecordingsessionController extends Controller {
         }
         echo json_encode($ret);
     }
+    
+    public function actionSearchrecords() {
+        $criteria = new CDbCriteria();
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Rcd_Title', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Isrc_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Iswc_Number', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Reference', $search_txt, true, 'OR');
+        }
+
+        if ($_REQUEST['is_record'] == '1') {
+            $recordings = Recording::model()->findAll($criteria);
+        }
+        $this->renderPartial('_search_recordings', compact('recordings'));
+    }
+
+    public function actionSearchallperformers() {
+        $performers = PerformerAccount::model()->findAll();
+        $this->renderPartial('_search_all_performers', compact('performers'));
+    }
+
+    public function actionSearchrecordperformers() {
+        if (isset($_REQUEST['rcd_guid']))
+            $recording = Recording::model()->findByAttributes(array('Rcd_GUID' => $_REQUEST['rcd_guid']));
+        $this->renderPartial('_search_recording_performers', compact('recording'));
+    }
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -453,7 +481,7 @@ class RecordingsessionController extends Controller {
      * @param RecordingSession $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form' || $_POST['ajax'] === 'session-rightholder-form-2' || $_POST['ajax'] === 'recording-session-folio-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'recording-form')) {
+if (isset($_POST['ajax']) && ($_POST['ajax'] === 'recording-session-form' || $_POST['ajax'] === 'rcd-ses-subtitle-form' || $_POST['ajax'] === 'recordingsession-documentation-form' || $_POST['ajax'] === 'recordingsession-biography-form' || $_POST['ajax'] === 'session-rightholder-form-2' || $_POST['ajax'] === 'recording-session-folio-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form' || $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'performer-account-form2')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

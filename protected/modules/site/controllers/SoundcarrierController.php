@@ -560,6 +560,7 @@ class SoundcarrierController extends Controller {
                         'first_name' => $model->Perf_First_Name,
                         'last_name' => $model->Perf_Sur_Name,
                         'int_code' => $model->Perf_Internal_Code,
+                        'uid' => $model->Perf_GUID,
                         'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type",array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode
                     );
                 }

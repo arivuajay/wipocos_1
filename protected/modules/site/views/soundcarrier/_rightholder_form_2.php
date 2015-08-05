@@ -466,6 +466,11 @@ $js = <<< EOD
             $('#link-performer-rec tr[data-intcode="'+_tr.data('intcode')+'"]').removeClass('hide');
             _tr.remove();
             checkShare2();
+            $('#sound-carrier-rightholder-form-2')[0].reset();
+            $("#rght_2 #right_insert").val('Add');
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Member_GUID').val("");
+            $('#rght_2 #SoundCarrierRightholder_Sound_Car_Right_Work_GUID').val("");
+            return false;
         });
         
         $("#rght_2 .roles_dd").on("change", function(){

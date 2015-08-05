@@ -52,7 +52,7 @@
     </div>
     <?php $this->endWidget(); ?>
 
-    <div class="col-lg-12">
+    <div class="col-lg-6 hide" id="newrecordingbutton-div">
         <div class="box-body">
             <?php
             $this->widget(
@@ -61,10 +61,28 @@
                 'context' => 'success',
                 'htmlOptions' => array(
                     'id' => 'newrecordingbutton',
-                    'class' => 'hide',
+//                    'class' => 'hide',
                     'data-toggle' => 'modal',
                     'data-target' => '#newrecordingModal',
 //            'onclick' => '{$("#producer-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+            ?>
+        </div>
+    </div>
+    <div class="col-lg-6 hide" id="rightperformerbutton-div">
+        <div class="box-body pull-right">
+            <?php
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'Set Performer',
+                'context' => 'primary',
+                'htmlOptions' => array(
+                    'id' => 'rightperformerbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#rightperformerModal',
+//                    'class' => 'hide'
                 ),
                     )
             );
@@ -370,7 +388,23 @@ $this->beginWidget(
 </div>
 
 <div class="modal-footer">
-    <p class="errorMessage text-center col-sm-8" id="pro-modelerror"></p>
+     <div class="col-sm-3">
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'New Performer',
+            'context' => 'success',
+            'htmlOptions' => array(
+                'id' => 'newperformerbutton',
+                'data-toggle' => 'modal',
+                'data-target' => '#newperformerModal',
+                'onclick' => '{$("#performer-dismiss").trigger("click");}'
+            ),
+                )
+        );
+        ?>
+    </div>
+    <p class="errorMessage text-center col-sm-5" id="pro-modelerror"></p>
     <?php
     $this->widget(
             'application.components.MyTbButton', array(
@@ -384,6 +418,7 @@ $this->beginWidget(
                     if(_row.length == 0){
                         $("#pro-modelerror").html("Select Alteast one Performer");
                     }else{
+                        $("#pro-modelerror").html("");
                         $("#temp_click_new_performer").trigger("click");
                     }
                 }'
@@ -405,13 +440,40 @@ $this->beginWidget(
 
 <?php $this->endWidget(); ?>
 
+<!---New Performer Add Form -->
+<?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'newperformerModal')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>New Performer</h4>
+</div>
+<div class="modal-body">
+    <?php echo $this->renderPartial('/recordingsession/_new_performer', array('model' => $performer_model, 'countries' => $countries)); ?>
+</div>
 
 <?php
-$search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecords");
-$search_performer_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecordperformers");
-$search_all_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchallperformers");
+$this->widget(
+        'application.components.MyTbButton', array(
+    'label' => 'Close',
+    'url' => '#',
+    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-performer-dismiss', 'class' => 'hide'),
+        )
+);
+
+$this->endWidget();
+?>
+<!---End -->
+
+<?php
+$search_url = Yii::app()->createAbsoluteUrl("site/recordingsession/searchrecords");
+$search_performer_url = Yii::app()->createAbsoluteUrl("site/recordingsession/searchrecordperformers");
+$search_all_url = Yii::app()->createAbsoluteUrl("site/recordingsession/searchallperformers");
 $get_roles_point_url = Yii::app()->createAbsoluteUrl("site/sharedefinitionperrole/getpoint");
 $new_recording_post = Yii::app()->createAbsoluteUrl('/site/recordingsession/newrecording');
+$new_performer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newperformer');
 
 $js = <<< EOD
     var rowCount2 = $('#linked-holders-rec tbody tr').length;
@@ -434,7 +496,7 @@ $js = <<< EOD
                     $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val('');
                     $("#record_search tr, #link-performer-rec tr").removeClass('highlight');
                     $("#link-performer-rec-div").addClass('hide');
-                    $('#newrecordingbutton').removeClass('hide');
+                    $('#newrecordingbutton-div').removeClass('hide');
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -449,6 +511,7 @@ $js = <<< EOD
             $('#rght_2 .user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
         });
         $('body').on('click','#record_search tbody tr', function(){
+            $('#rightperformerbutton-div').removeClass('hide');
             $("#link-performer-rec-div").removeClass('hide');
             $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val($(this).data('uid'));
             if($(this).data('new') == '0'){
@@ -468,6 +531,9 @@ $js = <<< EOD
                             }
     //                        $(this).remove();
                         });
+        
+                        //hide alert
+                        hide_alert();
                    },
                     error: function(data) {
                         alert("Something went wrong. Try again");
@@ -534,6 +600,11 @@ $js = <<< EOD
             $('#link-performer-rec tr[data-intcode="'+_tr.data('intcode')+'"]').removeClass('hide');
             _tr.remove();
             checkShare2();
+            $('#session-rightholder-form-2')[0].reset();
+            $("#rght_2 #right_insert").val('Add');
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Member_GUID').val("");
+            $('#rght_2 #RecordingSessionRightholder_Rcd_Ses_Right_Work_GUID').val("");
+            return false;
         });
         
         $("#rght_2 .roles_dd").on("change", function(){
@@ -782,6 +853,51 @@ $js = <<< EOD
             });
             return false;
         }
+    }
+        
+    function InsertNewPerformerRight(form, data, hasError){
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_performer_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#performer-account-form')[0].reset();
+                        _art_table = $('#rightperformertable');
+                        _art_table.dataTable().fnAddData([
+                            data.first_name + ' ' + data.last_name,
+                            data.int_code 
+                        ]);
+                        tr = _art_table.find("td:contains('"+data.int_code+"')").parent();
+                        tr.data('id', data.id);
+                        tr.data('name', data.first_name + ' ' + data.last_name);
+                        tr.data('intcode', data.int_code);
+                        tr.data('uid', data.uid);
+                        tr.trigger('click');
+                        $("#new_performer_add").trigger( "click" );
+                        $("#new-performer-dismiss").trigger( "click" );
+                        html = '<div class="alert alert-success alert-dismissable">';
+                        html += '<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>';
+                        html += '<b>One New Performer ('+data.first_name + ' ' + data.last_name+') Created ! Please Fill Role & Shares.</b>';
+                        html += '</div>';
+                        $('#alert-div').html(html);
+                        hide_alert();
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+        
+    function hide_alert(time = 5000){
+        setTimeout(function(){
+            $('.alert .close').trigger('click');
+        }, time);
     }
         
         

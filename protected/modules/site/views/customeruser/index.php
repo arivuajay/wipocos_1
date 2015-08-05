@@ -37,6 +37,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'User_Cust_Internal_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'User_Cust_Internal_Code', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'User_Cust_Internal_Code'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'User_Cust_Place_Id', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'User_Cust_Place_Id', array('class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'User_Cust_Place_Id'); ?>
@@ -111,6 +118,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+                'User_Cust_Internal_Code',
                 array(
                     'name' => 'User_Cust_Place_Id',
                     'value' => function($data) {
@@ -174,6 +182,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+            'User_Cust_Internal_Code',
             array(
                 'name' => 'User_Cust_Place_Id',
                 'value' => function($data) {

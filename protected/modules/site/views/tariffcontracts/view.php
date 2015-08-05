@@ -55,6 +55,7 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
             'Tarf_Cont_Internal_Code',
+            'Tarf_Invoice',
             array(
                 'name' => 'Tarf_Cont_User_Id',
                 'value' => $model->tarfContUser->User_Cust_Name

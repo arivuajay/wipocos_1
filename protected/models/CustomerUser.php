@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{customer_user}}':
  * @property integer $User_Cust_Id
  * @property string $User_Cust_GUID
+ * @property string $User_Cust_Internal_Code
  * @property integer $User_Cust_Place_Id
  * @property string $User_Cust_Code
  * @property string $User_Cust_Name
@@ -28,6 +29,7 @@ class CustomerUser extends RActiveRecord {
         parent::init();
         if($this->isNewRecord){
             $this->User_Cust_GUID = Myclass::guid(false);
+            $this->User_Cust_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::CUSTOMER_USER_CODE))->Fullcode;
         }
     }
     /**
@@ -44,7 +46,7 @@ class CustomerUser extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('User_Cust_GUID, User_Cust_Place_Id, User_Cust_Code, User_Cust_Name', 'required'),
+            array('User_Cust_GUID, User_Cust_Place_Id, User_Cust_Code, User_Cust_Name, User_Cust_Email', 'required'),
             array('User_Cust_Place_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('User_Cust_GUID', 'length', 'max' => 40),
             array('User_Cust_Code', 'length', 'max' => 25),
@@ -54,7 +56,7 @@ class CustomerUser extends RActiveRecord {
             array('User_Cust_GUID, User_Cust_Code', 'unique'),
             array('User_Cust_Email', 'email'),
             array('User_Cust_Website', 'url'),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, User_Cust_Internal_Code', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('User_Cust_Id, User_Cust_GUID, User_Cust_Place_Id, User_Cust_Code, User_Cust_Name, User_Cust_Address, User_Cust_Email, User_Cust_Telephone, User_Cust_Website, User_Cust_Fax, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -80,6 +82,7 @@ class CustomerUser extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'User_Cust_Id' => 'User Cust',
+            'User_Cust_Internal_Code' => 'Internal Code',
             'User_Cust_GUID' => 'Guid',
             'User_Cust_Place_Id' => 'Type',
             'User_Cust_Code' => 'Code',
@@ -152,6 +155,13 @@ class CustomerUser extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+    
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::CUSTOMER_USER_CODE);
+        }
+        return parent::afterSave();
     }
 
 }

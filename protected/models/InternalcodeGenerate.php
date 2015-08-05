@@ -35,6 +35,8 @@ class InternalcodeGenerate extends RActiveRecord {
     const SOUND_CARRIER_PUBLISHING_CODE = 'SP';
     const RECORDING_SESSION_CODE = 'RS';
     
+    const TARIF_MASTER_CODE = 'TMS';
+    const CUSTOMER_USER_CODE = 'CUS';
     const INSPECTOR_CODE = 'IS';
     const TARIFF_CONTRACT_CODE = 'TF';
     
@@ -200,6 +202,8 @@ class InternalcodeGenerate extends RActiveRecord {
             self::RECORDING_SESSION_CODE => 'Recording Session Sheet',
             self::SOUND_CARRIER_CODE => 'Sound Carrier',
             self::SOUND_CARRIER_PUBLISHING_CODE => 'Sound Carrier Publishing',
+            self::TARIF_MASTER_CODE => 'Tariff Master',
+            self::CUSTOMER_USER_CODE => 'Users & Customers',
             self::INSPECTOR_CODE => 'Inspectors',
             self::TARIFF_CONTRACT_CODE => 'Tariff Contracts',
         );

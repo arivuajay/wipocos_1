@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{master_tariff}}':
  * @property integer $Master_Tarif_Id
+ * @property string $Tarif_Internal_Code
  * @property string $Tarif_Code
  * @property string $Tarif_Description
  * @property string $Tarif_Min_Tarif_Amount
@@ -23,6 +24,12 @@
  */
 class MasterTariff extends CActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Tarif_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::TARIF_MASTER_CODE))->Fullcode;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -49,7 +56,7 @@ class MasterTariff extends CActiveRecord {
             array('Tarif_Description', 'length', 'max' => 100),
             array('Tarif_Min_Tarif_Amount, Tarif_Max_Tarif_Amount, Tarif_Amount', 'numerical', 'integerOnly' => false),
             array('Tarif_Percentage', 'length', 'max' => 1),
-            array('Tarif_Comment, Created_Date, Rowversion, Active', 'safe'),
+            array('Tarif_Comment, Created_Date, Rowversion, Active, Tarif_Internal_Code', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Master_Tarif_Id, Tarif_Code, Tarif_Description, Tarif_Min_Tarif_Amount, Tarif_Max_Tarif_Amount, Tarif_Amount, Tarif_Percentage, Tarif_Comment, Tarif_Currency_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -74,8 +81,9 @@ class MasterTariff extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Master_Tarif_Id' => 'Master Tarif',
+            'Tarif_Internal_Code' => 'Internal Code',
             'Tarif_Code' => 'Code',
-            'Tarif_Description' => 'Description',
+            'Tarif_Description' => 'Name',
             'Tarif_Min_Tarif_Amount' => 'Minimum Tariff',
             'Tarif_Max_Tarif_Amount' => 'Maximum Tariff',
             'Tarif_Amount' => 'Standard Tariff',
@@ -162,5 +170,12 @@ class MasterTariff extends CActiveRecord {
                 $this->addError('Tarif_Code', "This Tariff is already linked with {$relation}. So you can't Edit this record.");
         }
         return parent::beforeValidate();
+    }
+    
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIF_MASTER_CODE);
+        }
+        return parent::afterSave();
     }
 }

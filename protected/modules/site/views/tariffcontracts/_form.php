@@ -24,7 +24,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             ?>
             <div class="form-group foundation">
                 <div class="box-header">
-                    <h3 class="box-title">Search</h3>
+                    <h3 class="box-title">Search User</h3>
                 </div>
                 <div class="box-body">
                     <p class="help-inline">Enter the begin of the name or code or address or any one of the following criteria:</p>
@@ -238,7 +238,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-12">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_Event_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Event_Id', $event_types, array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Event_Id', $event_types, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_Event_Id'); ?>
                         </div>
 

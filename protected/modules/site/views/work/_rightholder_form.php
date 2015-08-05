@@ -356,6 +356,9 @@ $js = <<< EOD
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             checkShare();
+            $('#work-rightholder-form')[0].reset();
+            $("#right_insert").val('Add');
+            $('#WorkRightholder_Work_Member_GUID').val("");
             return false;
         });
 

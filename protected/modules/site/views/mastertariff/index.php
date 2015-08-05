@@ -38,6 +38,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Tarif_Internal_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Tarif_Internal_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->error($searchModel, 'Tarif_Internal_Code'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarif_Code', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Tarif_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
                             <?php echo $form->error($searchModel, 'Tarif_Code'); ?>
@@ -105,6 +112,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+                'Tarif_Internal_Code',
                 'Tarif_Code',
                 'Tarif_Description',
                 'Tarif_Min_Tarif_Amount',
@@ -169,6 +177,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+            'Tarif_Internal_Code',
             'Tarif_Code',
             'Tarif_Description',
             'Tarif_Min_Tarif_Amount',

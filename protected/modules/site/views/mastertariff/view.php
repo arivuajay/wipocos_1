@@ -55,6 +55,7 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
 //            'Master_Tarif_Id',
+            'Tarif_Internal_Code',
             'Tarif_Code',
             'Tarif_Description',
             'Tarif_Min_Tarif_Amount',

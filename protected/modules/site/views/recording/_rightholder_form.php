@@ -288,6 +288,9 @@ $js = <<< EOD
             $(this).closest('tr').remove();
             rowCount++;
             checkShare();
+            $('#recording-rightholder-form')[0].reset();
+            $("#right_insert").val('Add');
+            $('#RecordingRightholder_Rcd_Member_GUID').val("");
             return false;
         });
         
