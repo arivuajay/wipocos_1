@@ -40,6 +40,6 @@
 
     <?php
 } else {
-    echo '<div class="errorMessage text-center">No Users Found</div>';
+    echo '<div class="form-group"><div class="errorMessage text-center">No Users Found</div></div>';
 }
 ?>
