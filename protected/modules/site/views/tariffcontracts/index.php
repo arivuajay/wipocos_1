@@ -227,7 +227,17 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{view}{update}{delete}',
+                'template' => '{invoice}{view}{update}{delete}',
+                'buttons' => array(
+                    'invoice' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-plus-square"></i>',
+                        'options' => array(
+                            'title' => 'Create Invoice',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
+//                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
+                    ),
+                ),
                 )
             );
 

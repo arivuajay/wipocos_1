@@ -91,7 +91,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     </thead>
                                     <tbody>
                                         <?php $contract =  $cont_model;?>
-                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>">
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>">
                                             <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
                                             <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
                                             <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>

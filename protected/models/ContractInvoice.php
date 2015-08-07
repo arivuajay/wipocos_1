@@ -24,12 +24,13 @@ class ContractInvoice extends RActiveRecord {
     
     const INVOICE_PAD = 7;
     const AUTO_GENERATE = TRUE;
+    const DEFAULT_REPEAT = 4;
 
-
-    public function init() {
+        public function init() {
         parent::init();
         if($this->isNewRecord){
             $this->Inv_Date = date('Y-m-d');
+            $this->Inv_Repeat_Id = ContractInvoice::DEFAULT_REPEAT;
         }
     }
 
