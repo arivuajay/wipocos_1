@@ -6,10 +6,12 @@
  * The followings are the available columns in table '{{contract_invoice}}':
  * @property integer $Inv_Id
  * @property string $Inv_Date
+ * @property string $Inv_Invoice
  * @property integer $Tarf_Cont_Id
  * @property integer $Inv_Repeat_Id
  * @property integer $Inv_Repeat_Count
  * @property string $Inv_Next_Date
+ * @property string $Inv_Amount
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -20,6 +22,10 @@
  */
 class ContractInvoice extends RActiveRecord {
     
+    const INVOICE_PAD = 7;
+    const AUTO_GENERATE = TRUE;
+
+
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -44,7 +50,10 @@ class ContractInvoice extends RActiveRecord {
             array('Inv_Date, Inv_Repeat_Id, Inv_Repeat_Count, Inv_Next_Date', 'required'),
             array('Tarf_Cont_Id, Inv_Repeat_Id, Inv_Repeat_Count, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_Id', 'required', 'message' => 'Please search & select Contract'),
-            array('Inv_Next_Date, Created_Date, Rowversion', 'safe'),
+            array('Inv_Invoice', 'unique'),
+            array('Inv_Invoice', 'length', 'max'=>50),
+            array('Inv_Amount', 'numerical', 'integerOnly'=> false),
+            array('Inv_Next_Date, Created_Date, Rowversion, Inv_Invoice, Inv_Amount', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Inv_Id, Inv_Date, Tarf_Cont_Id, Inv_Repeat_Id, Inv_Repeat_Count, Inv_Next_Date, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -71,10 +80,12 @@ class ContractInvoice extends RActiveRecord {
         return array(
             'Inv_Id' => 'Inv',
             'Inv_Date' => 'Date',
+            'Inv_Invoice' => 'Invoice',
             'Tarf_Cont_Id' => 'Contract',
             'Inv_Repeat_Id' => 'Repeat Type',
             'Inv_Repeat_Count' => 'Repeat Count',
             'Inv_Next_Date' => 'Next Date',
+            'Inv_Amount' => 'Amount',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -98,10 +109,12 @@ class ContractInvoice extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('tarfCont');
 
         $criteria->compare('Inv_Id', $this->Inv_Id);
         $criteria->compare('Inv_Date', $this->Inv_Date, true);
-        $criteria->compare('Tarf_Cont_Id', $this->Tarf_Cont_Id);
+        $criteria->compare('Inv_Invoice', $this->Inv_Invoice, true);
+        $criteria->compare('tarfCont.Tarf_Cont_Internal_Code', $this->Tarf_Cont_Id, true);
         $criteria->compare('Inv_Repeat_Id', $this->Inv_Repeat_Id);
         $criteria->compare('Inv_Repeat_Count', $this->Inv_Repeat_Count);
         $criteria->compare('Inv_Next_Date', $this->Inv_Next_Date, true);
@@ -149,5 +162,47 @@ class ContractInvoice extends RActiveRecord {
         if ($key != NULL)
             return $repeats[$key];
         return $repeats;
+    }
+    
+    public function getNextdate($key, $date) {
+        $repeats = array(
+            '1' => 'Annual',
+            '2' => 'Biannual',
+            '3' => 'Quarterly',
+            '4' => 'Monthly',
+            '5' => 'Weekly',
+        );
+        switch ($key) {
+            case 1:
+                $nextDate = date('Y-m-d', strtotime('+1 year', strtotime($date)));
+                break;
+            case 2:
+                $nextDate = date('Y-m-d', strtotime('+6 months', strtotime($date)));
+                break;
+            case 3:
+                $nextDate = date('Y-m-d', strtotime('+3 months', strtotime($date)));
+                break;
+            case 4:
+                $nextDate = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                break;
+            case 5:
+                $nextDate = date('Y-m-d', strtotime('+1 week', strtotime($date)));
+                break;
+            default:
+                break;
+        }
+        return $nextDate;
+    }
+    
+    protected function beforeSave() {
+        if($this->isNewRecord){
+            $this->Inv_Invoice = Myclass::generateInvoiceno();
+            $contract = TariffContracts::model()->findByPk($this->Tarf_Cont_Id);
+            if(!empty($contract))
+                $this->Inv_Amount = $contract->Tarf_Cont_Amt_Pay;
+            else
+                $this->Inv_Amount = 0;
+        }
+        return parent::beforeSave();
     }
 }

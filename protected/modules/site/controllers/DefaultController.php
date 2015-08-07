@@ -162,6 +162,7 @@ class DefaultController extends Controller {
     }
 
     public function actionDailycron() {
+        //Publishing Renewal & Share spliting
         $publishings = WorkPublishing::model()->findAllByAttributes(array('Work_Pub_Contact_End' => date('Y-m-d')));
 
         if (!empty($publishings)) {
@@ -246,6 +247,7 @@ class DefaultController extends Controller {
             }
         }
 
+        //Sub Publishing Renewal & Share spliting
         $sub_publishings = WorkSubPublishing::model()->findAllByAttributes(array('Work_Sub_Contact_End' => date('Y-m-d')));
         if (!empty($sub_publishings)) {
             foreach ($sub_publishings as $key => $sub_publishing) {
@@ -320,6 +322,33 @@ class DefaultController extends Controller {
                     //// Remove Sub Publisher rightholder from Work////
                     if (!empty($sub_publisher))
                         $sub_publisher->delete();
+                }
+            }
+        }
+
+        //Contract Invoice Auto generate
+        if (ContractInvoice::AUTO_GENERATE) {
+            $invoices = ContractInvoice::model()->findAllByAttributes(array('Inv_Next_Date' => date('Y-m-d')));
+            foreach ($invoices as $key => $invoice) {
+                $checking_date = date('Y-m-d');
+                $check_next_invoice_exists = ContractInvoice::model()->find(array(
+                    'condition' => "Tarf_Cont_Id = :cont_id And Inv_Next_Date > :date And Inv_Repeat_Count != 0",
+                    'params' => array('cont_id' => $invoice->Tarf_Cont_Id, 'date' => $checking_date)
+                ));
+
+                if (empty($check_next_invoice_exists)) {
+                    $invoice_model = New ContractInvoice;
+                    $new_invoice = array(
+                        'Inv_Invoice' => Myclass::generateInvoiceno(),
+                        'Inv_Date' => $checking_date,
+                        'Tarf_Cont_Id' => $invoice->Tarf_Cont_Id,
+                        'Inv_Repeat_Id' => $invoice->Inv_Repeat_Id,
+                        'Inv_Repeat_Count' => $invoice->Inv_Repeat_Count - 1,
+                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($invoice->Inv_Repeat_Id, $checking_date),
+                        'Inv_Amount' => $invoice->Inv_Amount,
+                    );
+                    $invoice_model->attributes = $new_invoice;
+                    $invoice_model->save(false);
                 }
             }
         }

@@ -2,7 +2,7 @@
 /* @var $this ContractinvoiceController */
 /* @var $model ContractInvoice */
 
-$this->title = 'View ContractInvoice:' . $model->Inv_Id;
+$this->title = 'View ContractInvoice:' . $model->Inv_Invoice;
 $this->breadcrumbs = array(
     'Invoices' => array('index'),
     'View ' . 'ContractInvoice',
@@ -21,16 +21,16 @@ $this->breadcrumbs = array(
                 'context' => 'primary',
                     )
             );
-            echo "&nbsp;&nbsp;";
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'Delete',
-                'url' => array('delete', 'id' => $model->Inv_Id),
-                'buttonType' => 'link',
-                'context' => 'danger',
-                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    )
-            );
+//            echo "&nbsp;&nbsp;";
+//            $this->widget(
+//                    'application.components.MyTbButton', array(
+//                'label' => 'Delete',
+//                'url' => array('delete', 'id' => $model->Inv_Id),
+//                'buttonType' => 'link',
+//                'context' => 'danger',
+//                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+//                    )
+//            );
             echo "&nbsp;&nbsp;";
             $this->widget(
                     'application.components.MyTbButton', array(
@@ -58,6 +58,8 @@ $this->breadcrumbs = array(
                 'name' => 'Tarf_Cont_Id',
                 'value' => $model->tarfCont->Tarf_Cont_Internal_Code
             ),
+            'Inv_Invoice',
+            'Inv_Amount',
             array(
                 'name' => 'Inv_Repeat_Id',
                 'value' => $model->getRepeat()

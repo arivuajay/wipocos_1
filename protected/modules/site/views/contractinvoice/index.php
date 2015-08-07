@@ -38,13 +38,27 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     $repeats = ContractInvoice::model()->getRepeat();
                     ?>
 
-<!--                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-3 col-md-3">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Id', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Tarf_Cont_Id', array('class' => 'form-control')); ?>
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Id'); ?>
                         </div>
-                    </div>-->
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Inv_Invoice', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Inv_Invoice', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($searchModel, 'Inv_Invoice'); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Inv_Date', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Inv_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($searchModel, 'Inv_Date'); ?>
+                        </div>
+                    </div>
                     <div class="col-lg-3 col-md-3">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Inv_Repeat_Id', array('class' => ' control-label')); ?>
@@ -92,6 +106,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                         echo $data->tarfCont->Tarf_Cont_Internal_Code;
                     }
                 ),
+                'Inv_Invoice',
+                'Inv_Date',
+                array(
+                    'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
+                    'value' => function ($data) {
+                        echo $data->tarfCont->tarfContUser->User_Cust_Name;
+                    }
+                ),
                 array(
                     'name' => 'Inv_Repeat_Id',
                     'value' => function ($data) {
@@ -104,7 +126,8 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{view}{update}{delete}',
+                    'template' => '{view}{update}',
+//                    'template' => '{view}{update}{delete}',
                 )
             );
 
@@ -154,6 +177,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     echo $data->tarfCont->Tarf_Cont_Internal_Code;
                 }
             ),
+            'Inv_Invoice',
+            'Inv_Date',
+            array(
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
+                'value' => function ($data) {
+                    echo $data->tarfCont->tarfContUser->User_Cust_Name;
+                }
+            ),
             array(
                 'name' => 'Inv_Repeat_Id',
                 'value' => function ($data) {
@@ -166,8 +197,17 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{update}{delete}',
-            )
+                'template' => '{view}{invoice}{update}',
+                'buttons' => array(
+                    'invoice' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-file-text"></i>',
+                        'options' => array(
+                            'title' => 'View Invoice',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/invoice/id/".rawurlencode($data->Inv_Id)))',
+                    ),
+                ),
+            ),
         );
 
         $this->widget('booster.widgets.TbExtendedGridView', array(

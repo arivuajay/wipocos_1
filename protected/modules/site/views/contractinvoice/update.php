@@ -2,7 +2,7 @@
 /* @var $this ContractinvoiceController */
 /* @var $model ContractInvoice */
 
-$this->title='Update Invoices: '. $model->Inv_Id;
+$this->title='Update Invoices: '. $model->tarfCont->Tarf_Cont_Internal_Code;
 $this->breadcrumbs=array(
 	'Invoices'=>array('index'),
 	'Update Invoices',
@@ -10,4 +10,4 @@ $this->breadcrumbs=array(
 ?>
 
 <div class="user-create">
-    <?php $this->renderPartial('_form', array('model'=>$model)); ?></div>
+    <?php $this->renderPartial('_form', compact('cont_model', 'new_model')); ?></div>

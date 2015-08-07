@@ -620,13 +620,13 @@ class Myclass extends CController {
         return $ret;
     }
 
-    public function getTarifInvoice() {
-        $count = TariffContracts::model()->count() + 1;
-        $new_inv_no = str_pad($count,  TariffContracts::INVOICE_PAD,'0',STR_PAD_LEFT);;
+    public static function generateInvoiceno() {
+        $count = ContractInvoice::model()->count() + 1;
+        $new_inv_no = str_pad($count,  ContractInvoice::INVOICE_PAD,'0',STR_PAD_LEFT);;
         do {
-            $rf_no = TariffContracts::model()->findByAttributes(array('Tarf_Invoice' => $new_inv_no));
+            $rf_no = ContractInvoice::model()->findByAttributes(array('Inv_Invoice' => $new_inv_no));
             if (!empty($rf_no)) {
-                $check_inv_no = $rf_no->Tarf_Invoice;
+                $check_inv_no = $rf_no->Inv_Invoice;
                 $count++;
                 $new_inv_no = $count;
             } else {

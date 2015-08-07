@@ -35,7 +35,7 @@ class ContractinvoiceController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchcontract', 'getinvoice'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchcontract', 'getinvoice', 'invoice'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -73,24 +73,27 @@ class ContractinvoiceController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
-        $model = new ContractInvoice;
+    public function actionCreate($id = NULL) {
+        $new_model = new ContractInvoice;
+        $cont_model = array();
+                
+        if($id != NULL){
+            $cont_model = TariffContracts::model()->findByPk($id);
+        }
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation($new_model);
 
         if (isset($_POST['ContractInvoice'])) {
-            $model->attributes = $_POST['ContractInvoice'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Created ContractInvoice successfully.", "user");
+            $new_model->attributes = $_POST['ContractInvoice'];
+            if ($new_model->save()) {
+                Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');
-                $this->redirect(array('/site/contractinvoice/index'));
+                $this->redirect(array('/site/contractinvoice/update', 'id' => $new_model->Inv_Id));
             }
         }
 
-        $this->render('create', array(
-            'model' => $model,
-        ));
+        $this->render('create', compact('cont_model', 'new_model'));
     }
 
     /**
@@ -99,23 +102,27 @@ class ContractinvoiceController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $new_model = new ContractInvoice;
         $model = $this->loadModel($id);
+        $cont_model = array();
+                
+        if($id != NULL){
+            $cont_model = TariffContracts::model()->findByPk($model->Tarf_Cont_Id);
+        }
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation($new_model);
 
         if (isset($_POST['ContractInvoice'])) {
-            $model->attributes = $_POST['ContractInvoice'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated ContractInvoice successfully.", "user");
+            $new_model->attributes = $_POST['ContractInvoice'];
+            if ($new_model->save()) {
+                Myclass::addAuditTrail("Updated ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Updated Successfully!!!');
-                $this->redirect(array('/site/contractinvoice/index'));
+                $this->redirect(array('/site/contractinvoice/update', 'id' => $new_model->Inv_Id));
             }
         }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        $this->render('update', compact('cont_model', 'new_model'));
     }
 
     /**
@@ -127,7 +134,7 @@ class ContractinvoiceController extends Controller {
         try {
             $model = $this->loadModel($id);
             $model->delete();
-            Myclass::addAuditTrail("Deleted ContractInvoice successfully.", "user");
+            Myclass::addAuditTrail("Deleted ContractInvoice successfully.", "file-text");
         } catch (CDbException $e) {
             if ($e->errorInfo[1] == 1451) {
                 throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
@@ -162,12 +169,19 @@ class ContractinvoiceController extends Controller {
     }
 
     public function actionGetinvoice() {
-        if(isset($_GET['id'])){
-            $model = TariffContracts::model()->findByPk($_GET['id']);
-            $this->renderPartial('invoice', compact('model'));
+        if (isset($_GET['id'])) {
+//            $model = TariffContracts::model()->findByPk($_GET['id']);
+            $model = TariffContracts::model()->with('contractInvoices')->find(
+                    array(
+                    'condition' => 't.Tarf_Cont_Id = :id',
+                    'params' => array('id' => $_GET['id']),
+                    'order' => 'contractInvoices.Inv_Next_Date DESC'
+                )
+            );
+            $this->renderPartial('invoices', compact('model'));
         }
     }
-    
+
     public function actionSearchcontract() {
         $criteria = new CDbCriteria();
         if (!empty($_REQUEST['searach_text'])) {
@@ -176,7 +190,7 @@ class ContractinvoiceController extends Controller {
             $criteria->compare('tarfContUser.User_Cust_Name', $search_txt, true, 'OR');
             $criteria->compare('tarfContInsp.Insp_Name', $search_txt, true, 'OR');
             $criteria->compare('tarfContTariff.Tarif_Description', $search_txt, true, 'OR');
-            
+
             $criteria->compare('Tarf_Cont_Internal_Code', $search_txt, true, 'OR');
             $criteria->compare('Tarf_Invoice', $search_txt, true, 'OR');
             $criteria->compare('Tarf_Cont_District', $search_txt, true, 'OR');
@@ -191,6 +205,11 @@ class ContractinvoiceController extends Controller {
 
         $contracts = TariffContracts::model()->findAll($criteria);
         $this->renderPartial('_search_contract', compact('contracts'));
+    }
+
+    public function actionInvoice($id) {
+        $model = $this->loadModel($id);
+        $this->render('invoice', compact('model'));
     }
     
     /**

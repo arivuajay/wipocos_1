@@ -125,7 +125,7 @@
                         array('label' => '<i class="fa fa-user"></i> <span>Users & Customers</span>', 'url' => array('/site/customeruser/index'), 'visible' => 1, 'active' => 0),
                         array('label' => '<i class="fa fa-shield"></i> <span>Inspectors</span>', 'url' => array('/site/inspector/index'), 'visible' => 1, 'active' => 0),
                         array('label' => '<i class="fa fa-cny"></i> <span>Customer Tariffication</span>', 'url' => array('/site/tariffcontracts/index'), 'visible' => 1, 'active' => 0),
-                        array('label' => '<i class="fa fa-file-text"></i> <span>Create Invoice</span>', 'url' => array('/site/contractinvoice/create'), 'visible' => 1, 'active' => 0),
+                        array('label' => '<i class="fa fa-file-text"></i> <span>Invoices</span>', 'url' => array('/site/contractinvoice/index'), 'visible' => 1, 'active' => 0),
                     ),
                 ),
 //                array('label' => '<i class="fa fa-envelope"></i> <span>Invoice Sample</span>', 'url' => array('/site/default/invoice'), 'visible' => 1, 'active' => 0),

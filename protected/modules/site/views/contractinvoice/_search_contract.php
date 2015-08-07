@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Internal_Code'); ?></th>
-                            <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Invoice'); ?></th>
+                            <!--<th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Invoice'); ?></th>-->
                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'); ?></th>
                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Tariff_Id'); ?></th>
                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Insp_Id'); ?></th>
@@ -22,9 +22,9 @@
                         <?php
                         foreach ($contracts as $key => $contract) {
                             ?>
-                        <tr data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>">
+                        <tr data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>">
                                 <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
-                                <td><?php echo $contract->Tarf_Invoice ?></td>
+                                <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
                                 <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>
                                 <td><?php echo $contract->tarfContTariff->Tarif_Description ?></td>
                                 <td><?php echo $contract->tarfContInsp->Insp_Name ?></td>

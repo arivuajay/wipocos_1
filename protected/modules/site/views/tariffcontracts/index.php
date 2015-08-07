@@ -320,11 +320,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'template' => '{invoice}{view}{update}{delete}',
                 'buttons' => array(
                     'invoice' => array(//the name {reply} must be same
-                        'label' => '<i class="fa fa-file-text"></i>',
+                        'label' => '<i class="fa fa-plus-square"></i>',
                         'options' => array(
-                            'title' => 'View Invoice',
+                            'title' => 'Create Invoice',
                         ),
-                        'url' => 'CHtml::normalizeUrl(array("/site/tariffcontracts/invoice/id/".rawurlencode($data->Tarf_Cont_Id)))',
+                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
+//                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
                     ),
                 ),
             )

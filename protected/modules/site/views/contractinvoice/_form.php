@@ -47,6 +47,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     </div>
 
     <?php
+    $update = !empty($cont_model);
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'contract-invoice-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
@@ -57,14 +58,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     ));
     ?>
     <?php
-    echo $form->hiddenField($model, 'Tarf_Cont_Id');
+    $taf_cont_id = '';
+    if($update){
+        $taf_cont_id = $cont_model->Tarf_Cont_Id;
+    }
+    echo $form->hiddenField($new_model, 'Tarf_Cont_Id', array('value' => $taf_cont_id));
     $repeats = ContractInvoice::model()->getRepeat();
     ?>
 
     <div class="col-lg-12 col-xs-12">
         <div class="box-body">
             <div id="search_right_result">
-                <?php if (!$model->isNewRecord) { ?>
+                <?php if ($update) { ?>
                     <div class="form-group foundation">
                         <div class="box-header">
                             <div class="col-lg-12 col-md-12">
@@ -78,19 +83,20 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     <thead>
                                         <tr>
                                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Internal_Code'); ?></th>
-                                            <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Invoice'); ?></th>
+                                            <!--<th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Invoice'); ?></th>-->
                                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'); ?></th>
                                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Tariff_Id'); ?></th>
                                             <th><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Insp_Id'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="highlight" data-uid="<?php echo $model->tarfCont->Tarf_Cont_GUID ?>" data-id="<?php echo $model->tarfCont->Tarf_Cont_Id ?>" data-custname = "<?php echo $model->tarfCont->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $model->tarfCont->Tarf_Invoice; ?>">
-                                            <td><?php echo $model->tarfCont->Tarf_Cont_Internal_Code ?></td>
-                                            <td><?php echo $model->tarfCont->Tarf_Invoice ?></td>
-                                            <td><?php echo $model->tarfCont->tarfContUser->User_Cust_Name ?></td>
-                                            <td><?php echo $model->tarfCont->tarfContTariff->Tarif_Description ?></td>
-                                            <td><?php echo $model->tarfCont->tarfContInsp->Insp_Name ?></td>
+                                        <?php $contract =  $cont_model;?>
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>">
+                                            <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
+                                            <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
+                                            <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>
+                                            <td><?php echo $contract->tarfContTariff->Tarif_Description ?></td>
+                                            <td><?php echo $contract->tarfContInsp->Insp_Name ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -99,9 +105,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                 <?php } ?>
             </div>
-
-
-
         </div>
     </div>
 
@@ -111,15 +114,28 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
+                            <?php 
+                            $inv_to = $amount = '';
+                            if ($update) {
+                                $inv_to = $contract->tarfContUser->User_Cust_Name;
+                                $amount = $contract->Tarf_Cont_Amt_Pay;
+                            }
+                            ?>
                             <?php echo CHtml::label('Invoice To', 'invoice_to') ?>
-                            <?php echo CHtml::textField('invoice_to', '', array('id' => 'invoice_to', 'class' => 'form-control', 'readonly' => true)); ?>
+                            <?php echo CHtml::textField('invoice_to', $inv_to, array('id' => 'invoice_to', 'class' => 'form-control', 'readonly' => true)); ?>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+<!--                    <div class="col-lg-12">
                         <div class="form-group">
                             <?php echo CHtml::label('Reference', 'reference_invoice') ?>
                             <?php echo CHtml::textField('reference_invoice', '', array('id' => 'reference_invoice', 'class' => 'form-control', 'readonly' => true)); ?>
                         </div>
+                    </div>-->
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Amount', 'inv_amount') ?>
+                            <?php echo CHtml::textField('inv_amount', $amount, array('id' => 'inv_amount', 'class' => 'form-control', 'readonly' => true)); ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,21 +148,21 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Inv_Repeat_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Inv_Repeat_Id', $repeats, array('class' => 'form-control')); ?>
-                            <?php echo $form->error($model, 'Inv_Repeat_Id'); ?>
+                            <?php echo $form->labelEx($new_model, 'Inv_Repeat_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($new_model, 'Inv_Repeat_Id', $repeats, array('class' => 'form-control')); ?>
+                            <?php echo $form->error($new_model, 'Inv_Repeat_Id'); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Inv_Repeat_Count', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Inv_Repeat_Count', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($model, 'Inv_Repeat_Count'); ?>
+                            <?php echo $form->labelEx($new_model, 'Inv_Repeat_Count', array('class' => '')); ?>
+                            <?php echo $form->textField($new_model, 'Inv_Repeat_Count', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($new_model, 'Inv_Repeat_Count'); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'Inv_Next_Date', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
-                            <?php echo $form->error($model, 'Inv_Next_Date'); ?>
+                            <?php echo $form->labelEx($new_model, 'Inv_Next_Date', array('class' => '')); ?>
+                            <?php echo $form->textField($new_model, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->error($new_model, 'Inv_Next_Date'); ?>
                         </div>
 
                     </div>
@@ -156,22 +172,28 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         </div>
     </div>
 
-    <div class="col-lg-12 <?php echo $model->isNewRecord ? 'hide' : ''?>"  id="invoice_div">
+    <div class="col-lg-12 <?php echo !$update ? 'hide' : ''?>"  id="invoice_div">
         <?php
-        if(!$model->isNewRecord){
-            $cont_model = TariffContracts::model()->findByPk($model->Tarf_Cont_Id);
-            $this->renderPartial('invoice', array('model' => $cont_model)); 
+        if($update){
+            $cont_model = TariffContracts::model()->with('contractInvoices')->find(
+                    array(
+                    'condition' => 't.Tarf_Cont_Id = :id',
+                    'params' => array('id' => $cont_model->Tarf_Cont_Id),
+                    'order' => 'contractInvoices.Inv_Next_Date DESC'
+                )
+            );
+            $this->renderPartial('invoices', array('model' => $cont_model)); 
         }
         ?>
     </div>
-
-    <div class="col-lg-6 col-xs-6">
+    
+    <div class="col-lg-12 col-xs-12">
         <div class="form-group">
             <div class="col-lg-1">
-                <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                <?php echo CHtml::submitButton(!$update ? 'Save' : 'Save', array('class' => !$update ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
             <div class="col-lg-11 help-block">
-                <?php echo $form->error($model, 'Tarf_Cont_Id'); ?>
+                <?php echo $form->error($new_model, 'Tarf_Cont_Id'); ?>
             </div>
         </div>
     </div>
@@ -211,7 +233,8 @@ $js = <<< EOD
                     data:{id: _this.data('id')},
                     success:function(data){
                         $('#invoice_to').val(_this.data('custname'));
-                        $('#reference_invoice').val(_this.data('invoice'));
+//                        $('#reference_invoice').val(_this.data('invoice'));
+                        $('#inv_amount').val(_this.data('amount'));
                         $('#invoice_div').removeClass('hide');
                         $('#invoice_div').removeClass('hide');
                         $('#invoice_div').html(data);
