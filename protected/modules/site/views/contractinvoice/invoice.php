@@ -2,7 +2,7 @@
 $contract = $model->tarfCont;
 $this->title = 'View Invoice: ' . $model->Inv_Invoice;
 $this->breadcrumbs = array(
-    'Tariff Contracts' => array('index'),
+    'Invoice' => array('index'),
     'View Invoice',
 );
 ?>

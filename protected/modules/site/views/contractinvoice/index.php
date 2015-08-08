@@ -45,7 +45,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Id'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3">
+<!--                    <div class="col-lg-3 col-md-3">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Inv_Invoice', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Inv_Invoice', array('class' => 'form-control')); ?>
@@ -79,7 +79,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <?php echo $form->textField($searchModel, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Inv_Next_Date'); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
@@ -99,37 +99,50 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <div class="col-lg-12 col-md-12">
         <div class="row">
             <?php
-            $gridColumns = array(
-                array(
-                    'name' => 'Tarf_Cont_Id',
-                    'value' => function ($data) {
-                        echo $data->tarfCont->Tarf_Cont_Internal_Code;
-                    }
+            $gridColumns = array(            array(
+                'name' => 'Tarf_Cont_Id',
+                'value' => function ($data) {
+                    echo $data->tarfCont->Tarf_Cont_Internal_Code;
+                }
+            ),
+//            'Inv_Invoice',
+//            'Inv_Date',
+            array(
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
+                'value' => function ($data) {
+                    echo $data->tarfCont->tarfContUser->User_Cust_Name;
+                }
+            ),
+            array(
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
+                'value' => function ($data) {
+                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
+                }
+            ),
+            array(
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'),
+                'value' => function ($data) {
+                    echo $data->tarfCont->getPayment();
+                }
+            ),
+//            'Inv_Repeat_Count',
+//            'Inv_Next_Date',
+            array(
+                'header' => 'Actions',
+                'class' => 'application.components.MyActionButtonColumn',
+                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                'template' => '{newinvoice}',
+                'buttons' => array(
+                    'newinvoice' => array(//the name {reply} must be same
+                        'label' => '<i class="glyphicon glyphicon-pencil"></i>',
+                        'options' => array(
+                            'title' => 'Update',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
+                    ),
                 ),
-                'Inv_Invoice',
-                'Inv_Date',
-                array(
-                    'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
-                    'value' => function ($data) {
-                        echo $data->tarfCont->tarfContUser->User_Cust_Name;
-                    }
-                ),
-                array(
-                    'name' => 'Inv_Repeat_Id',
-                    'value' => function ($data) {
-                        echo $data->getRepeat();
-                    }
-                ),
-                'Inv_Repeat_Count',
-                'Inv_Next_Date',
-                array(
-                    'header' => 'Actions',
-                    'class' => 'application.components.MyActionButtonColumn',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{view}{update}',
-//                    'template' => '{view}{update}{delete}',
-                )
-            );
+            ),
+);
 
             $this->widget('booster.widgets.TbExtendedGridView', array(
                 'type' => 'striped bordered',
@@ -177,8 +190,8 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     echo $data->tarfCont->Tarf_Cont_Internal_Code;
                 }
             ),
-            'Inv_Invoice',
-            'Inv_Date',
+//            'Inv_Invoice',
+//            'Inv_Date',
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
                 'value' => function ($data) {
@@ -186,25 +199,31 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 }
             ),
             array(
-                'name' => 'Inv_Repeat_Id',
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
                 'value' => function ($data) {
-                    echo $data->getRepeat();
+                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
                 }
             ),
-            'Inv_Repeat_Count',
-            'Inv_Next_Date',
+            array(
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'),
+                'value' => function ($data) {
+                    echo $data->tarfCont->getPayment();
+                }
+            ),
+//            'Inv_Repeat_Count',
+//            'Inv_Next_Date',
             array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{invoice}{update}',
+                'template' => '{newinvoice}',
                 'buttons' => array(
-                    'invoice' => array(//the name {reply} must be same
-                        'label' => '<i class="fa fa-file-text"></i>',
+                    'newinvoice' => array(//the name {reply} must be same
+                        'label' => '<i class="glyphicon glyphicon-pencil"></i>',
                         'options' => array(
-                            'title' => 'View Invoice',
+                            'title' => 'Update',
                         ),
-                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/invoice/id/".rawurlencode($data->Inv_Id)))',
+                        'url' => 'CHtml::normalizeUrl(array("/site/contractinvoice/create/id/".rawurlencode($data->Tarf_Cont_Id)))',
                     ),
                 ),
             ),

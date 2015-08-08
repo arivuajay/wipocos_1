@@ -35,8 +35,8 @@ if (!empty($invoices)) {
                                 <td><?php echo $invoice->getRepeat() ?></td>
                                 <td><?php echo $invoice->Inv_Repeat_Count ?></td>
                                 <td align="center">
-                                    <?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/contractinvoice/view', 'id' => $invoice->Inv_Id), array('title' => 'View'));?>&nbsp;
-                                    <?php echo MyHtml::link('<i class="glyphicon glyphicon-file"></i>', array('/site/contractinvoice/invoice', 'id' => $invoice->Inv_Id), array('title' => 'View Invoice'));?>&nbsp;
+                                    <?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/contractinvoice/view', 'id' => $invoice->Inv_Id), array('title' => 'View', 'target' => '_blank'));?>&nbsp;
+                                    <?php echo MyHtml::link('<i class="glyphicon glyphicon-list-alt"></i>', array('/site/contractinvoice/invoice', 'id' => $invoice->Inv_Id), array('title' => 'View Invoice', 'target' => '_blank'));?>&nbsp;
                                 </td>
                             </tr>
                             <?php

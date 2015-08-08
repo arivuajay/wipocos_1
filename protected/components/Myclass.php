@@ -636,4 +636,19 @@ class Myclass extends CController {
         return $new_inv_no;
     }
 
+    public static function getTarifInvoice() {
+        $count = TariffContracts::model()->count() + 1;
+        $new_inv_no = str_pad($count,  TariffContracts::INVOICE_PAD,'0',STR_PAD_LEFT);;
+        do {
+            $rf_no = TariffContracts::model()->findByAttributes(array('Tarf_Invoice' => $new_inv_no));
+            if (!empty($rf_no)) {
+                $check_inv_no = $rf_no->Tarf_Invoice;
+                $count++;
+                $new_inv_no = $count;
+            } else {
+                break;
+            }
+        } while ($check_inv_no != $new_inv_no);
+        return $new_inv_no;
+    }
 }

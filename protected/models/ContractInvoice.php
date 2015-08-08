@@ -50,6 +50,7 @@ class ContractInvoice extends RActiveRecord {
         return array(
             array('Inv_Date, Inv_Repeat_Id, Inv_Repeat_Count, Inv_Next_Date', 'required'),
             array('Tarf_Cont_Id, Inv_Repeat_Id, Inv_Repeat_Count, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Inv_Repeat_Count', 'numerical', 'integerOnly' => true, 'max' => 100),
             array('Tarf_Cont_Id', 'required', 'message' => 'Please search & select Contract'),
             array('Inv_Invoice', 'unique'),
             array('Inv_Invoice', 'length', 'max'=>50),
@@ -111,19 +112,21 @@ class ContractInvoice extends RActiveRecord {
 
         $criteria = new CDbCriteria;
         $criteria->with = array('tarfCont');
+        $criteria->group = "t.Tarf_Cont_Id";
 
-        $criteria->compare('Inv_Id', $this->Inv_Id);
-        $criteria->compare('Inv_Date', $this->Inv_Date, true);
-        $criteria->compare('Inv_Invoice', $this->Inv_Invoice, true);
+//        $criteria->compare('Inv_Id', $this->Inv_Id);
+//        $criteria->compare('Inv_Date', $this->Inv_Date, true);
+//        $criteria->compare('Inv_Invoice', $this->Inv_Invoice, true);
         $criteria->compare('tarfCont.Tarf_Cont_Internal_Code', $this->Tarf_Cont_Id, true);
-        $criteria->compare('Inv_Repeat_Id', $this->Inv_Repeat_Id);
-        $criteria->compare('Inv_Repeat_Count', $this->Inv_Repeat_Count);
-        $criteria->compare('Inv_Next_Date', $this->Inv_Next_Date, true);
-        $criteria->compare('Created_Date', $this->Created_Date, true);
-        $criteria->compare('Rowversion', $this->Rowversion, true);
-        $criteria->compare('Created_By', $this->Created_By);
-        $criteria->compare('Updated_By', $this->Updated_By);
+//        $criteria->compare('Inv_Repeat_Id', $this->Inv_Repeat_Id);
+//        $criteria->compare('Inv_Repeat_Count', $this->Inv_Repeat_Count);
+//        $criteria->compare('Inv_Next_Date', $this->Inv_Next_Date, true);
+//        $criteria->compare('Created_Date', $this->Created_Date, true);
+//        $criteria->compare('Rowversion', $this->Rowversion, true);
+//        $criteria->compare('Created_By', $this->Created_By);
+//        $criteria->compare('Updated_By', $this->Updated_By);
 
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -143,7 +146,11 @@ class ContractInvoice extends RActiveRecord {
     }
 
     public function dataProvider() {
+        $criteria = new CDbCriteria;
+        $criteria->group = "t.Tarf_Cont_Id";
+        
         return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
             'pagination' => array(
                 'pageSize' => PAGE_SIZE,
             )
