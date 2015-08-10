@@ -76,8 +76,8 @@ class ContractinvoiceController extends Controller {
     public function actionCreate($id = NULL) {
         $new_model = new ContractInvoice;
         $cont_model = array();
-                
-        if($id != NULL){
+
+        if ($id != NULL) {
             $cont_model = TariffContracts::model()->findByPk($id);
         }
 
@@ -87,6 +87,22 @@ class ContractinvoiceController extends Controller {
         if (isset($_POST['ContractInvoice'])) {
             $new_model->attributes = $_POST['ContractInvoice'];
             if ($new_model->save()) {
+//                $society_name = '';
+//                $soceity = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
+//                if (!empty($soceity))
+//                    $society_name = $soceity->socOrg->Org_Abbrevation;
+//                $mail = new Sendmail;
+//                $trans_array = array(
+//                    "{CURRENT_MONTH}" => date('M'),
+//                    "{INVOICE_NO}" => $new_model->Inv_Invoice,
+//                    "{SOCIETY_NAME}" => $society_name,
+//                    "{CUSTOMER_NAME}" => $new_model->tarfCont->tarfContUser->User_Cust_Name,
+//                    "{INVOICE_AMOUNT}" => $new_model->Inv_Amount,
+//                );
+//                $message = $mail->getMessage(1, $trans_array);
+//                $Subject = $mail->getSubject(1, $trans_array);
+//                $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
+//                exit;
                 Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');
                 $this->redirect(array('/site/contractinvoice/update', 'id' => $new_model->Inv_Id));
@@ -105,8 +121,8 @@ class ContractinvoiceController extends Controller {
         $new_model = new ContractInvoice;
         $model = $this->loadModel($id);
         $cont_model = array();
-                
-        if($id != NULL){
+
+        if ($id != NULL) {
             $cont_model = TariffContracts::model()->findByPk($model->Tarf_Cont_Id);
         }
 
@@ -173,10 +189,10 @@ class ContractinvoiceController extends Controller {
 //            $model = TariffContracts::model()->findByPk($_GET['id']);
             $model = TariffContracts::model()->with('contractInvoices')->find(
                     array(
-                    'condition' => 't.Tarf_Cont_Id = :id',
-                    'params' => array('id' => $_GET['id']),
-                    'order' => 'contractInvoices.Inv_Next_Date DESC'
-                )
+                        'condition' => 't.Tarf_Cont_Id = :id',
+                        'params' => array('id' => $_GET['id']),
+                        'order' => 'contractInvoices.Inv_Next_Date DESC'
+                    )
             );
             $this->renderPartial('invoices', compact('model'));
         }
@@ -211,7 +227,7 @@ class ContractinvoiceController extends Controller {
         $model = $this->loadModel($id);
         $this->render('invoice', compact('model'));
     }
-    
+
     /**
      * Manages all models.
      */

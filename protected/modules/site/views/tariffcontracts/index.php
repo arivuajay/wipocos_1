@@ -2,9 +2,9 @@
 /* @var $this TariffcontractsController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Tariff Contracts';
+$this->title = 'Tariff / Contract';
 $this->breadcrumbs = array(
-    'Tariff Contracts',
+    'Tariff / Contract',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -265,7 +265,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
         $this->widget(
                 'application.components.MyTbButton', array(
-            'label' => 'Create TariffContracts',
+            'label' => 'Create Tariff / Contract',
             'icon' => 'fa fa-plus',
             'url' => array('/site/tariffcontracts/create'),
             'buttonType' => 'link',
@@ -345,7 +345,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Tariff Contracts</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Tariff / Contract</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns,
                 )
         );

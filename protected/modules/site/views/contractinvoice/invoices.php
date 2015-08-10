@@ -15,7 +15,7 @@ if (!empty($invoices)) {
                     <thead>
                         <tr>
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Invoice'); ?></th>
-                            <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Date'); ?></th>
+                            <!--<th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Date'); ?></th>-->
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Amount'); ?></th>
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Next_Date'); ?></th>
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Repeat_Id'); ?></th>
@@ -29,7 +29,7 @@ if (!empty($invoices)) {
                             ?>
                             <tr>
                                 <td><?php echo $invoice->Inv_Invoice ?></td>
-                                <td><?php echo $invoice->Inv_Date ?></td>
+                                <!--<td><?php echo $invoice->Inv_Date ?></td>-->
                                 <td><?php echo $invoice->Inv_Amount ?></td>
                                 <td><?php echo $invoice->Inv_Next_Date ?></td>
                                 <td><?php echo $invoice->getRepeat() ?></td>

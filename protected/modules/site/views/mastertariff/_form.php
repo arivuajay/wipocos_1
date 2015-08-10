@@ -20,6 +20,14 @@
             ?>
             <div class="box-body">
                 <div class="form-group">
+                    <?php echo CHtml::label('Internal Code *', '', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo CHtml::textField('Internal_Code', $model->Tarif_Internal_Code, array('class' => 'form-control', 'readonly' => true)) ?>
+                        <?php // echo $form->dropDownList($model, 'User_Cust_Place_Id', $places, array('class' => 'form-control')); ?>
+                    </div>
+                </div>
+                
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Tarif_Code', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->textField($model, 'Tarif_Code', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>

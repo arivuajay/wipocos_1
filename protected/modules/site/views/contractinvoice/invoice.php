@@ -33,9 +33,11 @@ $this->breadcrumbs = array(
         </div><!-- /.col -->
         <div class="col-sm-6 invoice-col">
             <p class="lead">Agreement:</p>
-            <b>Invoice #<?php echo $model->Inv_Invoice;?></b><br/>
-            <b>Paid Amount: </b><?php echo $model->Inv_Amount;?><br/>
-            <b>Contract Number:</b> <?php echo $contract->Tarf_Cont_Internal_Code;?><br/>
+            <b><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Internal_Code') ?>:</b> <?php echo $contract->Tarf_Cont_Internal_Code;?><br/>
+            <b><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_From') ?>:</b> <?php echo $contract->Tarf_Cont_From;?><br/>
+            <b><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_To') ?>:</b> <?php echo $contract->Tarf_Cont_To;?><br/>
+            <b><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Sign_Date') ?>:</b> <?php echo $contract->Tarf_Cont_Sign_Date;?><br/>
+            <b><?php echo TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id') ?>:</b> <?php echo $contract->getPayment();?><br/>
         </div><!-- /.col -->
     </div><!-- /.row -->
 
@@ -98,33 +100,14 @@ $this->breadcrumbs = array(
             <div class="table-responsive">
                 <table class="table">
                     <tr>
-                        <th style="width:50%">Amount to Pay:</th>
-                        <td><?php echo $contract->Tarf_Cont_Amt_Pay;?></td>
+                        <th style="width:50%"><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Invoice') ?>:</th>
+                        <td><?php echo $model->Inv_Invoice;?></td>
                     </tr>
                     <tr>
-                        <th>From:</th>
-                        <td><?php echo $contract->Tarf_Cont_From;?></td>
-                    </tr>
-                    <tr>
-                        <th>To:</th>
-                        <td><?php echo $contract->Tarf_Cont_To;?></td>
-                    </tr>
-                    <tr>
-                        <th>Date of signature:</th>
-                        <td><?php echo $contract->Tarf_Cont_Sign_Date;?></td>
-                    </tr>
-                    <tr>
-                        <th>Payment:</th>
-                        <td><?php echo $contract->getPayment();?></td>
-                    </tr>
-                    <tr>
-                        <th>Portion:</th>
-                        <td><?php echo $contract->Tarf_Cont_Portion;?></td>
+                        <th style="width:50%"><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Amount') ?>:</th>
+                        <td><?php echo $model->Inv_Amount;?></td>
                     </tr>
                 </table>
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                    <b>Comment:</b> <?php echo $contract->Tarf_Cont_Comment;?>
-                </p>
             </div>
 
         </div>

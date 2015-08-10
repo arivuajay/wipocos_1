@@ -3,7 +3,7 @@
 /* @var $model TariffContracts */
 
 $this->breadcrumbs=array(
-	'Tariff Contracts'=>array('index'),
+	'Tariff / Contract'=>array('index'),
 	'Manage',
 );
 
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Tariff Contracts</h1>
+<h1>Manage Tariff / Contract</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>

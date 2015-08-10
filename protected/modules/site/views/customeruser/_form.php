@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <?php echo $form->labelEx($model, 'User_Cust_Code', array('class' => 'col-sm-2 control-label')); ?>
                                 <div class="col-sm-5">
-                                    <?php echo $form->textField($model, 'User_Cust_Code', array('class' => 'form-control', 'size' => 25, 'maxlength' => 25)); ?>
+                                    <?php echo $form->textField($model, 'User_Cust_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 50)); ?>
                                     <?php echo $form->error($model, 'User_Cust_Code'); ?>
                                 </div>
                             </div>

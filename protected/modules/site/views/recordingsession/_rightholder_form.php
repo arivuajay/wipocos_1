@@ -894,7 +894,8 @@ $js = <<< EOD
         }
     }
         
-    function hide_alert(time = 5000){
+    function hide_alert(time){
+        time = typeof time !== 'undefined' ? time : 5000;
         setTimeout(function(){
             $('.alert .close').trigger('click');
         }, time);

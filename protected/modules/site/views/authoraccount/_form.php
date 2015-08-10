@@ -288,11 +288,13 @@ $regions = Myclass::getMasterRegion();
     </div>
 </div>
 <?php
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
+        alert(tab_{$tab});
         $('#AuthorAccount_Auth_Gender').find("br").remove();
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
-        $("#a_tab_{$tab}").trigger('click');
+        $('.nav-tabs a[href="#tab_{$tab}"]').tab('show');
 
         $("#AuthorManageRights_Auth_Mnge_Entry_Date").on("change", function(){
             $("#AuthorManageRights_Auth_Mnge_Entry_Date_2").val($(this).val());

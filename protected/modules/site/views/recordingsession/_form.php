@@ -36,7 +36,7 @@ $destinations = Myclass::getMasterDestination();
         ?>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Recordings</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($folio_tab_validation) echo 'data-toggle="tab"'; ?>>List of Folios</a></li>
@@ -45,7 +45,7 @@ $destinations = Myclass::getMasterDestination();
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="tab_1">
+                <div class="tab-pane" id="tab_1">
                     <div class="box box-primary">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
@@ -508,12 +508,12 @@ $this->endWidget();
 <?php
 $new_performer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newperformer');
 $new_producer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newproducer');
-
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
+        $('.nav-tabs a[href="#{$active_Tab}"]').tab('show');
         $('.year').datepicker({ dateFormat: 'yyyy' });
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
-        $("#a_tab_{$tab}").trigger('click');
         
         $(".popup").on('click', function(){
             _id = $(this).data('popup');

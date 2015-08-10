@@ -294,10 +294,11 @@ $legal_forms = Myclass::getMasterLegalForm();
 <div class="row">
 </div>
 <?php
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
-        $("#a_tab_{$tab}").trigger('click');
+        $('.nav-tabs a[href="#$active_Tab"]').tab('show');
 
         $("#ProducerRelatedRights_Pro_Mnge_Entry_Date").on("change", function(){
             $("#ProducerRelatedRights_Pro_Mnge_Entry_Date_2").val($(this).val());

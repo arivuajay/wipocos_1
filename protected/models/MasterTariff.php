@@ -23,6 +23,8 @@
  * @property MasterCurrency $tarifCurrency
  */
 class MasterTariff extends CActiveRecord {
+    
+//    public $fullname;
 
     public function init() {
         parent::init();
@@ -83,8 +85,8 @@ class MasterTariff extends CActiveRecord {
         return array(
             'Master_Tarif_Id' => 'Master Tarif',
             'Tarif_Internal_Code' => 'Internal Code',
-            'Tarif_Code' => 'Code',
-            'Tarif_Description' => 'Name',
+            'Tarif_Code' => 'Name',
+            'Tarif_Description' => 'Description',
             'Tarif_Min_Tarif_Amount' => 'Minimum Tariff',
             'Tarif_Max_Tarif_Amount' => 'Maximum Tariff',
             'Tarif_Amount' => 'Standard Tariff',
@@ -178,5 +180,9 @@ class MasterTariff extends CActiveRecord {
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIF_MASTER_CODE);
         }
         return parent::afterSave();
+    }
+    
+    public function getFullName() {
+        return "{$this->Tarif_Code} ({$this->Tarif_Description})";
     }
 }

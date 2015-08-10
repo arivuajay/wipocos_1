@@ -63,20 +63,20 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Email_Temp_Subject'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Email_Temp_Content', array('class' => ' control-label')); ?>
                             <?php echo $form->textArea($searchModel, 'Email_Temp_Content', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
                             <?php echo $form->error($searchModel, 'Email_Temp_Content'); ?>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
+                    </div>-->
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Email_Temp_Params', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Email_Temp_Params', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                             <?php echo $form->error($searchModel, 'Email_Temp_Params'); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>

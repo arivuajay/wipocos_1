@@ -2,9 +2,9 @@
 /* @var $this TariffcontractsController */
 /* @var $model TariffContracts */
 
-$this->title='Create Tariff Contracts';
+$this->title='Create Tariff / Contract';
 $this->breadcrumbs=array(
-	'Tariff Contracts'=>array('index'),
+	'Tariff / Contract'=>array('index'),
 	$this->title,
 );
 ?>

@@ -550,11 +550,12 @@ $this->endWidget();
 $new_performer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newperformer');
 $new_producer_post = Yii::app()->createAbsoluteUrl('/site/soundcarrier/newproducer');
 
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
-        $("#a_tab_{$tab}").trigger('click');
+        $('.nav-tabs a[href="#$active_Tab"]').tab('show');
         
         $(".popup").on('click', function(){
             _id = $(this).data('popup');

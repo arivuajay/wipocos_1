@@ -35,7 +35,7 @@ class TariffcontractsController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser', 'invoice'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser', 'invoice', 'gettariff'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -214,6 +214,15 @@ class TariffcontractsController extends Controller {
     public function actionInvoice($id) {
         $model = $this->loadModel($id);
         $this->render('invoice', compact('model'));
+    }
+    
+    public function actionGettariff() {
+        $model = MasterTariff::model()->findByPk($_POST['id']);
+        $return = array(
+            'standard_amout' => $model->Tarif_Amount
+        );
+        echo json_encode($return);
+        Yii::app()->end();
     }
     
     /**

@@ -56,14 +56,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         ),
         'enableAjaxValidation' => true,
     ));
-    ?>
-    <?php
     $taf_cont_id = '';
     if($update){
         $taf_cont_id = $cont_model->Tarf_Cont_Id;
     }
     echo $form->hiddenField($new_model, 'Tarf_Cont_Id', array('value' => $taf_cont_id));
     $repeats = ContractInvoice::model()->getRepeat();
+    echo $form->hiddenField($new_model, 'Inv_Repeat_Count', array('value' => 0))
     ?>
 
     <div class="col-lg-12 col-xs-12">
@@ -91,7 +90,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     </thead>
                                     <tbody>
                                         <?php $contract =  $cont_model;?>
-                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>">
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>">
                                             <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
                                             <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
                                             <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>
@@ -119,10 +118,17 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             if ($update) {
                                 $inv_to = $contract->tarfContUser->User_Cust_Name;
                                 $amount = $contract->Tarf_Cont_Amt_Pay;
+                                $cont_end = $contract->Tarf_Cont_To;
                             }
                             ?>
                             <?php echo CHtml::label('Invoice To', 'invoice_to') ?>
                             <?php echo CHtml::textField('invoice_to', $inv_to, array('id' => 'invoice_to', 'class' => 'form-control', 'readonly' => true)); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <?php echo CHtml::label(TariffContracts::model()->getAttributeLabel('Tarf_Cont_To'), 'reference_invoice') ?>
+                            <?php echo CHtml::textField('contract_end', $cont_end, array('id' => 'contract_end', 'class' => 'form-control', 'readonly' => true)); ?>
                         </div>
                     </div>
 <!--                    <div class="col-lg-12">
@@ -153,12 +159,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($new_model, 'Inv_Repeat_Id'); ?>
                         </div>
 
-                        <div class="form-group">
-                            <?php echo $form->labelEx($new_model, 'Inv_Repeat_Count', array('class' => '')); ?>
-                            <?php echo $form->textField($new_model, 'Inv_Repeat_Count', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($new_model, 'Inv_Repeat_Count'); ?>
-                        </div>
-
+                        
                         <div class="form-group">
                             <?php echo $form->labelEx($new_model, 'Inv_Next_Date', array('class' => '')); ?>
                             <?php echo $form->textField($new_model, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
@@ -233,6 +234,7 @@ $js = <<< EOD
                     data:{id: _this.data('id')},
                     success:function(data){
                         $('#invoice_to').val(_this.data('custname'));
+                        $('#contract_end').val(_this.data('contract-end'));
 //                        $('#reference_invoice').val(_this.data('invoice'));
                         $('#inv_amount').val(_this.data('amount'));
                         $('#invoice_div').removeClass('hide');

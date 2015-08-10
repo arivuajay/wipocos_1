@@ -48,7 +48,7 @@ class ContractInvoice extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Inv_Date, Inv_Repeat_Id, Inv_Repeat_Count, Inv_Next_Date', 'required'),
+            array('Inv_Date, Inv_Repeat_Id, Inv_Next_Date', 'required'),
             array('Tarf_Cont_Id, Inv_Repeat_Id, Inv_Repeat_Count, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Inv_Repeat_Count', 'numerical', 'integerOnly' => true, 'max' => 100),
             array('Tarf_Cont_Id', 'required', 'message' => 'Please search & select Contract'),
@@ -86,7 +86,7 @@ class ContractInvoice extends RActiveRecord {
             'Tarf_Cont_Id' => 'Contract',
             'Inv_Repeat_Id' => 'Repeat Type',
             'Inv_Repeat_Count' => 'Repeat Count',
-            'Inv_Next_Date' => 'Next Date',
+            'Inv_Next_Date' => 'Next Invoice Date',
             'Inv_Amount' => 'Amount',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

@@ -67,7 +67,7 @@ class RecordingSession extends RActiveRecord {
             array('Rcd_Ses_Internal_Code', 'length', 'max' => 100),
             array('Rcd_Ses_Title, Rcd_Ses_Internal_Code, Rcd_Ses_Orchestra, Rcd_Ses_Ref_Medium', 'length', 'max' => 50),
             array('Rcd_Ses_Release_Year', 'length', 'max' => 4),
-            array('Rcd_Ses_Internal_Code', 'unique'),
+            array('Rcd_Ses_Internal_Code, Rcd_Ses_Title', 'unique'),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

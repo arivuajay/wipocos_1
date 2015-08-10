@@ -5,6 +5,7 @@
  */
 
 class Sendmail {
+
     function send($to, $subject, $body, $fromName = '', $from = '', $attachment = null) {
         if (MAILSENDBY == 'phpmail'):
             $this->sendPhpmail($to, $subject, $body, $attachment);
@@ -42,21 +43,24 @@ class Sendmail {
     }
 
     public function getMessage($body, &$translate) {
-       
+
+        $msg_header = file_get_contents(SITEURL . EMAILTEMPLATE . 'header.html');
+        $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . 'footer.html');
         if (EMAILLAYOUT == 'file'):
-         
-            $msg_header = file_get_contents(SITEURL . EMAILTEMPLATE . 'header.html');
-            $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . 'footer.html');  
             $msg_body = file_get_contents(SITEURL . EMAILTEMPLATE . $body . '.html');
+        else: // for db concept
+            $msg = EmailTemplate::model()->findByPk($body);
+            $msg_body = $msg->Email_Temp_Content;
+        endif;
+        $message_dub = $msg_header . $msg_body . $msg_footer;
 
-            $message_dub = $msg_header . $msg_body . $msg_footer;
+        $message = $this->translate($message_dub, $translate);
+        return $message;
+    }
 
-//        else: // for db concept
-//            $msg_body = Mailtemplate::model()->find('id="' . $body . '"');
-//
-//            $message_dub = $msg_body->template_content;
-         endif;
-
+    public function getSubject($body, &$translate) {
+        $msg = EmailTemplate::model()->findByPk($body);
+        $msg_body = $msg->Email_Temp_Subject;
         $message = $this->translate($message_dub, $translate);
         return $message;
     }
@@ -67,6 +71,8 @@ class Sendmail {
             "{SITENAME}" => SITENAME,
             "{EMAILHEADERIMAGE}" => Yii::app()->createAbsoluteUrl(EMAILHEADERIMAGE),
             "{CONTACTMAIL}" => CONTACTMAIL,
+            "{GEN_DATE}" => date('Y-m-d'),
+            "{LOGO}" => '<img src="{' . EMAILHEADERIMAGE . '}" style="height: 14px;"/>',
         );
 
         $translation = array_merge($def_trans, $translate);

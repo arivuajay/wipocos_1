@@ -52,23 +52,8 @@
 
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Email_Temp_Content', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-5">
-                        <?php
-//                        $this->widget('application.extensions.TheCKEditor.TheCKEditorWidget', array(
-//                            'model' => $model, # Data-Model (form model)
-//                            'attribute' => 'Email_Temp_Content', # Attribute in the Data-Model
-//                            'height' => '400px',
-//                            'width' => '100%',
-////                            'toolbarSet' => 'Basic', # EXISTING(!) Toolbar (see: ckeditor.js)
-//                            'ckeditor' => Yii::app()->basePath . '/../ckeditor/ckeditor.php',
-////                            # Path to ckeditor.php
-//                            'ckBasePath' => Yii::app()->baseUrl . '/ckeditor/',
-////                            # Relative Path to the Editor (from Web-Root)
-////                            'css' => Yii::app()->baseUrl . '/css/index.css',
-//                                # Additional Parameters
-//                        ));
-                        ?>
-                        <?php echo $form->textArea($model, 'Email_Temp_Content', array('class' => 'form-control', 'rows' => 6, 'cols' => 50));  ?>
+                    <div class="col-sm-9">
+                        <?php echo $form->textArea($model, 'Email_Temp_Content', array('class' => 'form-control', 'rows' => 6, 'cols' => 50, 'id' => 'ckeditor'));  ?>
                         <?php echo $form->error($model, 'Email_Temp_Content'); ?>
                     </div>
                 </div>

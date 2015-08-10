@@ -9,7 +9,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
 // Custom Params Value
 return array(
     //Global Settings
-    'EMAILLAYOUT' => 'file', // file(file concept) or db(db_concept)
+    'EMAILLAYOUT' => 'db', // file(file concept) or db(db_concept)
     'EMAILTEMPLATE' => '/mailtemplate/',
     'MAILSENDBY' => $mailsendby,
     //EMAIL Settings
@@ -27,7 +27,7 @@ return array(
     //Product Settings
     'SITEBASEURL' => 'http://wipocos.byethost16.com',
     'UPLOAD_DIR' => 'uploads',
-    'EMAILHEADERIMAGE' => '/themes/adminlte/img/header-logo.png',
+    'EMAILHEADERIMAGE' => '/themes/adminlte/img/fa-globe.png',
 
     'PAGE_SIZE' => '10',
 

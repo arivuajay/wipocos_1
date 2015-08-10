@@ -147,7 +147,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Tarf_Cont_Tariff_Id', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-5">
-                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Tariff_Id', $tariffs, array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Tariff_Id', $tariffs, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_Tariff_Id'); ?>
                         </div>
                     </div>
@@ -210,7 +210,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($model, 'Tarf_Cont_Pay_Id'); ?>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_Portion', array('class' => '')); ?>
                             <?php echo $form->textField($model, 'Tarf_Cont_Portion', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_Portion'); ?>
@@ -279,31 +279,50 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/tariffcontracts/searchuser");
+$get_tariff = Yii::app()->createAbsoluteUrl("site/tariffcontracts/gettariff");
 $js = <<< EOD
-        $(document).ready(function(){
-            $('.date').datepicker({ format: 'yyyy-mm-dd' });
-            $('#search_button').on("click", function(){
-                var data=$("#search-form").serialize();
-                $.ajax({
-                    type: 'GET',
-                    url: '$search_url',
-                    data:data,
-                    success:function(data){
-                        $('#TariffContracts_Tarf_Cont_User_Id').val('');
-                        $("#search_right_result").html(data);
-                   },
-                    error: function(data) {
-                        alert("Something went wrong. Try again");
-                    },
-                    dataType:'html'
-                });
-            });
-
-            $('body').on('click','#search_result tbody tr', function(){
-                $(this).addClass('highlight').siblings().removeClass('highlight');
-                $('#TariffContracts_Tarf_Cont_User_Id').val($(this).data('id'));
+    $(document).ready(function(){
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        $('#search_button').on("click", function(){
+            var data=$("#search-form").serialize();
+            $.ajax({
+                type: 'GET',
+                url: '$search_url',
+                data:data,
+                success:function(data){
+                    $('#TariffContracts_Tarf_Cont_User_Id').val('');
+                    $("#search_right_result").html(data);
+               },
+                error: function(data) {
+                    alert("Something went wrong. Try again");
+                },
+                dataType:'html'
             });
         });
+
+        $('body').on('click','#search_result tbody tr', function(){
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+            $('#TariffContracts_Tarf_Cont_User_Id').val($(this).data('id'));
+        });
+        
+        $('#TariffContracts_Tarf_Cont_Tariff_Id').on("click", function(){
+            _that = $(this);
+            $.ajax({
+                type: "POST",
+                url: '$get_tariff',
+                data:{id: _that.val()},
+                dataType: "json",
+                success:function(data){
+                    var data = jQuery.parseJSON(data);
+                    $('#TariffContracts_Tarf_Cont_Amt_Pay').val(data.standard_amout);
+               },
+                error: function(data) {
+                    alert("Something went wrong. Try again");
+                },
+                dataType:'html'
+            });
+        });
+    });
    
 EOD;
 

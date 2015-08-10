@@ -213,11 +213,12 @@ $labels = Myclass::getMasterLabel();
     </div>
 </div>
 <?php
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
-        $("#a_tab_{$tab}").trigger('click');
+        $('.nav-tabs a[href="#$active_Tab"]').tab('show');
      });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

@@ -529,9 +529,9 @@ class Myclass extends CController {
 
     public static function getMasterTariff($is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)
-            $tariff = CHtml::listData(MasterTariff::model()->isActive(array('order' => 'Tarif_Code'))->findAll(), 'Master_Tarif_Id', 'Tarif_Description');
+            $tariff = CHtml::listData(MasterTariff::model()->isActive(array('order' => 'Tarif_Code'))->findAll(), 'Master_Tarif_Id', 'fullname');
         else
-            $tariff = CHtml::listData(MasterTariff::model()->findAll(array('order' => 'Tarif_Code')), 'Master_Tarif_Id', 'Tarif_Description');
+            $tariff = CHtml::listData(MasterTariff::model()->findAll(array('order' => 'Tarif_Code')), 'Master_Tarif_Id', 'fullname');
         if ($key != NULL)
             return $tariff[$key];
         return $tariff;
