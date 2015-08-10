@@ -55,7 +55,7 @@ class ContractInvoice extends RActiveRecord {
             array('Inv_Invoice', 'unique'),
             array('Inv_Invoice', 'length', 'max'=>50),
             array('Inv_Amount', 'numerical', 'integerOnly'=> false),
-            array('Inv_Next_Date', 'nextDateValidate'),
+//            array('Inv_Next_Date', 'nextDateValidate'),
             array('Inv_Next_Date, Created_Date, Rowversion, Inv_Invoice, Inv_Amount', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -64,7 +64,7 @@ class ContractInvoice extends RActiveRecord {
     }
 
     public function nextDateValidate($attribute, $params) {
-        $this->addError($attribute, "asdas");
+//        $this->addError($attribute, "asdas");
 //        if (strcasecmp($this->Auth_First_Name, $this->Auth_Sur_Name) == 0) {
 //            $this->addError($attribute, 'First name and Last cannot be equal.');
 //        }
