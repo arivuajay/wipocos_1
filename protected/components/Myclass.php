@@ -622,7 +622,8 @@ class Myclass extends CController {
 
     public static function generateInvoiceno() {
         $count = ContractInvoice::model()->count() + 1;
-        $new_inv_no = str_pad($count,  ContractInvoice::INVOICE_PAD,'0',STR_PAD_LEFT);;
+        $new_inv_no = str_pad($count, ContractInvoice::INVOICE_PAD, '0', STR_PAD_LEFT);
+        ;
         do {
             $rf_no = ContractInvoice::model()->findByAttributes(array('Inv_Invoice' => $new_inv_no));
             if (!empty($rf_no)) {
@@ -638,7 +639,8 @@ class Myclass extends CController {
 
     public static function getTarifInvoice() {
         $count = TariffContracts::model()->count() + 1;
-        $new_inv_no = str_pad($count,  TariffContracts::INVOICE_PAD,'0',STR_PAD_LEFT);;
+        $new_inv_no = str_pad($count, TariffContracts::INVOICE_PAD, '0', STR_PAD_LEFT);
+        ;
         do {
             $rf_no = TariffContracts::model()->findByAttributes(array('Tarf_Invoice' => $new_inv_no));
             if (!empty($rf_no)) {
@@ -650,5 +652,45 @@ class Myclass extends CController {
             }
         } while ($check_inv_no != $new_inv_no);
         return $new_inv_no;
+    }
+
+    public static function getDatediff($date1, $date2) {
+        $d1 = new DateTime($date1);
+        $d2 = new DateTime($date2);
+        $diff = strtotime($date2) - strtotime($date1);
+        $days = ($diff % 604800) / 86400;
+        $months = $d1->diff($d2)->m + ($d1->diff($d2)->y * 12);
+        $years = $d1->diff($d2)->y;
+        $weeks = ($diff - ($days * 86400)) / 604800;
+
+        return array(
+            'days' => $days,
+            'months' => $months,
+            'weeks' => $weeks,
+            'years' => $years,
+        );
+    }
+
+    public static function getContractDuration($id, $date1, $date2) {
+        $diff = Myclass::getDatediff($date1, $date2);
+        $duration = '';
+        switch ($id) {
+            case 1:
+                $duration = $diff['years']. 'Years';
+                break;
+            case 2:
+                $duration = ceil($diff['months']/6).' months';
+                break;
+            case 3:
+                $duration = ceil($diff['months']/4).' months';
+                break;
+            case 4:
+                $duration = $diff['months'].' months';
+                break;
+            case 5:
+                $duration = $diff['weeks'].' weeks';
+                break;
+        }
+        return $duration;
     }
 }

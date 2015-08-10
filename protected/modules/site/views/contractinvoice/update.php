@@ -1,8 +1,13 @@
 <?php
 /* @var $this ContractinvoiceController */
 /* @var $model ContractInvoice */
+/* @var $cont_model TariffContracts */
 
-$this->title='Update Invoices: '. $model->tarfCont->Tarf_Cont_Internal_Code;
+if(!empty($cont_model)){
+$this->title='Update Invoices: '. $cont_model->tarfContUser->User_Cust_Name;
+}else{
+$this->title='Update Invoices';
+}
 $this->breadcrumbs=array(
 	'Invoices'=>array('index'),
 	'Update Invoices',

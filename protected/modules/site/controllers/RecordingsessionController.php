@@ -184,7 +184,7 @@ class RecordingsessionController extends Controller {
                 Yii::app()->user->setFlash('success', 'Recording Session Sheet Documentation Updated Successfully!!!');
                 $doc_tab = 2;
                 $message = 'Recording Session Documentation Updated Successfully!!!';
-                if(empty($right_holder_exists_2)){
+                if(empty($right_holder_exists)){
                     $doc_tab = 5;
                     $message = 'Recording Session Documentation Updated Successfully!!!. Please Fill Recordings';
                 }
@@ -192,7 +192,7 @@ class RecordingsessionController extends Controller {
                 $this->redirect(array('/site/recordingsession/update', 'tab' => $doc_tab, 'id' => $model->Rcd_Ses_Id));
                 
                 $doc_tab = 2;
-                if(empty($right_holder_exists_1) || empty($right_holder_exists_1))
+                if(empty($right_holder_exists))
                     $doc_tab = 7;
                 $this->redirect(array('/site/recordingsession/update', 'tab' => $doc_tab, 'id' => $model->Rcd_Ses_Id));
             }

@@ -19,7 +19,7 @@ if (!empty($invoices)) {
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Amount'); ?></th>
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Next_Date'); ?></th>
                             <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Repeat_Id'); ?></th>
-                            <th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Repeat_Count'); ?></th>
+                            <!--<th><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Repeat_Count'); ?></th>-->
                             <th align="center">Action</th>
                         </tr>
                     </thead>
@@ -33,7 +33,7 @@ if (!empty($invoices)) {
                                 <td><?php echo $invoice->Inv_Amount ?></td>
                                 <td><?php echo $invoice->Inv_Next_Date ?></td>
                                 <td><?php echo $invoice->getRepeat() ?></td>
-                                <td><?php echo $invoice->Inv_Repeat_Count ?></td>
+                                <!--<td><?php echo $invoice->Inv_Repeat_Count ?></td>-->
                                 <td align="center">
                                     <?php echo MyHtml::link('<i class="glyphicon glyphicon-eye-open"></i>', array('/site/contractinvoice/view', 'id' => $invoice->Inv_Id), array('title' => 'View', 'target' => '_blank'));?>&nbsp;
                                     <?php echo MyHtml::link('<i class="glyphicon glyphicon-list-alt"></i>', array('/site/contractinvoice/invoice', 'id' => $invoice->Inv_Id), array('title' => 'View Invoice', 'target' => '_blank'));?>&nbsp;

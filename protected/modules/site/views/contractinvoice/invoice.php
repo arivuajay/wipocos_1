@@ -107,6 +107,11 @@ $this->breadcrumbs = array(
                         <th style="width:50%"><?php echo ContractInvoice::model()->getAttributeLabel('Inv_Amount') ?>:</th>
                         <td><?php echo $model->Inv_Amount;?></td>
                     </tr>
+                    <tr>
+                        <th style="width:50%">Contract Duration:</th>
+                        <?php $diff = Myclass::getContractDuration($contract->Tarf_Cont_Pay_Id, $model->Inv_Date, $contract->Tarf_Cont_To);?>
+                        <td><?php echo $diff;?></td>
+                    </tr>
                 </table>
             </div>
 
