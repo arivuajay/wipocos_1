@@ -5,7 +5,9 @@
  */
 
 class Sendmail {
-
+    
+    public $email_layout = 'file';
+    
     function send($to, $subject, $body, $fromName = '', $from = '', $attachment = null) {
         if (MAILSENDBY == 'phpmail'):
             $this->sendPhpmail($to, $subject, $body, $attachment);
@@ -42,16 +44,16 @@ class Sendmail {
         endif;
     }
 
-    public function getMessage($body, &$translate) {
-
-        $msg_header = file_get_contents(SITEURL . EMAILTEMPLATE . 'header.html');
-        $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . 'footer.html');
-        if (EMAILLAYOUT == 'file'):
+    public function getMessage($body, &$translate, $template = 1) {
+        $msg_header = file_get_contents(SITEURL . EMAILTEMPLATE . "template_{$template}/header.html");
+        $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . "template_{$template}/footer.html");
+        if ($this->email_layout == 'file'):
             $msg_body = file_get_contents(SITEURL . EMAILTEMPLATE . $body . '.html');
-        else: // for db concept
+        else:
             $msg = EmailTemplate::model()->findByPk($body);
             $msg_body = $msg->Email_Temp_Content;
         endif;
+        
         $message_dub = $msg_header . $msg_body . $msg_footer;
 
         $message = $this->translate($message_dub, $translate);
@@ -61,7 +63,7 @@ class Sendmail {
     public function getSubject($body, &$translate) {
         $msg = EmailTemplate::model()->findByPk($body);
         $msg_body = $msg->Email_Temp_Subject;
-        $message = $this->translate($message_dub, $translate);
+        $message = $this->translate($msg_body, $translate);
         return $message;
     }
 

@@ -121,6 +121,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 $inv_to = $contract->tarfContUser->User_Cust_Name;
                                 $amount = $contract->Tarf_Cont_Amt_Pay;
                                 $cont_end = $contract->Tarf_Cont_To;
+                                $repeat_type = $contract->getPayment();
                             }
                             ?>
                             <?php echo CHtml::label('Invoice To', 'invoice_to') ?>
@@ -156,9 +157,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php echo $form->labelEx($new_model, 'Inv_Repeat_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($new_model, 'Inv_Repeat_Id', $repeats, array('class' => 'form-control')); ?>
-                            <?php echo $form->error($new_model, 'Inv_Repeat_Id'); ?>
+                            <?php echo CHtml::label(TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'), 'repeat_type') ?>
+                            <?php echo CHtml::textField('repeat_type', $repeat_type, array('id' => 'repeat_type', 'class' => 'form-control', 'readonly' => true)); ?>
+                            <?php // echo $form->labelEx($new_model, 'Inv_Repeat_Id', array('class' => '')); ?>
+                            <?php // echo $form->dropDownList($new_model, 'Inv_Repeat_Id', $repeats, array('class' => 'form-control')); ?>
+                            <?php // echo $form->error($new_model, 'Inv_Repeat_Id'); ?>
                         </div>
 
                         
@@ -239,7 +242,7 @@ $js = <<< EOD
                     success:function(data){
                         $('#invoice_to').val(_this.data('custname'));
                         $('#contract_end').val(_this.data('contract-end'));
-//                        $('#reference_invoice').val(_this.data('invoice'));
+                        $('#repeat_type').val(_this.data('repeat'));
                         $('#inv_amount').val(_this.data('amount'));
                         $('#invoice_div').removeClass('hide');
                         $('#invoice_div').removeClass('hide');

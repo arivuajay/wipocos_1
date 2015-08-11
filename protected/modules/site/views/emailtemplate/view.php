@@ -2,7 +2,7 @@
 /* @var $this EmailtemplateController */
 /* @var $model EmailTemplate */
 
-$this->title = 'View EmailTemplate:' . $model->Email_Temp_Id;
+$this->title = 'View EmailTemplate:' . $model->Email_Temp_Name;
 $this->breadcrumbs = array(
     'Email Templates' => array('index'),
     'View ' . 'EmailTemplate',
@@ -57,14 +57,24 @@ $this->breadcrumbs = array(
 //            'Email_Temp_Id',
             'Email_Temp_Name',
             'Email_Temp_From',
-            'Email_Temp_ReplyTo',
+//            'Email_Temp_ReplyTo',
             'Email_Temp_Subject',
-            'Email_Temp_Content',
-            'Email_Temp_Params',
+            array(
+                'name' => 'Email_Temp_Content',
+                'type' => 'raw',
+                'value' => $model->Email_Temp_Content
+            ),
+            array(
+                'name' => 'Email_Temp_Params',
+                'type' => 'raw',
+                'value' => '<button data-toggle="modal" data-target="#paramsModal" class="btn" id="yw0" name="yt0" type="button">view</button>'
+            ),
+//            'Email_Temp_Params',
         ),
     ));
     ?>
 </div>
 
+<?php echo $this->renderPartial('_params', compact('model')); ?>
 
 

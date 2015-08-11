@@ -109,7 +109,7 @@ $this->breadcrumbs = array(
                     </tr>
                     <tr>
                         <th style="width:50%">Contract Duration:</th>
-                        <?php $diff = Myclass::getContractDuration($contract->Tarf_Cont_Pay_Id, $model->Inv_Date, $contract->Tarf_Cont_To);?>
+                        <?php $diff = ContractInvoice::getContractDuration($contract->Tarf_Cont_Pay_Id, $model->Inv_Date, $contract->Tarf_Cont_To);?>
                         <td><?php echo $diff;?></td>
                     </tr>
                 </table>

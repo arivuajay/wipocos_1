@@ -21,14 +21,14 @@
  * @property TariffContracts $tarfCont
  */
 class ContractInvoice extends RActiveRecord {
-    
+
     const INVOICE_PAD = 7;
     const AUTO_GENERATE = TRUE;
     const DEFAULT_REPEAT = 4;
 
-        public function init() {
+    public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Inv_Date = date('Y-m-d');
             $this->Inv_Repeat_Id = ContractInvoice::DEFAULT_REPEAT;
         }
@@ -53,9 +53,9 @@ class ContractInvoice extends RActiveRecord {
             array('Inv_Repeat_Count', 'numerical', 'integerOnly' => true, 'max' => 100),
             array('Tarf_Cont_Id', 'required', 'message' => 'Please search & select Contract'),
             array('Inv_Invoice', 'unique'),
-            array('Inv_Invoice', 'length', 'max'=>50),
-            array('Inv_Amount', 'numerical', 'integerOnly'=> false),
-//            array('Inv_Next_Date', 'nextDateValidate'),
+            array('Inv_Invoice', 'length', 'max' => 50),
+            array('Inv_Amount', 'numerical', 'integerOnly' => false),
+            array('Inv_Next_Date', 'nextDateValidate'),
             array('Inv_Next_Date, Created_Date, Rowversion, Inv_Invoice, Inv_Amount', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -64,11 +64,13 @@ class ContractInvoice extends RActiveRecord {
     }
 
     public function nextDateValidate($attribute, $params) {
-//        $this->addError($attribute, "asdas");
-//        if (strcasecmp($this->Auth_First_Name, $this->Auth_Sur_Name) == 0) {
-//            $this->addError($attribute, 'First name and Last cannot be equal.');
-//        }
+        $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
+        $check_date = empty($inv_model) ? date('Y-m-d') : $inv_model[0]->Inv_Next_Date;
+        if (strtotime($this->Inv_Next_Date) <= strtotime($check_date)) {
+            $this->addError($attribute, "Date must be greater than {$check_date}");
+        }
     }
+
     /**
      * @return array relational rules.
      */
@@ -133,7 +135,7 @@ class ContractInvoice extends RActiveRecord {
 //        $criteria->compare('Created_By', $this->Created_By);
 //        $criteria->compare('Updated_By', $this->Updated_By);
 
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -155,7 +157,7 @@ class ContractInvoice extends RActiveRecord {
     public function dataProvider() {
         $criteria = new CDbCriteria;
         $criteria->group = "t.Tarf_Cont_Id";
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
@@ -178,7 +180,7 @@ class ContractInvoice extends RActiveRecord {
             return $repeats[$key];
         return $repeats;
     }
-    
+
     public function getNextdate($key, $date) {
         $repeats = array(
             '1' => 'Annual',
@@ -208,16 +210,89 @@ class ContractInvoice extends RActiveRecord {
         }
         return $nextDate;
     }
-    
+
     protected function beforeSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Inv_Invoice = Myclass::generateInvoiceno();
             $contract = TariffContracts::model()->findByPk($this->Tarf_Cont_Id);
-            if(!empty($contract))
+            if (!empty($contract))
                 $this->Inv_Amount = $contract->Tarf_Cont_Amt_Pay;
             else
                 $this->Inv_Amount = 0;
         }
         return parent::beforeSave();
+    }
+
+    protected function afterSave() {
+        //Send mail
+        $mail = new Sendmail;
+        $mail->email_layout = 'db';
+        $temp_id = 1;
+
+        $society_name = '';
+        $soceity = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
+        if (!empty($soceity))
+            $society_name = $soceity->socOrg->Org_Abbrevation;
+
+        $contract = $this->tarfCont;
+        $trans_array = array(
+            "{CURRENT_MONTH}" => date('F'),
+            "{INVOICE_NO}" => $this->Inv_Invoice,
+            "{SOCIETY_NAME}" => $society_name,
+            "{CUSTOMER_NAME}" => $contract->tarfContUser->User_Cust_Name,
+            "{INVOICE_AMOUNT}" => $this->Inv_Amount,
+            "{CUST_NAME}" => $contract->tarfContUser->User_Cust_Name,
+            "{CUST_ADDRESS}" => $contract->tarfContUser->User_Cust_Address,
+            "{CUST_PHONE}" => $contract->tarfContUser->User_Cust_Telephone,
+            "{CUST_FAX}" => $contract->tarfContUser->User_Cust_Fax,
+            "{CUST_WEBSITE}" => $contract->tarfContUser->User_Cust_Website,
+            "{CUST_EMAIL}" => $contract->tarfContUser->User_Cust_Email,
+            "{CONTRACT_NO}" => $contract->Tarf_Cont_Internal_Code,
+            "{TAR_CITY}" => $contract->tarfContCity->City_Name,
+            "{TAR_DISTRICT}" => $contract->Tarf_Cont_District,
+            "{TAR_AREA}" => $contract->Tarf_Cont_Area,
+            "{TAR_TARIF_CODE}" => $contract->tarfContTariff->Tarif_Description,
+            "{TAR_INSP}" => $contract->tarfContInsp->Insp_Name,
+            "{TAR_BALANCE}" => $contract->Tarf_Cont_Balance,
+            "{TAR_TYPE}" => $contract->tarfContEvent->Evt_Type_Name,
+            "{TAR_EVE_DATE}" => $contract->Tarf_Cont_Event_Date,
+            "{TAR_EVE_COMMENT}" => $contract->Tarf_Cont_Event_Comment,
+            "{TAR_TO_PAY}" => $contract->Tarf_Cont_Amt_Pay,
+            "{TAR_FROM}" => $contract->Tarf_Cont_From,
+            "{TAR_TO}" => $contract->Tarf_Cont_To,
+            "{TAR_SIGN}" => $contract->Tarf_Cont_Sign_Date,
+            "{TAR_PAYMENT}" => $contract->getPayment(),
+            "{TAR_PORTION}" => $contract->Tarf_Cont_Portion,
+            "{TAR_ROY_COMMENT}" => $contract->Tarf_Cont_Comment,
+            "{CONTRACT_DURATION}" => $this->getContractDuration($contract->Tarf_Cont_Pay_Id, $this->Inv_Date, $contract->Tarf_Cont_To),
+        );
+        $message = $mail->getMessage($temp_id, $trans_array, 2);
+        $subject = $mail->getSubject($temp_id, $trans_array);
+        $mail->send($contract->tarfContUser->User_Cust_Email, $subject, $message);
+        //End
+        return parent::afterSave();
+    }
+
+    public static function getContractDuration($id, $date1, $date2) {
+        $diff = Myclass::getDatediff($date1, $date2);
+        $duration = '';
+        switch ($id) {
+            case 1:
+                $duration = $diff['years']. 'Years';
+                break;
+            case 2:
+                $duration = ceil($diff['months']/6).' months';
+                break;
+            case 3:
+                $duration = ceil($diff['months']/4).' months';
+                break;
+            case 4:
+                $duration = $diff['months'].' months';
+                break;
+            case 5:
+                $duration = $diff['weeks'].' weeks';
+                break;
+        }
+        return $duration;
     }
 }

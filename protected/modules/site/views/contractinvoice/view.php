@@ -61,10 +61,18 @@ $this->breadcrumbs = array(
             'Inv_Invoice',
             'Inv_Amount',
             array(
-                'name' => 'Inv_Repeat_Id',
-                'value' => $model->getRepeat()
+                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'),
+                'value' => $model->tarfCont->getPayment()
             ),
-            'Inv_Repeat_Count',
+            array(
+                'name' => 'Contract Duration',
+                'value' => ContractInvoice::getContractDuration($model->tarfCont->Tarf_Cont_Pay_Id, $model->Inv_Date, $model->tarfCont->Tarf_Cont_To)
+            ),
+//            array(
+//                'name' => 'Inv_Repeat_Id',
+//                'value' => $model->getRepeat()
+//            ),
+//            'Inv_Repeat_Count',
             'Inv_Next_Date',
             array(
                 'name' => 'Created_By',

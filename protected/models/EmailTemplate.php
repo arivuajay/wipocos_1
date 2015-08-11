@@ -35,10 +35,9 @@ class EmailTemplate extends CActiveRecord {
             array('Email_Temp_Name, Email_Temp_Subject, Email_Temp_Content', 'required'),
             array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Email_Temp_Name, Email_Temp_Subject', 'length', 'max' => 100),
-            array('Email_Temp_From, Email_Temp_ReplyTo', 'length', 'max' => 50),
+            array('Email_Temp_From, Email_Temp_ReplyTo, Email_Temp_Username', 'length', 'max' => 50),
             array('Email_Temp_ReplyTo', 'email'),
-            array('Email_Temp_Params', 'length', 'max' => 255),
-            array('Email_Temp_Content, Created_Date, Rowversion', 'safe'),
+            array('Email_Temp_Content, Created_Date, Rowversion, Email_Temp_Username', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Email_Temp_Id, Email_Temp_Name, Email_Temp_From, Email_Temp_ReplyTo, Email_Temp_Subject, Email_Temp_Content, Email_Temp_Params, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -61,12 +60,13 @@ class EmailTemplate extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'Email_Temp_Id' => 'Email Temp',
-            'Email_Temp_Name' => 'Name',
-            'Email_Temp_From' => 'From',
+            'Email_Temp_Name' => 'Template Name',
+            'Email_Temp_From' => 'From Email',
             'Email_Temp_ReplyTo' => 'Reply To',
             'Email_Temp_Subject' => 'Subject',
             'Email_Temp_Content' => 'Content',
             'Email_Temp_Params' => 'Params',
+            'Email_Temp_Username' => 'From Name',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',

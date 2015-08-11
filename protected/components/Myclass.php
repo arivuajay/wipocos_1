@@ -670,27 +670,4 @@ class Myclass extends CController {
             'years' => $years,
         );
     }
-
-    public static function getContractDuration($id, $date1, $date2) {
-        $diff = Myclass::getDatediff($date1, $date2);
-        $duration = '';
-        switch ($id) {
-            case 1:
-                $duration = $diff['years']. 'Years';
-                break;
-            case 2:
-                $duration = ceil($diff['months']/6).' months';
-                break;
-            case 3:
-                $duration = ceil($diff['months']/4).' months';
-                break;
-            case 4:
-                $duration = $diff['months'].' months';
-                break;
-            case 5:
-                $duration = $diff['weeks'].' weeks';
-                break;
-        }
-        return $duration;
-    }
 }

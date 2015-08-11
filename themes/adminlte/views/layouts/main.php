@@ -33,20 +33,5 @@
         $cs->registerScriptFile($themeUrl . '/js/app.js', $cs_pos_end);
 //        $cs->registerScriptFile($this . '/js/app.js', $cs_pos_end);
         ?>
-        <script src="<?php echo Yii::app()->baseUrl . '/ckeditor/ckeditor.js'; ?>"></script>
-        <script type="text/javascript">
-//            CKEDITOR.editorConfig = function (config)
-//            {
-//                // Define changes to default configuration here. For example:
-//                // config.language = 'fr';
-//                // config.uiColor = '#AADC6E';
-//                config.enterMode = CKEDITOR.ENTER_DIV;
-//            };
-//            CKEDITOR.replace('ckeditor');
-//            CKEDITOR.replace('ckeditor',
-//                    {
-//                        enterMode: CKEDITOR.ENTER_DIV,
-//                    });
-        </script>
     </body>
 </html>

@@ -49,13 +49,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->error($searchModel, 'Email_Temp_From'); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+<!--                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Email_Temp_ReplyTo', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Email_Temp_ReplyTo', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
                             <?php echo $form->error($searchModel, 'Email_Temp_ReplyTo'); ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Email_Temp_Subject', array('class' => ' control-label')); ?>
@@ -99,9 +99,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             $gridColumns = array(
                 'Email_Temp_Name',
                 'Email_Temp_From',
-                'Email_Temp_ReplyTo',
+//                'Email_Temp_ReplyTo',
                 'Email_Temp_Subject',
-                'Email_Temp_Content',
+//                'Email_Temp_Content',
 //                'Email_Temp_Params',
                 array(
                     'header' => 'Actions',
@@ -153,9 +153,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         $gridColumns = array(
             'Email_Temp_Name',
             'Email_Temp_From',
-            'Email_Temp_ReplyTo',
+//            'Email_Temp_ReplyTo',
             'Email_Temp_Subject',
-            'Email_Temp_Content',
+//            array(
+//                'name' => 'Email_Temp_Content',
+//                'value' => function ($data){
+////                    echo CHtml::encode($data->Email_Temp_Content);
+//                }
+//            ),
 //            'Email_Temp_Params',
             array(
                 'header' => 'Actions',

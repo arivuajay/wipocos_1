@@ -87,22 +87,6 @@ class ContractinvoiceController extends Controller {
         if (isset($_POST['ContractInvoice'])) {
             $new_model->attributes = $_POST['ContractInvoice'];
             if ($new_model->save()) {
-//                $society_name = '';
-//                $soceity = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
-//                if (!empty($soceity))
-//                    $society_name = $soceity->socOrg->Org_Abbrevation;
-//                $mail = new Sendmail;
-//                $trans_array = array(
-//                    "{CURRENT_MONTH}" => date('M'),
-//                    "{INVOICE_NO}" => $new_model->Inv_Invoice,
-//                    "{SOCIETY_NAME}" => $society_name,
-//                    "{CUSTOMER_NAME}" => $new_model->tarfCont->tarfContUser->User_Cust_Name,
-//                    "{INVOICE_AMOUNT}" => $new_model->Inv_Amount,
-//                );
-//                $message = $mail->getMessage(1, $trans_array);
-//                $Subject = $mail->getSubject(1, $trans_array);
-//                $mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message);
-//                exit;
                 Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');
                 $this->redirect(array('/site/contractinvoice/update', 'id' => $new_model->Inv_Id));
