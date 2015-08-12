@@ -343,9 +343,9 @@ class DefaultController extends Controller {
                         'Inv_Invoice' => Myclass::generateInvoiceno(),
                         'Inv_Date' => $checking_date,
                         'Tarf_Cont_Id' => $invoice->Tarf_Cont_Id,
-                        'Inv_Repeat_Id' => $invoice->Inv_Repeat_Id,
-                        'Inv_Repeat_Count' => $invoice->Inv_Repeat_Count - 1,
-                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($invoice->Inv_Repeat_Id, $checking_date),
+//                        'Inv_Repeat_Id' => $invoice->Inv_Repeat_Id,
+//                        'Inv_Repeat_Count' => $invoice->Inv_Repeat_Count - 1,
+                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($invoice->tarfCont->Tarf_Cont_Pay_Id, $checking_date),
                         'Inv_Amount' => $invoice->Inv_Amount,
                     );
                     $invoice_model->attributes = $new_invoice;

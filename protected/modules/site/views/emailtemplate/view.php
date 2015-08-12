@@ -45,7 +45,7 @@ $this->breadcrumbs = array(
     <?php }
     ?>
     <?php if ($export) { ?>
-        <h3 class="text-center">EmailTemplate <?php echo $this->title ?></h3>
+        <h3 class="text-center"><?php echo $this->title ?></h3>
         <?php
     }
     ?>

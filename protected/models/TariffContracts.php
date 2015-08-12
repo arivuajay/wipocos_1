@@ -39,6 +39,7 @@
 class TariffContracts extends RActiveRecord {
 
     const INVOICE_PAD = 7;
+    const DEAFULT_PAY_FREQ = 4;
 
     public function init() {
         parent::init();
@@ -47,6 +48,7 @@ class TariffContracts extends RActiveRecord {
             $this->Tarf_Cont_City_Id = DEFAULT_REGION_ID;
             $this->Tarf_Cont_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::TARIFF_CONTRACT_CODE))->Fullcode;
             $this->Tarf_Invoice = Myclass::getTarifInvoice();
+            $this->Tarf_Cont_Pay_Id = self::DEAFULT_PAY_FREQ;
         }
     }
 

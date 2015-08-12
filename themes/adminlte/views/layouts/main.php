@@ -30,6 +30,7 @@
         $cs->registerScriptFile($themeUrl . '/lib/bs3/js/bootstrap.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/dropdown.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/iCheck/icheck.js', $cs_pos_end);
+        $cs->registerScriptFile($themeUrl . '/js/zeroclipboard/dist/ZeroClipboard.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/app.js', $cs_pos_end);
 //        $cs->registerScriptFile($this . '/js/app.js', $cs_pos_end);
         ?>

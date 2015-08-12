@@ -219,6 +219,13 @@ class ContractInvoice extends RActiveRecord {
                 $this->Inv_Amount = $contract->Tarf_Cont_Amt_Pay;
             else
                 $this->Inv_Amount = 0;
+            $this->Inv_Repeat_Id = $this->tarfCont->Tarf_Cont_Pay_Id;
+            $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
+            if(empty($inv_model)){
+                $this->Inv_Repeat_Count = self::getContractDuration($this->tarfCont->Tarf_Cont_Pay_Id, $this->Inv_Date, $this->tarfCont->Tarf_Cont_To, false);
+            }else{
+                $this->Inv_Repeat_Count = $inv_model[0]->Inv_Repeat_Count - 1;
+            }
         }
         return parent::beforeSave();
     }
@@ -273,26 +280,33 @@ class ContractInvoice extends RActiveRecord {
         return parent::afterSave();
     }
 
-    public static function getContractDuration($id, $date1, $date2) {
+    public static function getContractDuration($id, $date1, $date2, $is_suffix = true) {
         $diff = Myclass::getDatediff($date1, $date2);
         $duration = '';
         switch ($id) {
             case 1:
-                $duration = $diff['years']. 'Years';
+                $duration = $diff['years'];
+                $suffix = ' Years';
                 break;
             case 2:
-                $duration = ceil($diff['months']/6).' months';
+                $duration = ceil($diff['months']/6);
+                $suffix = ' Months';
                 break;
             case 3:
-                $duration = ceil($diff['months']/4).' months';
+                $duration = ceil($diff['months']/4);
+                $suffix = ' Months';
                 break;
             case 4:
-                $duration = $diff['months'].' months';
+                $duration = $diff['months'];
+                $suffix = ' Months';
                 break;
             case 5:
-                $duration = $diff['weeks'].' weeks';
+                $duration = $diff['weeks'];
+                $suffix = ' Weeks';
                 break;
         }
+        if($is_suffix == TRUE)
+            $duration = $duration.$suffix;
         return $duration;
     }
 }
