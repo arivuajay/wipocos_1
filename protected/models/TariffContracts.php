@@ -199,14 +199,17 @@ class TariffContracts extends RActiveRecord {
         ));
     }
 
-    public function getPayment($key = NULL) {
-        $payments = array(
+    public static function getPaymentlist() {
+        return array(
             '1' => 'Annual',
             '2' => 'Biannual',
             '3' => 'Quarterly',
             '4' => 'Monthly',
             '5' => 'Weekly',
         );
+    }
+    public function getPayment($key = NULL) {
+        $payments = $this->getPaymentlist();
         if (isset($this->Tarf_Cont_Pay_Id))
             $key = $this->Tarf_Cont_Pay_Id;
         if ($key != NULL)

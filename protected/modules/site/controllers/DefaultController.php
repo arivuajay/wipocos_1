@@ -333,8 +333,8 @@ class DefaultController extends Controller {
             foreach ($invoices as $key => $invoice) {
                 $checking_date = date('Y-m-d');
                 $check_next_invoice_exists = ContractInvoice::model()->find(array(
-                    'condition' => "Tarf_Cont_Id = :cont_id And Inv_Next_Date > :date And Inv_Repeat_Count != 0",
-                    'params' => array('cont_id' => $invoice->Tarf_Cont_Id, 'date' => $checking_date)
+                    'condition' => "Tarf_Cont_Id = :cont_id And Inv_Next_Date > :date And Inv_Repeat_Count != :count And Inv_Created_Mode = :mode",
+                    'params' => array('cont_id' => $invoice->Tarf_Cont_Id, 'date' => $checking_date, 'count' => 0, 'mode' => 'C')
                 ));
 
                 if (empty($check_next_invoice_exists)) {
@@ -347,6 +347,7 @@ class DefaultController extends Controller {
 //                        'Inv_Repeat_Count' => $invoice->Inv_Repeat_Count - 1,
                         'Inv_Next_Date' => ContractInvoice::model()->getNextdate($invoice->tarfCont->Tarf_Cont_Pay_Id, $checking_date),
                         'Inv_Amount' => $invoice->Inv_Amount,
+                        'Inv_Created_Type' => 'A',
                     );
                     $invoice_model->attributes = $new_invoice;
                     $invoice_model->save(false);

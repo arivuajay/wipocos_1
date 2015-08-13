@@ -173,7 +173,17 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             'url' => array('/site/contractinvoice/create'),
             'buttonType' => 'link',
             'context' => 'success',
-            'htmlOptions' => array('class' => 'pull-right'),
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+                )
+        );
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Create Backdated Invoice',
+            'icon' => 'fa fa-plus',
+            'url' => array('/site/contractinvoice/backdated'),
+            'buttonType' => 'link',
+            'context' => 'success',
+            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
                 )
         );
         ?>

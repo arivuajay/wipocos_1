@@ -35,7 +35,7 @@ class ContractinvoiceController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchcontract', 'getinvoice', 'invoice'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchcontract', 'getinvoice', 'invoice', 'backdated'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -74,7 +74,7 @@ class ContractinvoiceController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($id = NULL) {
-        $new_model = new ContractInvoice;
+        $new_model = new ContractInvoice('current');
         $cont_model = array();
 
         if ($id != NULL) {
@@ -96,13 +96,36 @@ class ContractinvoiceController extends Controller {
         $this->render('create', compact('cont_model', 'new_model'));
     }
 
+    public function actionBackdated($id = NULL) {
+        $new_model = new ContractInvoice('backdated');
+        $cont_model = array();
+
+        if ($id != NULL) {
+            $cont_model = TariffContracts::model()->findByPk($id);
+        }
+
+        // Uncomment the following line if AJAX validation is needed
+        $this->performAjaxValidation($new_model);
+
+        if (isset($_POST['ContractInvoice'])) {
+            $new_model->attributes = $_POST['ContractInvoice'];
+            if ($new_model->save()) {
+                Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
+                Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');
+                $this->redirect(array('/site/contractinvoice/backdated', 'id' => $new_model->Tarf_Cont_Id));
+            }
+        }
+
+        $this->render('backdated', compact('cont_model', 'new_model'));
+    }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $new_model = new ContractInvoice;
+        $new_model = new ContractInvoice('current');
         $model = $this->loadModel($id);
         $cont_model = array();
 
