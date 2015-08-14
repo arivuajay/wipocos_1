@@ -46,7 +46,7 @@ class CustomerUser extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('User_Cust_GUID, User_Cust_Place_Id, User_Cust_Code, User_Cust_Name, User_Cust_Email', 'required'),
+            array('User_Cust_GUID, User_Cust_Place_Id, User_Cust_Code, User_Cust_Name, User_Cust_Email, User_Cust_Address', 'required'),
             array('User_Cust_Place_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('User_Cust_GUID', 'length', 'max' => 40),
             array('User_Cust_Code', 'length', 'max' => 50),

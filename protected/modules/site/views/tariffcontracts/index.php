@@ -2,9 +2,9 @@
 /* @var $this TariffcontractsController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Tariff / Contract';
+$this->title = 'Contract';
 $this->breadcrumbs = array(
-    'Tariff / Contract',
+    'Contract',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -209,6 +209,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         echo $data->tarfContInsp->Insp_Name;
                     }
                 ),
+              'Tarf_Cont_From',
+              'Tarf_Cont_To',
                 /*
                   'Tarf_Cont_Insp_Id',
                   'Tarf_Cont_Balance',
@@ -265,7 +267,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
         $this->widget(
                 'application.components.MyTbButton', array(
-            'label' => 'Create Tariff / Contract',
+            'label' => 'Create Contract',
             'icon' => 'fa fa-plus',
             'url' => array('/site/tariffcontracts/create'),
             'buttonType' => 'link',
@@ -309,6 +311,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     echo $data->tarfContInsp->Insp_Name;
                 }
             ),
+              'Tarf_Cont_From',
+              'Tarf_Cont_To',
             /*
               'Tarf_Cont_Insp_Id',
               'Tarf_Cont_Balance',
@@ -345,7 +349,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Tariff / Contract</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Contract</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns,
                 )
         );

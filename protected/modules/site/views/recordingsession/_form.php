@@ -43,6 +43,7 @@ $destinations = Myclass::getMasterDestination();
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Sub Titles</a></li>
                 <!--<li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>-->
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
+                <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Attachment</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="tab_1">
@@ -214,6 +215,13 @@ $destinations = Myclass::getMasterDestination();
                     <?php
                     if ($folio_tab_validation) {
                         $this->renderPartial('_folio_form', array('model' => $folio_model, 'record_ses_model' => $model));
+                    }
+                    ?>
+                </div>
+                <div class="tab-pane" id="tab_7">
+                    <?php
+                    if ($other_tab_validation) {
+                        $this->renderPartial('_upload_document_form', array('model' => $upload_model, 'record_ses_model' => $model));
                     }
                     ?>
                 </div>

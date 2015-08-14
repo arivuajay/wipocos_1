@@ -56,7 +56,10 @@ class PerformerAccount extends RActiveRecord {
     public $oldRecord;
 
     public $internal_increament = true;
+    
     const PHOTO_SIZE = 1;
+    const MIN_AGE = 20; //in years
+    const MAX_AGE = 80; //in years
 
     public function init() {
         parent::init();
@@ -113,6 +116,8 @@ class PerformerAccount extends RActiveRecord {
             ),
             array('Perf_First_Name', 'UniqueAttributesValidator', 'with' => 'Perf_Sur_Name', "message" => "This User Name already Exists"),
             array('Perf_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+//            array('Perf_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MIN_AGE.' years')), 'operator' => '<', 'message' => '{attribute} must be lesser than "{compareValue}". Age must be minimum '.self::MIN_AGE.' years'),
+            array('Perf_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Acc_Id, Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_DOB, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Identity_Number, Perf_Marital_Status_Id, Perf_Spouse_Name, Perf_Gender, Perf_Non_Member, Active, Created_Date, Rowversion, expiry_date, hierarchy_level, record_search', 'safe', 'on' => 'search'),

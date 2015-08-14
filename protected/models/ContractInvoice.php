@@ -294,11 +294,11 @@ class ContractInvoice extends RActiveRecord {
                 $suffix = ' Years';
                 break;
             case 2:
-                $duration = ceil($diff['months'] / 6);
+                $duration = ($diff['months'] / 6) < 1 ? 0 : floor($diff['months'] / 6) + 1;
                 $suffix = ' Months';
                 break;
             case 3:
-                $duration = ceil($diff['months'] / 4);
+                $duration = ($diff['months'] / 4) < 1 ? 0 : floor($diff['months'] / 4) + 1 ;
                 $suffix = ' Months';
                 break;
             case 4:

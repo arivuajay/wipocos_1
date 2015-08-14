@@ -35,7 +35,7 @@ class TariffcontractsController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser', 'invoice', 'gettariff'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'searchuser', 'invoice', 'gettariff', 'getrecurr'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -189,6 +189,19 @@ class TariffcontractsController extends Controller {
             'standard_amout' => $model->Tarif_Amount
         );
         echo json_encode($return);
+        Yii::app()->end();
+    }
+    
+    public function actionGetrecurr() {
+        if(isset($_POST)){
+            $recurr = ContractInvoice::getContractDuration($_POST['payid'], $_POST['from'], $_POST['to'], false);
+            $recurr_amt = 0;
+            if($recurr > 0){
+                $recurr_amt = round($_POST['amount'] / $recurr, 2);
+            }
+            echo $recurr_amt;
+            return $recurr_amt;
+        }
         Yii::app()->end();
     }
     

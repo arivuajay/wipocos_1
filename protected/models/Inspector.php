@@ -26,6 +26,9 @@
  */
 class Inspector extends RActiveRecord {
     
+    const MIN_AGE = 20; //in years
+    const MAX_AGE = 80; //in years
+
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -50,10 +53,13 @@ class Inspector extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Insp_Internal_Code, Insp_GUID, Insp_Name', 'required'),
+            array('Insp_Internal_Code, Insp_GUID, Insp_Name, Insp_Date, Insp_DOB', 'required'),
             array('Insp_Nationality_Id, Insp_Region_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Insp_Internal_Code, Insp_Identity_Number', 'length', 'max' => 50),
             array('Insp_GUID', 'length', 'max' => 40),
+            array('Insp_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MIN_AGE.' years')), 'operator' => '<', 'message' => '{attribute} must be lesser than "{compareValue}". Age must be minimum '.self::MIN_AGE.' years'),
+            array('Insp_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
+            array('Insp_Date', 'compare', 'compareValue' => date("Y-m-d"), 'operator' => '<'),
             array('Insp_Name, Insp_Occupation, Insp_Birth_Place', 'length', 'max' => 100),
             array('Insp_DOB, Insp_Date, Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
@@ -90,7 +96,7 @@ class Inspector extends RActiveRecord {
             'Insp_Nationality_Id' => 'Nationality',
             'Insp_Birth_Place' => 'Place of birth',
             'Insp_Identity_Number' => 'Identity Number',
-            'Insp_Date' => 'Date',
+            'Insp_Date' => 'Date of Joining',
             'Insp_Region_Id' => 'Region',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

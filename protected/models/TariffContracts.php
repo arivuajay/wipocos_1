@@ -23,6 +23,7 @@
  * @property integer $Tarf_Cont_Event_Id
  * @property string $Tarf_Cont_Event_Date
  * @property string $Tarf_Cont_Event_Comment
+ * @property string $Tarf_Recurring_Amount
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -40,6 +41,7 @@ class TariffContracts extends RActiveRecord {
 
     const INVOICE_PAD = 7;
     const DEAFULT_PAY_FREQ = 4;
+    const EXPIRY_WARNING_MONTH = 0;
 
     public function init() {
         parent::init();
@@ -52,6 +54,14 @@ class TariffContracts extends RActiveRecord {
         }
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $expiry_date = date('Y-m-d', strtotime("+".self::EXPIRY_WARNING_MONTH." months"));
+        return array(
+            'expiry' => array('condition' => "$alias.Tarf_Cont_To <= '{$expiry_date}'"),
+        );
+    }
+    
     /**
      * @return string the associated database table name
      */
@@ -66,16 +76,17 @@ class TariffContracts extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id', 'required'),
+            array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Recurring_Amount', 'required'),
             array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
             array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
-            array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion', 'numerical', 'integerOnly' => false),
+            array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion, Tarf_Recurring_Amount', 'numerical', 'integerOnly' => false),
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
-            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice', 'safe'),
+            array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>', 'compareValue'=> 0),
+            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -115,7 +126,7 @@ class TariffContracts extends RActiveRecord {
             'Tarf_Cont_Tariff_Id' => 'Tariff code',
             'Tarf_Cont_Insp_Id' => 'Inspector',
             'Tarf_Cont_Balance' => 'Balance',
-            'Tarf_Cont_Amt_Pay' => 'Amount to pay',
+            'Tarf_Cont_Amt_Pay' => 'Total Amount',
             'Tarf_Cont_From' => 'Contract Start',
             'Tarf_Cont_To' => 'Contract End',
             'Tarf_Cont_Sign_Date' => 'Date of signature',
@@ -125,6 +136,7 @@ class TariffContracts extends RActiveRecord {
             'Tarf_Cont_Event_Id' => 'Type',
             'Tarf_Cont_Event_Date' => 'Date',
             'Tarf_Cont_Event_Comment' => 'Comment',
+            'Tarf_Recurring_Amount' => 'Recurring Payment',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',

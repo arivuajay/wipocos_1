@@ -2,9 +2,9 @@
 /* @var $this TariffcontractsController */
 /* @var $model TariffContracts */
 
-$this->title = 'View Tariff / Contract: ' . $model->tarfContUser->User_Cust_Name;
+$this->title = 'View Contract: ' . $model->tarfContUser->User_Cust_Name;
 $this->breadcrumbs = array(
-    'Tariff / Contract' => array('index'),
+    'Contract' => array('index'),
     'View ' . 'TariffContracts',
 );
 ?>
@@ -45,7 +45,7 @@ $this->breadcrumbs = array(
     <?php }
     ?>
     <?php if ($export) { ?>
-        <h3 class="text-center">Tariff / Contract <?php echo $this->title ?></h3>
+        <h3 class="text-center">Contract <?php echo $this->title ?></h3>
         <?php
     }
     ?>

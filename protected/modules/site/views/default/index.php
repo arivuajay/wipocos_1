@@ -166,19 +166,27 @@ $this->breadcrumbs = array(
                 <?php 
                 $publisher_expiry_count = WorkPublishing::model()->expiry()->count();
                 $sub_publisher_expiry_count = WorkSubPublishing::model()->expiry()->count();
+                $customers_contract_count = TariffContracts::model()->expiry()->count();
                 ?>
                 <ul class="todo-list">
                     <li>
                         <?php 
                         $text = '<span class="text">No. of Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$publisher_expiry_count.'</small>';
-                        echo CHtml::link($text, array('/site/work/contractexpiry'), array());
+                        echo MyHtml::link($text, array('/site/work/contractexpiry'), array());
                         ?>
                         <!--<small class="label label-danger"><i class="fa fa-clock-o"></i> 20 mins</small>-->
                     </li>
                     <li>
                         <?php 
                         $text = '<span class="text">No. of Sub-Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$sub_publisher_expiry_count.'</small>';
-                        echo CHtml::link($text, array('/site/work/contractexpiry'), array());
+                        echo MyHtml::link($text, array('/site/work/contractexpiry'), array());
+                        ?>
+                        
+                    </li>
+                    <li>
+                        <?php 
+                        $text = '<span class="text">No. of Customers & Users contract expiry: </span>&nbsp;<small class="badge bg-red">'.$customers_contract_count.'</small>';
+                        echo MyHtml::link($text, array('/site/tariffcontracts/index'), array());
                         ?>
                         
                     </li>

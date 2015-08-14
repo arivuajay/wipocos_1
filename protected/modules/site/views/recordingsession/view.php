@@ -381,6 +381,61 @@ $this->breadcrumbs = array(
     </div>
 </div>
 
+<div class="row">
+    <div class="user-view col-lg-12">
+        <h4 class="box-title">Attachments</h4>
+        <?php
+        $uploaded_files = RecordingSessionUpload::model()->findAll('Rcd_Ses_Id = :acc_id', array(':acc_id' => $model->Rcd_Ses_Id));
+        if (!empty($uploaded_files)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>Document Name</th>
+                            <th>Created By</th>
+                            <th>Created Date</th>
+                            <th>Updated By</th>
+                            <th>Updated Date</th>
+                            <?php if ($export == false) { ?>
+                                <th>Action</th>
+                            <?php } ?>
+                        </tr>
+                        <?php foreach ($uploaded_files as $key => $uploaded_file) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $uploaded_file->Rcd_Ses_Upl_Doc_Name ?></td>
+                                <td><?php echo $uploaded_file->createdBy->name ?></td>
+                                <td><?php echo $uploaded_file->Created_Date ?></td>
+                                <td><?php echo $uploaded_file->updatedBy->name ?></td>
+                                <td><?php echo $uploaded_file->Rowversion ?></td>
+                                <?php if ($export == false) { ?>
+                                    <td>
+                                        <?php
+                                        $file_path = $uploaded_file->getFilePath();
+                                        echo CHtml::link('<i class="fa fa-download"></i>', array('/site/recordingsession/download', 'df' => Myclass::refencryption($file_path)), array('title' => 'Download'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo MyHtml::link('<i class="fa fa-eye"></i>', $file_path, array('target' => '_blank', 'title' => 'View'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/recordingsession/update' , 'id' => $model->Rcd_Ses_Id , 'tab' => 7 ,'fileedit' => $uploaded_file->Rcd_Ses_Upl_Id), array('title' => 'Edit'));
+                                        echo "&nbsp;&nbsp;";
+                                        echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/recordingsession/filedelete' , 'id' => $uploaded_file->Rcd_Ses_Upl_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                        ?>
+                                    </td>
+                                <?php } ?>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+    </div>
+</div>
 
 
 

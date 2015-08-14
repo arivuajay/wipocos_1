@@ -1,7 +1,7 @@
 <?php 
 $this->title = 'View Invoice: ' . $model->Tarf_Invoice;
 $this->breadcrumbs = array(
-    'Tariff / Contract' => array('index'),
+    'Contract' => array('index'),
     'View Invoice',
 );
 ?>

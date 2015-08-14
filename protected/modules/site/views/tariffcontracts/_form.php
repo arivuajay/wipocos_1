@@ -55,6 +55,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         'enableAjaxValidation' => true,
     ));
     echo $form->hiddenField($model, 'Tarf_Cont_User_Id');
+    echo $form->hiddenField($model, 'Tarf_Recurring_Amount', array('class' => 'recurr_amt'));
     $cities = Myclass::getMasterCity();
     $tariffs = Myclass::getMasterTariff();
     $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
@@ -182,19 +183,19 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <div class="col-lg-12">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_Amt_Pay', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Tarf_Cont_Amt_Pay', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->textField($model, 'Tarf_Cont_Amt_Pay', array('class' => 'form-control recurr', 'size' => 10, 'maxlength' => 10)); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_Amt_Pay'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_From', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Tarf_Cont_From', array('class' => 'form-control date')); ?>
+                            <?php echo $form->textField($model, 'Tarf_Cont_From', array('class' => 'form-control cont_dates')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_From'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_To', array('class' => '')); ?>
-                            <?php echo $form->textField($model, 'Tarf_Cont_To', array('class' => 'form-control date')); ?>
+                            <?php echo $form->textField($model, 'Tarf_Cont_To', array('class' => 'form-control cont_dates')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_To'); ?>
                         </div>
 
@@ -206,8 +207,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Tarf_Cont_Pay_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Pay_Id', $payments, array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($model, 'Tarf_Cont_Pay_Id', $payments, array('class' => 'form-control recurr')); ?>
                             <?php echo $form->error($model, 'Tarf_Cont_Pay_Id'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Tarf_Recurring_Amount', array('class' => '')); ?>
+                            <?php echo CHtml::textField('Tarf_Recurring_Amount', $model->Tarf_Recurring_Amount, array('class' => 'form-control recurr_amt', 'readonly' => true)); ?>
+                            <?php echo $form->error($model, 'Tarf_Recurring_Amount'); ?>
                         </div>
 
                         <div class="form-group hide">
@@ -280,9 +287,16 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/tariffcontracts/searchuser");
 $get_tariff = Yii::app()->createAbsoluteUrl("site/tariffcontracts/gettariff");
+$get_recurr = Yii::app()->createAbsoluteUrl("site/tariffcontracts/getrecurr");
 $js = <<< EOD
     $(document).ready(function(){
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        $('.cont_dates').datepicker({ 
+            format: 'yyyy-mm-dd'
+        }).on('changeDate', function(e){
+            getRecurr();
+        });
+        
         $('#search_button').on("click", function(){
             var data=$("#search-form").serialize();
             $.ajax({
@@ -315,6 +329,7 @@ $js = <<< EOD
                 success:function(data){
                     var data = jQuery.parseJSON(data);
                     $('#TariffContracts_Tarf_Cont_Amt_Pay').val(data.standard_amout);
+                    getRecurr();
                },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -322,7 +337,33 @@ $js = <<< EOD
                 dataType:'html'
             });
         });
+        
+        $('.recurr').on("change", function(){
+            getRecurr();
+        });
     });
+        
+    function getRecurr(){
+        amount = $('#TariffContracts_Tarf_Cont_Amt_Pay').val();
+        from = $('#TariffContracts_Tarf_Cont_From').val();
+        to = $('#TariffContracts_Tarf_Cont_To').val();
+        payid = $('#TariffContracts_Tarf_Cont_Pay_Id').val();
+        
+        if(amount != '' && from != '' && to != '' && payid != ''){
+            $.ajax({
+                type: "POST",
+                url: '$get_recurr',
+                data:{'amount': amount, 'from': from, 'to': to, 'payid': payid},
+                success:function(amt){
+                    console.log(amt);
+                    $('.recurr_amt').val(amt);
+                },
+                error: function(data) {
+                    alert("Something went wrong. Try again");
+                },
+            });
+        }
+    }
    
 EOD;
 
