@@ -87,6 +87,9 @@ class ContractinvoiceController extends Controller {
         if (isset($_POST['ContractInvoice'])) {
             $new_model->attributes = $_POST['ContractInvoice'];
             if ($new_model->save()) {
+                $cont_model = $new_model->tarfCont;
+                $cont_model->Tarf_Cont_Next_Inv_Date = $new_model->Inv_Next_Date;
+                $cont_model->save(false);
                 Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');
                 $this->redirect(array('/site/contractinvoice/update', 'id' => $new_model->Inv_Id));

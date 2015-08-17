@@ -136,19 +136,19 @@ class ContractInvoice extends RActiveRecord {
 
         $criteria = new CDbCriteria;
         $criteria->with = array('tarfCont');
-        $criteria->group = "t.Tarf_Cont_Id";
+//        $criteria->group = "t.Tarf_Cont_Id";
 
-//        $criteria->compare('Inv_Id', $this->Inv_Id);
-//        $criteria->compare('Inv_Date', $this->Inv_Date, true);
-//        $criteria->compare('Inv_Invoice', $this->Inv_Invoice, true);
+        $criteria->compare('Inv_Id', $this->Inv_Id);
+        $criteria->compare('Inv_Date', $this->Inv_Date, true);
+        $criteria->compare('Inv_Invoice', $this->Inv_Invoice, true);
         $criteria->compare('tarfCont.Tarf_Cont_Internal_Code', $this->Tarf_Cont_Id, true);
-//        $criteria->compare('Inv_Repeat_Id', $this->Inv_Repeat_Id);
-//        $criteria->compare('Inv_Repeat_Count', $this->Inv_Repeat_Count);
-//        $criteria->compare('Inv_Next_Date', $this->Inv_Next_Date, true);
-//        $criteria->compare('Created_Date', $this->Created_Date, true);
-//        $criteria->compare('Rowversion', $this->Rowversion, true);
-//        $criteria->compare('Created_By', $this->Created_By);
-//        $criteria->compare('Updated_By', $this->Updated_By);
+        $criteria->compare('Inv_Repeat_Id', $this->Inv_Repeat_Id);
+        $criteria->compare('Inv_Repeat_Count', $this->Inv_Repeat_Count);
+        $criteria->compare('Inv_Next_Date', $this->Inv_Next_Date, true);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('Created_By', $this->Created_By);
+        $criteria->compare('Updated_By', $this->Updated_By);
 
 
         return new CActiveDataProvider($this, array(
@@ -171,7 +171,7 @@ class ContractInvoice extends RActiveRecord {
 
     public function dataProvider() {
         $criteria = new CDbCriteria;
-        $criteria->group = "t.Tarf_Cont_Id";
+//        $criteria->group = "t.Tarf_Cont_Id";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -280,9 +280,9 @@ class ContractInvoice extends RActiveRecord {
                 "{TAR_ROY_COMMENT}" => $contract->Tarf_Cont_Comment,
                 "{CONTRACT_DURATION}" => $this->getContractDuration($contract->Tarf_Cont_Pay_Id, $this->Inv_Date, $contract->Tarf_Cont_To),
             );
-            $message = $mail->getMessage($temp_id, $trans_array, 2);
-            $subject = $mail->getSubject($temp_id, $trans_array);
-            $mail->send($contract->tarfContUser->User_Cust_Email, $subject, $message);
+//            $message = $mail->getMessage($temp_id, $trans_array, 2);
+//            $subject = $mail->getSubject($temp_id, $trans_array);
+//            $mail->send($contract->tarfContUser->User_Cust_Email, $subject, $message);
             //End
         }
         return parent::afterSave();

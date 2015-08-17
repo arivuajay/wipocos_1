@@ -179,7 +179,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     </div>
 
     <div class="col-lg-12 <?php echo !$update ? 'hide' : ''?>"  id="invoice_div">
-        <div class="box-body">
         <?php
         if($update){
             $cont_model = TariffContracts::model()->with('contractInvoices')->find(
@@ -192,7 +191,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             $this->renderPartial('invoices', array('model' => $cont_model)); 
         }
         ?>
-        </div>
     </div>
     
     <div class="col-lg-12 col-xs-12">

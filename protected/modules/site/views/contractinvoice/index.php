@@ -45,7 +45,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <?php echo $form->error($searchModel, 'Tarf_Cont_Id'); ?>
                         </div>
                     </div>
-<!--                    <div class="col-lg-3 col-md-3">
+                    <div class="col-lg-3 col-md-3">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Inv_Invoice', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Inv_Invoice', array('class' => 'form-control')); ?>
@@ -79,7 +79,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                             <?php echo $form->textField($searchModel, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
                             <?php echo $form->error($searchModel, 'Inv_Next_Date'); ?>
                         </div>
-                    </div>-->
+                    </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
                             <label>&nbsp;</label>
@@ -105,20 +105,21 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     echo $data->tarfCont->Tarf_Cont_Internal_Code;
                 }
             ),
-//            'Inv_Invoice',
-//            'Inv_Date',
+            'Inv_Invoice',
+            'Inv_Date',
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
                 'value' => function ($data) {
                     echo $data->tarfCont->tarfContUser->User_Cust_Name;
                 }
             ),
-            array(
-                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
-                'value' => function ($data) {
-                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
-                }
-            ),
+            'Inv_Amount',
+//            array(
+//                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
+//                'value' => function ($data) {
+//                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
+//                }
+//            ),
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'),
                 'value' => function ($data) {
@@ -183,7 +184,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             'url' => array('/site/contractinvoice/backdated'),
             'buttonType' => 'link',
             'context' => 'success',
-            'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
+            'htmlOptions' => array('class' => 'pull-right hide', 'style' => 'margin-left:10px;'),
                 )
         );
         ?>
@@ -200,20 +201,21 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     echo $data->tarfCont->Tarf_Cont_Internal_Code;
                 }
             ),
-//            'Inv_Invoice',
-//            'Inv_Date',
+            'Inv_Invoice',
+            'Inv_Date',
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
                 'value' => function ($data) {
                     echo $data->tarfCont->tarfContUser->User_Cust_Name;
                 }
             ),
-            array(
-                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
-                'value' => function ($data) {
-                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
-                }
-            ),
+            'Inv_Amount',
+//            array(
+//                'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Amt_Pay'),
+//                'value' => function ($data) {
+//                    echo $data->tarfCont->Tarf_Cont_Amt_Pay;
+//                }
+//            ),
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_Pay_Id'),
                 'value' => function ($data) {

@@ -327,13 +327,44 @@ class DefaultController extends Controller {
             }
         }
 
-        //Contract Invoice Auto generate
+        //Contract Auto generate
+        $checking_date = date('Y-m-d');
+        $contracts = TariffContracts::model()->findAllByAttributes(array('Tarf_Cont_To' => $checking_date, 'Tarf_Cont_Renewal' => 'Y'));
+        foreach ($contracts as $key => $contract) {
+            $cont_hist_model = New TariffContractsHistory;
+            $ignore_list = array('Tarf_Cont_GUID', 'Tarf_Cont_Internal_Code', 'Tarf_Invoice', 'Tarf_Cont_User_Id', 'Tarf_Cont_Id', 'Tarf_Cont_Renewal');
+            foreach ($contract->attributes as $attribute => $value) {
+                if (!in_array($attribute, $ignore_list)) {
+                    $attr_name = str_replace('Tarf_Cont', 'Tarf_Hist', $attribute);
+                    $cont_hist_model->$attr_name = $value;
+                }
+            }
+            $cont_hist_model->Tarf_Cont_Id = $contract->Tarf_Cont_Id;
+            if ($cont_hist_model->save(false)) {
+                $cont_model = TariffContracts::model()->findByPk($contract->Tarf_Cont_Id);
+//                $date1 = new DateTime($contract->Tarf_Cont_From);
+//                $date2 = new DateTime($contract->Tarf_Cont_To);
+//                $diff_days = $date2->diff($date1)->format("%a");
+                
+                $new_from_date = strtotime("+1 days", strtotime($contract->Tarf_Cont_To));
+                $new_to_date = strtotime("+1 year", strtotime($contract->Tarf_Cont_To));
+//                $new_to_date = strtotime("+$diff_days days", strtotime($contract->Tarf_Cont_To));
+                $cont_model->Tarf_Cont_From = date("Y-m-d", $new_from_date);
+                $cont_model->Tarf_Cont_To = date("Y-m-d", $new_to_date);
+                $cont_model->Tarf_Cont_Balance = $cont_model->Tarf_Cont_Amt_Pay;
+                
+                $cont_model->save(false);
+            }
+        }
+
+        //Invoice Auto generate
         if (ContractInvoice::AUTO_GENERATE) {
-            $checking_date = date('Y-m-d');
+            //condition **** Contract Event id is null and event date is null or date is greater than checking date ****
             $contracts = TariffContracts::model()->findAll(array(
                 'condition' => "Tarf_Cont_To >= :check_date And Tarf_Cont_Next_Inv_Date = :check_date And Tarf_Cont_Event_Id is NULL AND (Tarf_Cont_Event_Date IS NULL OR Tarf_Cont_Event_Date = '0000-00-00' OR Tarf_Cont_Event_Date >= :check_date)",
                 'params' => array('check_date' => $checking_date)
-                ));
+            ));
+            //condition end
             foreach ($contracts as $key => $contract) {
                 $check_next_invoice_exists = ContractInvoice::model()->find(array(
                     'condition' => "Tarf_Cont_Id = :cont_id And Inv_Next_Date > :date And Inv_Repeat_Count != :count And Inv_Created_Mode = :mode",
@@ -342,17 +373,28 @@ class DefaultController extends Controller {
 
                 if (empty($check_next_invoice_exists)) {
                     $invoice_model = New ContractInvoice;
+                    $nxt_inv_date = ContractInvoice::model()->getNextdate($contract->Tarf_Cont_Pay_Id, $checking_date);
                     $new_invoice = array(
                         'Inv_Date' => $checking_date,
                         'Tarf_Cont_Id' => $contract->Tarf_Cont_Id,
-                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($contract->Tarf_Cont_Pay_Id, $checking_date),
+                        'Inv_Next_Date' => $nxt_inv_date,
                         'Inv_Created_Type' => 'A',
                     );
+                    
                     $invoice_model->attributes = $new_invoice;
                     $invoice_model->save(false);
-                    
+
                     $contract_model = TariffContracts::model()->findByPk($contract->Tarf_Cont_Id);
-                    $contract_model->Tarf_Cont_Next_Inv_Date = ContractInvoice::model()->getNextdate($contract->Tarf_Cont_Pay_Id, $checking_date);
+                    if($contract->Tarf_Cont_Pay_Id != 6){
+                        $contract_model->Tarf_Cont_Next_Inv_Date = $nxt_inv_date;
+                    }else{
+                        $contract_model->Tarf_Cont_Next_Inv_Date = '';
+                    }
+                    $balance_amount = $contract_model->Tarf_Cont_Amt_Pay;
+                    foreach ($contract_model->contractInvoices as $invoice) {
+                        $balance_amount -= $invoice->Inv_Amount;
+                    }
+                    $contract_model->Tarf_Cont_Balance = $balance_amount;
                     $contract_model->save(false);
                 }
             }

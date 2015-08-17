@@ -196,11 +196,14 @@ class TariffcontractsController extends Controller {
         if(isset($_POST)){
             $recurr = ContractInvoice::getContractDuration($_POST['payid'], $_POST['from'], $_POST['to'], false);
             $recurr_amt = 0;
-            if($recurr > 0){
+            if($recurr > 0 && $_POST['payid'] != 6){
                 $recurr_amt = round($_POST['amount'] / $recurr, 2);
             }
-            echo $recurr_amt;
-            return $recurr_amt;
+            $nxt_date = ContractInvoice::getNextdate($_POST['payid'], $_POST['from']);
+            echo json_encode(array(
+                'recurr_amt' => $recurr_amt,
+                'nxt_date' => $nxt_date,
+            ));
         }
         Yii::app()->end();
     }
