@@ -24,6 +24,7 @@
  * @property string $Tarf_Cont_Event_Date
  * @property string $Tarf_Cont_Event_Comment
  * @property string $Tarf_Recurring_Amount
+ * @property string $Tarf_Cont_Next_Inv_Date
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -86,7 +87,7 @@ class TariffContracts extends RActiveRecord {
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>', 'compareValue'=> 0),
-            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount', 'safe'),
+            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -218,6 +219,7 @@ class TariffContracts extends RActiveRecord {
             '3' => 'Quarterly',
             '4' => 'Monthly',
             '5' => 'Weekly',
+            '6' => 'One of Payment',
         );
     }
     public function getPayment($key = NULL) {
@@ -233,6 +235,11 @@ class TariffContracts extends RActiveRecord {
         if($this->isNewRecord){
             $this->Tarf_Invoice = Myclass::getTarifInvoice();
         }
+        $invoices = ContractInvoice::model()->count(array('condition' => "Tarf_Cont_Id = :cont_id", 'params' => array('cont_id' => $this->Tarf_Cont_Id)));
+        if($invoices == 0){
+            $this->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From);
+        }
+        $this->Tarf_Cont_Due_Count = ContractInvoice::getContractDuration($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From, $this->Tarf_Cont_To);
         return parent::beforeSave();
     }
 

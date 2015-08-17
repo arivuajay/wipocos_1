@@ -329,28 +329,31 @@ class DefaultController extends Controller {
 
         //Contract Invoice Auto generate
         if (ContractInvoice::AUTO_GENERATE) {
-            $invoices = ContractInvoice::model()->findAllByAttributes(array('Inv_Next_Date' => date('Y-m-d')));
-            foreach ($invoices as $key => $invoice) {
-                $checking_date = date('Y-m-d');
+            $checking_date = date('Y-m-d');
+            $contracts = TariffContracts::model()->findAll(array(
+                'condition' => "Tarf_Cont_To >= :check_date And Tarf_Cont_Next_Inv_Date = :check_date And Tarf_Cont_Event_Id is NULL AND (Tarf_Cont_Event_Date IS NULL OR Tarf_Cont_Event_Date = '0000-00-00' OR Tarf_Cont_Event_Date >= :check_date)",
+                'params' => array('check_date' => $checking_date)
+                ));
+            foreach ($contracts as $key => $contract) {
                 $check_next_invoice_exists = ContractInvoice::model()->find(array(
                     'condition' => "Tarf_Cont_Id = :cont_id And Inv_Next_Date > :date And Inv_Repeat_Count != :count And Inv_Created_Mode = :mode",
-                    'params' => array('cont_id' => $invoice->Tarf_Cont_Id, 'date' => $checking_date, 'count' => 0, 'mode' => 'C')
+                    'params' => array('cont_id' => $contract->Tarf_Cont_Id, 'date' => $checking_date, 'count' => 0, 'mode' => 'C')
                 ));
 
                 if (empty($check_next_invoice_exists)) {
                     $invoice_model = New ContractInvoice;
                     $new_invoice = array(
-                        'Inv_Invoice' => Myclass::generateInvoiceno(),
                         'Inv_Date' => $checking_date,
-                        'Tarf_Cont_Id' => $invoice->Tarf_Cont_Id,
-//                        'Inv_Repeat_Id' => $invoice->Inv_Repeat_Id,
-//                        'Inv_Repeat_Count' => $invoice->Inv_Repeat_Count - 1,
-                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($invoice->tarfCont->Tarf_Cont_Pay_Id, $checking_date),
-                        'Inv_Amount' => $invoice->Inv_Amount,
+                        'Tarf_Cont_Id' => $contract->Tarf_Cont_Id,
+                        'Inv_Next_Date' => ContractInvoice::model()->getNextdate($contract->Tarf_Cont_Pay_Id, $checking_date),
                         'Inv_Created_Type' => 'A',
                     );
                     $invoice_model->attributes = $new_invoice;
                     $invoice_model->save(false);
+                    
+                    $contract_model = TariffContracts::model()->findByPk($contract->Tarf_Cont_Id);
+                    $contract_model->Tarf_Cont_Next_Inv_Date = ContractInvoice::model()->getNextdate($contract->Tarf_Cont_Pay_Id, $checking_date);
+                    $contract_model->save(false);
                 }
             }
         }

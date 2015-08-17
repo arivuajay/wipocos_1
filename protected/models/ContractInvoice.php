@@ -190,7 +190,7 @@ class ContractInvoice extends RActiveRecord {
         return $repeats;
     }
 
-    public function getNextdate($key, $date) {
+    public static function getNextdate($key, $date) {
         $repeats = TariffContracts::getPaymentlist();
         switch ($key) {
             case 1:
@@ -208,6 +208,9 @@ class ContractInvoice extends RActiveRecord {
             case 5:
                 $nextDate = date('Y-m-d', strtotime('+1 week', strtotime($date)));
                 break;
+            case 6:
+                $nextDate = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                break;
             default:
                 break;
         }
@@ -219,16 +222,16 @@ class ContractInvoice extends RActiveRecord {
             $this->Inv_Invoice = Myclass::generateInvoiceno();
             $contract = TariffContracts::model()->findByPk($this->Tarf_Cont_Id);
             if (!empty($contract))
-                $this->Inv_Amount = $contract->Tarf_Cont_Amt_Pay;
+                $this->Inv_Amount = $contract->Tarf_Recurring_Amount;
             else
                 $this->Inv_Amount = 0;
             $this->Inv_Repeat_Id = $this->tarfCont->Tarf_Cont_Pay_Id;
-            $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
-            if (empty($inv_model) && $this->Inv_Created_Mode == 'C') {
-                $this->Inv_Repeat_Count = self::getContractDuration($this->tarfCont->Tarf_Cont_Pay_Id, $this->Inv_Date, $this->tarfCont->Tarf_Cont_To, false);
-            } else {
-                $this->Inv_Repeat_Count = $this->Inv_Created_Mode == 'C' ? $inv_model[0]->Inv_Repeat_Count - 1 : 0;
-            }
+//            $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
+//            if (empty($inv_model) && $this->Inv_Created_Mode == 'C') {
+//                $this->Inv_Repeat_Count = self::getContractDuration($this->tarfCont->Tarf_Cont_Pay_Id, $this->Inv_Date, $this->tarfCont->Tarf_Cont_To, false);
+//            } else {
+//                $this->Inv_Repeat_Count = $this->Inv_Created_Mode == 'C' ? $inv_model[0]->Inv_Repeat_Count - 1 : 0;
+//            }
         }
         return parent::beforeSave();
     }
@@ -308,6 +311,10 @@ class ContractInvoice extends RActiveRecord {
             case 5:
                 $duration = $diff['weeks'];
                 $suffix = ' Weeks';
+                break;
+            case 6:
+                $duration = $diff['months'];
+                $suffix = ' Months';
                 break;
         }
         if ($is_suffix == TRUE)
