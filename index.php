@@ -13,6 +13,25 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 require_once($yii);
 $app = Yii::createWebApplication($config);
 
+$society = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
+if($society){
+    defined('DEFAULT_NATIONALITY_ID') || @define('DEFAULT_NATIONALITY_ID', $society->socOrg->Org_Nation_Id);
+    defined('DEFAULT_COUNTRY_ID') || @define('DEFAULT_COUNTRY_ID', $society->Society_Country_Id);
+    defined('DEFAULT_REGION_ID') || @define('DEFAULT_REGION_ID', $society->Society_Region_Id);
+    defined('DEFAULT_LANGUAGE_ID') || @define('DEFAULT_LANGUAGE_ID', $society->Society_Language_Id);
+    defined('DEFAULT_FACTOR_ID') || @define('DEFAULT_FACTOR_ID', $society->Society_Factor);
+    defined('DEFAULT_TERRITORY_ID') || @define('DEFAULT_TERRITORY_ID', $society->Society_Territory_Id);
+    defined('DEFAULT_TYPE_ID') || @define('DEFAULT_TYPE_ID', $society->Society_Type_Id);
+    defined('DEFAULT_DOCUMENT_TYPE_ID') || @define('DEFAULT_DOCUMENT_TYPE_ID', $society->Society_Doc_Id);
+    defined('DEFAULT_WORK_CATEGORY_ID') || @define('DEFAULT_WORK_CATEGORY_ID', $society->Soceity_Work_Cat_Id);
+    defined('DEFAULT_INTERNAL_POSITION_ID') || @define('DEFAULT_INTERNAL_POSITION_ID', $society->Soceity_Int_Pos_Id);
+    defined('DEFAULT_MANAGED_RIGHTS_ID') || @define('DEFAULT_MANAGED_RIGHTS_ID', $society->Soceity_Mnge_Rght_Id);
+    defined('DEFAULT_DOCUMENT_STATUS_ID') || @define('DEFAULT_DOCUMENT_STATUS_ID', $society->Soceity_Doc_Sts_Id);
+    defined('DEFAULT_RECORD_TYPE_ID') || @define('DEFAULT_RECORD_TYPE_ID', $society->Soceity_Rec_Type_Id);
+    defined('DEFAULT_MEDIUM_ID') || @define('DEFAULT_MEDIUM_ID', $society->Soceity_Medium_Id);
+    defined('DEFAULT_LEGAL_FORM_ID') || @define('DEFAULT_LEGAL_FORM_ID', $society->Soceity_Legal_Form_Id);
+}
+            
 defined('SITEURL') ||
     @define('SITEURL', Yii::app()->createAbsoluteUrl("/"));
 defined('SITENAME') ||

@@ -24,6 +24,8 @@ class WorkDocumentation extends RActiveRecord {
         parent::init();
         if($this->isNewRecord){
             $this->Work_Doc_Sign_Date = date('Y-m-d');
+            $this->Work_Doc_Status_Id = DEFAULT_DOCUMENT_STATUS_ID;
+            $this->Work_Doc_Type_Id = DEFAULT_DOCUMENT_TYPE_ID;
         }
     }
     /**

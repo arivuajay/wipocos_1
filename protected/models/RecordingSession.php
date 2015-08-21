@@ -44,6 +44,7 @@ class RecordingSession extends RActiveRecord {
             $this->Rcd_Ses_Type_Id = DEFAULT_TYPE_ID;
             $this->Rcd_Ses_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Rcd_Ses_Factor_Id = DEFAULT_FACTOR_ID;
+            $this->Rcd_Ses_Medium_Id = DEFAULT_MEDIUM_ID;
         }
     }
     /**

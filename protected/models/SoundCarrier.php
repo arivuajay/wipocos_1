@@ -50,6 +50,7 @@ class SoundCarrier extends RActiveRecord {
             $this->Sound_Car_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Sound_Car_Type_Id = DEFAULT_TYPE_ID;
             $this->Sound_Car_Product_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Sound_Car_Medium = DEFAULT_MEDIUM_ID;
         }
     }
 

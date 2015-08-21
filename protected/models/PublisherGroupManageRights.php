@@ -42,7 +42,11 @@ class PublisherGroupManageRights extends RActiveRecord {
         parent::init();
         if($this->isNewRecord){
             $this->Pub_Group_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
-            $this->Pub_Group_Mnge_Territories_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID;
+            $this->Pub_Group_Mnge_Territories_Id = DEFAULT_TERRITORY_ID;
+            $this->Pub_Group_Mnge_Region_Id = DEFAULT_REGION_ID;
+            $this->Pub_Group_Mnge_Avl_Work_Cat_Id = DEFAULT_WORK_CATEGORY_ID;
+            $this->Pub_Group_Mnge_Internal_Position_Id = DEFAULT_INTERNAL_POSITION_ID;
+            $this->Pub_Group_Mnge_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
 

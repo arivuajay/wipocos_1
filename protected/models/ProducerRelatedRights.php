@@ -40,7 +40,11 @@ class ProducerRelatedRights extends RActiveRecord {
         if($this->isNewRecord){
             $this->Pro_Rel_Type_Rght_Id = DEFAULT_PRODUCER_RIGHT_HOLDER_ID;
             $this->Pro_Rel_Society_Id = DEFAULT_SOCIETY_ID;
-            $this->Pro_Rel_Territories_Id = DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID;
+            $this->Pro_Rel_Territories_Id = DEFAULT_TERRITORY_ID;
+            $this->Pro_Rel_Region_Id = DEFAULT_REGION_ID;
+            $this->Pro_Rel_Avl_Work_Cat_Id = DEFAULT_WORK_CATEGORY_ID;
+            $this->Pro_Rel_Internal_Position_Id = DEFAULT_INTERNAL_POSITION_ID;
+            $this->Pro_Rel_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
     /**

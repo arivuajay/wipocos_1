@@ -42,6 +42,7 @@ class Group extends RActiveRecord {
             $this->Group_GUID = Myclass::guid(false);
             $this->Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Group_Language_Id = DEFAULT_LANGUAGE_ID;
+            $this->Group_Legal_Form_Id = DEFAULT_LEGAL_FORM_ID;
         }
     }
     /**

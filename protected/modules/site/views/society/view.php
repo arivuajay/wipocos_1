@@ -82,7 +82,10 @@ $this->breadcrumbs = array(
                 'name' => 'Society_Type_Id',
                 'value' => isset($model->socType->Type_Name) ? $model->socType->Type_Name : 'Not Set'
             ),
-            'Society_Factor',
+            array(
+                'name' => 'Society_Factor',
+                'value' => isset($model->socFactor->Factor) ? $model->socFactor->Factor : 'Not Set'
+            ),
             array(
                 'name' => 'Society_Doc_Type_Id',
                 'value' => isset($model->socDocType->Doc_Type_Name) ? $model->socDocType->Doc_Type_Name : 'Not Set'

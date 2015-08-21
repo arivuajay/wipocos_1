@@ -22,6 +22,13 @@
  */
 class RecordingSessionDocumentation extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Rcd_Ses_Doc_Status_Id = DEFAULT_DOCUMENT_STATUS_ID;
+            $this->Rcd_Ses_Doc_Type_Id = DEFAULT_DOCUMENT_TYPE_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

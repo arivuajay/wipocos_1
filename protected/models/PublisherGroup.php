@@ -48,6 +48,7 @@ class PublisherGroup extends RActiveRecord {
             $this->Pub_Group_GUID = Myclass::guid(false);
             $this->Pub_Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Pub_Group_Language_Id = DEFAULT_LANGUAGE_ID;
+            $this->Pub_Group_Legal_Form_Id = DEFAULT_LEGAL_FORM_ID;
         }
     }
     /**

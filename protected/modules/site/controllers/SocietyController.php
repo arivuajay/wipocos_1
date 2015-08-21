@@ -28,8 +28,8 @@ class SocietyController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'dataupload'),
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -194,6 +194,36 @@ class SocietyController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function parseXlsFile($filePath) {
+        if (!file_exists($filePath))
+            return;
+        Yii::import('ext.phpexcelreader.JPhpExcelReader');
+        $excel = new JPhpExcelReader($filePath);
+        echo $data->dump(true,true);
+        exit;
+        $maxRow = $excel->rowcount();  //Read all row from excel file 
+        for ($i = 2; $i <= $maxRow; $i++) {
+            $model = new YourModel;
+            $model->fieldname = $excel->raw($i, 2); //and so on as per your excel column //save your model 
+            $model->save();
+        }
+    }
+
+    public function actionDataupload() {
+        Yii::import("application.extensions.EAjaxUpload.qqFileUploader");
+        $folder = UPLOAD_DIR . '/data/'; // folder for uploaded files 
+        $allowedExtensions = array("xls",'xlsx'); //array("jpg","jpeg","gif","exe","mov" and etc... 
+        $sizeLimit = 1 * 1024 * 1024; // maximum file size in bytes 
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload($folder);
+        $file_path = UPLOAD_DIR . '/data/' . $result['filename'];
+        $this->parseXlsFile($file_path);
+        $result = htmlspecialchars(json_encode($result), ENT_NOQUOTES); // 
+        $fileSize = filesize($folder . $result['filename']); //GETTING FILE SIZE //	
+        $fileName = $result['filename']; //GETTING FILE NAME  
+        echo $result; // it's array 
     }
 
 }

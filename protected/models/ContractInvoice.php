@@ -69,8 +69,8 @@ class ContractInvoice extends RActiveRecord {
     }
 
     public function nextDateValidate($attribute, $params) {
-        $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
-        $check_date = empty($inv_model) ? date('Y-m-d') : $inv_model[0]->Inv_Next_Date;
+        $cont_model = TariffContracts::model()->find("Tarf_Cont_Id = :cont_id", array('cont_id' => $this->Tarf_Cont_Id));
+        $check_date = $cont_model->Tarf_Cont_Next_Inv_Date;
         if (strtotime($this->Inv_Next_Date) <= strtotime($check_date)) {
             $this->addError($attribute, "Date must be greater than {$check_date}");
         }

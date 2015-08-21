@@ -28,7 +28,7 @@ class WorkPublishing extends RActiveRecord {
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
-            $this->Work_Pub_Territories = CJSON::encode(array(DEFAULT_AUTHOR_MANAGED_RIGHTS_TERRITORY_ID));
+            $this->Work_Pub_Territories = CJSON::encode(array(DEFAULT_TERRITORY_ID));
         }
     }
 

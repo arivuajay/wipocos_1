@@ -240,6 +240,7 @@ class TariffContracts extends RActiveRecord {
             $this->Tarf_Invoice = Myclass::getTarifInvoice();
             $this->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From);
             $this->Tarf_Cont_Due_Count = ContractInvoice::getContractDuration($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From, $this->Tarf_Cont_To);
+            $this->Tarf_Cont_Balance = $this->Tarf_Cont_Amt_Pay;
         }
         return parent::beforeSave();
     }

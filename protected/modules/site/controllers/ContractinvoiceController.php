@@ -87,8 +87,13 @@ class ContractinvoiceController extends Controller {
         if (isset($_POST['ContractInvoice'])) {
             $new_model->attributes = $_POST['ContractInvoice'];
             if ($new_model->save()) {
-                $cont_model = $new_model->tarfCont;
+                $cont_model = TariffContracts::model()->findByPk($new_model->Tarf_Cont_Id);
                 $cont_model->Tarf_Cont_Next_Inv_Date = $new_model->Inv_Next_Date;
+                $balance_amount = $cont_model->Tarf_Cont_Amt_Pay;
+                foreach ($cont_model->contractInvoices as $invoice) {
+                    $balance_amount -= $invoice->Inv_Amount;
+                }
+                $cont_model->Tarf_Cont_Balance = $balance_amount;
                 $cont_model->save(false);
                 Myclass::addAuditTrail("Created ContractInvoice successfully.", "file-text");
                 Yii::app()->user->setFlash('success', 'ContractInvoice Created Successfully!!!');

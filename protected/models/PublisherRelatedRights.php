@@ -33,6 +33,15 @@
  */
 class PublisherRelatedRights extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pub_Rel_Region_Id = DEFAULT_REGION_ID;
+            $this->Pub_Rel_Avl_Work_Cat_Id = DEFAULT_WORK_CATEGORY_ID;
+            $this->Pub_Rel_Internal_Position_Id = DEFAULT_INTERNAL_POSITION_ID;
+            $this->Pub_Rel_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
+        }
+    }
     /**
      * @return string the associated database table name
      */

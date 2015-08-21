@@ -15,6 +15,15 @@ $hierarchy = Myclass::getMasterHierarchy();
 $types = Myclass::getMasterType();
 $languages = Myclass::getMasterLanguage();
 $currencies = Myclass::getMasterCurrency();
+$factors = Myclass::getMasterFactor();
+
+$work_categories = Myclass::getMasterWorkCategory();
+$internal_positions = Myclass::getMasterInternalPosition();
+$managed_rights = Myclass::getMasterManagedRight();
+$document_status = CHtml::listData(MasterDocumentStatus::model()->findAll(array('order' => 'Document_Sts_Name')), 'Master_Document_Sts_Id', 'Document_Sts_Name');
+$recording_types = Myclass::getMasterRecordType();
+$mediums = Myclass::getMasterMedium();
+$legal_forms = Myclass::getMasterLegalForm();
 ?>
 
 <div class="row">
@@ -118,6 +127,24 @@ $currencies = Myclass::getMasterCurrency();
                     </div>
 
                     <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Work_Cat_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Work_Cat_Id', $work_categories, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Work_Cat_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Int_Pos_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Int_Pos_Id', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Int_Pos_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Mnge_Rght_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Mnge_Rght_Id', $managed_rights, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Mnge_Rght_Id'); ?>
+                    </div>
+                    
+                    <div class="form-group">
                         <?php echo $form->labelEx($model, 'Active', array('class' => '')); ?><br />
 
                         <?php echo $form->checkBox($model, 'Active', array('class' => 'form-control')); ?>
@@ -146,7 +173,7 @@ $currencies = Myclass::getMasterCurrency();
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Society_Factor', array('class' => '')); ?>
 
-                        <?php echo $form->textField($model, 'Society_Factor', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo $form->dropDownList($model, 'Society_Factor', $factors, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Society_Factor'); ?>
                     </div>
 
@@ -216,6 +243,34 @@ $currencies = Myclass::getMasterCurrency();
                         <?php echo $form->labelEx($model, 'Society_Subscription', array('class' => '')); ?>
                         <?php echo $form->textField($model, 'Society_Subscription', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
                         <?php echo $form->error($model, 'Society_Subscription'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Doc_Sts_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Doc_Sts_Id', $document_status, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Doc_Sts_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Rec_Type_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Rec_Type_Id', $recording_types, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Rec_Type_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Medium_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Medium_Id', $mediums, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Medium_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Soceity_Legal_Form_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Soceity_Legal_Form_Id', $legal_forms, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Soceity_Legal_Form_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php $this->renderPartial('_upload'); ?>
                     </div>
 
                 </div>

@@ -23,8 +23,15 @@
  * @property MasterTerritories $pubGroupCatTerritory
  */
 class PublisherGroupCatalogue extends RActiveRecord {
+    
     const FILE_SIZE = 1;
-
+    
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Pub_Group_Cat_Territory_Id = DEFAULT_TERRITORY_ID;
+        }
+    }
 
     /**
      * @return string the associated database table name

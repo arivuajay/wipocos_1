@@ -28,8 +28,8 @@ $this->breadcrumbs = array(
                     $countries = Myclass::getMasterCountry(false);
                     $nationalities = Myclass::getMasterNationality(false);
                     $currencies = Myclass::getMasterCurrency();
+                    $social_types = $model->getSocialType(); 
                     ?>
-
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Org_Code', array('class' => ' control-label')); ?>
@@ -68,7 +68,7 @@ $this->breadcrumbs = array(
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Org_Society_Type_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Org_Society_Type_Id', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Org_Society_Type_Id', $social_types, array('class' => 'form-control', 'prompt' => '')); ?>
                             <?php echo $form->error($searchModel, 'Org_Society_Type_Id'); ?>
                         </div>
                     </div>
@@ -140,7 +140,6 @@ $this->breadcrumbs = array(
                 'Org_Abbrevation',
                 array(
                     'name' => 'Org_Nation_Id',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     //              'type' => 'raw',
                     'value' => function($data) {
                 echo isset($data->orgNation->Nation_Name) ? $data->orgNation->Nation_Name : '';
@@ -148,7 +147,6 @@ $this->breadcrumbs = array(
                 ),
                 array(
                     'name' => 'Org_Country_Id',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     //              'type' => 'raw',
                     'value' => function($data) {
                 echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
@@ -156,13 +154,18 @@ $this->breadcrumbs = array(
                 ),
                 array(
                     'name' => 'Org_Currency_Id',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                     //              'type' => 'raw',
                     'value' => function($data) {
                 echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
             }
                 ),
-                'Org_Society_Type_Id',
+                array(
+                    'name' => 'Org_Society_Type_Id',
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo !empty($data->Org_Society_Type_Id) ? Organization::getSocialType($data->Org_Society_Type_Id) : '';
+            }
+                ),
                 array(
                     'name' => 'Active',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
@@ -231,7 +234,6 @@ $this->breadcrumbs = array(
             'Org_Abbrevation',
             array(
                 'name' => 'Org_Nation_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 //              'type' => 'raw',
                 'value' => function($data) {
             echo isset($data->orgNation->Nation_Name) ? $data->orgNation->Nation_Name : '';
@@ -239,7 +241,6 @@ $this->breadcrumbs = array(
             ),
             array(
                 'name' => 'Org_Country_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 //              'type' => 'raw',
                 'value' => function($data) {
             echo isset($data->orgCountry->Country_Name) ? $data->orgCountry->Country_Name : '';
@@ -247,13 +248,18 @@ $this->breadcrumbs = array(
             ),
             array(
                 'name' => 'Org_Currency_Id',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
                 //              'type' => 'raw',
                 'value' => function($data) {
             echo isset($data->orgCurrency->Currency_Name) ? $data->orgCurrency->Currency_Name : '';
         },
             ),
-            'Org_Society_Type_Id',
+                array(
+                    'name' => 'Org_Society_Type_Id',
+                    //              'type' => 'raw',
+                    'value' => function($data) {
+                echo !empty($data->Org_Society_Type_Id) ? Organization::getSocialType($data->Org_Society_Type_Id) : '';
+            }
+                ),
             array(
                 'name' => 'Active',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),

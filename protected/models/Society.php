@@ -30,6 +30,13 @@
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
+ * @property string $Soceity_Work_Cat_Id
+ * @property string $Soceity_Int_Pos_Id
+ * @property string $Soceity_Mnge_Rght_Id
+ * @property string $Soceity_Doc_Sts_Id
+ * @property string $Soceity_Rec_Type_Id
+ * @property string $Soceity_Medium_Id
+ * @property string $Soceity_Legal_Form_Id
  *
  * The followings are the available model relations:
  * @property MasterCountry $socCountry
@@ -40,6 +47,7 @@
  * @property MasterRegion $socRegion
  * @property MasterRole $socRole
  * @property MasterTerritories $socTerritory
+ * @property MasterFactor $socFactor
  */
 class Society extends CActiveRecord {
     const LOGO_SIZE = 1;
@@ -47,8 +55,12 @@ class Society extends CActiveRecord {
     public function init() {
         parent::init();
         if($this->isNewRecord){
-            $this->Society_Country_Id = DEFAULT_COUNTRY_ID;
-            $this->Society_Language_Id = DEFAULT_LANGUAGE_ID;
+//            $this->Society_Country_Id = DEFAULT_COUNTRY_ID;
+//            $this->Society_Language_Id = DEFAULT_LANGUAGE_ID;
+//            $this->Society_Region_Id = DEFAULT_REGION_ID;
+//            $this->Society_Territory_Id = DEFAULT_TERRITORY_ID;
+//            $this->Society_Doc_Type_Id = DEFAULT_DOCUMENT_TYPE_ID;
+//            $this->Society_Type_Id = DEFAULT_TYPE_ID;
         }
     }
     /**
@@ -77,17 +89,17 @@ class Society extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Society_Abbr_Id, Society_Code, Society_Mailing_Address, Society_Language_Id, Society_Logo_File', 'required'),
-            array('Society_Rate, Society_Factor', 'numerical'),
+            array('Society_Rate', 'numerical'),
             array('Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Payment_Id, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights', 'numerical', 'integerOnly' => true),
             array('Society_Abbr_Id, Society_Main_Performer_Id, Society_Producer_Id', 'length', 'max' => 100),
             array('Society_Logo_File', 'length', 'max' => 255),
             array('Society_Subscription', 'length', 'max' => 100),
             array('Society_Code', 'length', 'max' => 50),
             array('Society_Code', 'unique'),
-            array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency_Id', 'length', 'max' => 50),
-            array('Society_Rate, Society_Factor', 'length', 'max' => 10),
+            array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency_Id, Society_Factor', 'length', 'max' => 50),
+            array('Society_Rate', 'length', 'max' => 10),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Soceity_Work_Cat_Id, Soceity_Int_Pos_Id, Soceity_Mnge_Rght_Id, Soceity_Doc_Sts_Id, Soceity_Rec_Type_Id, Soceity_Medium_Id, Soceity_Legal_Form_Id', 'safe'),
             array('Society_Logo_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::LOGO_SIZE, 'tooLarge'=>'File should be smaller than '.self::LOGO_SIZE.'MB'),
             array('Society_Logo_File', 'file', 'allowEmpty' => false, 'types' => 'jpg, png, gif, jpeg', 'on' => 'create'),
             array('Society_Logo_File', 'file', 'allowEmpty' => true, 'types' => 'jpg, png, gif, jpeg', 'on' => 'update'),
@@ -117,6 +129,7 @@ class Society extends CActiveRecord {
             'socHirearchy' => array(self::BELONGS_TO, 'MasterHierarchy', 'Society_Hirearchy_Id'),
             'socLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Society_Language_Id'),
             'socCurrency' => array(self::BELONGS_TO, 'MasterCurrency', 'Society_Currency_Id'),
+            'socFactor' => array(self::BELONGS_TO, 'MasterFactor', 'Society_Factor'),
         );
     }
 
@@ -153,6 +166,13 @@ class Society extends CActiveRecord {
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Society_Subscription' => 'Subscription',
+            'Soceity_Work_Cat_Id' => 'Work category',
+            'Soceity_Int_Pos_Id' => 'Internal Position',
+            'Soceity_Mnge_Rght_Id' => 'Managed Rights',
+            'Soceity_Doc_Sts_Id' => 'Document Status',
+            'Soceity_Rec_Type_Id' => 'Type of Recording',
+            'Soceity_Medium_Id' => 'Medium',
+            'Soceity_Legal_Form_Id' => 'Legal Form',
         );
     }
 

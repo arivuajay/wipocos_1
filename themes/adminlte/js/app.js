@@ -167,8 +167,8 @@ $(function() {
             "iDisplayLength": 100
         });
 
-        $('#base_table_search').keyup(function(){
-             baseTable.fnFilter( $(this).val() );
+        $(document).on('keyup','#base_table_search',function( e ) {
+            baseTable.fnFilter( $(this).val() );
         });
     }
 });

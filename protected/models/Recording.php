@@ -52,6 +52,7 @@ class Recording extends RActiveRecord {
             $this->Rcd_Date = date('Y-m-d');
             $this->Rcd_Record_Type_Id = DEFAULT_RECORD_TYPE_ID;
             $this->Rcd_GUID = Myclass::guid(false);
+            $this->Rcd_Doc_Status_Id = DEFAULT_DOCUMENT_STATUS_ID;
 
             $this->Rcd_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::RECORDING_CODE))->Fullcode;
         }
