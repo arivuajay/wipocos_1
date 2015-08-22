@@ -68,6 +68,14 @@ class SocietyController extends Controller {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
                 if ($model->save()) {
+                    if ($_FILES['Society']['name']['import_file']) {
+                        $model->import_file = CUploadedFile::getInstance($model, 'import_file');
+                        if (!is_dir(UPLOAD_DIR . '/temp/'))
+                            mkdir(UPLOAD_DIR . '/temp/');
+                        $path = UPLOAD_DIR . '/temp/' . $model->import_file;
+                        $model->import_file->saveAs($path);
+                        $this->importExcel($path);
+                    }
                     Myclass::addAuditTrail("Created a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Created Successfully!!!');
                     $this->redirect(array('index'));
