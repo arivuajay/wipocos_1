@@ -97,9 +97,18 @@ class SocietyController extends Controller {
             if ($_FILES['Society']['name']['Society_Logo_File']) {
                 $model->setAttribute('Society_Logo_File', $_FILES['Society']['name']['Society_Logo_File']);
             }
+
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
+                if ($_FILES['Society']['name']['import_file']) {
+                    $model->import_file = CUploadedFile::getInstance($model, 'import_file');
+                    if (!is_dir(UPLOAD_DIR . '/temp/'))
+                        mkdir(UPLOAD_DIR . '/temp/');
+                    $path = UPLOAD_DIR . '/temp/' . $model->import_file;
+                    $model->import_file->saveAs($path);
+                    $this->importExcel($path);
+                }
                 if ($model->save()) {
                     Myclass::addAuditTrail("Updated a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Updated Successfully!!!');
@@ -196,34 +205,183 @@ class SocietyController extends Controller {
         }
     }
 
-    public function parseXlsFile($filePath) {
-        if (!file_exists($filePath))
-            return;
-        Yii::import('ext.phpexcelreader.JPhpExcelReader');
-        $excel = new JPhpExcelReader($filePath);
-        echo $data->dump(true,true);
-        exit;
-        $maxRow = $excel->rowcount();  //Read all row from excel file 
-        for ($i = 2; $i <= $maxRow; $i++) {
-            $model = new YourModel;
-            $model->fieldname = $excel->raw($i, 2); //and so on as per your excel column //save your model 
-            $model->save();
+    public function importExcel($file_path) {
+//        $file_path = UPLOAD_DIR . '/data/import.xls';
+        Yii::import('application.vendors.PHPExcel', true);
+        $objReader = new PHPExcel_Reader_Excel5;
+        $objPHPExcel = $objReader->load(@$file_path);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+        $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
+        $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
+
+        $authors = $performers = $producers = $publishers = $author_performers = $publisher_producers = array();
+        $iValid = 0;
+
+        if ($objWorksheet->getCellByColumnAndRow(0, 2)->getValue() == "TITLE") {
+            $iValid = 1;
+            if ($objWorksheet->getCellByColumnAndRow(1, 2)->getValue() != "PRODUCER") {
+                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (EXECUTIVE PRODUCER column value missing)"));
+            } else if ($objWorksheet->getCellByColumnAndRow(2, 2)->getValue() != "RELEASED") {
+                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (YEAR FIRST column value missing)"));
+            } else if ($objWorksheet->getCellByColumnAndRow(3, 2)->getValue() != "INFORMATION") {
+                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (CONTACT column value missing)"));
+            }
+        }
+
+
+        if ($iValid == 1) {
+            for ($row = 3; $row <= $highestRow; ++$row) {
+                //set author
+                //COMPOSER
+                $auth_val_1 = $objWorksheet->getCellByColumnAndRow(7, $row)->getValue();
+                if ($this->importStringValidation($auth_val_1)) {
+                    array_push($authors, $auth_val_1);
+                }
+                //ARRANGER (S)
+                $auth_val_2 = $objWorksheet->getCellByColumnAndRow(11, $row)->getValue();
+                if ($this->importStringValidation($auth_val_2)) {
+                    array_push($authors, $auth_val_2);
+                }
+                //LYRICTS
+                $auth_val_3 = $objWorksheet->getCellByColumnAndRow(8, $row)->getValue();
+                if ($this->importStringValidation($auth_val_3)) {
+                    array_push($authors, $auth_val_3);
+                }
+                //MUSIC
+                $auth_val_4 = $objWorksheet->getCellByColumnAndRow(9, $row)->getValue();
+                if ($this->importStringValidation($auth_val_4)) {
+                    array_push($authors, $auth_val_4);
+                }
+
+                //set performer
+                //FEATURED PERFORMER
+                $perf_val_1 = $objWorksheet->getCellByColumnAndRow(12, $row)->getValue();
+                if ($this->importStringValidation($perf_val_1)) {
+                    array_push($performers, $perf_val_1);
+                }
+                //GUEST PERFORMER
+                $perf_val_2 = $objWorksheet->getCellByColumnAndRow(13, $row)->getValue();
+                if ($this->importStringValidation($perf_val_2)) {
+                    array_push($performers, $perf_val_2);
+                }
+                //SESSION MUSICIANS
+                $perf_val_3 = $objWorksheet->getCellByColumnAndRow(14, $row)->getValue();
+                if ($this->importStringValidation($perf_val_3)) {
+                    array_push($performers, $perf_val_3);
+                }
+                //SESSION VOCALISTS
+                $perf_val_4 = $objWorksheet->getCellByColumnAndRow(16, $row)->getValue();
+                if ($this->importStringValidation($perf_val_4)) {
+                    array_push($performers, $perf_val_4);
+                }
+                //PERFORMER FEMALE
+                $perf_val_5 = $objWorksheet->getCellByColumnAndRow(21, $row)->getValue();
+                if ($this->importStringValidation($perf_val_5)) {
+                    array_push($performers, $perf_val_5);
+                }
+
+                //set publisher
+                //DISTRIBUTOR
+                $pub_val = $objWorksheet->getCellByColumnAndRow(4, $row)->getValue();
+                if ($this->importStringValidation($pub_val, true)) {
+                    array_push($publishers, $pub_val);
+                }
+
+                //set producers
+                //EXECUTIVE PRODUCER
+                $prod_val = $objWorksheet->getCellByColumnAndRow(1, $row)->getValue();
+                if ($this->importStringValidation($prod_val, true)) {
+                    array_push($producers, $prod_val);
+                }
+            }
+            //get unique values
+            $authors = array_unique($authors);
+            $performers = array_unique($performers);
+            $publishers = array_unique($publishers);
+            $producers = array_unique($producers);
+
+            //get both author & performers, publishers & producers
+            $author_performers = array_intersect($authors, $performers);
+            $authors = array_diff($authors, $author_performers);
+            $performers = array_diff($performers, $author_performers);
+            $publisher_producers = array_intersect($publishers, $producers);
+            $publishers = array_diff($publishers, $publisher_producers);
+            $producers = array_diff($producers, $publisher_producers);
+
+            foreach ($authors as $author) {
+                $check_exists = AuthorAccount::model()->find("Auth_First_Name =:name", array(':name' => $author));
+                if (empty($check_exists)) {
+                    $model = new AuthorAccount;
+                    $model->Auth_First_Name = $author;
+                    $model->save(false);
+                }
+            }
+
+            foreach ($performers as $performer) {
+                $check_exists = PerformerAccount::model()->find("Perf_First_Name =:name", array(':name' => $performer));
+                if (empty($check_exists)) {
+                    $model = new PerformerAccount;
+                    $model->Perf_First_Name = $performer;
+                    $model->save(false);
+                }
+            }
+
+            foreach ($publishers as $publisher) {
+                $check_exists = PublisherAccount::model()->find("Pub_Corporate_Name =:name", array(':name' => $publisher));
+                if (empty($check_exists)) {
+                    $model = new PublisherAccount;
+                    $model->Pub_Corporate_Name = $publisher;
+                    $model->save(false);
+                }
+            }
+
+            foreach ($producers as $producer) {
+                $check_exists = ProducerAccount::model()->find("Pro_Corporate_Name =:name", array(':name' => $producer));
+                if (empty($check_exists)) {
+                    $model = new ProducerAccount;
+                    $model->Pro_Corporate_Name = $producer;
+                    $model->save(false);
+                }
+            }
+
+            foreach ($author_performers as $author_performer) {
+                $check_exists = AuthorAccount::model()->find("Auth_First_Name =:name", array(':name' => $author_performer));
+                if (empty($check_exists)) {
+                    $model = new AuthorAccount;
+                    $model->Auth_First_Name = $author_performer;
+                    $model->Auth_Is_Performer = 'Y';
+                    $model->save(false);
+                }
+            }
+
+            foreach ($publisher_producers as $publisher_producer) {
+                $check_exists = PublisherAccount::model()->find("Pub_Corporate_Name =:name", array(':name' => $publisher_producer));
+                if (empty($check_exists)) {
+                    $model = new PublisherAccount;
+                    $model->Pub_Corporate_Name = $publisher_producer;
+                    $model->Pub_Is_Producer = 'Y';
+                    $model->save(false);
+                }
+            }
+            
+            unlink($file_path);
+//            for ($row = 2; $row <= $highestRow; ++$row) {
+//                for ($col = 0; $col <= $highestColumnIndex; ++$col) {
+//                }
+//            }
+        } else {
+            throw new CHttpException(400, Yii::t('err', "Its not a Valid File (NOT IN PREDEFINED FORMAT)"));
         }
     }
 
-    public function actionDataupload() {
-        Yii::import("application.extensions.EAjaxUpload.qqFileUploader");
-        $folder = UPLOAD_DIR . '/data/'; // folder for uploaded files 
-        $allowedExtensions = array("xls",'xlsx'); //array("jpg","jpeg","gif","exe","mov" and etc... 
-        $sizeLimit = 1 * 1024 * 1024; // maximum file size in bytes 
-        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
-        $result = $uploader->handleUpload($folder);
-        $file_path = UPLOAD_DIR . '/data/' . $result['filename'];
-        $this->parseXlsFile($file_path);
-        $result = htmlspecialchars(json_encode($result), ENT_NOQUOTES); // 
-        $fileSize = filesize($folder . $result['filename']); //GETTING FILE SIZE //	
-        $fileName = $result['filename']; //GETTING FILE NAME  
-        echo $result; // it's array 
+    public function importStringValidation($value, $special_char = false) {
+        $pattern = preg_quote('#$%^&*()+=-[]\';,/{}|\":<>?~', '#');
+        $title_exception = array('EXECUTIVE', 'PRODUCER', 'DISTRIBUTOR', 'COMPOSER', 'MUSICAL', 'ARRANGER (S)', 'FEATURED', 'PERFORMER', 'SESSION', 'VOCALISTS', 'MUSICIANS', 'PERFORMERFEMALE');
+        if ($special_char)
+            return !in_array($value, $title_exception) && $value != '' && !preg_match("#[{$pattern}]#", $value) && !is_array($value) && !is_object($value);
+        else
+            return !in_array($value, $title_exception) && $value != '' && !is_array($value) && !is_object($value);
     }
 
 }

@@ -31,6 +31,7 @@ return array(
             'packages' => array(
                 'jquery' => array(
                     'baseUrl' => '//code.jquery.com/',
+//                    'baseUrl' => 'http://localhost/wipocos_1/branches/dev/',
                     'js' => array('jquery-1.10.1.min.js', 'jquery-migrate-1.2.1.min.js'),
                 ),
             )

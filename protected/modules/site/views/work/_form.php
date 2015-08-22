@@ -48,7 +48,7 @@ $territories = Myclass::getMasterTerritory();
         ?>
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Right Holders</a></li>
                 <li><a id="a_tab_5" href="#tab_5" <?php if ($pub_tab_validation) echo 'data-toggle="tab"'; ?>>Publishing</a></li>
@@ -58,7 +58,7 @@ $territories = Myclass::getMasterTerritory();
                 <!--<li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>-->
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="tab_1">
+                <div class="tab-pane" id="tab_1">
                     <div class="box box-primary">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(

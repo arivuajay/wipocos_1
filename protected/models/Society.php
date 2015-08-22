@@ -50,7 +50,13 @@
  * @property MasterFactor $socFactor
  */
 class Society extends CActiveRecord {
+    
     const LOGO_SIZE = 1;
+    const LOGO_TYPE = 'jpg, png, gif, jpeg';
+    const IMPORT_TYPE = 'xls';
+
+
+    public $import_file;
 
     public function init() {
         parent::init();
@@ -99,10 +105,11 @@ class Society extends CActiveRecord {
             array('Society_Hirearchy_Id, Society_Type_Id, Society_Currency_Id, Society_Factor', 'length', 'max' => 50),
             array('Society_Rate', 'length', 'max' => 10),
             array('Active', 'length', 'max' => 1),
-            array('Created_Date, Rowversion, Soceity_Work_Cat_Id, Soceity_Int_Pos_Id, Soceity_Mnge_Rght_Id, Soceity_Doc_Sts_Id, Soceity_Rec_Type_Id, Soceity_Medium_Id, Soceity_Legal_Form_Id', 'safe'),
+            array('Created_Date, Rowversion, Soceity_Work_Cat_Id, Soceity_Int_Pos_Id, Soceity_Mnge_Rght_Id, Soceity_Doc_Sts_Id, Soceity_Rec_Type_Id, Soceity_Medium_Id, Soceity_Legal_Form_Id, import_file', 'safe'),
             array('Society_Logo_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::LOGO_SIZE, 'tooLarge'=>'File should be smaller than '.self::LOGO_SIZE.'MB'),
-            array('Society_Logo_File', 'file', 'allowEmpty' => false, 'types' => 'jpg, png, gif, jpeg', 'on' => 'create'),
-            array('Society_Logo_File', 'file', 'allowEmpty' => true, 'types' => 'jpg, png, gif, jpeg', 'on' => 'update'),
+            array('Society_Logo_File', 'file', 'allowEmpty' => false, 'types' => self::LOGO_TYPE, 'on' => 'create'),
+            array('Society_Logo_File', 'file', 'allowEmpty' => true, 'types' => self::LOGO_TYPE, 'on' => 'update'),
+            array('import_file', 'file', 'allowEmpty' => true, 'types' => self::IMPORT_TYPE),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Society_Id, Society_Code, Society_Abbr_Id, Society_Logo_File, Society_Language_Id, Society_Mailing_Address, Society_Country_Id, Society_Territory_Id, Society_Region_Id, Society_Profession_Id, Society_Role_Id, Society_Hirearchy_Id, Society_Payment_Id, Society_Type_Id, Society_Factor, Society_Doc_Type_Id, Society_Doc_Id, Society_Duration, Society_CopyRight, Society_RelatedRights, Society_Currency_Id, Society_Rate, Society_Main_Performer_Id, Society_Producer_Id, Active, Created_Date, Rowversion, Society_Subscription', 'safe', 'on' => 'search'),
@@ -168,11 +175,12 @@ class Society extends CActiveRecord {
             'Society_Subscription' => 'Subscription',
             'Soceity_Work_Cat_Id' => 'Work category',
             'Soceity_Int_Pos_Id' => 'Internal Position',
-            'Soceity_Mnge_Rght_Id' => 'Managed Rights',
+            'Soceity_Mnge_Rght_Id' => 'Membership Role',
             'Soceity_Doc_Sts_Id' => 'Document Status',
             'Soceity_Rec_Type_Id' => 'Type of Recording',
             'Soceity_Medium_Id' => 'Medium',
             'Soceity_Legal_Form_Id' => 'Legal Form',
+            'import_file' => 'Import XLS',
         );
     }
 

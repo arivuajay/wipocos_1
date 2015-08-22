@@ -143,7 +143,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                         <?php echo $form->dropDownList($model, 'Soceity_Mnge_Rght_Id', $managed_rights, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Soceity_Mnge_Rght_Id'); ?>
                     </div>
-                    
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'Active', array('class' => '')); ?><br />
 
@@ -270,8 +270,14 @@ $legal_forms = Myclass::getMasterLegalForm();
                     </div>
 
                     <div class="form-group">
-                        <?php $this->renderPartial('_upload'); ?>
+                        <?php echo $form->labelEx($model, 'import_file', array('class' => '')); ?>
+                        <?php echo $form->fileField($model, 'import_file', array()); ?>
+                        <?php echo $form->error($model, 'import_file'); ?>
                     </div>
+
+<!--                    <div class="form-group">
+                        <?php $this->renderPartial('_upload'); ?>
+                    </div>-->
 
                 </div>
 
