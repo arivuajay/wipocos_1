@@ -223,7 +223,7 @@ class SocietyController extends Controller {
         $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
         $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
 
-        $authors = $performers = $producers = $publishers = $author_performers = $publisher_producers = array();
+        $authors = $performers = $producers = $publishers = $author_performers = $publisher_producers = $female_performers = array();
         $iValid = 0;
 
         if ($objWorksheet->getCellByColumnAndRow(0, 2)->getValue() == "TITLE") {
@@ -240,97 +240,93 @@ class SocietyController extends Controller {
 
         if ($iValid == 1) {
             for ($row = 3; $row <= $highestRow; ++$row) {
-                //set author
-                //COMPOSER
-                $auth_val_1 = $objWorksheet->getCellByColumnAndRow(7, $row)->getValue();
-                if ($this->importStringValidation($auth_val_1)) {
-                    array_push($authors, $auth_val_1);
-                }
-                //ARRANGER (S)
-                $auth_val_2 = $objWorksheet->getCellByColumnAndRow(11, $row)->getValue();
-                if ($this->importStringValidation($auth_val_2)) {
-                    array_push($authors, $auth_val_2);
-                }
-                //LYRICTS
-                $auth_val_3 = $objWorksheet->getCellByColumnAndRow(8, $row)->getValue();
-                if ($this->importStringValidation($auth_val_3)) {
-                    array_push($authors, $auth_val_3);
-                }
-                //MUSIC
-                $auth_val_4 = $objWorksheet->getCellByColumnAndRow(9, $row)->getValue();
-                if ($this->importStringValidation($auth_val_4)) {
-                    array_push($authors, $auth_val_4);
+                //set authors
+                $auth_cols = array(
+                    7 => 'COMPOSER',
+                    8 => 'LYRICTS',
+                    9 => 'MUSIC',
+                    11 => 'ARRANGER (S)',
+                );
+                foreach ($auth_cols as $col => $v) {
+                    $auth_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                    if ($this->importStringValidation($auth_val)) {
+                        if (!in_array($auth_val, $authors))
+                            array_push($authors, $auth_val);
+                    }
                 }
 
                 //set performer
-                //FEATURED PERFORMER
-                $perf_val_1 = $objWorksheet->getCellByColumnAndRow(12, $row)->getValue();
-                if ($this->importStringValidation($perf_val_1)) {
-                    array_push($performers, $perf_val_1);
-                }
-                //GUEST PERFORMER
-                $perf_val_2 = $objWorksheet->getCellByColumnAndRow(13, $row)->getValue();
-                if ($this->importStringValidation($perf_val_2)) {
-                    array_push($performers, $perf_val_2);
-                }
-                //SESSION MUSICIANS
-                $perf_val_3 = $objWorksheet->getCellByColumnAndRow(14, $row)->getValue();
-                if ($this->importStringValidation($perf_val_3)) {
-                    array_push($performers, $perf_val_3);
-                }
-                //SESSION VOCALISTS
-                $perf_val_4 = $objWorksheet->getCellByColumnAndRow(16, $row)->getValue();
-                if ($this->importStringValidation($perf_val_4)) {
-                    array_push($performers, $perf_val_4);
-                }
-                //PERFORMER FEMALE
-                $perf_val_5 = $objWorksheet->getCellByColumnAndRow(21, $row)->getValue();
-                if ($this->importStringValidation($perf_val_5)) {
-                    array_push($performers, $perf_val_5);
+                $perf_cols = array(
+                    12 => 'FEATURED PERFORMER',
+                    13 => 'GUEST PERFORMER',
+                    14 => 'SESSION MUSICIANS',
+                    16 => 'SESSION VOCALISTS',
+                    21 => 'PERFORMER FEMALE',
+                );
+                foreach ($perf_cols as $col => $v) {
+                    $perf_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                    if ($this->importStringValidation($perf_val)) {
+                        if (!in_array($perf_val, $performers))
+                            array_push($performers, $perf_val);
+                        if ($col == 21) {
+                            if (!in_array($perf_val, $female_performers))
+                                array_push($female_performers, $perf_val);
+                        }
+                    }
                 }
 
                 //set publisher
-                //DISTRIBUTOR
-                $pub_val = $objWorksheet->getCellByColumnAndRow(4, $row)->getValue();
-                if ($this->importStringValidation($pub_val, true)) {
-                    array_push($publishers, $pub_val);
+                $pub_cols = array(
+                    4 => 'DISTRIBUTOR',
+                );
+                foreach ($pub_cols as $col => $v) {
+                    $pub_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                    if ($this->importStringValidation($pub_val, true)) {
+                        if (!in_array($pub_val, $publishers))
+                            array_push($publishers, $pub_val);
+                    }
                 }
 
                 //set producers
-                //EXECUTIVE PRODUCER
-                $prod_val = $objWorksheet->getCellByColumnAndRow(1, $row)->getValue();
-                if ($this->importStringValidation($prod_val, true)) {
-                    array_push($producers, $prod_val);
+                $pro_cols = array(
+                    1 => 'EXECUTIVE PRODUCER',
+                );
+                foreach ($pro_cols as $col => $v) {
+                    $prod_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+                    if ($this->importStringValidation($prod_val, true)) {
+                        if (!in_array($prod_val, $producers))
+                            array_push($producers, $prod_val);
+                    }
                 }
             }
-            //get unique values
-            $authors = array_unique($authors);
-            $performers = array_unique($performers);
-            $publishers = array_unique($publishers);
-            $producers = array_unique($producers);
 
             //get both author & performers, publishers & producers
             $author_performers = array_intersect($authors, $performers);
-            $authors = array_diff($authors, $author_performers);
-            $performers = array_diff($performers, $author_performers);
             $publisher_producers = array_intersect($publishers, $producers);
-            $publishers = array_diff($publishers, $publisher_producers);
-            $producers = array_diff($producers, $publisher_producers);
 
             foreach ($authors as $author) {
                 $check_exists = AuthorAccount::model()->find("Auth_First_Name =:name", array(':name' => $author));
                 if (empty($check_exists)) {
                     $model = new AuthorAccount;
                     $model->Auth_First_Name = $author;
+                    if(in_array($author, $author_performers)){
+                        $model->Auth_Is_Performer = 'Y';
+                    }
                     $model->save(false);
                 }
             }
-
+            
+            $performers = array_diff($performers, $authors);
             foreach ($performers as $performer) {
                 $check_exists = PerformerAccount::model()->find("Perf_First_Name =:name", array(':name' => $performer));
                 if (empty($check_exists)) {
                     $model = new PerformerAccount;
                     $model->Perf_First_Name = $performer;
+                    if(in_array($performer, $female_performers))
+                        $model->Perf_Gender = 'F';
+                    if(in_array($performer, $author_performers)){
+                        $model->Perf_Is_Author = 'Y';
+                    }
                     $model->save(false);
                 }
             }
@@ -340,44 +336,26 @@ class SocietyController extends Controller {
                 if (empty($check_exists)) {
                     $model = new PublisherAccount;
                     $model->Pub_Corporate_Name = $publisher;
+                    if(in_array($publisher, $publisher_producers)){
+                        $model->Pub_Is_Producer = 'Y';
+                    }
                     $model->save(false);
                 }
             }
 
+            $producers = array_diff($producers, $publishers);
             foreach ($producers as $producer) {
                 $check_exists = ProducerAccount::model()->find("Pro_Corporate_Name =:name", array(':name' => $producer));
                 if (empty($check_exists)) {
                     $model = new ProducerAccount;
                     $model->Pro_Corporate_Name = $producer;
+                    if(in_array($producer, $publisher_producers)){
+                        $model->Pro_Is_Publisher = 'Y';
+                    }
                     $model->save(false);
                 }
             }
-
-            foreach ($author_performers as $author_performer) {
-                $check_exists = AuthorAccount::model()->find("Auth_First_Name =:name", array(':name' => $author_performer));
-                if (empty($check_exists)) {
-                    $model = new AuthorAccount;
-                    $model->Auth_First_Name = $author_performer;
-                    $model->Auth_Is_Performer = 'Y';
-                    $model->save(false);
-                }
-            }
-
-            foreach ($publisher_producers as $publisher_producer) {
-                $check_exists = PublisherAccount::model()->find("Pub_Corporate_Name =:name", array(':name' => $publisher_producer));
-                if (empty($check_exists)) {
-                    $model = new PublisherAccount;
-                    $model->Pub_Corporate_Name = $publisher_producer;
-                    $model->Pub_Is_Producer = 'Y';
-                    $model->save(false);
-                }
-            }
-            
             unlink($file_path);
-//            for ($row = 2; $row <= $highestRow; ++$row) {
-//                for ($col = 0; $col <= $highestColumnIndex; ++$col) {
-//                }
-//            }
         } else {
             throw new CHttpException(400, Yii::t('err', "Its not a Valid File (NOT IN PREDEFINED FORMAT)"));
         }
@@ -385,7 +363,7 @@ class SocietyController extends Controller {
 
     public function importStringValidation($value, $special_char = false) {
         $pattern = preg_quote('#$%^&*()+=-[]\';,/{}|\":<>?~', '#');
-        $title_exception = array('EXECUTIVE', 'PRODUCER', 'DISTRIBUTOR', 'COMPOSER', 'MUSICAL', 'ARRANGER (S)', 'FEATURED', 'PERFORMER', 'SESSION', 'VOCALISTS', 'MUSICIANS', 'PERFORMERFEMALE');
+        $title_exception = array('EXECUTIVE', 'PRODUCER', 'DISTRIBUTOR', 'COMPOSER', 'MUSICAL', 'ARRANGER (S)', 'FEATURED', 'PERFORMER', 'SESSION', 'VOCALISTS', 'MUSICIANS', 'PERFORMERFEMALE', 'GUEST', 'LYRICIST', 'MUSIC');
         if ($special_char)
             return !in_array($value, $title_exception) && $value != '' && !preg_match("#[{$pattern}]#", $value) && !is_array($value) && !is_object($value);
         else
