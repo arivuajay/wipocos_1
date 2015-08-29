@@ -8,6 +8,7 @@
  * @property string $Role_Code
  * @property string $Description
  * @property string $is_Admin
+ * @property string $Rank
  * @property integer $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -27,8 +28,11 @@ class MasterRole extends CActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
+        $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
+        $rank = !empty($user) ? $user->roleMdl->Rank : 0;
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'slaves' => array('condition' => "$alias.Rank >= '$rank'"),
         );
     }
 
@@ -43,10 +47,11 @@ class MasterRole extends CActiveRecord {
             array('Role_Code', 'length', 'max' => 45),
             array('Description', 'length', 'max' => 100),
             array('is_Admin, Active', 'length', 'max' => 1),
+            array('Rank', 'numerical', 'integerOnly' => TRUE),
             array('Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Master_Role_ID, Role_Code, Description, is_Admin, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Master_Role_ID, Role_Code, Description, is_Admin, Active, Created_Date, Rowversion, Rank', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,6 +76,7 @@ class MasterRole extends CActiveRecord {
             'Role_Code' => 'Role Code',
             'Description' => 'Description',
             'is_Admin' => 'Is Admin',
+            'Rank' => 'Rank',
             'Active' => 'Active',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',

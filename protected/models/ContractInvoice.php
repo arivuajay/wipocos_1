@@ -26,6 +26,7 @@ class ContractInvoice extends RActiveRecord {
 
     const INVOICE_PAD = 7;
     const AUTO_GENERATE = TRUE;
+    const ATTACH_INVOICE = FALSE;
     const DEFAULT_REPEAT = 4;
 
     public function init() {
@@ -280,9 +281,45 @@ class ContractInvoice extends RActiveRecord {
                 "{TAR_ROY_COMMENT}" => $contract->Tarf_Cont_Comment,
                 "{CONTRACT_DURATION}" => $this->getContractDuration($contract->Tarf_Cont_Pay_Id, $this->Inv_Date, $contract->Tarf_Cont_To),
             );
-//            $message = $mail->getMessage($temp_id, $trans_array, 2);
-//            $subject = $mail->getSubject($temp_id, $trans_array);
+            $message = $mail->getMessage($temp_id, $trans_array, 2, false);
+            $subject = $mail->getSubject($temp_id, $trans_array);
+
 //            $mail->send($contract->tarfContUser->User_Cust_Email, $subject, $message);
+
+            Yii::import('application.extensions.phpmailer.JPhpMailer');
+            $from = NOREPLYMAIL;
+            $fromName = SITENAME;
+
+            $mailer = new JPhpMailer;
+            $mailer->IsSMTP();
+            $mailer->IsHTML(true);
+            $mailer->SMTPAuth = SMTPAUTH;
+            $mailer->SMTPSecure = SMTPSECURE;
+            $mailer->Host = SMTPHOST;
+            $mailer->Port = SMTPPORT;
+            $mailer->Username = SMTPUSERNAME;
+            $mailer->Password = SMTPPASS;
+            $mailer->From = $from;
+            $mailer->FromName = $fromName;
+            $mailer->AddAddress($contract->tarfContUser->User_Cust_Email);
+
+            //PDF attachment
+            if (self::ATTACH_INVOICE) {
+                $mPDF1 = Yii::app()->ePdf->mpdf();
+                $stylesheet = Yii::app()->controller->pdfStyles();
+                $mPDF1->WriteHTML($stylesheet, 1);
+                $model = self::model()->findByPk($this->Inv_Id);
+                $mPDF1->WriteHTML(Yii::app()->controller->renderPartial('/contractinvoice/_invoice_pdf', compact('model'), true));
+                $pdf = "Invoice{$model->Inv_Invoice}.pdf";
+                $mail_pdf = $mPDF1->Output($pdf, EYiiPdf::OUTPUT_TO_STRING);
+                $mailer->AddStringAttachment($mail_pdf, $pdf);
+            }
+            //end
+
+            $mailer->Subject = $subject;
+
+            $mailer->MsgHTML($message);
+            $mailer->Send();
             //End
         }
         return parent::afterSave();
@@ -301,7 +338,7 @@ class ContractInvoice extends RActiveRecord {
                 $suffix = ' Months';
                 break;
             case 3:
-                $duration = ($diff['months'] / 4) < 1 ? 0 : floor($diff['months'] / 4) + 1 ;
+                $duration = ($diff['months'] / 4) < 1 ? 0 : floor($diff['months'] / 4) + 1;
                 $suffix = ' Months';
                 break;
             case 4:

@@ -18,7 +18,7 @@ $this->breadcrumbs = array(
             <div class="col-lg-6 col-md-6">
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Master_User_ID') ?>
-                    <?php $names = CHtml::listData(User::model()->findAll(array('order' => 'name')), 'id', 'username') ?>
+                    <?php $names = CHtml::listData(User::model()->slaves()->with('roleMdl')->findAll(array('order' => 'name')), 'id', 'username') ?>
                     <?php
                     echo $form->dropDownList($model, 'Master_User_ID', $names, array(
                         'prompt' => 'Choose User',

@@ -35,6 +35,14 @@
                 </div>
 
                 <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Rank', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Rank', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                        <?php echo $form->error($model, 'Rank'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'is_Admin', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->checkBox($model, 'is_Admin', array('class' => 'form-control')); ?>

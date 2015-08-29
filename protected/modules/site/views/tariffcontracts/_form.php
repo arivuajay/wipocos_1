@@ -98,8 +98,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php } ?>
 
                         </div>
-                        <?php 
-                        $this->endWidget(); 
+                        <?php
+                        $this->endWidget();
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'tariff-contracts-form',
                             'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
@@ -115,6 +115,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
                         $event_types = Myclass::getMasterEventtype();
                         $payments = TariffContracts::model()->getPayment();
+                        $renewalas = TariffContracts::model()->getRenewallist();
                         ?>
                         <div class="col-lg-12">
                             <div class="box-body">
@@ -198,7 +199,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-6">
                             <div class="box-body">
                                 <div class="form-group foundation">
@@ -260,6 +261,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                 <?php echo $form->checkBox($model, 'Tarf_Cont_Renewal', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                                 <?php echo $form->error($model, 'Tarf_Cont_Renewal'); ?>
                                             </div>
+
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Renewal_Year', array('class' => '')); ?><br />
+                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Renewal_Year', $renewalas, array('class' => 'form-control', 'prompt' => '')); ?>
+                                                <?php echo $form->error($model, 'Tarf_Cont_Renewal_Year'); ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -297,22 +304,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         </div>
                         <div class="col-lg-6">
                             <div class="box-body"><div class="form-group foundation">
-                                        <div class="box-header">
-                                            <h3 class="box-title">Invoice Options</h3>
-                                        </div>
-                                        <div class="box-body">
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <?php echo $form->labelEx($model, 'Tarf_Cont_Next_Inv_Date', array('class' => '')); ?>
-                                                    <?php echo $form->textField($model, 'Tarf_Cont_Next_Inv_Date', array('class' => 'form-control', 'readonly' => !$model->isNewRecord)); ?>
-                                                    <?php echo $form->error($model, 'Tarf_Cont_Next_Inv_Date'); ?>
-                                                </div>
-
+                                    <div class="box-header">
+                                        <h3 class="box-title">Invoice Options</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Next_Inv_Date', array('class' => '')); ?>
+                                                <?php echo $form->textField($model, 'Tarf_Cont_Next_Inv_Date', array('class' => 'form-control', 'readonly' => !$model->isNewRecord)); ?>
+                                                <?php echo $form->error($model, 'Tarf_Cont_Next_Inv_Date'); ?>
                                             </div>
+
                                         </div>
-                                    </div></div>
+                                    </div>
+                                </div></div>
                         </div>
-                        
+
                         <div class="box-footer">
                             <div class="form-group">
                                 <div class="col-lg-12">
@@ -330,10 +337,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                 </div>
                 <div class="tab-pane" id="tab_2">
-                    <?php 
-                    if($other_tab_validation){
+                    <?php
+                    if ($other_tab_validation) {
                         $this->renderPartial('_history', compact('model'));
-                    } 
+                    }
                     ?>
                 </div>
             </div>
@@ -347,8 +354,10 @@ $search_url = Yii::app()->createAbsoluteUrl("site/tariffcontracts/searchuser");
 $get_tariff = Yii::app()->createAbsoluteUrl("site/tariffcontracts/gettariff");
 $get_recurr = Yii::app()->createAbsoluteUrl("site/tariffcontracts/getrecurr");
 $mode = $model->isNewRecord ? 1 : 0;
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
+        $('.nav-tabs a[href="#$active_Tab"]').tab('show');
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
         $('.cont_dates').datepicker({ 
             format: 'yyyy-mm-dd'
@@ -427,6 +436,15 @@ $js = <<< EOD
             });
         }
     }
+        
+    $('#TariffContracts_Tarf_Cont_Renewal').on('ifChecked', function(event){
+        $('#TariffContracts_Tarf_Cont_Renewal_Year').attr('disabled', false);
+    });
+        
+    $('#TariffContracts_Tarf_Cont_Renewal').on('ifUnchecked', function(event){
+        $('#TariffContracts_Tarf_Cont_Renewal_Year').attr('disabled', true);
+        $('#TariffContracts_Tarf_Cont_Renewal_Year').val('');
+    });
    
 EOD;
 

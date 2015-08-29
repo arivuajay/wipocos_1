@@ -64,6 +64,7 @@ class UserIdentity extends CUserIdentity {
         $this->_id = $user->id;
         $this->setState('name', $user->name);
         $this->setState('id', $user->id);
+        $this->setState('role', $user->role);
         return;
     }
 
@@ -119,4 +120,21 @@ class UserIdentity extends CUserIdentity {
         return $return;
     }
 
+    public static function checkAdmin() {
+        $return = false;
+        if(isset(Yii::app()->user->id)){
+            $user = User::model()->find('id = :U', array(':U' => $id));
+            $return = $user->role == 1;
+        }
+        return $return;
+    }
+    
+    public static function checkPrivilages($rank) {
+        $return = false;
+        if(isset(Yii::app()->user->id)){
+            $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
+            $return = $user->roleMdl->Rank <= $rank;
+        }
+        return $return;
+    }
 }

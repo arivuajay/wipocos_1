@@ -119,6 +119,24 @@ $this->breadcrumbs = array(
                                 'title' => 'Privilages',
                             ),
                             'url' => 'CHtml::normalizeUrl(array("/site/authresources/role/rid/".rawurlencode($data->Master_Role_ID)))',
+                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
+                        ),
+                        'role_update' => array(//the name {reply} must be same
+                            'label' => '<i class="glyphicon glyphicon-pencil"></i>',
+                            'options' => array(
+                                'title' => 'Update',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/masterrole/update/id/".rawurlencode($data->Master_Role_ID)))',
+                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
+                        ),
+                        'role_delete' => array(//the name {reply} must be same
+                            'label' => '<i class="glyphicon glyphicon-trash"></i>',
+                            'options' => array(
+                                'title' => 'Delete',
+                                'confirm' => 'Are you sure to delete?',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/masterrole/delete/id/".rawurlencode($data->Master_Role_ID)))',
+                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
                         ),
                     ),
                 )
@@ -175,6 +193,24 @@ $this->breadcrumbs = array(
                             'title' => 'Privilages',
                         ),
                         'url' => 'CHtml::normalizeUrl(array("/site/authresources/role/rid/".rawurlencode($data->Master_Role_ID)))',
+                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
+                    ),
+                    'role_update' => array(//the name {reply} must be same
+                        'label' => '<i class="glyphicon glyphicon-pencil"></i>',
+                        'options' => array(
+                            'title' => 'Update',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/masterrole/update/id/".rawurlencode($data->Master_Role_ID)))',
+                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
+                    ),
+                    'role_delete' => array(//the name {reply} must be same
+                        'label' => '<i class="glyphicon glyphicon-trash"></i>',
+                        'options' => array(
+                            'title' => 'Delete',
+                            'confirm' => 'Are you sure to delete?',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/masterrole/delete/id/".rawurlencode($data->Master_Role_ID)))',
+                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->Rank))'
                     ),
                 ),
             )

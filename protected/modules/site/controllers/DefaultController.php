@@ -30,7 +30,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron', 'testmail'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -329,7 +329,12 @@ class DefaultController extends Controller {
 
         //Contract Auto generate
         $checking_date = date('Y-m-d');
-        $contracts = TariffContracts::model()->findAllByAttributes(array('Tarf_Cont_To' => $checking_date, 'Tarf_Cont_Renewal' => 'Y'));
+        //condition **** Contract to = checking date and Renewal = Y and Renewal_year >= checking date ****
+        $contracts = TariffContracts::model()->findAll(array(
+            'condition' => "Tarf_Cont_To = :check_date And Tarf_Cont_Renewal = 'Y' And Tarf_Cont_Renewal_Year >= :year",
+            'params' => array('check_date' => $checking_date, 'year' => date('Y', strtotime($checking_date)))
+        ));
+//        $contracts = TariffContracts::model()->findAllByAttributes(array('Tarf_Cont_To' => $checking_date, 'Tarf_Cont_Renewal' => 'Y'));
         foreach ($contracts as $key => $contract) {
             $cont_hist_model = New TariffContractsHistory;
             $ignore_list = array('Tarf_Cont_GUID', 'Tarf_Cont_Internal_Code', 'Tarf_Invoice', 'Tarf_Cont_User_Id', 'Tarf_Cont_Id', 'Tarf_Cont_Renewal');
@@ -345,14 +350,14 @@ class DefaultController extends Controller {
 //                $date1 = new DateTime($contract->Tarf_Cont_From);
 //                $date2 = new DateTime($contract->Tarf_Cont_To);
 //                $diff_days = $date2->diff($date1)->format("%a");
-                
+
                 $new_from_date = strtotime("+1 days", strtotime($contract->Tarf_Cont_To));
                 $new_to_date = strtotime("+1 year", strtotime($contract->Tarf_Cont_To));
 //                $new_to_date = strtotime("+$diff_days days", strtotime($contract->Tarf_Cont_To));
                 $cont_model->Tarf_Cont_From = date("Y-m-d", $new_from_date);
                 $cont_model->Tarf_Cont_To = date("Y-m-d", $new_to_date);
                 $cont_model->Tarf_Cont_Balance = $cont_model->Tarf_Cont_Amt_Pay;
-                
+
                 $cont_model->save(false);
             }
         }
@@ -380,14 +385,14 @@ class DefaultController extends Controller {
                         'Inv_Next_Date' => $nxt_inv_date,
                         'Inv_Created_Type' => 'A',
                     );
-                    
+
                     $invoice_model->attributes = $new_invoice;
                     $invoice_model->save(false);
 
                     $contract_model = TariffContracts::model()->findByPk($contract->Tarf_Cont_Id);
-                    if($contract->Tarf_Cont_Pay_Id != 6){
+                    if ($contract->Tarf_Cont_Pay_Id != 6) {
                         $contract_model->Tarf_Cont_Next_Inv_Date = $nxt_inv_date;
-                    }else{
+                    } else {
                         $contract_model->Tarf_Cont_Next_Inv_Date = '';
                     }
                     $balance_amount = $contract_model->Tarf_Cont_Amt_Pay;
@@ -399,6 +404,24 @@ class DefaultController extends Controller {
                 }
             }
         }
+        exit;
+    }
+
+    public function actionTestmail() {
+        $mail = new Sendmail;
+        $message = "test";
+        $subject = "Tetss";
+
+        try {
+            mail("prakash.paramanandam@arkinfotec.com","My subject","Test");
+        } catch (Exception $exc) {
+            echo 'fail';
+            echo $exc->getTraceAsString();
+        }
+        exit;
+
+
+        var_dump($mail->send('prakash.paramanandam@arkinfotec.com', $subject, $message));
         exit;
     }
 

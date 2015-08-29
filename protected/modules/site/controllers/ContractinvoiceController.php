@@ -240,7 +240,48 @@ class ContractinvoiceController extends Controller {
 
     public function actionInvoice($id) {
         $model = $this->loadModel($id);
-        $this->render('invoice', compact('model'));
+
+        $export = isset($_REQUEST['export']) && $_REQUEST['export'] == 'PDF';
+        $compact = compact('model', 'export');
+        if ($export) {
+            $mPDF1 = Yii::app()->ePdf->mpdf();
+            $stylesheet = $this->pdfStyles();
+            $mPDF1->WriteHTML($stylesheet, 1);
+            $mPDF1->WriteHTML($this->renderPartial('_invoice_pdf', $compact, true));
+            $mail_pdf = $mPDF1->Output("Invoice{$model->Inv_Invoice}.pdf", EYiiPdf::OUTPUT_TO_STRING);
+            
+            Yii::import('application.extensions.phpmailer.JPhpMailer');
+            $from = NOREPLYMAIL;
+            $fromName = SITENAME;
+
+            $mailer = new JPhpMailer;
+            $mailer->IsSMTP();
+            $mailer->IsHTML(true);
+            $mailer->SMTPAuth = SMTPAUTH;
+            $mailer->SMTPSecure = SMTPSECURE;
+            $mailer->Host = SMTPHOST;
+            $mailer->Port = SMTPPORT;
+            $mailer->Username = SMTPUSERNAME;
+            $mailer->Password = SMTPPASS;
+            $mailer->From = $from;
+            $mailer->FromName = $fromName;
+            $mailer->AddAddress('prakash.paramanandam@arkinfotec.com');
+            $mailer->AddStringAttachment($mail_pdf, "Invoice_view_{$id}.pdf");
+            // $mailer->
+
+            $mailer->Subject = 'test';
+
+            $mailer->MsgHTML('test');
+
+            try {
+                $mailer->Send();
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+            exit;
+        } else {
+            $this->render('invoice', $compact);
+        }
     }
 
     /**
