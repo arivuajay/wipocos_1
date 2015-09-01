@@ -34,6 +34,14 @@
                     </div>
                 </div>
 
+                <?php
+                if (isset(Yii::app()->user->id) && !$model->isNewRecord) {
+                    $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
+                    $show_rank = $user->roleMdl->Rank <= $model->Rank;
+                }
+                ?>
+
+                <?php if($show_rank){ ?>
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Rank', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
@@ -41,6 +49,7 @@
                         <?php echo $form->error($model, 'Rank'); ?>
                     </div>
                 </div>
+                <?php } ?>
 
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'is_Admin', array('class' => 'col-sm-2 control-label')); ?>

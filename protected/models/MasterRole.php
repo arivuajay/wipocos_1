@@ -47,7 +47,7 @@ class MasterRole extends CActiveRecord {
             array('Role_Code', 'length', 'max' => 45),
             array('Description', 'length', 'max' => 100),
             array('is_Admin, Active', 'length', 'max' => 1),
-            array('Rank', 'numerical', 'integerOnly' => TRUE),
+            array('Rank', 'numerical', 'integerOnly' => TRUE, 'min' => 1, 'max' => 1000),
             array('Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
