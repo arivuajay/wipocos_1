@@ -55,6 +55,13 @@ $this->breadcrumbs = array(
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
+                        <?php $societies = Myclass::getSociety(); ?>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'society_id') ?>
+                            <?php echo $form->dropDownList($searchModel, 'society_id', $societies, array('prompt' => '', 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'status') ?>
                             <?php echo $form->dropDownList($searchModel, 'status', array('0' => 'In-active', '1' => 'Active'), array('prompt' => '', 'class' => 'form-control')); ?>
@@ -103,6 +110,12 @@ $this->breadcrumbs = array(
                     'htmlOptions' => array('style' => 'width: 180px;', 'vAlign' => 'middle'),
                     'type' => 'raw',
                     'value' => 'CHtml::encode($data->roleMdl->Description)',
+                ),
+                array(
+                    'name' => 'society_id',
+                    'htmlOptions' => array('style' => 'width: 180px;', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => 'CHtml::encode($data->soc->Societyname)',
                 ),
                 array(
                     'name' => 'status',
@@ -205,6 +218,12 @@ $this->breadcrumbs = array(
                 'type' => 'raw',
                 'value' => 'CHtml::encode($data->roleMdl->Description)',
             ),
+                array(
+                    'name' => 'society_id',
+                    'htmlOptions' => array('style' => 'width: 180px;', 'vAlign' => 'middle'),
+                    'type' => 'raw',
+                    'value' => 'CHtml::encode($data->soc->Societyname)',
+                ),
             array(
                 'name' => 'status',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle'),
