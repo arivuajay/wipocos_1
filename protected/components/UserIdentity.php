@@ -93,7 +93,9 @@ class UserIdentity extends CUserIdentity {
         //end//
         $screen = MasterScreen::model()->find("Screen_code = :controller", array(':controller' => $controller));
         if (!empty($user) && !empty($screen)) {
+            //First Check User Access
             $auth_resources = AuthResources::model()->findByAttributes(array('Master_User_ID' => $user->id, 'Master_Module_ID' => $screen->Module_ID, 'Master_Screen_ID' => $screen->Master_Screen_ID));
+            //Second Check Role Access
             if (empty($auth_resources)) {
                 $auth_resources = AuthResources::model()->findByAttributes(array('Master_Role_ID' => $user->role, 'Master_Module_ID' => $screen->Module_ID, 'Master_Screen_ID' => $screen->Master_Screen_ID));
             }
@@ -115,6 +117,37 @@ class UserIdentity extends CUserIdentity {
                 } elseif (in_array($action, $other_actions)) {
                     $return = true;
                 }
+            }else{
+                //hard code for society based access - Temporarily
+                $checking_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession');
+                
+                $author_screens = array('authoraccount', 'authorgroup', 'work', 'soundcarrier');
+                $performer_screens = array('performeraccount', 'performergroup', 'recording', 'recordingsession');
+                $copyright_screens = array('authoraccount', 'publisheraccount', 'authorgroup', 'publishergroup');
+                $related_screens = array('performeraccount', 'produceraccount', 'performergroup', 'producergroup');
+                $full_access_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession');
+                
+                if(in_array($controller, $checking_screens)){
+                    if($user->society_id == '10'){
+                        //author
+                        $return = in_array($controller, $author_screens);
+                    }else if($user->society_id == '11'){
+                        //performer
+                        $return = in_array($controller, $performer_screens);
+                    }else if($user->society_id == '12'){
+                        //copy rights
+                        $return = in_array($controller, $copyright_screens);
+                    }else if($user->society_id == '13'){
+                        //related rights
+                        $return = in_array($controller, $related_screens);
+                    }else if($user->society_id == '14'){
+                        //full access
+                        $return = in_array($controller, $full_access_screens);
+                    }
+                }else{
+                    $return = true;
+                }
+                //end
             }
         }
         return $return;

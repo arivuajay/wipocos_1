@@ -21,17 +21,17 @@ class MyMenu extends CMenu {
                     foreach ($second_item as $third_key => $third_item) {
                         if (isset($third_item['url'])) {
                             $controller = $this->splitController($third_item['url'][0]);
-                            if(is_array($third_item['url'])){
-                                if(!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)){
+                            if (is_array($third_item['url'])) {
+                                $this->items[$key][$second_key][$third_key]['visible'] = UserIdentity::checkAccess($_id, $controller, 'view');
+                                if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
                                     $this->items[$key][$second_key][$third_key]['active'] = $_controller == $controller;
-                                    $this->items[$key][$second_key][$third_key]['visible'] = UserIdentity::checkAccess($_id, $controller, 'view');
                                 }
                             }
                             if (isset($third_item['items'])) {
                                 foreach ($third_item['items'] as $fourth_key => $fourth_value) {
                                     $controller = $this->splitController($fourth_value['url'][0]);
+                                    $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['visible'] = UserIdentity::checkAccess($_id, $controller, 'view');
                                     if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
-                                        $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['visible'] = UserIdentity::checkAccess($_id, $controller, 'view');
                                         $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['active'] = $_controller == $controller;
                                     }
                                 }
@@ -41,9 +41,6 @@ class MyMenu extends CMenu {
                 }
             }
         }
-//        echo '<pre>';
-//        print_r($this->items);
-//        exit;
         parent::init();
     }
 
@@ -54,10 +51,16 @@ class MyMenu extends CMenu {
         } else {
             $controller = $exp[2];
         }
+        //hard code for groups controller//
+        if (in_array($controller, array('group', 'publishergroup'))) {
+            $controller = "$exp[5]group";
+        }
+        //end
         return $controller;
     }
 
-    public static function ignoreActiveList(){
+    public static function ignoreActiveList() {
         return array('group', 'publishergroup', 'work');
     }
+
 }

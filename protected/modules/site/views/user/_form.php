@@ -10,8 +10,16 @@
                     'validateOnSubmit' => true,
                 )
             ));
+            $societies = Myclass::getSociety();
             ?>
             <div class="box-body">
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'society_id', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->dropDownList($model, 'society_id', $societies, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'society_id'); ?>
+                    </div>
+                </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'username', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">

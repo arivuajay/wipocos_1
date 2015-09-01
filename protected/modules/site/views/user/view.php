@@ -36,7 +36,11 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
-            'id',
+//            'id',
+            array(
+                'label' => $model->getAttributeLabel('society_id'),
+                'value' => $model->soc->Societyname
+            ),
             'username',
             'name',
             array(

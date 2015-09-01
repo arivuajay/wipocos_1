@@ -1,21 +1,28 @@
 <?php
+
 //error_reporting(E_ALL & ~E_NOTICE  & ~E_DEPRECATED);
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 // change the following paths if necessary
-$yii=dirname(__FILE__).'/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/main.php';
+$yii = dirname(__FILE__) . '/framework/yii.php';
+$config = dirname(__FILE__) . '/protected/config/main.php';
 include_once(dirname(__FILE__) . '/protected/config/constants.php');
 
 // remove the following lines when in production mode
-defined('YII_DEBUG') or define('YII_DEBUG',true);
+defined('YII_DEBUG') or define('YII_DEBUG', true);
 // specify how many levels of call stack should be shown in each log message
-defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 
 require_once($yii);
 $app = Yii::createWebApplication($config);
 
-$society = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
-if($society){
+$soc_id = DEFAULT_SOCIETY_ID;
+if (isset(Yii::app()->user->id)) {
+    $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
+    if(!empty($user))
+        $soc_id = $user->society_id;
+}
+$society = Society::model()->findByPk($soc_id);
+if ($society) {
     defined('DEFAULT_NATIONALITY_ID') || @define('DEFAULT_NATIONALITY_ID', $society->socOrg->Org_Nation_Id);
     defined('DEFAULT_COUNTRY_ID') || @define('DEFAULT_COUNTRY_ID', $society->Society_Country_Id);
     defined('DEFAULT_REGION_ID') || @define('DEFAULT_REGION_ID', $society->Society_Region_Id);
@@ -32,13 +39,13 @@ if($society){
     defined('DEFAULT_MEDIUM_ID') || @define('DEFAULT_MEDIUM_ID', $society->Soceity_Medium_Id);
     defined('DEFAULT_LEGAL_FORM_ID') || @define('DEFAULT_LEGAL_FORM_ID', $society->Soceity_Legal_Form_Id);
 }
-            
+
 defined('SITEURL') ||
-    @define('SITEURL', Yii::app()->createAbsoluteUrl("/"));
+        @define('SITEURL', Yii::app()->createAbsoluteUrl("/"));
 defined('SITENAME') ||
-    @define('SITENAME', Yii::app()->name);
+        @define('SITENAME', Yii::app()->name);
 
 defined('DS') ||
-    @define('DS', DIRECTORY_SEPARATOR);
+        @define('DS', DIRECTORY_SEPARATOR);
 
 $app->run();
