@@ -65,6 +65,7 @@ class UserIdentity extends CUserIdentity {
         $this->setState('name', $user->name);
         $this->setState('id', $user->id);
         $this->setState('role', $user->role);
+        $this->setState('rolename', $user->roleMdl->Description);
         return;
     }
 
@@ -136,10 +137,10 @@ class UserIdentity extends CUserIdentity {
                         //performer
                         $return = in_array($controller, $performer_screens);
                     }else if($user->society_id == '12'){
-                        //copy rights
+                        //copyrights and publisher
                         $return = in_array($controller, $copyright_screens);
                     }else if($user->society_id == '13'){
-                        //related rights
+                        //performer and producers
                         $return = in_array($controller, $perf_prod_screens);
                     }else if($user->society_id == '14'){
                         //full access

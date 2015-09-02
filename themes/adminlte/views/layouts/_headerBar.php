@@ -209,7 +209,7 @@
                             <!-- User image -->
                             <li class="user-header bg-light-blue">
                                 <?php echo CHtml::image("{$this->themeUrl}/img/avatar5.png", 'User Image', array('class' => 'img-circle')) ?>
-                                <p><?php echo Inflector::camel2words(Yii::app()->user->name) ?> - ADMIN</p>
+                                <p><?php echo Inflector::camel2words(Yii::app()->user->name) ?> - <?php echo isset(Yii::app()->user->rolename) ? Inflector::camel2words(Yii::app()->user->rolename) : '' ?></p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
