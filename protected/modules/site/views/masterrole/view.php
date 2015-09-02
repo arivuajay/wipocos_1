@@ -2,7 +2,7 @@
 /* @var $this MasterroleController */
 /* @var $model MasterRole */
 
-$this->title = 'View Master Role: ' . $model->Role_Code;
+$this->title = 'View Master Role: ' . $model->Description;
 $this->breadcrumbs = array(
     'Master Roles' => array('index'),
     'View ' . 'MasterRole',
@@ -39,8 +39,9 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
-            'Master_Role_ID',
+//            'Master_Role_ID',
             'Role_Code',
+            'Rank',
             'Description',
             array(
                 'label' => MasterRole::model()->getAttributeLabel('is_Admin'),
