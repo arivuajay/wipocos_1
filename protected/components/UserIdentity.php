@@ -123,13 +123,14 @@ class UserIdentity extends CUserIdentity {
                 
                 $author_screens = array('authoraccount', 'authorgroup', 'work', 'soundcarrier');
                 $performer_screens = array('performeraccount', 'performergroup', 'recording', 'recordingsession');
-                $copyright_screens = array('authoraccount', 'publisheraccount', 'authorgroup', 'publishergroup');
-                $related_screens = array('performeraccount', 'produceraccount', 'performergroup', 'producergroup');
+                $copyright_screens = array('authoraccount', 'publisheraccount', 'authorgroup', 'publishergroup', 'work', 'soundcarrier');
+                $perf_prod_screens = array('performeraccount', 'produceraccount', 'performergroup', 'producergroup', 'recording', 'recordingsession');
+                $producer_screens = array('produceraccount', 'producergroup', 'recording');
                 $full_access_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession');
                 
                 if(in_array($controller, $checking_screens)){
                     if($user->society_id == '10'){
-                        //author
+                        //copyright
                         $return = in_array($controller, $author_screens);
                     }else if($user->society_id == '11'){
                         //performer
@@ -139,10 +140,13 @@ class UserIdentity extends CUserIdentity {
                         $return = in_array($controller, $copyright_screens);
                     }else if($user->society_id == '13'){
                         //related rights
-                        $return = in_array($controller, $related_screens);
+                        $return = in_array($controller, $perf_prod_screens);
                     }else if($user->society_id == '14'){
                         //full access
                         $return = in_array($controller, $full_access_screens);
+                    }else if($user->society_id == '15'){
+                        //producer
+                        $return = in_array($controller, $producer_screens);
                     }
                 }else{
                     $return = true;
