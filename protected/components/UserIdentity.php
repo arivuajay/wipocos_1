@@ -120,14 +120,14 @@ class UserIdentity extends CUserIdentity {
                 }
             }else{
                 //hard code for society based access - Temporarily
-                $checking_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession');
+                $checking_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession', 'customeruser', 'inspector', 'tariffcontracts', 'contractinvoice');
                 
                 $author_screens = array('authoraccount', 'authorgroup', 'work', 'soundcarrier');
                 $performer_screens = array('performeraccount', 'performergroup', 'recording', 'recordingsession');
                 $copyright_screens = array('authoraccount', 'publisheraccount', 'authorgroup', 'publishergroup', 'work', 'soundcarrier');
                 $perf_prod_screens = array('performeraccount', 'produceraccount', 'performergroup', 'producergroup', 'recording', 'recordingsession');
                 $producer_screens = array('produceraccount', 'producergroup', 'recording');
-                $full_access_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession');
+                $full_access_screens = array('authoraccount', 'performeraccount', 'publisheraccount', 'produceraccount', 'authorgroup', 'performergroup', 'publishergroup', 'producergroup', 'work', 'soundcarrier', 'recording', 'recordingsession', 'customeruser', 'inspector', 'tariffcontracts', 'contractinvoice');
                 
                 if(in_array($controller, $checking_screens)){
                     if($user->society_id == '10'){

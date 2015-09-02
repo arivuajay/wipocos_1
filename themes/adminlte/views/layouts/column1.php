@@ -4,7 +4,7 @@
         <h1>
             <?php
             if ($this->title !== null) {
-                echo Inflector::camel2words($this->title);
+                echo $this->title;//Inflector::camel2words($this->title);
             } else {
                 echo Inflector::camel2words(Inflector::id2camel($this->context->module->id));
                 echo ($this->context->module->id !== Yii::app()->id) ? '<small>Module</small>' : '';
