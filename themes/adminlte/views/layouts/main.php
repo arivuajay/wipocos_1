@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?php echo CHtml::encode($this->title); ?></title>
+        <title><?php echo $this->title//CHtml::encode($this->title); ?></title>
         <?php
         $themeUrl = $this->themeUrl;
         $cs = Yii::app()->getClientScript();

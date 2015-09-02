@@ -129,6 +129,14 @@
                         array('label' => '<i class="fa fa-envelope"></i> <span>Email Templates</span>', 'url' => array('/site/emailtemplate/index'), 'visible' => 1, 'active' => 0),
                     ),
                 ),
+                array('label' => '<i class="fa fa-pie-chart"></i> <span>Distribution</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                    'itemOptions' => array('class' => 'treeview'),
+                    'submenuOptions' => array('class' => 'treeview-menu'),
+                    'items' => array(
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Class</span>', 'url' => array('/site/distributionclass/index'), 'visible' => 1, 'active' => 0),
+                        array('label' => '<i class="fa fa-paw"></i> <span>Sub-Class</span>', 'url' => array('/site/distributionsubclass/index'), 'visible' => 1, 'active' => 0),
+                    ),
+                ),
             ),
             'htmlOptions' => array('class' => 'sidebar-menu')
         ));

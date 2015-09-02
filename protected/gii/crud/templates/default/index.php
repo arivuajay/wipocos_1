@@ -57,7 +57,6 @@ echo "\$cs->registerScriptFile(\$themeUrl . '/js/datatables/dataTables.bootstrap
                         <div class="form-group">
                             <?php echo "<?php echo " . $this->generatesearchActiveLabel($this->modelClass, $column, '') . "; ?>\n"; ?>
                             <?php echo "<?php echo " . $this->generateSearchActiveField($this->modelClass, $column) . "; ?>\n"; ?>
-                            <?php echo "<?php echo \$form->error(\$searchModel,'{$column->name}'); ?>\n"; ?>
                         </div>
                     </div>
                     <?php
