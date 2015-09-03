@@ -1,19 +1,19 @@
 <?php
-/* @var $this DistributionsettingController */
+/* @var $this DistributionutlizationperiodController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Setting Dates';
+$this->title = 'Utlization Periods';
 $this->breadcrumbs = array(
-    'Setting Dates',
+    'Utlization Periods',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
-$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
 $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
@@ -32,33 +32,47 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'search-form',
                         'method' => 'get',
-                        'action' => array('/site/distributionsetting/index'),
+                        'action' => array('/site/distributionutlizationperiod/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
+                    $classes = DistributionClass::classList();
+                    $settings = DistributionSetting::settingList();
                     ?>
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Setting_Identifier', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Setting_Identifier', array('class' => 'form-control')); ?>
+                            <?php echo $form->labelEx($searchModel, 'Period_Year', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Period_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Setting_Date', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Setting_Date', array('class' => 'form-control date')); ?>
+                            <?php echo $form->labelEx($searchModel, 'Period_Number', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Period_Number', array('class' => 'form-control')); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Total_Distribute', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Total_Distribute', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                            <?php echo $form->labelEx($searchModel, 'Period_From', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Period_From', array('class' => 'form-control date')); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Closing_Distribute', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Closing_Distribute', array('class' => 'form-control')); ?>
+                            <?php echo $form->labelEx($searchModel, 'Period_To', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Period_To', array('class' => 'form-control date')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Class_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Class_Id', $classes, array('class' => 'form-control', 'prompt' => '')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Setting_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Setting_Id', $settings, array('class' => 'form-control', 'prompt' => '')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -81,10 +95,18 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                'Setting_Identifier',
-                'Setting_Date',
-                'Total_Distribute',
-                'Closing_Distribute',
+                'Period_Year',
+                'Period_Number',
+                'Period_From',
+                'Period_To',
+                array(
+                    'name' => 'Class_Id',
+                    'value' => '$data->class->Class_Name'
+                ),
+                array(
+                    'name' => 'Setting_Id',
+                    'value' => '$data->setting->Setting_Date'
+                ),
                 array(
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
@@ -117,9 +139,9 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
         <?php
         $this->widget(
                 'application.components.MyTbButton', array(
-            'label' => 'Create Setting Dates',
+            'label' => 'Create Utlization Period',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/distributionsetting/create'),
+            'url' => array('/site/distributionutlizationperiod/create'),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),
@@ -133,10 +155,18 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
-            'Setting_Identifier',
-            'Setting_Date',
-            'Total_Distribute',
-            'Closing_Distribute',
+            'Period_Year',
+            'Period_Number',
+            'Period_From',
+            'Period_To',
+            array(
+                'name' => 'Class_Id',
+                'value' => '$data->class->Class_Name'
+            ),
+            array(
+                'name' => 'Setting_Id',
+                'value' => '$data->setting->Setting_Date'
+            ),
             array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
@@ -149,7 +179,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Setting Dates</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Utlization Periods</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

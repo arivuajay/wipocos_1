@@ -129,7 +129,7 @@ $this->breadcrumbs = array(
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{privilages}{view}{update}{delete}',
+                    'template' => '{privilages}{view}{role_update}{role_delete}',
                     'buttons' => array(
                         'privilages' => array(//the name {reply} must be same
                             'label' => '<i class="fa fa-cogs"></i>',
@@ -145,7 +145,7 @@ $this->breadcrumbs = array(
                                 'title' => 'Update',
                             ),
                             'url' => 'CHtml::normalizeUrl(array("/site/user/update/id/".rawurlencode($data->id)))',
-                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank)) && UserIdentity::checkAccess(NULL, "user", "update")'
                         ),
                         'role_delete' => array(//the name {reply} must be same
                             'label' => '<i class="glyphicon glyphicon-trash"></i>',
@@ -154,7 +154,7 @@ $this->breadcrumbs = array(
                                 'confirm' => 'Are you sure to delete?',
                             ),
                             'url' => 'CHtml::normalizeUrl(array("/site/user/delete/id/".rawurlencode($data->id)))',
-                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                            'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank)) && UserIdentity::checkAccess(NULL, "user", "delete")'
                         ),
                     ),
                 )
@@ -236,7 +236,7 @@ $this->breadcrumbs = array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{privilages}{view}{update}{delete}',
+                'template' => '{privilages}{view}{role_update}{role_delete}',
                 'buttons' => array(
                     'privilages' => array(//the name {reply} must be same
                         'label' => '<i class="fa fa-cogs"></i>',
@@ -252,7 +252,7 @@ $this->breadcrumbs = array(
                             'title' => 'Update',
                         ),
                         'url' => 'CHtml::normalizeUrl(array("/site/user/update/id/".rawurlencode($data->id)))',
-                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank)) && UserIdentity::checkAccess(NULL, "user", "update")'
                     ),
                     'role_delete' => array(//the name {reply} must be same
                         'label' => '<i class="glyphicon glyphicon-trash"></i>',
@@ -261,7 +261,7 @@ $this->breadcrumbs = array(
                             'confirm' => 'Are you sure to delete?',
                         ),
                         'url' => 'CHtml::normalizeUrl(array("/site/user/delete/id/".rawurlencode($data->id)))',
-                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank)) && UserIdentity::checkAccess(NULL, "user", "delete")'
                     ),
                 ),
             )

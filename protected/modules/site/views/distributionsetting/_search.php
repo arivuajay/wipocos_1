@@ -17,6 +17,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'Setting_Identifier'); ?>
+		<?php echo $form->textField($model,'Setting_Identifier',array('class'=>'form-control')); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'Setting_Date'); ?>
 		<?php echo $form->textField($model,'Setting_Date',array('class'=>'form-control')); ?>
 	</div>

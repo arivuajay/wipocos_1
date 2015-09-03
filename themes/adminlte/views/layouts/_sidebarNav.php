@@ -46,10 +46,11 @@
             'encodeLabel' => false,
             'activateItems' => true,
             'items' => array(
-                array('label' => '<i class="fa fa-dashboard"></i> <span>Dashboard</span>', 'url' => Yii::app()->homeUrl),
+                array('label' => '<i class="fa fa-dashboard"></i> <span>Dashboard</span>', 'url' => Yii::app()->homeUrl, 'visible' => '1'),
                 array('label' => '<i class="fa fa-cog"></i> <span>Administration</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
                     'items' => array(
                         array('label' => '<i class="fa fa-weixin"></i> <span>Society</span>', 'url' => array('/site/society/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-music"></i> <span>Roles</span>', 'url' => array('/site/masterrole/index'), 'visible' => '1', 'active' => '0'),
@@ -59,6 +60,7 @@
                 array('label' => '<i class="fa fa-database"></i> <span>Master</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
                     'items' => array(
                         array('label' => '<i class="fa fa-usd"></i> <span>Currencies</span>', 'url' => array('/site/mastercurrency/index'), 'visible' => '1', 'active' => '0'),
                         array('label' => '<i class="fa fa-globe"></i> <span>Countries</span>', 'url' => array('/site/mastercountry/index'), 'visible' => '1', 'active' => '0'),
@@ -96,6 +98,7 @@
                 array('label' => '<i class="fa fa-briefcase"></i> <span>Documentation</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
                     'items' => array(
                         array('label' => '<i class="fa fa-group"></i> <span>Members</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                             'itemOptions' => array('class' => 'treeview innertree'),
@@ -121,6 +124,7 @@
                 array('label' => '<i class="fa fa-copyright"></i> <span>Licensing</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
                     'items' => array(
                         array('label' => '<i class="fa fa-user"></i> <span>Users & Customers</span>', 'url' => array('/site/customeruser/index'), 'visible' => 1, 'active' => 0),
                         array('label' => '<i class="fa fa-shield"></i> <span>Inspectors</span>', 'url' => array('/site/inspector/index'), 'visible' => 1, 'active' => 0),
@@ -132,9 +136,12 @@
                 array('label' => '<i class="fa fa-pie-chart"></i> <span>Distribution</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
                     'items' => array(
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Class</span>', 'url' => array('/site/distributionclass/index'), 'visible' => 1, 'active' => 0),
                         array('label' => '<i class="fa fa-paw"></i> <span>Sub-Class</span>', 'url' => array('/site/distributionsubclass/index'), 'visible' => 1, 'active' => 0),
+                        array('label' => '<i class="fa fa-calendar"></i> <span>Setting Dates</span>', 'url' => array('/site/distributionsetting/index'), 'visible' => 1, 'active' => 0),
+                        array('label' => '<i class="fa fa-area-chart"></i> <span>Utlization Periods</span>', 'url' => array('/site/distributionutlizationperiod/index'), 'visible' => 1, 'active' => 0),
                     ),
                 ),
             ),

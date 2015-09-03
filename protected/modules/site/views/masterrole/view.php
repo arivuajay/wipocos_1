@@ -13,22 +13,25 @@ $this->breadcrumbs = array(
     <p>
          <?php
         $this->widget(
-                'application.components.MyTbButton', array(
+//                'application.components.MyTbButton', array(
+                'booster.widgets.TbButton', array(
                     'label' => 'Update',
                     'url' => array('update', 'id' => $model->Master_Role_ID),
                     'buttonType' => 'link',
                     'context' => 'primary',
+                    'visible' => UserIdentity::checkPrivilages($model->Rank) && UserIdentity::checkAccess(NULL, "masterrole", "update")
 //                    
                 )
         );
         echo "&nbsp;&nbsp;";
         $this->widget(
-                'application.components.MyTbButton', array(
+                'booster.widgets.TbButton', array(
                     'label' => 'Delete',
                     'url' => array('delete', 'id' => $model->Master_Role_ID),
                     'buttonType' => 'link',
                     'context' => 'danger',
                     'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                    'visible' => UserIdentity::checkPrivilages($model->Rank) && UserIdentity::checkAccess(NULL, "masterrole", "delete")
                     
                 )
         );

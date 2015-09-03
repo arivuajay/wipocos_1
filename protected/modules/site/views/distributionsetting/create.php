@@ -2,9 +2,9 @@
 /* @var $this DistributionsettingController */
 /* @var $model DistributionSetting */
 
-$this->title='Create Distribution Settings';
+$this->title='Create Setting Dates';
 $this->breadcrumbs=array(
-	'Distribution Settings'=>array('index'),
+	'Setting Dates'=>array('index'),
 	$this->title,
 );
 ?>

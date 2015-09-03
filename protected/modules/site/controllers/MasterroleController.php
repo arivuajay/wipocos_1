@@ -84,6 +84,9 @@ class MasterroleController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        if(!UserIdentity::checkPrivilages($model->Rank)){
+            throw new CHttpException(403, 'You are not authorized to perform this action');
+        }
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
@@ -111,6 +114,9 @@ class MasterroleController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            if(!UserIdentity::checkPrivilages($model->Rank)){
+                throw new CHttpException(403, 'You are not authorized to perform this action');
+            }
             $model->delete();
             Myclass::addAuditTrail("Deleted Role {$model->Role_Code} successfully.", "music");
         } catch (CDbException $e) {

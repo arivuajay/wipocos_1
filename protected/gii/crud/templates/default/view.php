@@ -62,7 +62,7 @@ $activeFields = $this->giiGenerateActiveInActiveFields();
     ?>
     <?php echo "<?php"; ?>
     if ($export) { ?>
-        <h3 class="text-center"><?php echo  $this->modelClass.' <?php echo $this->title ?>';?></h3>
+        <h3 class="text-center"><?php echo  '<?php echo $this->title ?>';?></h3>
     <?php echo "<?php"; ?>        
     }
     ?>

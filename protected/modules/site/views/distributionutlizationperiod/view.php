@@ -1,11 +1,11 @@
 <?php
-/* @var $this DistributionsettingController */
-/* @var $model DistributionSetting */
+/* @var $this DistributionutlizationperiodController */
+/* @var $model DistributionUtlizationPeriod */
 
-$this->title = 'View Setting Dates: ' . $model->Setting_Identifier;
+$this->title = 'View Utlization Period: ' . $model->Period_Year;
 $this->breadcrumbs = array(
-    'Setting Datess' => array('index'),
-    'View ' . 'Setting Dates',
+    'Utlization Periods' => array('index'),
+    'View ' . 'Utlization Period',
 );
 ?>
 <div class="user-view">
@@ -16,7 +16,7 @@ $this->breadcrumbs = array(
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Update',
-                'url' => array('update', 'id' => $model->Setting_Id),
+                'url' => array('update', 'id' => $model->Period_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
                     )
@@ -25,7 +25,7 @@ $this->breadcrumbs = array(
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Delete',
-                'url' => array('delete', 'id' => $model->Setting_Id),
+                'url' => array('delete', 'id' => $model->Period_Id),
                 'buttonType' => 'link',
                 'context' => 'danger',
                 'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
@@ -35,7 +35,7 @@ $this->breadcrumbs = array(
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Download',
-                'url' => array('view', 'id' => $model->Setting_Id, 'export' => 'PDF'),
+                'url' => array('view', 'id' => $model->Period_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
                     )
@@ -54,11 +54,19 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
-//            'Setting_Id',
-            'Setting_Identifier',
-            'Setting_Date',
-            'Total_Distribute',
-            'Closing_Distribute',
+//            'Period_Id',
+            'Period_Year',
+            'Period_Number',
+            'Period_From',
+            'Period_To',
+            array(
+                'name' => 'Class_Id',
+                'value' => $model->class->Class_Name
+            ),
+            array(
+                'name' => 'Setting_Id',
+                'value' => $model->setting->Setting_Date
+            ),
                 array(
                     'name' => 'Created_By',
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''

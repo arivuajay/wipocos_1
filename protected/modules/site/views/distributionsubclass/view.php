@@ -2,7 +2,7 @@
 /* @var $this DistributionsubclassController */
 /* @var $model DistributionSubclass */
 
-$this->title = 'View Sub-Class:' . $model->Subclass_Name;
+$this->title = 'View Sub-Class: ' . $model->Subclass_Name;
 $this->breadcrumbs = array(
     'Sub-Classes' => array('index'),
     'View ' . 'Sub-Class',
@@ -45,7 +45,7 @@ $this->breadcrumbs = array(
     <?php }
     ?>
     <?php if ($export) { ?>
-        <h3 class="text-center">Sub-Class <?php echo $this->title ?></h3>
+        <h3 class="text-center"><?php echo $this->title ?></h3>
         <?php
     }
     ?>
@@ -54,12 +54,12 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
+            'Subclass_Code',
+            'Subclass_Name',
             array(
                 'name' => 'Class_Id',
                 'value' => $model->class->Class_Name
             ),
-            'Subclass_Code',
-            'Subclass_Name',
             array(
                 'name' => 'Subclass_Measure_Unit',
                 'value' => DistributionSubclass::measuringUnitList($model->Subclass_Measure_Unit)
@@ -75,6 +75,22 @@ $this->breadcrumbs = array(
             'Subclass_Admin_Cost',
             'Subclass_Social_Deduct',
             'Subclass_Cultural_Deduct',
+                array(
+                    'name' => 'Created_By',
+                    'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''
+                ),
+                array(
+                    'name' => 'Created Date',
+                    'value' => $model->Created_Date
+                ),
+                array(
+                    'name' => 'Updated_By',
+                    'value' => isset($model->updatedBy->name) ? $model->updatedBy->name : ''
+                ),
+                array(
+                    'name' => 'Updated Date',
+                    'value' => $model->Rowversion
+                ),
         ),
     ));
     ?>

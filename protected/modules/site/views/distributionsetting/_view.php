@@ -9,6 +9,10 @@
 	<?php echo CHtml::link(CHtml::encode($data->Setting_Id), array('view', 'id'=>$data->Setting_Id)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Setting_Identifier')); ?>:</b>
+	<?php echo CHtml::encode($data->Setting_Identifier); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Setting_Date')); ?>:</b>
 	<?php echo CHtml::encode($data->Setting_Date); ?>
 	<br />
@@ -29,11 +33,11 @@
 	<?php echo CHtml::encode($data->Rowversion); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Created_By')); ?>:</b>
 	<?php echo CHtml::encode($data->Created_By); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Updated_By')); ?>:</b>
 	<?php echo CHtml::encode($data->Updated_By); ?>
 	<br />

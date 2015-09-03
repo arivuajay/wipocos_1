@@ -89,6 +89,9 @@ class UserController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        if(!UserIdentity::checkPrivilages($model->roleMdl->Rank)){
+            throw new CHttpException(403, 'You are not authorized to perform this action');
+        }
         $model->setScenario('update');
 
         // Uncomment the following line if AJAX validation is needed
@@ -117,6 +120,9 @@ class UserController extends Controller {
     public function actionDelete($id) {
         try {
             $model = $this->loadModel($id);
+            if(!UserIdentity::checkPrivilages($model->roleMdl->Rank)){
+                throw new CHttpException(403, 'You are not authorized to perform this action');
+            }
             $model->delete();
             Myclass::addAuditTrail("Deleted User {$model->username} successfully.", "user");
         } catch (CDbException $e) {

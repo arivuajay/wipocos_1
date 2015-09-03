@@ -167,12 +167,14 @@ class UserIdentity extends CUserIdentity {
         return $return;
     }
     
-    public static function checkPrivilages($rank) {
+    public static function checkPrivilages($rank/*, $id = NULL, $controller = NULL, $action = NULL, $group_role = NULL*/) {
         $return = false;
         if(isset(Yii::app()->user->id)){
             $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
             $return = $user->roleMdl->Rank <= $rank;
         }
+//        if(!$return)
+//            $return = self::checkAccess ($id, $controller, $action, $group_role);
         return $return;
     }
 }

@@ -44,7 +44,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'role', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php $roles = CHtml::listData(MasterRole::model()->findAll(), 'Master_Role_ID', 'Description'); ?>
+                        <?php $roles = CHtml::listData(MasterRole::model()->slaves()->findAll(), 'Master_Role_ID', 'Description'); ?>
                         <?php echo $form->dropDownList($model, 'role', $roles, array('class' => 'form-control')); ?>
                         <?php echo $form->error($model, 'role'); ?>
                     </div>

@@ -1,29 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "{{distribution_setting}}".
+ * This is the model class for table "{{distribution_utlization_period}}".
  *
- * The followings are the available columns in table '{{distribution_setting}}':
+ * The followings are the available columns in table '{{distribution_utlization_period}}':
+ * @property integer $Period_Id
+ * @property string $Period_Year
+ * @property integer $Period_Number
+ * @property string $Period_From
+ * @property string $Period_To
+ * @property integer $Class_Id
  * @property integer $Setting_Id
- * @property integer $Setting_Identifier
- * @property string $Setting_Date
- * @property string $Total_Distribute
- * @property integer $Closing_Distribute
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
  * @property integer $Updated_By
  *
  * The followings are the available model relations:
- * @property DistributionUtlizationPeriod[] $distributionUtlizationPeriods
+ * @property DistributionClass $class
+ * @property DistributionSetting $setting
  */
-class DistributionSetting extends RActiveRecord {
+class DistributionUtlizationPeriod extends RActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{distribution_setting}}';
+        return '{{distribution_utlization_period}}';
     }
 
     /**
@@ -33,13 +36,14 @@ class DistributionSetting extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Setting_Identifier, Setting_Date', 'required'),
-            array('Setting_Identifier, Closing_Distribute, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Total_Distribute', 'length', 'max' => 10),
+            array('Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id', 'required'),
+            array('Period_Year, Period_Number, Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Period_Year', 'length', 'max' => 4),
+            array('Period_Year', 'numerical', 'min' => date('Y')-100, 'max' => date('Y')+100),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Setting_Id, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Period_Id, Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -50,7 +54,8 @@ class DistributionSetting extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'distributionUtlizationPeriods' => array(self::HAS_MANY, 'DistributionUtlizationPeriod', 'Setting_Id'),
+            'class' => array(self::BELONGS_TO, 'DistributionClass', 'Class_Id'),
+            'setting' => array(self::BELONGS_TO, 'DistributionSetting', 'Setting_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -61,11 +66,13 @@ class DistributionSetting extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
+            'Period_Id' => 'Period',
+            'Period_Year' => 'Period Year',
+            'Period_Number' => 'Period Number',
+            'Period_From' => 'Period From',
+            'Period_To' => 'Period To',
+            'Class_Id' => 'Class',
             'Setting_Id' => 'Setting',
-            'Setting_Identifier' => 'Identifier',
-            'Setting_Date' => 'Date',
-            'Total_Distribute' => 'Total Distributed',
-            'Closing_Distribute' => 'Closing Distribute',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -90,11 +97,13 @@ class DistributionSetting extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
+        $criteria->compare('Period_Id', $this->Period_Id);
+        $criteria->compare('Period_Year', $this->Period_Year, true);
+        $criteria->compare('Period_Number', $this->Period_Number);
+        $criteria->compare('Period_From', $this->Period_From, true);
+        $criteria->compare('Period_To', $this->Period_To, true);
+        $criteria->compare('Class_Id', $this->Class_Id);
         $criteria->compare('Setting_Id', $this->Setting_Id);
-        $criteria->compare('Setting_Identifier', $this->Setting_Identifier);
-        $criteria->compare('Setting_Date', $this->Setting_Date, true);
-        $criteria->compare('Total_Distribute', $this->Total_Distribute, true);
-        $criteria->compare('Closing_Distribute', $this->Closing_Distribute);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('Created_By', $this->Created_By);
@@ -112,7 +121,7 @@ class DistributionSetting extends RActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return DistributionSetting the static model class
+     * @return DistributionUtlizationPeriod the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -126,10 +135,4 @@ class DistributionSetting extends RActiveRecord {
         ));
     }
 
-    public static function settingList($key = NULL) {
-        $list = CHtml::listData(self::model()->findAll(), 'Setting_Id', 'Setting_Date');
-        if($key != NULL)
-            return $list[$key];
-        return $list;
-    }
 }
