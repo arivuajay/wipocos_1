@@ -28,7 +28,7 @@ class AuthresourcesController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'user', 'role', 'getscreensbymodule'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'user', 'role', 'getscreensbymodule', 'society'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -197,6 +197,14 @@ class AuthresourcesController extends Controller {
         return $this->render('role_base', compact('model'));
     }
 
+    public function actionSociety($sid = null) {
+        $model = new AuthResources();
+        if ($sid)
+            $model->Master_Society_ID = $sid;
+
+        return $this->render('society_base', compact('model'));
+    }
+
     public function actionGetscreensbymodule() {
         $mid = $id = $type = '';
         if (isset($_GET['mid']) && isset($_GET['id']) && isset($_GET['type'])) {
@@ -207,10 +215,9 @@ class AuthresourcesController extends Controller {
         $model = new AuthResources();
         $masters = MasterScreen::model()->isActive()->findAllByAttributes(array('Module_ID' => $mid));
 
-        if ($type == 'role') {
-            $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, 'Master_Role_ID' => $id));
-        } elseif ($type == 'user') {
-            $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, 'Master_User_ID' => $id));
+        if ($type != '') {
+            $u_type = ucfirst($type);
+            $exist_resources = AuthResources::model()->with('masterScreen')->findAllByAttributes(array('Master_Module_ID' => $mid, "Master_{$u_type}_ID" => $id));
         }
 
         if (Yii::app()->request->isPostRequest) {
@@ -224,11 +231,11 @@ class AuthresourcesController extends Controller {
             }
             if ($valid) {
                 Yii::app()->user->setFlash('success', 'Changes saved successfully!!!');
-                $action = $_POST['AuthResources']['type'] == 'user' ? '/site/user' : '/site/masterrole';
+                $action = $_POST['AuthResources']['type'] == 'user' ? ('/site/user') : ($_POST['AuthResources']['type'] == 'role' ? '/site/masterrole' : '/site/society');
                 return $this->redirect(array($action . '/index'));
             }
         } else {
-            return $this->renderPartial('_screen_by_module', compact('masters', 'exist_resources', 'model', 'id', 'type', 'mid'));
+            return $this->renderPartial('_screen_by_module', compact('masters', 'exist_resources', 'model', 'id', 'type', 'mid', 'u_type'));
         }
     }
 

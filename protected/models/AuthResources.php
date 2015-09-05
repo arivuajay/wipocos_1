@@ -7,6 +7,7 @@
  * @property integer $Master_Resource_ID
  * @property integer $Master_User_ID
  * @property integer $Master_Role_ID
+ * @property integer $Master_Society_ID
  * @property integer $Master_Module_ID
  * @property integer $Master_Screen_ID
  * @property string $Master_Task_ADD
@@ -23,7 +24,7 @@
  * @property MasterModule $masterModule
  * @property MasterScreen $masterScreen
  */
-class AuthResources extends CActiveRecord {
+class AuthResources extends RActiveRecord {
     
     public $id;
 
@@ -42,9 +43,9 @@ class AuthResources extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('Master_Module_ID, Master_Screen_ID', 'required'),
-            array('Master_User_ID, Master_Role_ID, Master_Module_ID, Master_Screen_ID, Active', 'numerical', 'integerOnly' => true),
+            array('Master_User_ID, Master_Role_ID, Master_Module_ID, Master_Society_ID, Master_Screen_ID, Active', 'numerical', 'integerOnly' => true),
             array('Master_Task_ADD, Master_Task_SEE, Master_Task_UPT, Master_Task_DEL', 'length', 'max' => 1),
-            array('Rowversion', 'safe'),
+            array('Rowversion, Master_Society_ID, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Master_Resource_ID, Master_User_ID, Master_Role_ID, Master_Module_ID, Master_Screen_ID, Master_Task_ADD, Master_Task_SEE, Master_Task_UPT, Master_Task_DEL, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -61,7 +62,10 @@ class AuthResources extends CActiveRecord {
             'masterRole' => array(self::BELONGS_TO, 'MasterRole', 'Master_Role_ID'),
             'masterUser' => array(self::BELONGS_TO, 'User', 'Master_User_ID'),
             'masterModule' => array(self::BELONGS_TO, 'MasterModule', 'Master_Module_ID'),
+            'masterSociety' => array(self::BELONGS_TO, 'Society', 'Master_Society_ID'),
             'masterScreen' => array(self::BELONGS_TO, 'MasterScreen', 'Master_Screen_ID'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
     }
 
@@ -73,6 +77,7 @@ class AuthResources extends CActiveRecord {
             'Master_Resource_ID' => 'Master Resource',
             'Master_User_ID' => 'Master User',
             'Master_Role_ID' => 'Master Role',
+            'Master_Society_ID' => 'Master Society',
             'Master_Module_ID' => 'Master Module',
             'Master_Screen_ID' => 'Master Screen',
             'Master_Task_ADD' => 'Master Task Add',
@@ -105,6 +110,7 @@ class AuthResources extends CActiveRecord {
         $criteria->compare('Master_Resource_ID', $this->Master_Resource_ID);
         $criteria->compare('Master_User_ID', $this->Master_User_ID);
         $criteria->compare('Master_Role_ID', $this->Master_Role_ID);
+        $criteria->compare('Master_Society_ID', $this->Master_Society_ID);
         $criteria->compare('Master_Module_ID', $this->Master_Module_ID);
         $criteria->compare('Master_Screen_ID', $this->Master_Screen_ID);
         $criteria->compare('Master_Task_ADD', $this->Master_Task_ADD, true);

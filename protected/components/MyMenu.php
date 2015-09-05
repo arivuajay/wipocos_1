@@ -28,8 +28,8 @@ class MyMenu extends CMenu {
                             $controller = $this->splitController($third_item['url'][0]);
                             if (is_array($third_item['url'])) {
                                 $is_visible = UserIdentity::checkAccess($_id, $controller, 'view');
-                                $this->items[$key][$second_key][$third_key]['visible'] = $is_visible;
                                 if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
+                                    $this->items[$key][$second_key][$third_key]['visible'] = $is_visible;
                                     $this->items[$key][$second_key][$third_key]['active'] = $_controller == $controller;
                                 }
                                 if ($is_visible) {
@@ -40,8 +40,8 @@ class MyMenu extends CMenu {
                                 foreach ($third_item['items'] as $fourth_key => $fourth_value) {
                                     $controller = $this->splitController($fourth_value['url'][0]);
                                     $is_visible = UserIdentity::checkAccess($_id, $controller, 'view');
-                                    $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['visible'] = $is_visible;
                                     if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
+                                        $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['visible'] = $is_visible;
                                         $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['active'] = $_controller == $controller;
                                     }
                                     if ($is_visible) {
@@ -62,6 +62,7 @@ class MyMenu extends CMenu {
         parent::init();
     }
 
+    /*Split menu controller name*/
     public function splitController($url) {
         $exp = explode("/", $url);
         if (count($exp) == 1) {
@@ -77,6 +78,7 @@ class MyMenu extends CMenu {
         return $controller;
     }
 
+    /* These are ignored list for visible / active ckecking. we are checking visible / active condition (_sidenavebar.php) directly*/
     public static function ignoreActiveList() {
         return array('group', 'publishergroup', 'work');
     }

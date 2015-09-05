@@ -21,11 +21,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 if (empty($exist_resources)) {
                     foreach ($masters as $master) {
                         echo CHtml::activeHiddenField($model, 'Master_Module_ID', array('value' => $master->Module_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Module_ID]'));
-                        if ($type == 'role') {
-                            echo CHtml::activeHiddenField($model, 'Master_Role_ID', array('value' => $id, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Role_ID]'));
-                        } else if ($type == 'user') {
-                            echo CHtml::activeHiddenField($model, 'Master_User_ID', array('value' => $id, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_User_ID]'));
-                        }
+                        echo CHtml::activeHiddenField($model, "Master_{$u_type}_ID", array('value' => $id, 'name' => "AuthResources[{$master->Master_Screen_ID}][Master_{$u_type}_ID]"));
                         echo CHtml::activeHiddenField($model, 'Master_Screen_ID', array('value' => $master->Master_Screen_ID, 'name' => 'AuthResources[' . $master->Master_Screen_ID . '][Master_Screen_ID]'));
                         echo '<tr class="text-center">';
                         echo '<td>' . $master->Description . '</td>';

@@ -12,6 +12,7 @@ $this->breadcrumbs = array(
     $author_reg_count = AuthorManageRights::model()->count();
     $performer_count = PerformerAccount::model()->count();
     $performer_reg_count = PerformerRelatedRights::model()->count();
+    $work_count = Work::model()->count();
     ?>
     <div class="col-lg-3 col-xs-6">
 
@@ -24,9 +25,7 @@ $this->breadcrumbs = array(
                 <i class="ion ion-person-add"></i>
             </div>
 
-            <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
+            <?php echo CHtml::link('More info <i class="fa fa-arrow-circle-right"></i>', array('/site/authoraccount/index'), array('class' => 'small-box-footer')); ?>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -39,9 +38,7 @@ $this->breadcrumbs = array(
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
+            <?php echo CHtml::link('More info <i class="fa fa-arrow-circle-right"></i>', array('/site/performeraccount/index'), array('class' => 'small-box-footer')); ?>
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -58,25 +55,21 @@ $this->breadcrumbs = array(
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
+            <?php echo CHtml::link('More info <i class="fa fa-arrow-circle-right"></i>', '#', array('class' => 'small-box-footer')); ?>
         </div>
     </div>
 
 
     <div class="col-lg-3 col-xs-6">
-        <div class="small-box bg-green">
+        <div class="small-box bg-olive">
             <div class="inner">
-                <h3>0</h3>
+                <h3><?php echo $work_count; ?></h3>
                 <p>Registered works</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer">
-                More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
+            <?php echo CHtml::link('More info <i class="fa fa-arrow-circle-right"></i>', array('/site/work/index'), array('class' => 'small-box-footer')); ?>
         </div>
     </div>
 </div>

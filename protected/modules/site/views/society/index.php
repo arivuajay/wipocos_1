@@ -273,7 +273,17 @@ $this->breadcrumbs = array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{view}{update}{delete}',
+                'template' => '{privilages}{view}{update}{delete}',
+                'buttons' => array(
+                    'privilages' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-cogs"></i>',
+                        'options' => array(
+                            'title' => 'Privilages',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/authresources/society/sid/".rawurlencode($data->Society_Id)))',
+//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                    ),
+                )
             )
         );
 
