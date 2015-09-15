@@ -90,6 +90,19 @@ class RecordingsessionController extends Controller {
      */
     public function actionCreate() {
         $model = new RecordingSession;
+        
+        $is_perf = UserIdentity::checkAccess(null, 'performeraccount', 'view');
+        $is_prod = UserIdentity::checkAccess(null, 'produceraccount', 'view');
+        $is_both = $is_perf && $is_prod;
+        
+        if($is_both){
+            $model->setScenario('perfprodReq');
+        }else{
+            if($is_perf)
+                $model->setScenario('perfReq');
+            else if($is_prod)
+                $model->setScenario('prodReq');
+        }
 
         $performer_model = new PerformerAccount;
         $producer_model = new ProducerAccount;
@@ -115,6 +128,12 @@ class RecordingsessionController extends Controller {
      */
     public function actionUpdate($id, $tab = 1, $edit = NULL, $foledit = NULL, $fileedit = NULL) {
         $model = $this->loadModel($id);
+        if(UserIdentity::checkAccess(null, 'performeraccount', 'view')){
+            $model->setScenario('perfReq');
+        }
+        if(UserIdentity::checkAccess(null, 'produceraccount', 'view')){
+            $model->setScenario('prodReq');
+        }
         $sub_title_model = $edit == NULL ? new RecordingSessionSubtitle : RecordingSessionSubtitle::model()->findByAttributes(array('Rcd_Ses_Subtitle_Id' => $edit));
         $folio_model = $foledit == NULL ? new RecordingSessionFolio : RecordingSessionFolio::model()->findByAttributes(array('Rcd_Ses_Folio_Id' => $foledit));
 

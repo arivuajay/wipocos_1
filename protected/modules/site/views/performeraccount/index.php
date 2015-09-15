@@ -197,6 +197,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'name' => 'Perf_Is_Author',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'authoraccount', 'view'),
                     'value' => function($data) {
                 echo $data->Perf_Is_Author == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
             },
@@ -340,6 +341,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'name' => 'Perf_Is_Author',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'authoraccount', 'view'),
                 'value' => function($data) {
             echo $data->Perf_Is_Author == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
         },

@@ -19,10 +19,30 @@
                     <div class="col-lg-6">
                         <div class="box-body">
                             <div class="form-group">
-                                <?php echo CHtml::label('Performer', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_perf', ($_REQUEST['is_perf'] == 1), array('class' => 'form-control', 'id' => 'is_perf')); ?>&nbsp;&nbsp;
-                                <?php echo CHtml::label('Producer', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_prod', ($_REQUEST['is_prod'] == 1), array('class' => 'form-control', 'id' => 'is_prod')); ?>
+                                <?php
+                                $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
+                                $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
+                                
+                                $is_perf = $_REQUEST['is_perf'] == 1;
+                                $is_prod = $_REQUEST['is_prod'] == 1;
+                                if(!$view_performer)
+                                    $is_prod = true;
+                                if(!$view_producer)
+                                    $is_perf = true;
+                                
+                                if ($view_performer) {
+                                    echo CHtml::label('Performer', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_perf', $is_perf, array('class' => 'form-control', 'id' => 'is_perf'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_producer) {
+                                    echo CHtml::label('Producer', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_prod', $is_prod, array('class' => 'form-control', 'id' => 'is_prod'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                ?>
                                 <div id="chkbox_err" class="errorMessage hide">Select Performer or Producer</div>
                             </div>
                             <div class="form-group">
@@ -152,7 +172,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-right"><span>Note: Save button will be enabled after atleast one producer & performer added </span></div>
+                <div class="text-right help-block"><span>Note: Save button will be enabled after atleast one producer & performer added </span></div>
                 <div class="form-group foundation">
                     <?php echo CHtml::form(array('/site/recording/insertright'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
                     <div class="box-header">

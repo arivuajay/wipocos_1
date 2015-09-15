@@ -239,12 +239,17 @@ class AuthorAccount extends RActiveRecord {
             $criteria->compare('Auth_Non_Member', 'N', true);
         }
 
+        //Restrict to show only authors
+        if(!UserIdentity::checkAccess(null, 'performeraccount', 'view')){
+            $criteria->compare('Auth_Is_Performer', 'N', true);
+        }
+        //End
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => false
-//            'pagination' => array(
-//                'pageSize' => PAGE_SIZE,
-//            )
+//            'pagination' => false
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
         ));
     }
 
@@ -282,6 +287,11 @@ class AuthorAccount extends RActiveRecord {
             $criteria->compare('Rowversion', $this->record_search, true, 'OR');
         }
 
+        //Restrict to show only authors
+        if(!UserIdentity::checkAccess(null, 'performeraccount', 'view')){
+            $criteria->compare('Auth_Is_Performer', 'N', true);
+        }
+        //End
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => false

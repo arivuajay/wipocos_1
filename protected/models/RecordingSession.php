@@ -61,7 +61,10 @@ class RecordingSession extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Rcd_Ses_GUID, Rcd_Ses_Title, Rcd_Ses_Internal_Code, Rcd_Ses_Record_Date, Rcd_Ses_Studio_Id, Rcd_Ses_Producer, Rcd_Ses_Main_Artist, Rcd_Ses_Medium_Id, Rcd_Ses_Type_Id, Rcd_Ses_Destination_Id, Rcd_Ses_Country_Id, Rcd_Ses_Factor_Id', 'required'),
+            array('Rcd_Ses_GUID, Rcd_Ses_Title, Rcd_Ses_Internal_Code, Rcd_Ses_Record_Date, Rcd_Ses_Studio_Id, Rcd_Ses_Medium_Id, Rcd_Ses_Type_Id, Rcd_Ses_Destination_Id, Rcd_Ses_Country_Id, Rcd_Ses_Factor_Id', 'required'),
+            array('Rcd_Ses_Producer', 'required', 'on' => 'prodReq'),
+            array('Rcd_Ses_Main_Artist', 'required', 'on' => 'perfReq'),
+            array('Rcd_Ses_Main_Artist, Rcd_Ses_Producer', 'required', 'on' => 'perfprodReq'),
             array('Rcd_Ses_Language_Id, Rcd_Ses_Hours, Rcd_Ses_Studio_Id, Rcd_Ses_Producer, Rcd_Ses_Main_Artist, Rcd_Ses_Medium_Id, Rcd_Ses_Type_Id, Rcd_Ses_Destination_Id, Rcd_Ses_Country_Id, Rcd_Ses_Factor_Id', 'numerical', 'integerOnly' => true),
             array('Rcd_Ses_GUID', 'length', 'max' => 40),
             array('Rcd_Ses_Title', 'length', 'max' => 255),

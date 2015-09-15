@@ -40,14 +40,14 @@ $legal_forms = Myclass::getMasterLegalForm();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Marks, Series & <br />Cross-references</a></li>
                 <?php if ($model->Pro_Is_Publisher == 'Y') { ?>
                     <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
                 <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Managers and Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Marks, Series & <br />Cross-references</a></li>
                 <!--<li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>-->
                 <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Liquidation <?php echo $model->Pro_Is_Publisher == 'Y' ? '<br />' : ''; ?> and Inheritance</a></li>
             </ul>
@@ -72,17 +72,19 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     <?php echo $form->error($model, 'Pro_Internal_Code'); ?>
                                 </div>
 
-                                <div class="form-group" style="pointer-events: none">
-                                    <?php echo $form->labelEx($model, 'is_producer', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'is_producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
-                                    <?php echo $form->error($model, 'is_producer'); ?>
-                                </div>
+                                <?php if (UserIdentity::checkAccess(null, 'publisheraccount', 'view')) { ?>
+                                    <div class="form-group" style="pointer-events: none">
+                                        <?php echo $form->labelEx($model, 'is_producer', array('class' => '')); ?><br />
+                                        <?php echo $form->checkBox($model, 'is_producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                        <?php echo $form->error($model, 'is_producer'); ?>
+                                    </div>
 
-                                <div class="form-group">
-                                    <?php echo $form->labelEx($model, 'Pro_Is_Publisher', array('class' => '')); ?><br />
-                                    <?php echo $form->checkBox($model, 'Pro_Is_Publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                    <?php echo $form->error($model, 'Pro_Is_Publisher'); ?>
-                                </div>
+                                    <div class="form-group">
+                                        <?php echo $form->labelEx($model, 'Pro_Is_Publisher', array('class' => '')); ?><br />
+                                        <?php echo $form->checkBox($model, 'Pro_Is_Publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                        <?php echo $form->error($model, 'Pro_Is_Publisher'); ?>
+                                    </div>
+                                <?php } ?>
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Corporate_Name', array('class' => '')); ?>

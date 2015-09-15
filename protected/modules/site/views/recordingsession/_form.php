@@ -114,12 +114,14 @@ $destinations = Myclass::getMasterDestination();
                         <div class="col-lg-5">
                             <div class="box-body">
 
+                                <?php if(UserIdentity::checkAccess(null, 'produceraccount', 'view')){ ?>
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Ses_Producer', array('class' => '')); ?>
                                     <?php echo $form->hiddenField($model, 'Rcd_Ses_Producer'); ?>
                                     <?php echo CHtml::textField('producer', $model->recordingSessionProducer->Pro_Corporate_Name, array('class' => 'form-control popup', 'size' => 60, 'maxlength' => 100, 'onkeypress' => 'return false', 'data-popup' => 'producerbutton')) ?>
                                     <?php echo $form->error($model, 'Rcd_Ses_Producer'); ?>
                                 </div>
+                                <?php } ?>
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Rcd_Ses_Main_Artist', array('class' => '')); ?>

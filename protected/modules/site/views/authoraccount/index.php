@@ -201,6 +201,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'name' => 'Auth_Is_Performer',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'performeraccount', 'view'),
                     'value' => function($data) {
                 echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
             },
@@ -313,6 +314,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'name' => 'Auth_Is_Performer',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'performeraccount', 'view'),
                 'value' => function($data) {
             echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
         },

@@ -175,6 +175,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                     'name' => 'Pro_Is_Publisher',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'publisheraccount', 'view'),
                     'value' => function($data) {
                 echo $data->Pro_Is_Publisher == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
             },
@@ -302,6 +303,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                     'name' => 'Pro_Is_Publisher',
                     'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                     'type' => 'raw',
+                    'visible' => UserIdentity::checkAccess(null, 'publisheraccount', 'view'),
                     'value' => function($data) {
                 echo $data->Pro_Is_Publisher == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
             },

@@ -48,16 +48,16 @@ $regions = Myclass::getMasterRegion();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
-                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
-                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
-                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
-                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
                 <?php if ($model->Auth_Is_Performer == 'Y') { ?>
                     <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <?php } ?>
+                <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
+                <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
+                <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
+                <li><a id="a_tab_5" href="#tab_5" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Pseudonyms</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Death Inheritance</a></li>
-                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php echo $model->Auth_Is_Performer == 'Y' ? '<br />' : ''; ?> Documents</a></li>
+                <li><a id="a_tab_8" href="#tab_8" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Upload <?php // echo $model->Auth_Is_Performer == 'Y' ? '<br />' : ''; ?> Documents</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="tab_1">
@@ -80,6 +80,7 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
                                 </div>
 
+                                <?php if(UserIdentity::checkAccess(null, 'performeraccount', 'view')){ ?>
                                 <div class="form-group" style="pointer-events: none">
                                     <?php echo $form->labelEx($model, 'is_author', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'is_author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
@@ -91,6 +92,7 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->checkBox($model, 'Auth_Is_Performer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Auth_Is_Performer'); ?>
                                 </div>
+                                <?php } ?>
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Auth_First_Name', array('class' => '')); ?>

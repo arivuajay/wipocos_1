@@ -15,13 +15,16 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 require_once($yii);
 $app = Yii::createWebApplication($config);
 
-$soc_id = DEFAULT_SOCIETY_ID;
 if (isset(Yii::app()->user->id)) {
     $user = User::model()->find('id = :U', array(':U' => Yii::app()->user->id));
     if(!empty($user))
-        $soc_id = $user->society_id;
+        defined('DEFAULT_SOCIETY_ID') || @define('DEFAULT_SOCIETY_ID', $user->society_id);
+    else
+        defined('DEFAULT_SOCIETY_ID') || @define('DEFAULT_SOCIETY_ID', CUSTOM_SOCIETY_ID);
+}else{
+    defined('DEFAULT_SOCIETY_ID') || @define('DEFAULT_SOCIETY_ID', CUSTOM_SOCIETY_ID);
 }
-$society = Society::model()->findByPk($soc_id);
+$society = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
 if ($society) {
     defined('DEFAULT_NATIONALITY_ID') || @define('DEFAULT_NATIONALITY_ID', $society->socOrg->Org_Nation_Id);
     defined('DEFAULT_COUNTRY_ID') || @define('DEFAULT_COUNTRY_ID', $society->Society_Country_Id);

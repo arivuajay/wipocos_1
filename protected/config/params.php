@@ -34,7 +34,7 @@ return array(
     'SITENAME' => 'Wipocos',
     'EMAILHEADERIMAGE' => '',
 
-    'DEFAULT_SOCIETY_ID' => '10',
+    'CUSTOM_SOCIETY_ID' => '10',
 
     'DEFAULT_AUTHOR_RIGHT_HOLDER_ID' => '1',
     'DEFAULT_AUTHOR_GROUP_RIGHT_HOLDER_ID' => '1',

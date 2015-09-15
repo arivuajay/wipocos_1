@@ -19,10 +19,30 @@
                     <div class="col-lg-6">
                         <div class="box-body">
                             <div class="form-group">
-                                <?php echo CHtml::label('Author', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_auth', ($_REQUEST['is_auth'] == 1), array('class' => 'form-control', 'id' => 'is_auth')); ?>&nbsp;&nbsp;
-                                <?php echo CHtml::label('Publisher', '', array('class' => 'control-label')); ?>&nbsp;
-                                <?php echo CHtml::checkBox('is_publ', ($_REQUEST['is_publ'] == 1), array('class' => 'form-control', 'id' => 'is_publ')); ?>
+                                <?php
+                                $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
+                                $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
+                                
+                                $is_auth = $_REQUEST['is_auth'] == 1;
+                                $is_publ = $_REQUEST['is_publ'] == 1;
+                                if(!$view_author)
+                                    $is_publ = true;
+                                if(!$view_publisher)
+                                    $is_auth = true;
+                                
+                                if ($view_author) {
+                                    echo CHtml::label('Author', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_auth', $is_auth, array('class' => 'form-control', 'id' => 'is_auth'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_publisher) {
+                                    echo CHtml::label('Publisher', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_publ', $is_publ, array('class' => 'form-control', 'id' => 'is_publ'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                ?>
                                 <div id="chkbox_err" class="errorMessage hide">Select Author or Publisher</div>
                             </div>
                             <div class="form-group">
