@@ -2,6 +2,7 @@
 /* @var $this AuthresourcesController */
 /* @var $model AuthResources */
 /* @var $form CActiveForm */
+/**/
 ?>
 
 <div class="row">

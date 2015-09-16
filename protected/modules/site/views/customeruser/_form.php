@@ -2,6 +2,7 @@
 /* @var $this CustomeruserController */
 /* @var $model CustomerUser */
 /* @var $form CActiveForm */
+/**/
 ?>
 
 <div class="row">

@@ -2,6 +2,7 @@
 /* @var $this PublisheraccountController */
 /* @var $model PublisherAccount */
 /* @var $form CActiveForm */
+/**/
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;

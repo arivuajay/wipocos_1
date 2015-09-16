@@ -2,6 +2,7 @@
 /* @var $this SocietyController */
 /* @var $model Society */
 /* @var $form CActiveForm */
+/**/
 $countries = Myclass::getMasterCountry();
 $territories = Myclass::getMasterTerritory();
 $regions = Myclass::getMasterRegion();

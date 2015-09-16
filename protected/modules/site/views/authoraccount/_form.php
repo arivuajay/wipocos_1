@@ -2,6 +2,7 @@
 /* @var $this AuthoraccountController */
 /* @var $model AuthorAccount */
 /* @var $form CActiveForm */
+/**/
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;

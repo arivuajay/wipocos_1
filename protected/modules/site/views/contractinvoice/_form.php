@@ -3,6 +3,7 @@
 /* @var $model ContractInvoice */
 /* @var $form CActiveForm */
 /* @var $cont_model TariffContracts */
+/**/
 
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();

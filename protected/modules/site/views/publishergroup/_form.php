@@ -2,6 +2,7 @@
 /* @var $this GroupController */
 /* @var $model Group */
 /* @var $form CActiveForm */
+/**/
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
