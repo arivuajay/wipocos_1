@@ -273,7 +273,7 @@ $this->breadcrumbs = array(
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{privilages}{view}{update}{delete}',
+                'template' => '{import}{privilages}{view}{update}{delete}',
                 'buttons' => array(
                     'privilages' => array(//the name {reply} must be same
                         'label' => '<i class="fa fa-cogs"></i>',
@@ -281,6 +281,14 @@ $this->breadcrumbs = array(
                             'title' => 'Privilages',
                         ),
                         'url' => 'CHtml::normalizeUrl(array("/site/authresources/society/sid/".rawurlencode($data->Society_Id)))',
+//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                    ),
+                    'import' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-upload"></i>',
+                        'options' => array(
+                            'title' => 'Import XLS',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/society/import/sid/".rawurlencode($data->Society_Id)))',
 //                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
                     ),
                 )

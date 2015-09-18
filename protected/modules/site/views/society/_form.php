@@ -270,11 +270,11 @@ $legal_forms = Myclass::getMasterLegalForm();
                         <?php echo $form->error($model, 'Soceity_Legal_Form_Id'); ?>
                     </div>
 
-                    <div class="form-group">
+<!--                    <div class="form-group">
                         <?php echo $form->labelEx($model, 'import_file', array('class' => '')); ?>
                         <?php echo $form->fileField($model, 'import_file', array()); ?>
                         <?php echo $form->error($model, 'import_file'); ?>
-                    </div>
+                    </div>-->
 
 <!--                    <div class="form-group">
                         <?php $this->renderPartial('_upload'); ?>

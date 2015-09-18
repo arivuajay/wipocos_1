@@ -670,4 +670,5 @@ class Myclass extends CController {
             'years' => $years,
         );
     }
+
 }

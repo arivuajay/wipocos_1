@@ -1,6 +1,12 @@
 <?php
 
 class SocietyController extends Controller {
+
+    private $_import_rows;
+    private $_import_worksheet;
+    private $_import_status = "";
+    private $_import_society;
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -28,7 +34,7 @@ class SocietyController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'dataupload'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'import'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -68,14 +74,6 @@ class SocietyController extends Controller {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
                 if ($model->save()) {
-                    if ($_FILES['Society']['name']['import_file']) {
-                        $model->import_file = CUploadedFile::getInstance($model, 'import_file');
-                        if (!is_dir(UPLOAD_DIR . '/temp/'))
-                            mkdir(UPLOAD_DIR . '/temp/');
-                        $path = UPLOAD_DIR . '/temp/' . $model->import_file;
-                        $model->import_file->saveAs($path);
-                        $this->importExcel($path);
-                    }
                     Myclass::addAuditTrail("Created a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Created Successfully!!!');
                     $this->redirect(array('index'));
@@ -109,14 +107,6 @@ class SocietyController extends Controller {
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
-                if ($_FILES['Society']['name']['import_file']) {
-                    $model->import_file = CUploadedFile::getInstance($model, 'import_file');
-                    if (!is_dir(UPLOAD_DIR . '/temp/'))
-                        mkdir(UPLOAD_DIR . '/temp/');
-                    $path = UPLOAD_DIR . '/temp/' . $model->import_file;
-                    $model->import_file->saveAs($path);
-                    $this->importExcel($path);
-                }
                 if ($model->save()) {
                     Myclass::addAuditTrail("Updated a {$model->Society_Code} successfully.", "group");
                     Yii::app()->user->setFlash('success', 'Society Updated Successfully!!!');
@@ -174,6 +164,39 @@ class SocietyController extends Controller {
         $this->render('index', compact('searchModel', 'search', 'model'));
     }
 
+    public function actionImport($sid) {
+        $model = $this->loadModel($sid);
+        $model->setScenario('import');
+
+        // Uncomment the following line if AJAX validation is needed
+        $this->performAjaxValidation($model);
+
+        if (isset($_POST['Society'])) {
+            $model->attributes = $_POST['Society'];
+            $model->setAttribute('import_file', isset($_FILES['Society']['name']['import_file']) ? $_FILES['Society']['name']['import_file'] : '');
+            if ($model->validate()) {
+                if ($_FILES['Society']['name']['import_file']) {
+                    $model->import_file = CUploadedFile::getInstance($model, 'import_file');
+                    if (!is_dir(UPLOAD_DIR . '/temp/'))
+                        mkdir(UPLOAD_DIR . '/temp/');
+                    $path = UPLOAD_DIR . '/temp/' . $model->import_file;
+                    $model->import_file->saveAs($path);
+                    $this->_import_society = $model->Society_Id;
+                    $this->importExcel($path);
+                    if ($model->save()) {
+                        Myclass::addAuditTrail("XLS Imported to Society : {$model->Society_Code} successfully.", "group");
+                        Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
+                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                    }
+                }
+            }
+        }
+
+        $this->render('import', array(
+            'model' => $model,
+        ));
+    }
+
     /**
      * Manages all models.
      */
@@ -214,7 +237,6 @@ class SocietyController extends Controller {
     }
 
     public function importExcel($file_path) {
-//        $file_path = UPLOAD_DIR . '/data/import.xls';
         Yii::import('application.vendors.PHPExcel', true);
         $objReader = new PHPExcel_Reader_Excel5;
         $objPHPExcel = $objReader->load(@$file_path);
@@ -222,138 +244,18 @@ class SocietyController extends Controller {
         $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
         $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
         $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
+        $screens = Society::getImportcategoryList();
+        $this->_import_worksheet = $objWorksheet;
+        
+        if (array_key_exists($input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue()), $screens)) {
+            switch ($input_type) {
+                case 'authors tabs':
+                    $this->_import_rows = $this->importRows('author', 4, $highestRow, 14);
+                    $this->importAuthor();
+                    break;
 
-        $authors = $performers = $producers = $publishers = $author_performers = $publisher_producers = $female_performers = array();
-        $iValid = 0;
-
-        if ($objWorksheet->getCellByColumnAndRow(0, 2)->getValue() == "TITLE") {
-            $iValid = 1;
-            if ($objWorksheet->getCellByColumnAndRow(1, 2)->getValue() != "PRODUCER") {
-                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (EXECUTIVE PRODUCER column value missing)"));
-            } else if ($objWorksheet->getCellByColumnAndRow(2, 2)->getValue() != "RELEASED") {
-                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (YEAR FIRST column value missing)"));
-            } else if ($objWorksheet->getCellByColumnAndRow(3, 2)->getValue() != "INFORMATION") {
-                throw new CHttpException(400, Yii::t('err', "Its not in Album Information formate (CONTACT column value missing)"));
-            }
-        }
-
-
-        if ($iValid == 1) {
-            for ($row = 3; $row <= $highestRow; ++$row) {
-                //set authors
-                $auth_cols = array(
-                    7 => 'COMPOSER',
-                    8 => 'LYRICTS',
-                    9 => 'MUSIC',
-                    11 => 'ARRANGER (S)',
-                );
-                foreach ($auth_cols as $col => $v) {
-                    $auth_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    if ($this->importStringValidation($auth_val)) {
-                        if (!in_array($auth_val, $authors))
-                            array_push($authors, $auth_val);
-                    }
-                }
-
-                //set performer
-                $perf_cols = array(
-                    12 => 'FEATURED PERFORMER',
-                    13 => 'GUEST PERFORMER',
-                    14 => 'SESSION MUSICIANS',
-                    16 => 'SESSION VOCALISTS',
-                    21 => 'PERFORMER FEMALE',
-                );
-                foreach ($perf_cols as $col => $v) {
-                    $perf_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    if ($this->importStringValidation($perf_val)) {
-                        if (!in_array($perf_val, $performers))
-                            array_push($performers, $perf_val);
-                        if ($col == 21) {
-                            if (!in_array($perf_val, $female_performers))
-                                array_push($female_performers, $perf_val);
-                        }
-                    }
-                }
-
-                //set publisher
-                $pub_cols = array(
-                    4 => 'DISTRIBUTOR',
-                );
-                foreach ($pub_cols as $col => $v) {
-                    $pub_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    if ($this->importStringValidation($pub_val, true)) {
-                        if (!in_array($pub_val, $publishers))
-                            array_push($publishers, $pub_val);
-                    }
-                }
-
-                //set producers
-                $pro_cols = array(
-                    1 => 'EXECUTIVE PRODUCER',
-                );
-                foreach ($pro_cols as $col => $v) {
-                    $prod_val = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-                    if ($this->importStringValidation($prod_val, true)) {
-                        if (!in_array($prod_val, $producers))
-                            array_push($producers, $prod_val);
-                    }
-                }
-            }
-
-            //get both author & performers, publishers & producers
-            $author_performers = array_intersect($authors, $performers);
-            $publisher_producers = array_intersect($publishers, $producers);
-
-            foreach ($authors as $author) {
-                $check_exists = AuthorAccount::model()->find("Auth_First_Name =:name", array(':name' => $author));
-                if (empty($check_exists)) {
-                    $model = new AuthorAccount;
-                    $model->Auth_First_Name = $author;
-                    if(in_array($author, $author_performers)){
-                        $model->Auth_Is_Performer = 'Y';
-                    }
-                    $model->save(false);
-                }
-            }
-            
-            $performers = array_diff($performers, $authors);
-            foreach ($performers as $performer) {
-                $check_exists = PerformerAccount::model()->find("Perf_First_Name =:name", array(':name' => $performer));
-                if (empty($check_exists)) {
-                    $model = new PerformerAccount;
-                    $model->Perf_First_Name = $performer;
-                    if(in_array($performer, $female_performers))
-                        $model->Perf_Gender = 'F';
-                    if(in_array($performer, $author_performers)){
-                        $model->Perf_Is_Author = 'Y';
-                    }
-                    $model->save(false);
-                }
-            }
-
-            foreach ($publishers as $publisher) {
-                $check_exists = PublisherAccount::model()->find("Pub_Corporate_Name =:name", array(':name' => $publisher));
-                if (empty($check_exists)) {
-                    $model = new PublisherAccount;
-                    $model->Pub_Corporate_Name = $publisher;
-                    if(in_array($publisher, $publisher_producers)){
-                        $model->Pub_Is_Producer = 'Y';
-                    }
-                    $model->save(false);
-                }
-            }
-
-            $producers = array_diff($producers, $publishers);
-            foreach ($producers as $producer) {
-                $check_exists = ProducerAccount::model()->find("Pro_Corporate_Name =:name", array(':name' => $producer));
-                if (empty($check_exists)) {
-                    $model = new ProducerAccount;
-                    $model->Pro_Corporate_Name = $producer;
-                    if(in_array($producer, $publisher_producers)){
-                        $model->Pro_Is_Publisher = 'Y';
-                    }
-                    $model->save(false);
-                }
+                default:
+                    break;
             }
             unlink($file_path);
         } else {
@@ -370,4 +272,203 @@ class SocietyController extends Controller {
             return !in_array($value, $title_exception) && $value != '' && !is_array($value) && !is_object($value);
     }
 
+    /* Common function for import rows */
+
+    public function importRows($import_category, $start_row, $highestRow, $max_row) {
+        if ($import_category == 'author') {
+            $loop_options = $this->importAuthorLoopOptions();
+        }
+        $objWorksheet = $this->_import_worksheet;
+        $dateFields = $this->importDateFields();
+        foreach ($loop_options as $keyset => $fieldsets) {
+            if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], 2)->getValue() != $fieldsets['start_col']) {
+                throw new CHttpException(400, Yii::t('err', "Its not in {$import_category} Basic Information format ({$fieldsets['start_col']} column value missing)"));
+            }
+            $start_point = true;
+            $stop_point = false;
+            $row_count = 1;
+            $i = 1;
+            for ($row = $start_row; $row <= $highestRow; ++$row) {
+                if ($start_point && !$stop_point) {
+                    $i = 1;
+                    if (isset($fieldsets['fieldsets'][$i]))
+                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = !in_array ($fieldsets['fieldsets'][$i], $dateFields) ? $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() : date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                    $start_point = false;
+                }
+                if (!$stop_point) {
+                    if (isset($fieldsets['fieldsets'][$i]))
+                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = !in_array ($fieldsets['fieldsets'][$i], $dateFields) ? $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() : date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                    if ($i == $max_row)
+                        $stop_point = true;
+                }
+                if ($stop_point) {
+                    if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() == $fieldsets['start_col']) {
+                        $row++;
+                        $row_count++;
+                        $start_point = true;
+                        $stop_point = false;
+                    }
+                }
+                $i++;
+            }
+        }
+        return $import_rows;
+    }
+    /* end */
+
+    public function importDateFields() {
+        return array(
+            'Auth_Mnge_Entry_Date',
+            'Auth_Mnge_Exit_Date',
+            'Auth_Mnge_Entry_Date_2',
+            'Auth_Mnge_Exit_Date_2',
+        );
+    }
+    
+    public function importAuthorLoopOptions() {
+        $basic_fields = array(
+//            1 => "Auth_Internal_Code",
+            2 => "Auth_Sur_Name",
+            3 => "Auth_First_Name",
+            4 => "Auth_Ipi",
+            5 => "Auth_Ipi_Base_Number",
+            6 => "Auth_Ipn_Number",
+            7 => "Auth_Place_Of_Birth_Id",
+            8 => "Auth_Birth_Country_Id",
+            9 => "Auth_Nationality_Id",
+            10 => "Auth_Language_Id",
+            11 => "Auth_Marital_Status_Id",
+            12 => "Auth_Identity_Number",
+            13 => "Auth_Spouse_Name",
+            14 => "Auth_Gender",
+        );
+
+        $address_fields = array(
+            1 => "Auth_Home_Address_1",
+            2 => "Auth_Home_Telephone",
+            3 => "Auth_Home_Fax",
+            4 => "Auth_Home_Email",
+            5 => "Auth_Home_Website",
+            6 => "Auth_Home_Address_3",
+            7 => "Auth_Mailing_Address_1",
+            8 => "Auth_Mailing_Telephone",
+            9 => "Auth_Mailing_Fax",
+            10 => "Auth_Mailing_Email",
+            11 => "Auth_Mailing_Website",
+            12 => "Auth_Unknown_Address",
+        );
+
+        $payment_fields = array(
+            1 => "Auth_Pay_Method_id",
+            2 => "Auth_Bank_Account_1",
+            3 => "Auth_Bank_Account_2",
+            4 => "Auth_Bank_Account_3",
+        );
+
+        $biography_fields = array(
+            2 => "Auth_Biogrph_Annotation",
+        );
+
+        $pseudonym_fields = array(
+            1 => "Auth_Pseudo_Type_Id",
+            2 => "Auth_Pseudo_Name",
+        );
+
+        $copyright_fields = array(
+            1 => "Auth_Mnge_Entry_Date",
+            2 => "Auth_Mnge_Exit_Date",
+            3 => "Auth_Mnge_Internal_Position_Id",
+            4 => "Auth_Mnge_Entry_Date_2",
+            5 => "Auth_Mnge_Exit_Date_2",
+            7 => "Auth_Mnge_Managed_Rights_Id",
+            8 => "Auth_Mnge_Territories_Id",
+            9 => "Auth_Mnge_Region_Id",
+            10 => "Auth_Mnge_Profession_Id",
+            11 => "Auth_Mnge_File",
+            12 => "Auth_Unknown_Address",
+        );
+
+        $death_fields = array(
+            1 => "Auth_Death_Inhrt_Surname",
+            2 => "Auth_Death_Inhrt_Address_1",
+            3 => "Auth_Death_Inhrt_Addtion_Annotation",
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'address_val' => array('col' => 2, 'fieldsets' => $address_fields, 'start_col' => 'ADDRESSES FIELDS'),
+            'payment_val' => array('col' => 3, 'fieldsets' => $payment_fields, 'start_col' => 'PAYMENT FIELDS'),
+            'biograph_val' => array('col' => 4, 'fieldsets' => $biography_fields, 'start_col' => 'BIOGRAPHY'),
+            'pseudonym_val' => array('col' => 5, 'fieldsets' => $pseudonym_fields, 'start_col' => 'PSEUDONYMS'),
+            'copyright_val' => array('col' => 6, 'fieldsets' => $copyright_fields, 'start_col' => 'COPYRIGHTS'),
+            'death_val' => array('col' => 7, 'fieldsets' => $death_fields, 'start_col' => 'DEATH AND INHERITANCE'),
+        );
+    }
+
+    public function importAuthor() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Auth_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
+            $import_row['basic_val']['Auth_Nationality_Id'] = $this->importAddMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
+            $import_row['basic_val']['Auth_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
+            $import_row['basic_val']['Auth_Marital_Status_Id'] = $this->importAddMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
+            $import_row['payment_val']['Auth_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
+            $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
+
+            /* Save Records */
+            $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
+            if(empty($check_exists)){
+                $model = new AuthorAccount;
+                $model->attributes = $import_row['basic_val'];
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
+                    }
+                    
+                    $related_records = array(
+                        'AuthorAccountAddress' => 'address_val',
+                        'AuthorPaymentMethod' => 'payment_val',
+                        'AuthorBiography' => 'biograph_val',
+                        'AuthorPseudonym' => 'pseudonym_val',
+                        'AuthorManageRights' => 'copyright_val',
+                        'AuthorDeathInheritance' => 'death_val',
+                    );
+                    
+                    $import_row['copyright_val']['Auth_Mnge_Society_Id'] = $this->_import_society;
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
+        }
+        $this->_import_status = "Total records: {$total_records}. Successfull records: {$success_records}. Unsuccessfull records: {$unsuccess_records}. Duplicate records: {$duplicate_records}";
+    }
+    
+    public function importAddMaster($model, $col_name, $col_id, $name) {
+        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
+        if(empty($id) && $name != ''){
+            $model = new $model;
+            $model->setAttribute($col_name, $name);
+            $model->save(false);
+            $id = $model->$col_id;
+        }
+        return $id;
+    }
 }
