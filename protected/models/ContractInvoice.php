@@ -242,8 +242,8 @@ class ContractInvoice extends RActiveRecord {
             //Send mail
             $mail = new Sendmail;
             $mail->email_layout = 'db';
-            $temp_id = 1;
-
+            $temp_id = $this->tarfCont->emailTemp->Email_Temp_Id;
+            
             $society_name = '';
             $soceity = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
             if (!empty($soceity))

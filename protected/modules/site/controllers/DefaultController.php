@@ -329,15 +329,14 @@ class DefaultController extends Controller {
 
         //Contract Auto generate
         $checking_date = date('Y-m-d');
-        //condition **** Contract to = checking date and Renewal = Y and Renewal_year >= checking date ****
+        //condition **** Contract to = checking date and Renewal = Y ****
         $contracts = TariffContracts::model()->findAll(array(
-            'condition' => "Tarf_Cont_To = :check_date And Tarf_Cont_Renewal = 'Y' And Tarf_Cont_Renewal_Year >= :year",
-            'params' => array('check_date' => $checking_date, 'year' => date('Y', strtotime($checking_date)))
+            'condition' => "Tarf_Cont_To = :check_date And Tarf_Cont_Renewal = 'Y'",
+            'params' => array('check_date' => $checking_date)
         ));
-//        $contracts = TariffContracts::model()->findAllByAttributes(array('Tarf_Cont_To' => $checking_date, 'Tarf_Cont_Renewal' => 'Y'));
         foreach ($contracts as $key => $contract) {
             $cont_hist_model = New TariffContractsHistory;
-            $ignore_list = array('Tarf_Cont_GUID', 'Tarf_Cont_Internal_Code', 'Tarf_Invoice', 'Tarf_Cont_User_Id', 'Tarf_Cont_Id', 'Tarf_Cont_Renewal');
+            $ignore_list = array('Tarf_Cont_GUID', 'Tarf_Cont_Internal_Code', 'Tarf_Invoice', 'Tarf_Cont_User_Id', 'Tarf_Cont_Id', 'Tarf_Cont_Renewal', 'Tarf_Cont_Renewal_Year');
             foreach ($contract->attributes as $attribute => $value) {
                 if (!in_array($attribute, $ignore_list)) {
                     $attr_name = str_replace('Tarf_Cont', 'Tarf_Hist', $attribute);
@@ -352,7 +351,7 @@ class DefaultController extends Controller {
 //                $diff_days = $date2->diff($date1)->format("%a");
 
                 $new_from_date = strtotime("+1 days", strtotime($contract->Tarf_Cont_To));
-                $new_to_date = strtotime("+1 year", strtotime($contract->Tarf_Cont_To));
+                $new_to_date = strtotime("+{$contract->Tarf_Cont_Renewal_Year} year", strtotime($contract->Tarf_Cont_To));
 //                $new_to_date = strtotime("+$diff_days days", strtotime($contract->Tarf_Cont_To));
                 $cont_model->Tarf_Cont_From = date("Y-m-d", $new_from_date);
                 $cont_model->Tarf_Cont_To = date("Y-m-d", $new_to_date);

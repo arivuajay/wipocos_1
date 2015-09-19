@@ -6,6 +6,7 @@ class SocietyController extends Controller {
     private $_import_worksheet;
     private $_import_status = "";
     private $_import_society;
+    private $_import_category;
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -182,10 +183,14 @@ class SocietyController extends Controller {
                     $path = UPLOAD_DIR . '/temp/' . $model->import_file;
                     $model->import_file->saveAs($path);
                     $this->_import_society = $model->Society_Id;
-                    $this->importExcel($path);
-                    if ($model->save()) {
+                    $this->_import_category = $model->import_category;
+                    $success = $this->importExcel($path);
+                    if ($success && $model->save()) {
                         Myclass::addAuditTrail("XLS Imported to Society : {$model->Society_Code} successfully.", "group");
                         Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
+                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                    }else{
+                        Yii::app()->user->setFlash('danger', "XLS not Imported !!! Please Try after sometime");
                         $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
                     }
                 }
@@ -247,17 +252,25 @@ class SocietyController extends Controller {
         $screens = Society::getImportcategoryList();
         $this->_import_worksheet = $objWorksheet;
         
+        $return = false;
+        
         if (array_key_exists($input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue()), $screens)) {
             switch ($input_type) {
                 case 'authors tabs':
                     $this->_import_rows = $this->importRows('author', 4, $highestRow, 14);
-                    $this->importAuthor();
+                    $return = $this->importAuthor();
+                    break;
+
+                case 'performers tabs':
+                    $this->_import_rows = $this->importRows('performer', 4, $highestRow, 14);
+                    $return = $this->importPerformer();
                     break;
 
                 default:
                     break;
             }
             unlink($file_path);
+            return $return;
         } else {
             throw new CHttpException(400, Yii::t('err', "Its not a Valid File (NOT IN PREDEFINED FORMAT)"));
         }
@@ -275,9 +288,19 @@ class SocietyController extends Controller {
     /* Common function for import rows */
 
     public function importRows($import_category, $start_row, $highestRow, $max_row) {
-        if ($import_category == 'author') {
-            $loop_options = $this->importAuthorLoopOptions();
+        switch ($import_category) {
+            case 'author':
+                $loop_options = $this->importAuthorLoopOptions();
+                break;
+            case 'performer':
+                $loop_options = $this->importPerformerLoopOptions();
+                break;
+            default:
+                break;
         }
+        if(!isset($loop_options))
+            return false;
+
         $objWorksheet = $this->_import_worksheet;
         $dateFields = $this->importDateFields();
         foreach ($loop_options as $keyset => $fieldsets) {
@@ -322,9 +345,14 @@ class SocietyController extends Controller {
             'Auth_Mnge_Exit_Date',
             'Auth_Mnge_Entry_Date_2',
             'Auth_Mnge_Exit_Date_2',
+            'Perf_Rel_Entry_Date',
+            'Perf_Rel_Exit_Date',
+            'Perf_Rel_Entry_Date_2',
+            'Perf_Rel_Exit_Date_2',
         );
     }
-    
+
+    /* Author Importing */
     public function importAuthorLoopOptions() {
         $basic_fields = array(
 //            1 => "Auth_Internal_Code",
@@ -385,7 +413,6 @@ class SocietyController extends Controller {
             9 => "Auth_Mnge_Region_Id",
             10 => "Auth_Mnge_Profession_Id",
             11 => "Auth_Mnge_File",
-            12 => "Auth_Unknown_Address",
         );
 
         $death_fields = array(
@@ -459,6 +486,143 @@ class SocietyController extends Controller {
             $total_records++;
         }
         $this->_import_status = "Total records: {$total_records}. Successfull records: {$success_records}. Unsuccessfull records: {$unsuccess_records}. Duplicate records: {$duplicate_records}";
+        return true;
+    }
+    
+    /* Performer Importing */
+    public function importPerformerLoopOptions() {
+        $basic_fields = array(
+//            1 => "Perf_Internal_Code",
+            2 => "Perf_Sur_Name",
+            3 => "Perf_First_Name",
+            4 => "Perf_Ipi",
+            5 => "Perf_Ipi_Base_Number",
+            6 => "Perf_Ipn_Number",
+            7 => "Perf_Place_Of_Birth_Id",
+            8 => "Perf_Birth_Country_Id",
+            9 => "Perf_Nationality_Id",
+            10 => "Perf_Language_Id",
+            11 => "Perf_Marital_Status_Id",
+            12 => "Perf_Identity_Number",
+            13 => "Perf_Spouse_Name",
+            14 => "Perf_Gender",
+        );
+
+        $address_fields = array(
+            1 => "Perf_Home_Address_1",
+            2 => "Perf_Home_Telephone",
+            3 => "Perf_Home_Fax",
+            4 => "Perf_Home_Email",
+            5 => "Perf_Home_Website",
+            6 => "Perf_Home_Address_3",
+            7 => "Perf_Mailing_Address_1",
+            8 => "Perf_Mailing_Telephone",
+            9 => "Perf_Mailing_Fax",
+            10 => "Perf_Mailing_Email",
+            11 => "Perf_Mailing_Website",
+            12 => "Perf_Unknown_Address",
+        );
+
+        $payment_fields = array(
+            1 => "Perf_Pay_Method_id",
+            2 => "Perf_Bank_Account_1",
+            3 => "Perf_Bank_Account_2",
+            4 => "Perf_Bank_Account_3",
+        );
+
+        $biography_fields = array(
+            2 => "Perf_Biogrph_Annotation",
+        );
+
+        $pseudonym_fields = array(
+            1 => "Perf_Pseudo_Type_Id",
+            2 => "Perf_Pseudo_Name",
+        );
+
+        $copyright_fields = array(
+            1 => "Perf_Rel_Entry_Date",
+            2 => "Perf_Rel_Exit_Date",
+            3 => "Perf_Rel_Internal_Position_Id",
+            4 => "Perf_Rel_Entry_Date_2",
+            5 => "Perf_Rel_Exit_Date_2",
+            7 => "Perf_Rel_Managed_Rights_Id",
+            8 => "Perf_Rel_Territories_Id",
+            9 => "Perf_Rel_Region_Id",
+//            10 => "Perf_Rel_Profession_Id",
+            11 => "Perf_Rel_File",
+        );
+
+        $death_fields = array(
+            1 => "Perf_Death_Inhrt_Surname",
+            2 => "Perf_Death_Inhrt_Address_1",
+            3 => "Perf_Death_Inhrt_Addtion_Annotation",
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'address_val' => array('col' => 2, 'fieldsets' => $address_fields, 'start_col' => 'ADDRESSES FIELDS'),
+            'payment_val' => array('col' => 3, 'fieldsets' => $payment_fields, 'start_col' => 'PAYMENT FIELDS'),
+            'biograph_val' => array('col' => 4, 'fieldsets' => $biography_fields, 'start_col' => 'BIOGRAPHY'),
+            'pseudonym_val' => array('col' => 5, 'fieldsets' => $pseudonym_fields, 'start_col' => 'PSEUDONYMS'),
+            'copyright_val' => array('col' => 6, 'fieldsets' => $copyright_fields, 'start_col' => 'COPYRIGHTS'),
+            'death_val' => array('col' => 7, 'fieldsets' => $death_fields, 'start_col' => 'DEATH AND INHERITANCE'),
+        );
+    }
+
+    public function importPerformer() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Perf_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Perf_Birth_Country_Id']);
+            $import_row['basic_val']['Perf_Nationality_Id'] = $this->importAddMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Perf_Nationality_Id']);
+            $import_row['basic_val']['Perf_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Perf_Language_Id']);
+            $import_row['basic_val']['Perf_Marital_Status_Id'] = $this->importAddMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Perf_Marital_Status_Id']);
+            $import_row['payment_val']['Perf_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Perf_Pay_Method_id']);
+            $import_row['pseudonym_val']['Perf_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Perf_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Perf_Rel_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Perf_Rel_Internal_Position_Id']);
+            $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id']);
+            $import_row['copyright_val']['Perf_Rel_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Perf_Rel_Territories_Id']);
+            $import_row['copyright_val']['Perf_Rel_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Perf_Rel_Region_Id']);
+
+            /* Save Records */
+            $check_exists = PerformerAccount::model()->findByAttributes(array('Perf_First_Name' => $import_row['basic_val']['Perf_First_Name'], 'Perf_Sur_Name' => $import_row['basic_val']['Perf_Sur_Name']));
+            if(empty($check_exists)){
+                $model = new PerformerAccount;
+                $model->attributes = $import_row['basic_val'];
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Perf_Acc_Id'] = $model->Perf_Acc_Id;
+                    }
+                    
+                    $related_records = array(
+                        'PerformerAccountAddress' => 'address_val',
+                        'PerformerPaymentMethod' => 'payment_val',
+                        'PerformerBiography' => 'biograph_val',
+                        'PerformerPseudonym' => 'pseudonym_val',
+                        'PerformerRelatedRights' => 'copyright_val',
+                        'PerformerDeathInheritance' => 'death_val',
+                    );
+                    
+                    $import_row['copyright_val']['Perf_Rel_Society_Id'] = $this->_import_society;
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
+        }
+        $this->_import_status = "Total records: {$total_records}. Successfull records: {$success_records}. Unsuccessfull records: {$unsuccess_records}. Duplicate records: {$duplicate_records}";
+        return true;
     }
     
     public function importAddMaster($model, $col_name, $col_id, $name) {

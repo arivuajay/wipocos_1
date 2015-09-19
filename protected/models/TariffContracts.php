@@ -40,12 +40,16 @@
  * @property MasterEventType $tarfContEvent
  * @property ContractInvoice $contractInvoices
  * @property TariffContractsHistory $contractHistory
+ * @property EmailTemplate $emailTemp
  */
 class TariffContracts extends RActiveRecord {
 
     const INVOICE_PAD = 7;
     const DEAFULT_PAY_FREQ = 4;
     const EXPIRY_WARNING_MONTH = 0;
+
+    const RENEWAL_MIN_YEAR = 1;
+    const RENEWAL_MAX_YEAR = 10;
 
     public function init() {
         parent::init();
@@ -84,10 +88,12 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
-            array('Tarf_Cont_Internal_Code, Tarf_Cont_Renewal_Year', 'length', 'max' => 50),
+            array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
             array('Tarf_Cont_Renewal', 'length', 'max' => 1),
             array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion, Tarf_Recurring_Amount', 'numerical', 'integerOnly' => false),
+            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MIN_YEAR, 'operator'=> '>=', 'message' => 'Percentage must be greater than '.self::RENEWAL_MIN_YEAR),
+            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MAX_YEAR, 'operator'=>'<=', 'message' => 'Percentage must be less than '.self::RENEWAL_MAX_YEAR),
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>=', 'compareValue'=> 0),
@@ -102,6 +108,7 @@ class TariffContracts extends RActiveRecord {
      * @return array relational rules.
      */
     public function relations() {
+        $alias = $this->getTableAlias(false, false);
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -114,6 +121,7 @@ class TariffContracts extends RActiveRecord {
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
             'contractInvoices' => array(self::HAS_MANY, 'ContractInvoice', 'Tarf_Cont_Id'),
             'contractHistory' => array(self::HAS_MANY, 'TariffContractsHistory', 'Tarf_Cont_Id'),
+            'emailTemp' => array(self::HAS_ONE, 'EmailTemplate', array('Tarf_Cont_Id'=>'Tarf_Cont_Id')),
         );
     }
 
@@ -145,7 +153,7 @@ class TariffContracts extends RActiveRecord {
             'Tarf_Recurring_Amount' => 'Recurring Payment',
             'Tarf_Cont_Renewal' => 'Auto Renewal',
             'Tarf_Cont_Next_Inv_Date' => 'Next Invoice Date',
-            'Tarf_Cont_Renewal_Year' => 'Renewal Year',
+            'Tarf_Cont_Renewal_Year' => 'No. of Years',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -255,6 +263,12 @@ class TariffContracts extends RActiveRecord {
     protected function afterSave() {
         if($this->isNewRecord){
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIFF_CONTRACT_CODE);
+            
+            $model = new EmailTemplate;
+            $model->attributes = EmailTemplate::defaultTemplateContents();
+            $model->setAttribute('Tarf_Cont_Id', $this->Tarf_Cont_Id);
+            $model->setAttribute('Email_Temp_Name', "{$this->tarfContUser->User_Cust_Name}");
+            $model->save(false);
         }
 
         return parent::afterSave();
@@ -267,11 +281,7 @@ class TariffContracts extends RActiveRecord {
     }
     
     public function getRenewallist() {
-        $ranges =  range(date('Y', strtotime('-10 years')), date('Y', strtotime('+10 years')));
-        $ret = array();
-        foreach ($ranges as $range) {
-            $ret[$range] = $range;
-        }
-        return $ret;
+        $ranges =  range(1, 10);
+        return array_combine($ranges, $ranges);
     }
 }

@@ -98,6 +98,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             <?php
             $gridColumns = array(
                 'Email_Temp_Name',
+                'tarfCont.Tarf_Cont_Internal_Code',
                 'Email_Temp_From',
 //                'Email_Temp_ReplyTo',
                 'Email_Temp_Subject',
@@ -152,6 +153,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
         $gridColumns = array(
             'Email_Temp_Name',
+            'tarfCont.Tarf_Cont_Internal_Code',
             'Email_Temp_From',
 //            'Email_Temp_ReplyTo',
             'Email_Temp_Subject',

@@ -264,7 +264,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                                             <div class="form-group">
                                                 <?php echo $form->labelEx($model, 'Tarf_Cont_Renewal_Year', array('class' => '')); ?><br />
-                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Renewal_Year', $renewalas, array('class' => 'form-control', 'prompt' => '')); ?>
+                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Renewal_Year', $renewalas, array('class' => 'form-control', 'prompt' => '', 'disabled' => $model->Tarf_Cont_Renewal == 'N')); ?>
                                                 <?php echo $form->error($model, 'Tarf_Cont_Renewal_Year'); ?>
                                             </div>
                                         </div>
@@ -356,6 +356,7 @@ $get_recurr = Yii::app()->createAbsoluteUrl("site/tariffcontracts/getrecurr");
 $mode = $model->isNewRecord ? 1 : 0;
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
+    var mode = $mode;        
     $(document).ready(function(){
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
         $('.date').datepicker({ format: 'yyyy-mm-dd' });
@@ -424,7 +425,6 @@ $js = <<< EOD
                 url: '$get_recurr',
                 data:{'amount': amount, 'from': from, 'to': to, 'payid': payid},
                 success:function(data){
-                    var mode = $mode;
                     $('.recurr_amt').val(data.recurr_amt);
                     if(mode == 1){
                         $('#TariffContracts_Tarf_Cont_Next_Inv_Date').val(data.nxt_date);
@@ -439,6 +439,7 @@ $js = <<< EOD
         
     $('#TariffContracts_Tarf_Cont_Renewal').on('ifChecked', function(event){
         $('#TariffContracts_Tarf_Cont_Renewal_Year').attr('disabled', false);
+        $('#TariffContracts_Tarf_Cont_Renewal_Year').val() == '' ? $('#TariffContracts_Tarf_Cont_Renewal_Year').val(1) : '';
     });
         
     $('#TariffContracts_Tarf_Cont_Renewal').on('ifUnchecked', function(event){
