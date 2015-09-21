@@ -29,6 +29,10 @@
 
 
 /*custom*/
+.bg-green.no-bgcolor {
+  background: #93bf02 !important;
+  color: #fff !important;
+}
 .bg-green {
   background: #93bf02 !important;
   color: #000 !important;

@@ -16,8 +16,17 @@
                 ),
                 'enableAjaxValidation' => true,
             ));
+            $class_list = DistributionMainClass::mainClassList();
             ?>
             <div class="box-body">
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Main_Class_Id', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->dropDownList($model, 'Main_Class_Id', $class_list, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Main_Class_Id'); ?>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Class_Code', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">

@@ -33,8 +33,15 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'action' => array('/site/distributionclass/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
+            $class_list = DistributionMainClass::mainClassList();
                     ?>
 
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Main_Class_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Main_Class_Id', $class_list, array('class' => 'form-control', 'prompt' => '')); ?>
+                        </div>
+                    </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Class_Code', array('class' => ' control-label')); ?>
@@ -67,6 +74,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+                'distributionMainclass.Main_Class_Name',
                 'Class_Code',
                 'Class_Name',
                 array(
@@ -117,6 +125,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+                'distributionMainclass.Main_Class_Name',
             'Class_Code',
             'Class_Name',
             array(

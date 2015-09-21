@@ -251,10 +251,15 @@ class SocietyController extends Controller {
         $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn); // e.g. 5
         $screens = Society::getImportcategoryList();
         $this->_import_worksheet = $objWorksheet;
+        unlink($file_path);
         
         $return = false;
         
         if (array_key_exists($input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue()), $screens)) {
+            if($input_type != $this->_import_category){
+                Yii::app()->user->setFlash('danger', "Its not a Valid {$this->_import_category} File Format (Seems like {$input_type} File). Recheck your imported file");
+                $this->redirect(array('/site/society/import', 'sid' => $this->_import_society));
+            }
             switch ($input_type) {
                 case 'authors tabs':
                     $this->_import_rows = $this->importRows('author', 4, $highestRow, 14);
@@ -266,13 +271,23 @@ class SocietyController extends Controller {
                     $return = $this->importPerformer();
                     break;
 
+                case 'publishers tabs':
+                    $this->_import_rows = $this->importRows('publisher', 4, $highestRow, 13);
+                    $return = $this->importPublisher();
+                    break;
+
+                case 'producers tabs':
+                    $this->_import_rows = $this->importRows('producer', 4, $highestRow, 12);
+                    $return = $this->importProducer();
+                    break;
+
                 default:
                     break;
             }
-            unlink($file_path);
             return $return;
         } else {
-            throw new CHttpException(400, Yii::t('err', "Its not a Valid File (NOT IN PREDEFINED FORMAT)"));
+            Yii::app()->user->setFlash('danger', "Its not a Valid File (NOT IN PREDEFINED FORMAT)");
+            $this->redirect(array('/site/society/import', 'sid' => $this->_import_society));
         }
     }
 
@@ -295,6 +310,12 @@ class SocietyController extends Controller {
             case 'performer':
                 $loop_options = $this->importPerformerLoopOptions();
                 break;
+            case 'publisher':
+                $loop_options = $this->importPublisherLoopOptions();
+                break;
+            case 'producer':
+                $loop_options = $this->importProducerLoopOptions();
+                break;
             default:
                 break;
         }
@@ -309,8 +330,7 @@ class SocietyController extends Controller {
             }
             $start_point = true;
             $stop_point = false;
-            $row_count = 1;
-            $i = 1;
+            $row_count = $i = 1;
             for ($row = $start_row; $row <= $highestRow; ++$row) {
                 if ($start_point && !$stop_point) {
                     $i = 1;
@@ -349,6 +369,20 @@ class SocietyController extends Controller {
             'Perf_Rel_Exit_Date',
             'Perf_Rel_Entry_Date_2',
             'Perf_Rel_Exit_Date_2',
+            'Pub_Date',
+            'Pub_Reg_Date',
+            'Pub_Excerpt_Date',
+            'Pub_Mnge_Entry_Date',
+            'Pub_Mnge_Exit_Date',
+            'Pub_Mnge_Entry_Date_2',
+            'Pub_Mnge_Exit_Date_2',
+            'Pro_Date',
+            'Pro_Reg_Date',
+            'Pro_Excerpt_Date',
+            'Pro_Rel_Entry_Date',
+            'Pro_Rel_Exit_Date',
+            'Pro_Rel_Entry_Date_2',
+            'Pro_Rel_Exit_Date_2',
         );
     }
 
@@ -485,7 +519,7 @@ class SocietyController extends Controller {
             }
             $total_records++;
         }
-        $this->_import_status = "Total records: {$total_records}. Successfull records: {$success_records}. Unsuccessfull records: {$unsuccess_records}. Duplicate records: {$duplicate_records}";
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
     
@@ -539,7 +573,7 @@ class SocietyController extends Controller {
             2 => "Perf_Pseudo_Name",
         );
 
-        $copyright_fields = array(
+        $relrights_fields = array(
             1 => "Perf_Rel_Entry_Date",
             2 => "Perf_Rel_Exit_Date",
             3 => "Perf_Rel_Internal_Position_Id",
@@ -564,7 +598,7 @@ class SocietyController extends Controller {
             'payment_val' => array('col' => 3, 'fieldsets' => $payment_fields, 'start_col' => 'PAYMENT FIELDS'),
             'biograph_val' => array('col' => 4, 'fieldsets' => $biography_fields, 'start_col' => 'BIOGRAPHY'),
             'pseudonym_val' => array('col' => 5, 'fieldsets' => $pseudonym_fields, 'start_col' => 'PSEUDONYMS'),
-            'copyright_val' => array('col' => 6, 'fieldsets' => $copyright_fields, 'start_col' => 'COPYRIGHTS'),
+            'copyright_val' => array('col' => 6, 'fieldsets' => $relrights_fields, 'start_col' => 'COPYRIGHTS'),
             'death_val' => array('col' => 7, 'fieldsets' => $death_fields, 'start_col' => 'DEATH AND INHERITANCE'),
         );
     }
@@ -621,7 +655,287 @@ class SocietyController extends Controller {
             }
             $total_records++;
         }
-        $this->_import_status = "Total records: {$total_records}. Successfull records: {$success_records}. Unsuccessfull records: {$unsuccess_records}. Duplicate records: {$duplicate_records}";
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        return true;
+    }
+    
+    /* Publisher Importing */
+    public function importPublisherLoopOptions() {
+        $basic_fields = array(
+//            1 => "Pub_Internal_Code",
+            2 => "Pub_Corporate_Name",
+            3 => "Pub_Country_Id",
+            4 => "Pub_Ipi",
+            5 => "Pub_Ipi_Base_Number",
+//            6 => "Pub_Ipn_Number",
+            7 => "Pub_Date",
+            8 => "Pub_Legal_Form_id",
+            9 => "Pub_Reg_Date",
+            10 => "Pub_Reg_Number",
+            11 => "Pub_Excerpt_Date",
+            12 => "Pub_Language_Id",
+        );
+
+        $address_fields = array(
+            1 => "Pub_Head_Address_1",
+            2 => "Pub_Head_Telephone",
+            3 => "Pub_Head_Fax",
+            4 => "Pub_Head_Email",
+            5 => "Pub_Head_Website",
+            6 => "Pub_Head_Address_3",
+            7 => "Pub_Mailing_Address_1",
+            8 => "Pub_Mailing_Telephone",
+            9 => "Pub_Mailing_Fax",
+            10 => "Pub_Mailing_Email",
+            11 => "Pub_Mailing_Website",
+            12 => "Pub_Unknown_Address",
+        );
+
+        $payment_fields = array(
+            1 => "Pub_Pay_Method_id",
+            2 => "Pub_Bank_Account",
+            3 => "Pub_Pay_Address",
+            4 => "Pub_Pay_Iban",
+            5 => "Pub_Pay_Swift",
+        );
+
+        $biography_fields = array(
+            2 => "Pub_Managers",
+            3 => "Pub_Biogrph_Annotation",
+        );
+
+        $pseudonym_fields = array(
+            1 => "Pub_Pseudo_Type_Id",
+            2 => "Pub_Pseudo_Name",
+        );
+
+        $copyright_fields = array(
+            1 => "Pub_Mnge_Entry_Date",
+            2 => "Pub_Mnge_Exit_Date",
+            3 => "Pub_Mnge_Internal_Position_Id",
+            4 => "Pub_Mnge_Entry_Date_2",
+            5 => "Pub_Mnge_Exit_Date_2",
+            6 => "Pub_Mnge_Avl_Work_Cat_Id",
+            7 => "Pub_Mnge_Type_Rght_Id",
+            8 => "Pub_Mnge_Managed_Rights_Id",
+            9 => "Pub_Mnge_Territories_Id",
+            10 => "Pub_Mnge_Region_Id",
+            11 => "Pub_Mnge_File",
+//            12 => "Pub_Mnge_Subscription",
+            13 => "Pub_Mnge_Profession_Id",
+        );
+
+        $death_fields = array(
+            1 => "Pub_Suc_Name",
+            2 => "Pub_Suc_Address_1",
+            3 => "Pub_Suc_Annotation",
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'address_val' => array('col' => 2, 'fieldsets' => $address_fields, 'start_col' => 'ADDRESSES FIELDS'),
+            'payment_val' => array('col' => 3, 'fieldsets' => $payment_fields, 'start_col' => 'PAYMENT FIELDS'),
+            'biograph_val' => array('col' => 4, 'fieldsets' => $biography_fields, 'start_col' => 'BIOGRAPHY'),
+            'pseudonym_val' => array('col' => 5, 'fieldsets' => $pseudonym_fields, 'start_col' => 'PSEUDONYMS'),
+            'copyright_val' => array('col' => 6, 'fieldsets' => $copyright_fields, 'start_col' => 'COPYRIGHTS'),
+            'death_val' => array('col' => 7, 'fieldsets' => $death_fields, 'start_col' => 'LIQUIDATION AND INHERITANCE'),
+        );
+    }
+
+    public function importPublisher() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Pub_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pub_Country_Id']);
+            $import_row['basic_val']['Pub_Legal_Form_id'] = $this->importAddMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pub_Legal_Form_id']);
+            $import_row['basic_val']['Pub_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pub_Language_Id']);
+            $import_row['payment_val']['Pub_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pub_Pay_Method_id']);
+            $import_row['pseudonym_val']['Pub_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pub_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pub_Mnge_Territories_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pub_Mnge_Region_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pub_Mnge_Profession_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id'] = $this->importAddMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'] = $this->importAddMasterTypeRights($import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
+
+            /* Save Records */
+            $check_exists = PublisherAccount::model()->findByAttributes(array('Pub_Corporate_Name' => $import_row['basic_val']['Pub_Corporate_Name']));
+            if(empty($check_exists)){
+                $model = new PublisherAccount;
+                $model->attributes = $import_row['basic_val'];
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Pub_Acc_Id'] = $model->Pub_Acc_Id;
+                    }
+                    
+                    $related_records = array(
+                        'PublisherAccountAddress' => 'address_val',
+                        'PublisherPaymentMethod' => 'payment_val',
+                        'PublisherBiography' => 'biograph_val',
+                        'PublisherPseudonym' => 'pseudonym_val',
+                        'PublisherManageRights' => 'copyright_val',
+                        'PublisherSuccession' => 'death_val',
+                    );
+                    
+                    $import_row['copyright_val']['Pub_Mnge_Society_Id'] = $this->_import_society;
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
+        }
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        return true;
+    }
+    
+    /* Publisher Importing */
+    public function importProducerLoopOptions() {
+        $basic_fields = array(
+//            1 => "Pro_Internal_Code",
+            2 => "Pro_Corporate_Name",
+            3 => "Pro_Country_Id",
+            4 => "Pro_Ipi",
+            5 => "Pro_Ipi_Base_Number",
+//            6 => "Pro_Ipn_Number",
+            7 => "Pro_Date",
+            8 => "Pro_Legal_Form_id",
+            9 => "Pro_Reg_Date",
+            10 => "Pro_Reg_Number",
+            11 => "Pro_Excerpt_Date",
+            12 => "Pro_Language_Id",
+        );
+
+        $address_fields = array(
+            1 => "Pro_Head_Address_1",
+            2 => "Pro_Head_Telephone",
+            3 => "Pro_Head_Fax",
+            4 => "Pro_Head_Email",
+            5 => "Pro_Head_Website",
+            6 => "Pro_Head_Address_3",
+            7 => "Pro_Mailing_Address_1",
+            8 => "Pro_Mailing_Telephone",
+            9 => "Pro_Mailing_Fax",
+            10 => "Pro_Mailing_Email",
+            11 => "Pro_Mailing_Website",
+            12 => "Pro_Unknown_Address",
+        );
+
+        $payment_fields = array(
+            1 => "Pro_Pay_Method_id",
+            2 => "Pro_Bank_Account",
+            3 => "Pro_Pay_Address",
+            4 => "Pro_Pay_Iban",
+            5 => "Pro_Pay_Swift",
+        );
+
+        $biography_fields = array(
+            2 => "Pro_Managers",
+            3 => "Pro_Biogrph_Annotation",
+        );
+
+        $pseudonym_fields = array(
+            1 => "Pro_Pseudo_Type_Id",
+            2 => "Pro_Pseudo_Name",
+        );
+
+        $copyright_fields = array(
+            1 => "Pro_Rel_Entry_Date",
+            2 => "Pro_Rel_Exit_Date",
+            3 => "Pro_Rel_Internal_Position_Id",
+            4 => "Pro_Rel_Entry_Date_2",
+            5 => "Pro_Rel_Exit_Date_2",
+            6 => "Pro_Rel_Avl_Work_Cat_Id",
+            7 => "Pro_Rel_Managed_Rights_Id",
+            8 => "Pro_Rel_Territories_Id",
+            9 => "Pro_Rel_Region_Id",
+            10 => "Pro_Rel_File",
+//            11 => "Pro_Rel_Subscription",
+        );
+
+        $death_fields = array(
+            1 => "Pro_Suc_Name",
+            2 => "Pro_Suc_Address_1",
+            3 => "Pro_Suc_Annotation",
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'address_val' => array('col' => 2, 'fieldsets' => $address_fields, 'start_col' => 'ADDRESSES FIELDS'),
+            'payment_val' => array('col' => 3, 'fieldsets' => $payment_fields, 'start_col' => 'PAYMENT FIELDS'),
+            'biograph_val' => array('col' => 4, 'fieldsets' => $biography_fields, 'start_col' => 'BIOGRAPHY'),
+            'pseudonym_val' => array('col' => 5, 'fieldsets' => $pseudonym_fields, 'start_col' => 'PSEUDONYMS'),
+            'copyright_val' => array('col' => 6, 'fieldsets' => $copyright_fields, 'start_col' => 'RELATED RIGHTS'),
+            'death_val' => array('col' => 7, 'fieldsets' => $death_fields, 'start_col' => 'LIQUIDATION AND INHERITANCE'),
+        );
+    }
+
+    public function importProducer() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Pro_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pro_Country_Id']);
+            $import_row['basic_val']['Pro_Legal_Form_id'] = $this->importAddMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pro_Legal_Form_id']);
+            $import_row['basic_val']['Pro_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pro_Language_Id']);
+            $import_row['payment_val']['Pro_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pro_Pay_Method_id']);
+            $import_row['pseudonym_val']['Pro_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pro_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Pro_Rel_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pro_Rel_Internal_Position_Id']);
+            $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id']);
+            $import_row['copyright_val']['Pro_Rel_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pro_Rel_Territories_Id']);
+            $import_row['copyright_val']['Pro_Rel_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pro_Rel_Region_Id']);
+            $import_row['copyright_val']['Pro_Rel_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pro_Rel_Profession_Id']);
+            $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id'] = $this->importAddMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id']);
+//            $import_row['copyright_val']['Pro_Rel_Type_Rght_Id'] = $this->importAddMasterTypeRights($import_row['copyright_val']['Pro_Rel_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
+
+            /* Save Records */
+            $check_exists = ProducerAccount::model()->findByAttributes(array('Pro_Corporate_Name' => $import_row['basic_val']['Pro_Corporate_Name']));
+            if(empty($check_exists)){
+                $model = new ProducerAccount;
+                $model->attributes = $import_row['basic_val'];
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Pro_Acc_Id'] = $model->Pro_Acc_Id;
+                    }
+                    
+                    $related_records = array(
+                        'ProducerAccountAddress' => 'address_val',
+                        'ProducerPaymentMethod' => 'payment_val',
+                        'ProducerBiography' => 'biograph_val',
+                        'ProducerPseudonym' => 'pseudonym_val',
+                        'ProducerRelatedRights' => 'copyright_val',
+                        'ProducerSuccession' => 'death_val',
+                    );
+                    
+                    $import_row['copyright_val']['Pro_Rel_Society_Id'] = $this->_import_society;
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
+        }
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
     
@@ -634,5 +948,28 @@ class SocietyController extends Controller {
             $id = $model->$col_id;
         }
         return $id;
+    }
+    
+    public function importAddMasterTypeRights($name, $occupation, $domain, $rank) {
+        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
+        if(empty($id) && $name != ''){
+            $model = new MasterTypeRights;
+            $attr = array(
+                'Type_Rights_Name' => $name,
+                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Rank' => $rank,
+                'Type_Rights_Occupation' => $occupation,
+                'Type_Rights_Domain' => $domain,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Master_Type_Rights_Id;
+        }
+        return $id;
+    }
+    
+    public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
+        return "Total records: <span class='badge bg-blue'>{$total_records}</span> Successfull records: <span class='badge bg-green no-bgcolor'>{$success_records}</span> Unsuccessfull records: <span class='badge bg-red'>{$unsuccess_records}</span> Duplicate records: <span class='badge bg-yellow'>{$duplicate_records}</span>";
     }
 }
