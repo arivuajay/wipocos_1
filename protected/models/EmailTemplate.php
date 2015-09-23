@@ -40,7 +40,7 @@ class EmailTemplate extends RActiveRecord {
             array('Email_Temp_Name, Email_Temp_Subject', 'length', 'max' => 100),
             array('Email_Temp_From, Email_Temp_ReplyTo, Email_Temp_Username', 'length', 'max' => 50),
             array('Email_Temp_ReplyTo', 'email'),
-            array('Email_Temp_Content, Created_Date, Rowversion, Email_Temp_Username, Tarf_Cont_Id', 'safe'),
+            array('Email_Temp_Content, Created_Date, Rowversion, Email_Temp_Username, Tarf_Cont_Id, Email_Temp_Params', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Email_Temp_Id, Email_Temp_Name, Email_Temp_From, Email_Temp_ReplyTo, Email_Temp_Subject, Email_Temp_Content, Email_Temp_Params, Created_Date, Rowversion, Created_By, Updated_By, Tarf_Cont_Id', 'safe', 'on' => 'search'),
@@ -182,8 +182,8 @@ class EmailTemplate extends RActiveRecord {
             'Email_Temp_From' => self::DEFAULT_FROM,
             'Email_Temp_ReplyTo' => self::DEFAULT_REPLY_TO,
             'Email_Temp_Subject' => $subject,
-            'Email_Temp_Content' => $content,
             'Email_Temp_Params' => $params,
+            'Email_Temp_Content' => $content,
         );
     }
 }

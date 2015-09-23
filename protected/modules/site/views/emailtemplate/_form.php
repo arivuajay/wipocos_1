@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Email_Temp_Params', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $this->renderPartial('_params', compact('model')); ?>
+                        <?php echo $this->renderPartial('/emailtemplate/_params', array('model' => $model)); ?>
                         <?php
                         $this->widget(
                             'application.components.MyTbButton', array(

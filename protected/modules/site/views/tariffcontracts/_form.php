@@ -35,7 +35,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         ?>
                         <div class="col-lg-12">
                             <div class="box-body">
-                                <div class="form-group foundation">
+                                <div class="form-group foundation <?php echo $model->isNewRecord ? '' : 'hide' ?>">
                                     <div class="box-header">
                                         <h3 class="box-title">Search</h3>
                                     </div>
@@ -323,16 +323,31 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         <div class="box-footer">
                             <div class="form-group">
                                 <div class="col-lg-12">
-                                    <div class="col-lg-1">
+                                    <div class="col-lg-3">
                                         <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
-
+                                        <?php
+                                        if($model->isNewRecord){
+                                            $this->widget(
+                                                'application.components.MyTbButton', array(
+                                                    'label' => 'Modify Default Email Template',
+                                                    'context' => 'default btn-sm',
+                                                    'htmlOptions' => array(
+                                                        'data-toggle' => 'modal',
+                                                        'data-target' => '#templateModal',
+                                                    ),
+                                                )
+                                            );
+                                            $this->renderPartial('_email_template', compact('model','form'));
+                                        }
+                                        ?>
                                     </div>
-                                    <div class="col-lg-11 help-block">
+                                    <div class="col-lg-9 help-block">
                                         <?php echo $form->error($model, 'Tarf_Cont_User_Id'); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <?php $this->endWidget(); ?>
                     </div>
                 </div>
@@ -348,6 +363,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
     </div>
 </div>
+
 
 <?php
 $search_url = Yii::app()->createAbsoluteUrl("site/tariffcontracts/searchuser");
@@ -386,6 +402,7 @@ $js = <<< EOD
         $('body').on('click','#search_result tbody tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             $('#TariffContracts_Tarf_Cont_User_Id').val($(this).data('id'));
+            $('#TariffContracts_email_name').val($(this).data('name'));
         });
         
         $('#TariffContracts_Tarf_Cont_Tariff_Id').on("click", function(){

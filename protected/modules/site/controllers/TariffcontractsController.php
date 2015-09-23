@@ -92,6 +92,13 @@ class TariffcontractsController extends Controller {
                 $this->redirect(array('/site/tariffcontracts/index'));
             }
         }
+        
+        $contents = EmailTemplate::defaultTemplateContents();
+        $model->setAttribute('email_template', $contents['Email_Temp_Content']); 
+        $model->setAttribute('email_subject', $contents['Email_Temp_Subject']); 
+        $model->setAttribute('email_from', $contents['Email_Temp_From']); 
+        $model->setAttribute('email_params', $contents['Email_Temp_Params']); 
+//        $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name); 
 
         $this->render('create', array(
             'model' => $model,
@@ -105,9 +112,23 @@ class TariffcontractsController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $email_model = EmailTemplate::model()->findByAttributes(array('Tarf_Cont_Id' => $model->Tarf_Cont_Id));
+        
+        if(!empty($email_model)){
+            $model->setAttribute('email_template', $email_model->Email_Temp_Content); 
+            $model->setAttribute('email_subject', $email_model->Email_Temp_Subject); 
+            $model->setAttribute('email_from', $email_model->Email_Temp_From); 
+            $model->setAttribute('email_name', $email_model->Email_Temp_Name); 
+        }else{
+            $contents = EmailTemplate::defaultTemplateContents();
+            $model->setAttribute('email_template', $contents['Email_Temp_Content']); 
+            $model->setAttribute('email_subject', $contents['Email_Temp_Subject']); 
+            $model->setAttribute('email_from', $contents['Email_Temp_From']); 
+            $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name); 
+        }
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(array($model, $email_model));
 
         if (isset($_POST['TariffContracts'])) {
             $model->attributes = $_POST['TariffContracts'];
@@ -120,6 +141,7 @@ class TariffcontractsController extends Controller {
 
         $this->render('update', array(
             'model' => $model,
+            'email_model' => $email_model,
         ));
     }
 
@@ -246,7 +268,7 @@ class TariffcontractsController extends Controller {
      * @param TariffContracts $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'tariff-contracts-form') {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'tariff-contracts-form' || $_POST['ajax'] === 'email-template-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

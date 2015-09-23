@@ -50,6 +50,12 @@ class TariffContracts extends RActiveRecord {
 
     const RENEWAL_MIN_YEAR = 1;
     const RENEWAL_MAX_YEAR = 10;
+    
+    public $email_subject;
+    public $email_name;
+    public $email_from;
+    public $email_template;
+    public $email_params;
 
     public function init() {
         parent::init();
@@ -92,15 +98,15 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
             array('Tarf_Cont_Renewal', 'length', 'max' => 1),
             array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion, Tarf_Recurring_Amount', 'numerical', 'integerOnly' => false),
-            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MIN_YEAR, 'operator'=> '>=', 'message' => 'Percentage must be greater than '.self::RENEWAL_MIN_YEAR),
-            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MAX_YEAR, 'operator'=>'<=', 'message' => 'Percentage must be less than '.self::RENEWAL_MAX_YEAR),
+//            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MIN_YEAR, 'operator'=> '>=', 'message' => 'No. of Years must be greater than '.self::RENEWAL_MIN_YEAR),
+            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MAX_YEAR, 'operator'=>'<=', 'message' => 'No. of Years must be less than '.self::RENEWAL_MAX_YEAR),
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>=', 'compareValue'=> 0),
-            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count, Tarf_Cont_Renewal_Year, Tarf_Cont_Renewal', 'safe'),
+            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count, Tarf_Cont_Renewal_Year, Tarf_Cont_Renewal, email_template, email_subject, email_from, email_name, email_params', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By, email_template, email_subject, email_from, email_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -263,14 +269,21 @@ class TariffContracts extends RActiveRecord {
     protected function afterSave() {
         if($this->isNewRecord){
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIFF_CONTRACT_CODE);
-            
             $model = new EmailTemplate;
             $model->attributes = EmailTemplate::defaultTemplateContents();
             $model->setAttribute('Tarf_Cont_Id', $this->Tarf_Cont_Id);
             $model->setAttribute('Email_Temp_Name', "{$this->tarfContUser->User_Cust_Name}");
+            /* Customized Email */
+            if($this->email_template != '')
+                $model->setAttribute('Email_Temp_Content', $this->email_template);
+            if($this->email_name != '')
+                $model->setAttribute('Email_Temp_Name', $this->email_name);
+            if($this->email_subject != '')
+                $model->setAttribute('Email_Temp_Subject', $this->email_subject);
+            if($this->email_from != '')
+                $model->setAttribute('Email_Temp_From', $this->email_from);
             $model->save(false);
         }
-
         return parent::afterSave();
     }
 
@@ -283,5 +296,12 @@ class TariffContracts extends RActiveRecord {
     public function getRenewallist() {
         $ranges =  range(1, 10);
         return array_combine($ranges, $ranges);
+    }
+    
+    protected function afterDelete() {
+        $model = EmailTemplate::model()->findByAttributes(array('Tarf_Cont_Id' => $this->Tarf_Cont_Id));
+        $model->delete();
+
+        return parent::afterDelete();
     }
 }
