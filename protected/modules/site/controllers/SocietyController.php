@@ -281,6 +281,16 @@ class SocietyController extends Controller {
                     $return = $this->importProducer();
                     break;
 
+                case 'works tabs':
+                    $this->_import_rows = $this->importRows('work', 4, $highestRow, 12);
+                    $return = $this->importWork();
+                    break;
+
+                case 'recordings tabs':
+                    $this->_import_rows = $this->importRows('recording', 4, $highestRow, 14);
+                    $return = $this->importRecording();
+                    break;
+
                 default:
                     break;
             }
@@ -316,6 +326,12 @@ class SocietyController extends Controller {
             case 'producer':
                 $loop_options = $this->importProducerLoopOptions();
                 break;
+            case 'work':
+                $loop_options = $this->importWorkLoopOptions();
+                break;
+            case 'recording':
+                $loop_options = $this->importRecordingLoopOptions();
+                break;
             default:
                 break;
         }
@@ -324,26 +340,44 @@ class SocietyController extends Controller {
 
         $objWorksheet = $this->_import_worksheet;
         $dateFields = $this->importDateFields();
+        $timeFields = $this->importTimeFields();
         foreach ($loop_options as $keyset => $fieldsets) {
             if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], 2)->getValue() != $fieldsets['start_col']) {
-                throw new CHttpException(400, Yii::t('err', "Its not in {$import_category} Basic Information format ({$fieldsets['start_col']} column value missing)"));
+                Yii::app()->user->setFlash('danger', "Its not in {$import_category} Basic Information format ({$fieldsets['start_col']} column value missing)");
+                $this->redirect(array('/site/society/import', 'sid' => $this->_import_society));
             }
             $start_point = true;
             $stop_point = false;
             $row_count = $i = 1;
             for ($row = $start_row; $row <= $highestRow; ++$row) {
-                if ($start_point && !$stop_point) {
+                if ($start_point && !$stop_point)
                     $i = 1;
+                
+                /* Set Value */
+                $val = '';
+                if (isset($fieldsets['fieldsets'][$i])){
+                    if(in_array ($fieldsets['fieldsets'][$i], $dateFields))
+                        $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                    else if(in_array ($fieldsets['fieldsets'][$i], $timeFields))
+                        $val = PHPExcel_Style_NumberFormat::toFormattedString($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue(), 'hh:mm:ss');
+                    else
+                        $val = $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue();
+                }
+                /* End */
+                
+                if ($start_point && !$stop_point) {
                     if (isset($fieldsets['fieldsets'][$i]))
-                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = !in_array ($fieldsets['fieldsets'][$i], $dateFields) ? $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() : date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = $val;
                     $start_point = false;
                 }
+                
                 if (!$stop_point) {
                     if (isset($fieldsets['fieldsets'][$i]))
-                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = !in_array ($fieldsets['fieldsets'][$i], $dateFields) ? $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() : date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                        $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = $val;
                     if ($i == $max_row)
                         $stop_point = true;
                 }
+                
                 if ($stop_point) {
                     if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() == $fieldsets['start_col']) {
                         $row++;
@@ -383,9 +417,52 @@ class SocietyController extends Controller {
             'Pro_Rel_Exit_Date',
             'Pro_Rel_Entry_Date_2',
             'Pro_Rel_Exit_Date_2',
+            'Work_Doc_Sign_Date',
+            'Rcd_Date',
         );
     }
 
+    public function importTimeFields() {
+        return array(
+            'Work_Duration',
+            'Rcd_Duration',
+        );
+    }
+
+    public function importAddMaster($model, $col_name, $col_id, $name) {
+        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
+        if(empty($id)){
+            $model = new $model;
+            $model->setAttribute($col_name, $name);
+            $model->save(false);
+            $id = $model->$col_id;
+        }
+        return $id;
+    }
+    
+    public function importAddMasterTypeRights($name, $occupation, $domain, $rank) {
+        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
+        if(empty($id) && $name != ''){
+            $model = new MasterTypeRights;
+            $attr = array(
+                'Type_Rights_Name' => $name,
+                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Rank' => $rank,
+                'Type_Rights_Occupation' => $occupation,
+                'Type_Rights_Domain' => $domain,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Master_Type_Rights_Id;
+        }
+        return $id;
+    }
+    
+    public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
+        return "<span class='badge bg-blue'>{$total_records}</span> Total records.&nbsp;&nbsp;&nbsp;<span class='badge bg-green no-bgcolor'>{$success_records}</span> Successfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-red'>{$unsuccess_records}</span> Unsuccessfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-yellow'>{$duplicate_records}</span> Duplicate records.";
+    }
+    
     /* Author Importing */
     public function importAuthorLoopOptions() {
         $basic_fields = array(
@@ -800,7 +877,7 @@ class SocietyController extends Controller {
         return true;
     }
     
-    /* Publisher Importing */
+    /* Producer Importing */
     public function importProducerLoopOptions() {
         $basic_fields = array(
 //            1 => "Pro_Internal_Code",
@@ -939,37 +1016,182 @@ class SocietyController extends Controller {
         return true;
     }
     
-    public function importAddMaster($model, $col_name, $col_id, $name) {
-        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
-        if(empty($id) && $name != ''){
-            $model = new $model;
-            $model->setAttribute($col_name, $name);
-            $model->save(false);
-            $id = $model->$col_id;
+    /* Work Importing */
+    public function importWorkLoopOptions() {
+        $basic_fields = array(
+//            1 => "Work_Internal_Code",
+            2 => "Work_Org_Title",
+            3 => "Work_Language_Id",
+            4 => "Work_Iswc",
+            5 => "Work_Wic_Code",
+//            6 => "Work_Ipn_Number",
+            7 => "Work_Type_Id",
+            8 => "Work_Factor_Id",
+            9 => "Work_Instrumentation",
+            10 => "Work_Duration",
+            11 => "Work_Creation",
+            12 => "Work_Opus_Number",
+        );
+
+        $subtite_fields = array(
+            1 => 'Work_Subtitle_Name',
+            2 => 'Work_Subtitle_Type_Id',
+            3 => 'Work_Subtitle_Language_Id',
+        );
+
+        $document_fields = array(
+            1 => 'Work_Doc_Status_Id',
+            2 => 'Work_Doc_Inclusion',
+            3 => 'Work_Doc_Dispute',
+            4 => 'Work_Doc_Type_Id',
+            5 => 'Work_Doc_Sign_Date',
+            6 => 'Work_Doc_File',
+        );
+
+        $biograph_fields = array(
+            1 => 'Work_Biogrph_Annotation',
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtite_fields, 'start_col' => 'SUB TITLES'),
+            'document_val' => array('col' => 7, 'fieldsets' => $document_fields, 'start_col' => 'DOCUMENTATION'),
+            'biograph_val' => array('col' => 8, 'fieldsets' => $biograph_fields, 'start_col' => 'BIOGRAPHY'),
+        );
+    }
+
+    public function importWork() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Work_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Work_Language_Id']);
+            $import_row['basic_val']['Work_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Work_Type_Id']);
+            $import_row['basic_val']['Work_Factor_Id'] = $this->importAddMaster('MasterFactor', 'Factor', 'Master_Factor_Id', $import_row['basic_val']['Work_Factor_Id']);
+            $import_row['subtitle_val']['Work_Subtitle_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Work_Subtitle_Language_Id']);
+            $import_row['subtitle_val']['Work_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Work_Subtitle_Type_Id']);
+            $import_row['document_val']['Work_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['document_val']['Work_Doc_Status_Id']);
+            $import_row['document_val']['Work_Doc_Type_Id'] = $this->importAddMaster('MasterDocument', 'Doc_Name', 'Master_Doc_Id', $import_row['document_val']['Work_Doc_Type_Id']);
+            
+            $inst_val = array();
+            $instruments = explode(',', $import_row['basic_val']['Work_Instrumentation']);
+            foreach ($instruments as $instrument) {
+                array_push($inst_val, $this->importAddMaster('MasterInstrument', 'Instrument_Name', 'Master_Inst_Id', $instrument));
+            }
+            $import_row['basic_val']['Work_Instrumentation'] = json_encode($inst_val);
+
+            /* Save Records */
+            $check_exists = Work::model()->findByAttributes(array('Work_Org_Title' => $import_row['basic_val']['Work_Org_Title']));
+            if(empty($check_exists)){
+                $model = new Work;
+                $model->attributes = $import_row['basic_val'];
+                $model->setDuration();
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Work_Id'] = $model->Work_Id;
+                    }
+                    
+                    $related_records = array(
+                        'WorkSubtitle' => 'subtitle_val',
+                        'WorkDocumentation' => 'document_val',
+                        'WorkBiography' => 'biograph_val',
+                    );
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
         }
-        return $id;
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        return true;
     }
     
-    public function importAddMasterTypeRights($name, $occupation, $domain, $rank) {
-        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
-        if(empty($id) && $name != ''){
-            $model = new MasterTypeRights;
-            $attr = array(
-                'Type_Rights_Name' => $name,
-                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
-                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
-                'Type_Rights_Rank' => $rank,
-                'Type_Rights_Occupation' => $occupation,
-                'Type_Rights_Domain' => $domain,
-            );
-            $model->attributes = $attr;
-            $model->save(false);
-            $id = $model->Master_Type_Rights_Id;
-        }
-        return $id;
+    /* Recording Importing */
+    public function importRecordingLoopOptions() {
+        $basic_fields = array(
+//            1 => "Rcd_Internal_Code",
+            2 => "Rcd_Title",
+            3 => "Rcd_Type_Id",
+            4 => "Rcd_Duration",
+            5 => "Rcd_Date",
+            6 => "Rcd_Record_Country_id",
+            7 => "Rcd_Product_Country_Id",
+            8 => "Rcd_Doc_Status_Id",
+            9 => "Rcd_Record_Type_Id",
+            10 => "Rcd_Label_Id",
+            11 => "Rcd_Reference",
+            12 => "Rcd_File",
+            13 => "Rcd_Isrc_Code",
+            14 => "Rcd_Iswc_Number",
+        );
+
+        $subtite_fields = array(
+            1 => 'Rcd_Subtitle_Name',
+            2 => 'Rcd_Subtitle_Type_Id',
+            3 => 'Rcd_Subtitle_Language_Id',
+        );
+
+        return array(
+            'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
+            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtite_fields, 'start_col' => 'SUB TITLES'),
+        );
     }
-    
-    public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
-        return "Total records: <span class='badge bg-blue'>{$total_records}</span> Successfull records: <span class='badge bg-green no-bgcolor'>{$success_records}</span> Unsuccessfull records: <span class='badge bg-red'>{$unsuccess_records}</span> Duplicate records: <span class='badge bg-yellow'>{$duplicate_records}</span>";
+
+    public function importRecording() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        foreach ($this->_import_rows as $key => $import_row) {
+            /* Add Master fields */
+            $import_row['basic_val']['Rcd_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Rcd_Type_Id']);
+            $import_row['basic_val']['Rcd_Record_Country_id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Record_Country_id']);
+            $import_row['basic_val']['Rcd_Product_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Product_Country_Id']);
+            $import_row['basic_val']['Rcd_Record_Type_Id'] = $this->importAddMaster('MasterRecordType', 'Rec_Type_Name', 'Master_Rec_Type_Id', $import_row['basic_val']['Rcd_Record_Type_Id']);
+            $import_row['basic_val']['Rcd_Label_Id'] = $this->importAddMaster('MasterLabel', 'Label_Name', 'Master_Label_Id', $import_row['basic_val']['Rcd_Label_Id']);
+            $import_row['basic_val']['Rcd_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
+            $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
+            $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
+          
+            /* Save Records */
+            $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
+            if(empty($check_exists)){
+                $model = new Recording;
+                $model->attributes = $import_row['basic_val'];
+                $model->setDuration();
+                if($model->validate()){
+                    $success_records++;
+                    $model->save(false);
+                    
+                    foreach ($import_row as $catKey => $values) {
+                        $import_row[$catKey]['Rcd_Id'] = $model->Rcd_Id;
+                    }
+                    
+                    $related_records = array(
+                        'RecordingSubtitle' => 'subtitle_val',
+                    );
+                    
+                    foreach ($related_records as $relModal => $arrKey) {
+                        $rel_model = new $relModal;
+                        $rel_model->attributes = $import_row[$arrKey];
+                        $rel_model->save(false);
+                    }
+                }else{
+                    $unsuccess_records++;
+                }
+            }else{
+                $duplicate_records++;
+            }
+            $total_records++;
+        }
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        return true;
     }
 }

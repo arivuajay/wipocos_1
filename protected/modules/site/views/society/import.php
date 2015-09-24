@@ -63,7 +63,7 @@ $this->breadcrumbs = array(
                 </div>
                 <div class="box-footer">
                     <div class="form-group">
-                        <div class="col-lg-offset-1">
+                        <div class="col-sm-6">
                             <div class="help-block">
                                 <a data-toggle="modal" data-target="#samplesModal" href="#">Click Here to Download Samples Files</a>
                             </div>
