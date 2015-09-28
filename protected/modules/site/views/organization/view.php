@@ -38,7 +38,7 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
-            'Org_Id',
+//            'Org_Id',
             'Org_Code',
             'Org_Abbrevation',
             array(
@@ -64,6 +64,7 @@ $this->breadcrumbs = array(
             'Org_Website',
             'Org_Bank_Account',
             'Org_Related_Rights',
+            'Org_Administrative_Cost',
             array(
                 'name' => 'Active',
                 'type' => 'raw',

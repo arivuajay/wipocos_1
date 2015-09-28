@@ -25,6 +25,12 @@
 
                 <div class="box-body">
                     <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Subclass_Internal_Code', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Subclass_Internal_Code', array('class' => 'form-control', 'size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                        <?php echo $form->error($model, 'Subclass_Internal_Code'); ?>
+                    </div>
+                    
+                    <div class="form-group">
                         <?php echo $form->labelEx($model, 'Class_Id', array('class' => '')); ?>
                         <?php echo $form->dropDownList($model, 'Class_Id', $class, array('class' => 'form-control', 'prompt' => '')); ?>
                         <?php echo $form->error($model, 'Class_Id'); ?>

@@ -41,6 +41,7 @@ if ($society) {
     defined('DEFAULT_RECORD_TYPE_ID') || @define('DEFAULT_RECORD_TYPE_ID', $society->Soceity_Rec_Type_Id);
     defined('DEFAULT_MEDIUM_ID') || @define('DEFAULT_MEDIUM_ID', $society->Soceity_Medium_Id);
     defined('DEFAULT_LEGAL_FORM_ID') || @define('DEFAULT_LEGAL_FORM_ID', $society->Soceity_Legal_Form_Id);
+    defined('DEFAULT_ADMINISTRATIVE_COST') || @define('DEFAULT_ADMINISTRATIVE_COST', $society->socOrg->Org_Administrative_Cost);
 }
 
 defined('SITEURL') ||

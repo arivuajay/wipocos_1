@@ -24,12 +24,21 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             ));
             $classes = DistributionClass::classList();
             $settings = DistributionSetting::settingList();
+            $years = DistributionUtlizationPeriod::getYearlist();
             ?>
             <div class="box-body">
                 <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Period_Internal_Code', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Period_Internal_Code', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4, 'readonly' => true)); ?>
+                        <?php echo $form->error($model, 'Period_Internal_Code'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Period_Year', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
-                        <?php echo $form->textField($model, 'Period_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
+                        <?php echo $form->dropDownList($model, 'Period_Year', $years, array('class' => 'form-control')); ?>
                         <?php echo $form->error($model, 'Period_Year'); ?>
                     </div>
                 </div>

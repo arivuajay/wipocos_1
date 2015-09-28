@@ -39,6 +39,12 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Setting_Internal_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Setting_Internal_Code', array('class' => 'form-control')); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Setting_Identifier', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Setting_Identifier', array('class' => 'form-control')); ?>
                         </div>
@@ -81,6 +87,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+                'Setting_Internal_Code',
                 'Setting_Identifier',
                 'Setting_Date',
                 'Total_Distribute',
@@ -133,6 +140,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+            'Setting_Internal_Code',
             'Setting_Identifier',
             'Setting_Date',
             'Total_Distribute',

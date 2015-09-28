@@ -55,6 +55,7 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
 //            'Setting_Id',
+            'Setting_Internal_Code',
             'Setting_Identifier',
             'Setting_Date',
             'Total_Distribute',

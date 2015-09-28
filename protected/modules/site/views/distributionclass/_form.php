@@ -20,6 +20,14 @@
             ?>
             <div class="box-body">
                 <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Class_Internal_Code', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Class_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
+                        <?php echo $form->error($model, 'Class_Internal_Code'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Main_Class_Id', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->dropDownList($model, 'Main_Class_Id', $class_list, array('class' => 'form-control', 'prompt' => '')); ?>

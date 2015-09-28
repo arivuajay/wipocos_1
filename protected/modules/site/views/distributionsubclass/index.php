@@ -113,6 +113,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+            'Subclass_Internal_Code',
             array(
                 'name' => 'Class_Id',
                 'value' => '$data->class->Class_Name'
@@ -190,6 +191,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+            'Subclass_Internal_Code',
             array(
                 'name' => 'Class_Id',
                 'value' => '$data->class->Class_Name'

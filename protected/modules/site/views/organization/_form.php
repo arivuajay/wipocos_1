@@ -137,6 +137,14 @@
                 </div>
 
                 <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Org_Administrative_Cost', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Org_Administrative_Cost', array('class' => 'form-control')); ?>
+                        <?php echo $form->error($model, 'Org_Administrative_Cost'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Active', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->checkBox($model, 'Active', array('class' => 'form-control')); ?>

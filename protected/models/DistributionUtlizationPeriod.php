@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{distribution_utlization_period}}':
  * @property integer $Period_Id
  * @property string $Period_Year
+ * @property string $Period_Internal_Code
  * @property integer $Period_Number
  * @property string $Period_From
  * @property string $Period_To
@@ -22,6 +23,13 @@
  */
 class DistributionUtlizationPeriod extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Period_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_UTILIZATION_PERIOD_CODE))->Fullcode;
+            $this->Period_Year = date('Y');
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -36,14 +44,15 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id', 'required'),
+            array('Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Period_Internal_Code', 'required'),
+            array('Period_Internal_Code', 'unique'),
             array('Period_Year, Period_Number, Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Period_Year', 'length', 'max' => 4),
-            array('Period_Year', 'numerical', 'min' => date('Y')-100, 'max' => date('Y')+100),
+            array('Period_Year', 'numerical', 'min' => date('Y')-10, 'max' => date('Y')+10),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Period_Id, Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Period_Id, Period_Internal_Code, Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -67,6 +76,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'Period_Id' => 'Period',
+            'Period_Internal_Code' => 'Internal Code',
             'Period_Year' => 'Period Year',
             'Period_Number' => 'Period Number',
             'Period_From' => 'Period From',
@@ -98,6 +108,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('Period_Id', $this->Period_Id);
+        $criteria->compare('Period_Internal_Code', $this->Period_Internal_Code, true);
         $criteria->compare('Period_Year', $this->Period_Year, true);
         $criteria->compare('Period_Number', $this->Period_Number);
         $criteria->compare('Period_From', $this->Period_From, true);
@@ -135,4 +146,15 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_UTILIZATION_PERIOD_CODE);
+        }
+        return parent::afterSave();
+    }
+    
+    public static function getYearlist() {
+        $ranges =  range(date('Y', strtotime("-10 Years")), date('Y', strtotime("+10 Years")));
+        return array_combine($ranges, $ranges);
+    }
 }

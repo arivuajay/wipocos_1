@@ -25,6 +25,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
             ?>
             <div class="box-body">
                 <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Setting_Internal_Code', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Setting_Internal_Code', array('class' => 'form-control', 'readonly' => true)); ?>
+                        <?php echo $form->error($model, 'Setting_Internal_Code'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Setting_Identifier', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->textField($model, 'Setting_Identifier', array('class' => 'form-control')); ?>

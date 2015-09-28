@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{distribution_class}}':
  * @property integer $Class_Id
+ * @property string $Class_Internal_Code
  * @property string $Class_Code
  * @property string $Class_Name
  * @property string $Created_Date
@@ -19,6 +20,12 @@
  */
 class DistributionClass extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Class_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_CLASS_CODE))->Fullcode;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -33,14 +40,15 @@ class DistributionClass extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Main_Class_Id, Class_Code, Class_Name', 'required'),
+            array('Class_Internal_Code, Main_Class_Id, Class_Code, Class_Name', 'required'),
+            array('Class_Internal_Code', 'unique'),
             array('Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Class_Code', 'length', 'max' => 30),
             array('Class_Name', 'length', 'max' => 50),
             array('Created_Date, Rowversion, Main_Class_Id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Class_Id, Class_Code, Class_Name, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Class_Id, Class_Internal_Code, Class_Code, Class_Name, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -65,6 +73,7 @@ class DistributionClass extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'Class_Id' => 'Class',
+            'Class_Internal_Code' => 'Internal Code',
             'Main_Class_Id' => 'Main Class',
             'Class_Code' => 'Code',
             'Class_Name' => 'Name',
@@ -94,6 +103,7 @@ class DistributionClass extends RActiveRecord {
 
         $criteria->compare('Class_Id', $this->Class_Id);
         $criteria->compare('Main_Class_Id', $this->Main_Class_Id);
+        $criteria->compare('Class_Internal_Code', $this->Class_Internal_Code, true);
         $criteria->compare('Class_Code', $this->Class_Code, true);
         $criteria->compare('Class_Name', $this->Class_Name, true);
         $criteria->compare('Created_Date', $this->Created_Date, true);
@@ -132,5 +142,12 @@ class DistributionClass extends RActiveRecord {
         if($key != NULL)
             return $list[$key];
         return $list;
+    }
+    
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_CLASS_CODE);
+        }
+        return parent::afterSave();
     }
 }

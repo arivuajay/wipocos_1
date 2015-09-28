@@ -54,6 +54,7 @@ $this->breadcrumbs = array(
         'data' => $model,
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
+            'Subclass_Internal_Code',
             'Subclass_Code',
             'Subclass_Name',
             array(

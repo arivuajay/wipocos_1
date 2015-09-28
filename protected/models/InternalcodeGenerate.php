@@ -39,7 +39,13 @@ class InternalcodeGenerate extends RActiveRecord {
     const CUSTOMER_USER_CODE = 'CUS';
     const INSPECTOR_CODE = 'IS';
     const TARIFF_CONTRACT_CODE = 'TF';
-    
+
+    const DIST_CLASS_CODE = 'DCLS';
+    const DIST_SUBCLASS_CODE = 'DSCL';
+    const DIST_DATES_CODE = 'DDI';
+    const DIST_UTILIZATION_PERIOD_CODE = 'DUPD';
+
+
     public $fullcode;
     
     public $virtualinternalcode;
@@ -206,6 +212,10 @@ class InternalcodeGenerate extends RActiveRecord {
             self::CUSTOMER_USER_CODE => 'Users & Customers',
             self::INSPECTOR_CODE => 'Inspectors',
             self::TARIFF_CONTRACT_CODE => 'Tariff Contracts',
+            self::DIST_CLASS_CODE => 'Class',
+            self::DIST_SUBCLASS_CODE => 'Sub-class',
+            self::DIST_DATES_CODE => 'Setting Dates',
+            self::DIST_UTILIZATION_PERIOD_CODE => 'Utilization Periods',
         );
         
         if($user_type == NULL && isset($this->Gen_User_Type))

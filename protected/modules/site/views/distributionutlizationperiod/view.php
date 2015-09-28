@@ -55,6 +55,7 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('class' => 'table table-striped table-bordered'),
         'attributes' => array(
 //            'Period_Id',
+            'Period_Internal_Code',
             'Period_Year',
             'Period_Number',
             'Period_From',

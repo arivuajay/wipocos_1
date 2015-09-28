@@ -7,6 +7,7 @@
  * @property integer $Subclass_Id
  * @property integer $Class_Id
  * @property string $Subclass_Code
+ * @property string $Subclass_Internal_Code
  * @property string $Subclass_Name
  * @property string $Subclass_Measure_Unit
  * @property string $Subclass_Calc_Unit
@@ -24,6 +25,13 @@
  */
 class DistributionSubclass extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Subclass_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_SUBCLASS_CODE))->Fullcode;
+            $this->Subclass_Admin_Cost = DEFAULT_ADMINISTRATIVE_COST;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -38,17 +46,18 @@ class DistributionSubclass extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Class_Id, Subclass_Code, Subclass_Name', 'required'),
+            array('Class_Id, Subclass_Code, Subclass_Name, Subclass_Internal_Code', 'required'),
+            array('Subclass_Internal_Code', 'unique'),
             array('Class_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Subclass_Code', 'length', 'max' => 30),
             array('Subclass_Name', 'length', 'max' => 50),
             array('Subclass_Measure_Unit, Subclass_Calc_Unit, Subclass_Dist_Params', 'length', 'max' => 1),
             array('Subclass_Admin_Cost, Subclass_Social_Deduct, Subclass_Cultural_Deduct', 'numerical', 'integerOnly' => false),
             array('Subclass_Admin_Cost, Subclass_Social_Deduct, Subclass_Cultural_Deduct', 'length', 'max' => 10),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Created_Date, Rowversion, Subclass_Internal_Code', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Subclass_Id, Class_Id, Subclass_Code, Subclass_Name, Subclass_Measure_Unit, Subclass_Calc_Unit, Subclass_Dist_Params, Subclass_Admin_Cost, Subclass_Social_Deduct, Subclass_Cultural_Deduct, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Subclass_Id, Subclass_Internal_Code, Class_Id, Subclass_Code, Subclass_Name, Subclass_Measure_Unit, Subclass_Calc_Unit, Subclass_Dist_Params, Subclass_Admin_Cost, Subclass_Social_Deduct, Subclass_Cultural_Deduct, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,6 +80,7 @@ class DistributionSubclass extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'Subclass_Id' => 'Subclass',
+            'Subclass_Internal_Code' => 'Internal Code',
             'Class_Id' => 'Class',
             'Subclass_Code' => 'Code',
             'Subclass_Name' => 'Name',
@@ -106,6 +116,7 @@ class DistributionSubclass extends RActiveRecord {
 
         $criteria->compare('Subclass_Id', $this->Subclass_Id);
         $criteria->compare('Class_Id', $this->Class_Id);
+        $criteria->compare('Subclass_Internal_Code', $this->Subclass_Internal_Code, true);
         $criteria->compare('Subclass_Code', $this->Subclass_Code, true);
         $criteria->compare('Subclass_Name', $this->Subclass_Name, true);
         $criteria->compare('Subclass_Measure_Unit', $this->Subclass_Measure_Unit, true);
@@ -177,5 +188,12 @@ class DistributionSubclass extends RActiveRecord {
         if($key != NULL)
             return $list[$key];
         return $list;
+    }
+    
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_SUBCLASS_CODE);
+        }
+        return parent::afterSave();
     }
 }

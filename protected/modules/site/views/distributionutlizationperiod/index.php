@@ -41,6 +41,12 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
+                            <?php echo $form->labelEx($searchModel, 'Period_Internal_Code', array('class' => ' control-label')); ?>
+                            <?php echo $form->textField($searchModel, 'Period_Internal_Code', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Period_Year', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Period_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
                         </div>
@@ -95,6 +101,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
+                'Period_Internal_Code',
                 'Period_Year',
                 'Period_Number',
                 'Period_From',
@@ -155,6 +162,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
+            'Period_Internal_Code',
             'Period_Year',
             'Period_Number',
             'Period_From',

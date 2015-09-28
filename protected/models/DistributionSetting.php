@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{distribution_setting}}':
  * @property integer $Setting_Id
  * @property integer $Setting_Identifier
+ * @property string $Setting_Internal_Code
  * @property string $Setting_Date
  * @property string $Total_Distribute
  * @property integer $Closing_Distribute
@@ -19,6 +20,12 @@
  */
 class DistributionSetting extends RActiveRecord {
 
+    public function init() {
+        parent::init();
+        if($this->isNewRecord){
+            $this->Setting_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_DATES_CODE))->Fullcode;
+        }
+    }
     /**
      * @return string the associated database table name
      */
@@ -33,13 +40,14 @@ class DistributionSetting extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Setting_Identifier, Setting_Date', 'required'),
+            array('Setting_Identifier, Setting_Date, Setting_Internal_Code', 'required'),
+            array('Setting_Internal_Code', 'unique'),
             array('Setting_Identifier, Closing_Distribute, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Total_Distribute', 'length', 'max' => 10),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Setting_Id, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Setting_Id, Setting_Internal_Code, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -62,6 +70,7 @@ class DistributionSetting extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'Setting_Id' => 'Setting',
+            'Setting_Internal_Code' => 'Internal Code',
             'Setting_Identifier' => 'Identifier',
             'Setting_Date' => 'Date',
             'Total_Distribute' => 'Total Distributed',
@@ -92,6 +101,7 @@ class DistributionSetting extends RActiveRecord {
 
         $criteria->compare('Setting_Id', $this->Setting_Id);
         $criteria->compare('Setting_Identifier', $this->Setting_Identifier);
+        $criteria->compare('Setting_Internal_Code', $this->Setting_Internal_Code, true);
         $criteria->compare('Setting_Date', $this->Setting_Date, true);
         $criteria->compare('Total_Distribute', $this->Total_Distribute, true);
         $criteria->compare('Closing_Distribute', $this->Closing_Distribute);
@@ -131,5 +141,12 @@ class DistributionSetting extends RActiveRecord {
         if($key != NULL)
             return $list[$key];
         return $list;
+    }
+    
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_DATES_CODE);
+        }
+        return parent::afterSave();
     }
 }
