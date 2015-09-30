@@ -7,6 +7,7 @@ class SocietyController extends Controller {
     private $_import_status = "";
     private $_import_society;
     private $_import_category;
+    private $_stage_rows;
     private $_stage_tables;
 
     /**
@@ -188,16 +189,22 @@ class SocietyController extends Controller {
                     $success = $this->importExcel($path);
                     if ($success && $model->save()) {
                         Myclass::addAuditTrail("XLS Imported to Society : {$model->Society_Code} successfully.", "group");
-                        Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
-                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
-                    }else{
+                        $this->render('import', array(
+                            'model' => $model,
+                            'staging' => $this->_stage_rows,
+                            'import_status' => $this->_import_status,
+                            'staging_tables' => $this->_stage_tables,
+                        ));
+                        Yii::app()->end();
+//                        Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
+//                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                    } else {
                         Yii::app()->user->setFlash('danger', "XLS not Imported !!! Please Try after sometime");
                         $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
                     }
                 }
             }
         }
-
         $this->render('import', array(
             'model' => $model,
         ));
@@ -253,11 +260,11 @@ class SocietyController extends Controller {
         $screens = Society::getImportcategoryList();
         $this->_import_worksheet = $objWorksheet;
         unlink($file_path);
-        
+
         $return = false;
-        
+
         if (array_key_exists($input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue()), $screens)) {
-            if($input_type != $this->_import_category){
+            if ($input_type != $this->_import_category) {
                 Yii::app()->user->setFlash('danger', "Its not a Valid {$this->_import_category} File Format (Seems like {$input_type} File). Recheck your imported file");
                 $this->redirect(array('/site/society/import', 'sid' => $this->_import_society));
             }
@@ -336,7 +343,7 @@ class SocietyController extends Controller {
             default:
                 break;
         }
-        if(!isset($loop_options))
+        if (!isset($loop_options))
             return false;
 
         $objWorksheet = $this->_import_worksheet;
@@ -353,32 +360,36 @@ class SocietyController extends Controller {
             for ($row = $start_row; $row <= $highestRow; ++$row) {
                 if ($start_point && !$stop_point)
                     $i = 1;
-                
+
                 /* Set Value */
                 $val = '';
-                if (isset($fieldsets['fieldsets'][$i])){
-                    if(in_array ($fieldsets['fieldsets'][$i], $dateFields))
-                        $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
-                    else if(in_array ($fieldsets['fieldsets'][$i], $timeFields))
+                if (isset($fieldsets['fieldsets'][$i])) {
+                    if (in_array($fieldsets['fieldsets'][$i], $dateFields)) {
+                        if (Myclass::is_date($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()))
+                            $val = date('Y-m-d', strtotime($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                        else
+                            $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                    }else if (in_array($fieldsets['fieldsets'][$i], $timeFields)) {
                         $val = PHPExcel_Style_NumberFormat::toFormattedString($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue(), 'hh:mm:ss');
-                    else
+                    } else {
                         $val = $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue();
+                    }
                 }
                 /* End */
-                
+
                 if ($start_point && !$stop_point) {
                     if (isset($fieldsets['fieldsets'][$i]))
                         $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = $val;
                     $start_point = false;
                 }
-                
+
                 if (!$stop_point) {
                     if (isset($fieldsets['fieldsets'][$i]))
                         $import_rows[$row_count][$keyset][$fieldsets['fieldsets'][$i]] = $val;
                     if ($i == $max_row)
                         $stop_point = true;
                 }
-                
+
                 if ($stop_point) {
                     if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue() == $fieldsets['start_col']) {
                         $row++;
@@ -392,10 +403,12 @@ class SocietyController extends Controller {
         }
         return $import_rows;
     }
+
     /* end */
 
     public function importDateFields() {
         return array(
+            'Auth_DOB',
             'Auth_Mnge_Entry_Date',
             'Auth_Mnge_Exit_Date',
             'Auth_Mnge_Entry_Date_2',
@@ -430,9 +443,37 @@ class SocietyController extends Controller {
         );
     }
 
+    public function importRequiredFields() {
+        return array(
+            'author' => array(
+                'basic_val' => array(
+                    'Auth_Sur_Name',
+                    'Auth_DOB',
+                    'Auth_Gender',
+                ),
+                'copyright_val' => array(
+                    'Auth_Mnge_Entry_Date',
+                    'Auth_Mnge_Internal_Position_Id',
+                    'Auth_Mnge_Entry_Date_2',
+//                    'Auth_Mnge_Sector',
+                    'Auth_Mnge_Managed_Rights_Id',
+                    'Auth_Mnge_Territories_Id',
+                ),
+            ),
+        );
+    }
+    
+    public function importRequiredDateFields() {
+        return array(
+            'Auth_DOB',
+            'Auth_Mnge_Entry_Date',
+            'Auth_Mnge_Entry_Date_2',
+        );
+    }
+    
     public function importAddMaster($model, $col_name, $col_id, $name) {
         $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
-        if(empty($id)){
+        if (empty($id)) {
             $model = new $model;
             $model->setAttribute($col_name, $name);
             $model->save(false);
@@ -440,10 +481,10 @@ class SocietyController extends Controller {
         }
         return $id;
     }
-    
+
     public function importAddMasterTypeRights($name, $occupation, $domain, $rank) {
         $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
-        if(empty($id) && $name != ''){
+        if (empty($id) && $name != '') {
             $model = new MasterTypeRights;
             $attr = array(
                 'Type_Rights_Name' => $name,
@@ -459,12 +500,36 @@ class SocietyController extends Controller {
         }
         return $id;
     }
-    
+
     public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
         return "<span class='badge bg-blue'>{$total_records}</span> Total records.&nbsp;&nbsp;&nbsp;<span class='badge bg-green no-bgcolor'>{$success_records}</span> Successfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-red'>{$unsuccess_records}</span> Unsuccessfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-yellow'>{$duplicate_records}</span> Duplicate records.";
     }
+
+    public function importValidate($user_type, $key, $model_key) {
+        $validate_fields = $this->importRequiredFields();
+        $date_validate_fields = $this->importRequiredDateFields();
+        $valid = true;
+        $this->_stage_rows[$key][$model_key]['success'] = 1;
+        if (isset($validate_fields[$user_type][$model_key])) {
+            foreach ($this->_stage_rows[$key][$model_key] as $col => $value) {
+                if (in_array($col, $validate_fields[$user_type][$model_key])) {
+                    if ($value == '')
+                        $valid = false;
+                    if (in_array($col, $date_validate_fields)) {
+                        $d = DateTime::createFromFormat('Y-m-d', $value);
+                        if ($d && $d->format('Y-m-d') != $value)
+                            $valid = false;
+                    }
+                }
+            }
+        }
+        if(!$valid)
+            $this->_stage_rows[$key][$model_key]['success'] = 0;
+        return $valid;
+    }
     
     /* Author Importing */
+
     public function importAuthorLoopOptions() {
         $basic_fields = array(
 //            1 => "Auth_Internal_Code",
@@ -473,7 +538,7 @@ class SocietyController extends Controller {
             4 => "Auth_Ipi",
             5 => "Auth_Ipi_Base_Number",
             6 => "Auth_Ipn_Number",
-            7 => "Auth_Place_Of_Birth_Id",
+            7 => "Auth_DOB",
             8 => "Auth_Birth_Country_Id",
             9 => "Auth_Nationality_Id",
             10 => "Auth_Language_Id",
@@ -520,6 +585,7 @@ class SocietyController extends Controller {
             3 => "Auth_Mnge_Internal_Position_Id",
             4 => "Auth_Mnge_Entry_Date_2",
             5 => "Auth_Mnge_Exit_Date_2",
+//            6 => "Auth_Mnge_Sector",
             7 => "Auth_Mnge_Managed_Rights_Id",
             8 => "Auth_Mnge_Territories_Id",
             9 => "Auth_Mnge_Region_Id",
@@ -546,15 +612,15 @@ class SocietyController extends Controller {
 
     public function importAuthor() {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
-        echo '<pre>';
-        print_r($this->_import_rows);
-        exit;
+        $this->_stage_rows = $this->_import_rows;
+
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
             $import_row['basic_val']['Auth_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
             $import_row['basic_val']['Auth_Nationality_Id'] = $this->importAddMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
             $import_row['basic_val']['Auth_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
             $import_row['basic_val']['Auth_Marital_Status_Id'] = $this->importAddMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
+            $import_row['basic_val']['Auth_Gender'] = strtoupper(substr($import_row['basic_val']['Auth_Gender'], 0, 1));
             $import_row['payment_val']['Auth_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
             $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
             $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
@@ -563,54 +629,89 @@ class SocietyController extends Controller {
             $import_row['copyright_val']['Auth_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
             $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
 
-            $this->authorValidate($key);
-            /* Save Records */
-            $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
-            if(empty($check_exists)){
-                $model = new AuthorAccount;
-                $model->attributes = $import_row['basic_val'];
-                if($model->validate()){
-                    $success_records++;
-                    $model->save(false);
-                    
-                    foreach ($import_row as $catKey => $values) {
-                        $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
+//            $this->_stage_rows[$key] = $import_row;
+            if ($this->importValidate('author', $key, 'basic_val')) {
+                /* Save Records */
+                $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
+                if (empty($check_exists)) {
+                    $model = new AuthorAccount;
+                    $model->attributes = $import_row['basic_val'];
+                    if ($model->validate()) {
+                        $success_records++;
+                        $model->save(false);
+
+                        foreach ($import_row as $catKey => $values) {
+                            $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
+                        }
+
+                        $related_records = array(
+                            'AuthorAccountAddress' => 'address_val',
+                            'AuthorPaymentMethod' => 'payment_val',
+                            'AuthorBiography' => 'biograph_val',
+                            'AuthorPseudonym' => 'pseudonym_val',
+                            'AuthorManageRights' => 'copyright_val',
+                            'AuthorDeathInheritance' => 'death_val',
+                        );
+
+                        $import_row['copyright_val']['Auth_Mnge_Society_Id'] = $this->_import_society;
+
+                        foreach ($related_records as $relModal => $arrKey) {
+                            $rel_model = new $relModal;
+                            $rel_model->attributes = $import_row[$arrKey];
+                            if ($this->importValidate('author', $key, $arrKey))
+                                $rel_model->save(false);
+                        }
+                    } else {
+                        $unsuccess_records++;
                     }
-                    
-                    $related_records = array(
-                        'AuthorAccountAddress' => 'address_val',
-                        'AuthorPaymentMethod' => 'payment_val',
-                        'AuthorBiography' => 'biograph_val',
-                        'AuthorPseudonym' => 'pseudonym_val',
-                        'AuthorManageRights' => 'copyright_val',
-                        'AuthorDeathInheritance' => 'death_val',
-                    );
-                    
-                    $import_row['copyright_val']['Auth_Mnge_Society_Id'] = $this->_import_society;
-                    
-                    foreach ($related_records as $relModal => $arrKey) {
-                        $rel_model = new $relModal;
-                        $rel_model->attributes = $import_row[$arrKey];
-                        $rel_model->save(false);
-                    }
-                }else{
-                    $unsuccess_records++;
+                } else {
+                    $duplicate_records++;
                 }
-            }else{
-                $duplicate_records++;
+            } else {
+                $unsuccess_records++;
             }
             $total_records++;
         }
+        $this->_stage_tables = $this->importAuthorStageTables();
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-    
-    public function authorValidate($key) {
-        echo 'in';
-        exit;
+
+    public function importAuthorStageTables() {
+        return array(
+            'AuthorAccount' => array(
+                'title' => 'Basic Data',
+                'key' => 'basic_val',
+            ),
+            'AuthorAccountAddress' => array(
+                'title' => 'Address',
+                'key' => 'address_val',
+            ),
+            'AuthorPaymentMethod' => array(
+                'title' => 'Payment',
+                'key' => 'payment_val',
+            ),
+            'AuthorBiography' => array(
+                'title' => 'Biograph',
+                'key' => 'biograph_val',
+            ),
+            'AuthorPseudonym' => array(
+                'title' => 'Psedonym',
+                'key' => 'pseudonym_val',
+            ),
+            'AuthorManageRights' => array(
+                'title' => 'Managed Rights',
+                'key' => 'copyright_val',
+            ), 
+            'AuthorDeathInheritance' => array(
+                'title' => 'Death Inheritance',
+                'key' => 'death_val',
+            ) 
+        );
     }
-    
+
     /* Performer Importing */
+
     public function importPerformerLoopOptions() {
         $basic_fields = array(
 //            1 => "Perf_Internal_Code",
@@ -707,17 +808,17 @@ class SocietyController extends Controller {
 
             /* Save Records */
             $check_exists = PerformerAccount::model()->findByAttributes(array('Perf_First_Name' => $import_row['basic_val']['Perf_First_Name'], 'Perf_Sur_Name' => $import_row['basic_val']['Perf_Sur_Name']));
-            if(empty($check_exists)){
+            if (empty($check_exists)) {
                 $model = new PerformerAccount;
                 $model->attributes = $import_row['basic_val'];
-                if($model->validate()){
+                if ($model->validate()) {
                     $success_records++;
                     $model->save(false);
-                    
+
                     foreach ($import_row as $catKey => $values) {
                         $import_row[$catKey]['Perf_Acc_Id'] = $model->Perf_Acc_Id;
                     }
-                    
+
                     $related_records = array(
                         'PerformerAccountAddress' => 'address_val',
                         'PerformerPaymentMethod' => 'payment_val',
@@ -726,18 +827,18 @@ class SocietyController extends Controller {
                         'PerformerRelatedRights' => 'copyright_val',
                         'PerformerDeathInheritance' => 'death_val',
                     );
-                    
+
                     $import_row['copyright_val']['Perf_Rel_Society_Id'] = $this->_import_society;
-                    
+
                     foreach ($related_records as $relModal => $arrKey) {
                         $rel_model = new $relModal;
                         $rel_model->attributes = $import_row[$arrKey];
                         $rel_model->save(false);
                     }
-                }else{
+                } else {
                     $unsuccess_records++;
                 }
-            }else{
+            } else {
                 $duplicate_records++;
             }
             $total_records++;
@@ -745,8 +846,9 @@ class SocietyController extends Controller {
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-    
+
     /* Publisher Importing */
+
     public function importPublisherLoopOptions() {
         $basic_fields = array(
 //            1 => "Pub_Internal_Code",
@@ -848,17 +950,17 @@ class SocietyController extends Controller {
 
             /* Save Records */
             $check_exists = PublisherAccount::model()->findByAttributes(array('Pub_Corporate_Name' => $import_row['basic_val']['Pub_Corporate_Name']));
-            if(empty($check_exists)){
+            if (empty($check_exists)) {
                 $model = new PublisherAccount;
                 $model->attributes = $import_row['basic_val'];
-                if($model->validate()){
+                if ($model->validate()) {
                     $success_records++;
                     $model->save(false);
-                    
+
                     foreach ($import_row as $catKey => $values) {
                         $import_row[$catKey]['Pub_Acc_Id'] = $model->Pub_Acc_Id;
                     }
-                    
+
                     $related_records = array(
                         'PublisherAccountAddress' => 'address_val',
                         'PublisherPaymentMethod' => 'payment_val',
@@ -867,18 +969,18 @@ class SocietyController extends Controller {
                         'PublisherManageRights' => 'copyright_val',
                         'PublisherSuccession' => 'death_val',
                     );
-                    
+
                     $import_row['copyright_val']['Pub_Mnge_Society_Id'] = $this->_import_society;
-                    
+
                     foreach ($related_records as $relModal => $arrKey) {
                         $rel_model = new $relModal;
                         $rel_model->attributes = $import_row[$arrKey];
                         $rel_model->save(false);
                     }
-                }else{
+                } else {
                     $unsuccess_records++;
                 }
-            }else{
+            } else {
                 $duplicate_records++;
             }
             $total_records++;
@@ -886,8 +988,9 @@ class SocietyController extends Controller {
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-    
+
     /* Producer Importing */
+
     public function importProducerLoopOptions() {
         $basic_fields = array(
 //            1 => "Pro_Internal_Code",
@@ -987,17 +1090,17 @@ class SocietyController extends Controller {
 
             /* Save Records */
             $check_exists = ProducerAccount::model()->findByAttributes(array('Pro_Corporate_Name' => $import_row['basic_val']['Pro_Corporate_Name']));
-            if(empty($check_exists)){
+            if (empty($check_exists)) {
                 $model = new ProducerAccount;
                 $model->attributes = $import_row['basic_val'];
-                if($model->validate()){
+                if ($model->validate()) {
                     $success_records++;
                     $model->save(false);
-                    
+
                     foreach ($import_row as $catKey => $values) {
                         $import_row[$catKey]['Pro_Acc_Id'] = $model->Pro_Acc_Id;
                     }
-                    
+
                     $related_records = array(
                         'ProducerAccountAddress' => 'address_val',
                         'ProducerPaymentMethod' => 'payment_val',
@@ -1006,18 +1109,18 @@ class SocietyController extends Controller {
                         'ProducerRelatedRights' => 'copyright_val',
                         'ProducerSuccession' => 'death_val',
                     );
-                    
+
                     $import_row['copyright_val']['Pro_Rel_Society_Id'] = $this->_import_society;
-                    
+
                     foreach ($related_records as $relModal => $arrKey) {
                         $rel_model = new $relModal;
                         $rel_model->attributes = $import_row[$arrKey];
                         $rel_model->save(false);
                     }
-                }else{
+                } else {
                     $unsuccess_records++;
                 }
-            }else{
+            } else {
                 $duplicate_records++;
             }
             $total_records++;
@@ -1025,8 +1128,9 @@ class SocietyController extends Controller {
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-    
+
     /* Work Importing */
+
     public function importWorkLoopOptions() {
         $basic_fields = array(
 //            1 => "Work_Internal_Code",
@@ -1081,7 +1185,7 @@ class SocietyController extends Controller {
             $import_row['subtitle_val']['Work_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Work_Subtitle_Type_Id']);
             $import_row['document_val']['Work_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['document_val']['Work_Doc_Status_Id']);
             $import_row['document_val']['Work_Doc_Type_Id'] = $this->importAddMaster('MasterDocument', 'Doc_Name', 'Master_Doc_Id', $import_row['document_val']['Work_Doc_Type_Id']);
-            
+
             $inst_val = array();
             $instruments = explode(',', $import_row['basic_val']['Work_Instrumentation']);
             foreach ($instruments as $instrument) {
@@ -1091,33 +1195,33 @@ class SocietyController extends Controller {
 
             /* Save Records */
             $check_exists = Work::model()->findByAttributes(array('Work_Org_Title' => $import_row['basic_val']['Work_Org_Title']));
-            if(empty($check_exists)){
+            if (empty($check_exists)) {
                 $model = new Work;
                 $model->attributes = $import_row['basic_val'];
                 $model->setDuration();
-                if($model->validate()){
+                if ($model->validate()) {
                     $success_records++;
                     $model->save(false);
-                    
+
                     foreach ($import_row as $catKey => $values) {
                         $import_row[$catKey]['Work_Id'] = $model->Work_Id;
                     }
-                    
+
                     $related_records = array(
                         'WorkSubtitle' => 'subtitle_val',
                         'WorkDocumentation' => 'document_val',
                         'WorkBiography' => 'biograph_val',
                     );
-                    
+
                     foreach ($related_records as $relModal => $arrKey) {
                         $rel_model = new $relModal;
                         $rel_model->attributes = $import_row[$arrKey];
                         $rel_model->save(false);
                     }
-                }else{
+                } else {
                     $unsuccess_records++;
                 }
-            }else{
+            } else {
                 $duplicate_records++;
             }
             $total_records++;
@@ -1125,8 +1229,9 @@ class SocietyController extends Controller {
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-    
+
     /* Recording Importing */
+
     public function importRecordingLoopOptions() {
         $basic_fields = array(
 //            1 => "Rcd_Internal_Code",
@@ -1169,34 +1274,34 @@ class SocietyController extends Controller {
             $import_row['basic_val']['Rcd_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
             $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
             $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
-          
+
             /* Save Records */
             $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
-            if(empty($check_exists)){
+            if (empty($check_exists)) {
                 $model = new Recording;
                 $model->attributes = $import_row['basic_val'];
                 $model->setDuration();
-                if($model->validate()){
+                if ($model->validate()) {
                     $success_records++;
                     $model->save(false);
-                    
+
                     foreach ($import_row as $catKey => $values) {
                         $import_row[$catKey]['Rcd_Id'] = $model->Rcd_Id;
                     }
-                    
+
                     $related_records = array(
                         'RecordingSubtitle' => 'subtitle_val',
                     );
-                    
+
                     foreach ($related_records as $relModal => $arrKey) {
                         $rel_model = new $relModal;
                         $rel_model->attributes = $import_row[$arrKey];
                         $rel_model->save(false);
                     }
-                }else{
+                } else {
                     $unsuccess_records++;
                 }
-            }else{
+            } else {
                 $duplicate_records++;
             }
             $total_records++;
@@ -1204,4 +1309,5 @@ class SocietyController extends Controller {
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
+
 }

@@ -671,4 +671,14 @@ class Myclass extends CController {
         );
     }
 
+    public static function is_date($str) {
+        $stamp = strtotime($str);
+        if (!is_numeric($stamp)/* || !preg_match("^\d{1,2}[.-/]\d{2}[.-/]\d{4}^", $str)*/)
+            return FALSE;
+        $month = date('m', $stamp);
+        $day = date('d', $stamp);
+        $year = date('Y', $stamp);
+        return checkdate($month, $day, $year);
+    }
+
 }
