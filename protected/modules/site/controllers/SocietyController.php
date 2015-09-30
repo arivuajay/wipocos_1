@@ -7,6 +7,7 @@ class SocietyController extends Controller {
     private $_import_status = "";
     private $_import_society;
     private $_import_category;
+    private $_stage_tables;
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -545,6 +546,9 @@ class SocietyController extends Controller {
 
     public function importAuthor() {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        echo '<pre>';
+        print_r($this->_import_rows);
+        exit;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
             $import_row['basic_val']['Auth_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
@@ -559,6 +563,7 @@ class SocietyController extends Controller {
             $import_row['copyright_val']['Auth_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
             $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
 
+            $this->authorValidate($key);
             /* Save Records */
             $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
             if(empty($check_exists)){
@@ -598,6 +603,11 @@ class SocietyController extends Controller {
         }
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
+    }
+    
+    public function authorValidate($key) {
+        echo 'in';
+        exit;
     }
     
     /* Performer Importing */
@@ -1033,7 +1043,7 @@ class SocietyController extends Controller {
             12 => "Work_Opus_Number",
         );
 
-        $subtite_fields = array(
+        $subtitle_fields = array(
             1 => 'Work_Subtitle_Name',
             2 => 'Work_Subtitle_Type_Id',
             3 => 'Work_Subtitle_Language_Id',
@@ -1054,7 +1064,7 @@ class SocietyController extends Controller {
 
         return array(
             'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
-            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtite_fields, 'start_col' => 'SUB TITLES'),
+            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtitle_fields, 'start_col' => 'SUB TITLES'),
             'document_val' => array('col' => 7, 'fieldsets' => $document_fields, 'start_col' => 'DOCUMENTATION'),
             'biograph_val' => array('col' => 8, 'fieldsets' => $biograph_fields, 'start_col' => 'BIOGRAPHY'),
         );
@@ -1135,7 +1145,7 @@ class SocietyController extends Controller {
             14 => "Rcd_Iswc_Number",
         );
 
-        $subtite_fields = array(
+        $subtitle_fields = array(
             1 => 'Rcd_Subtitle_Name',
             2 => 'Rcd_Subtitle_Type_Id',
             3 => 'Rcd_Subtitle_Language_Id',
@@ -1143,7 +1153,7 @@ class SocietyController extends Controller {
 
         return array(
             'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
-            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtite_fields, 'start_col' => 'SUB TITLES'),
+            'subtitle_val' => array('col' => 2, 'fieldsets' => $subtitle_fields, 'start_col' => 'SUB TITLES'),
         );
     }
 
