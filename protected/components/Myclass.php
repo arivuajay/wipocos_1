@@ -681,4 +681,33 @@ class Myclass extends CController {
         return checkdate($month, $day, $year);
     }
 
+    public static function addMaster($model, $col_name, $col_id, $name) {
+        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
+        if (empty($id)) {
+            $model = new $model;
+            $model->setAttribute($col_name, $name);
+            $model->save(false);
+            $id = $model->$col_id;
+        }
+        return $id;
+    }
+
+    public static function addMasterTypeRights($name, $occupation, $domain, $rank) {
+        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
+        if (empty($id) && $name != '') {
+            $model = new MasterTypeRights;
+            $attr = array(
+                'Type_Rights_Name' => $name,
+                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Rank' => $rank,
+                'Type_Rights_Occupation' => $occupation,
+                'Type_Rights_Domain' => $domain,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Master_Type_Rights_Id;
+        }
+        return $id;
+    }
 }

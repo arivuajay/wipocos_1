@@ -10,7 +10,29 @@ $this->breadcrumbs = array(
 ?>
 
 <div class="user-create">
-    <?php if (isset($staging) && !empty($staging)) {
+    <?php
+    if (isset($staging) && !empty($staging)) {
+        $status = array(
+            0 => array(
+                'bg_color' => '#F2DEDE',
+                'text_color' => '#B74442',
+                'status' => 'Not Inserted',
+            ),
+            1 => array(
+                'bg_color' => '#DFF0D8',
+                'text_color' => '#93BF02',
+                'status' => 'Inserted',
+            ),
+            2 => array(
+                'bg_color' => '#FCF8E3',
+                'text_color' => '#F39C12',
+                'status' => 'Duplicate Record',
+            ),
+        );
+        $ignore_list = array(
+            'import_status',
+            'success'
+        );
         ?>
         <div class="alert alert-success fade in">
             <button data-dismiss="alert" class="close close-sm" type="button">
@@ -20,7 +42,7 @@ $this->breadcrumbs = array(
         </div>
         <div class="row mb10">
             <div class="col-lg-12 col-xs-12">
-                <?php echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-info")) ?>
+                <?php echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-success")) ?>
             </div>
         </div>
         <div class="row">
@@ -28,26 +50,38 @@ $this->breadcrumbs = array(
                 <div class="col-lg-12">
                     <div class="box-body" style="width: 100%;">
                         <?php foreach ($staging_tables as $table => $cont) { ?>
-                        <h3 class="box-title"><?php echo $cont['title']; ?> Table</h3>
+                            <h3 class="box-title"><?php echo $cont['title']; ?></h3>
                             <table class="table table-bordered">
                                 <tbody>
                                     <?php
                                     echo "<tr>";
                                     foreach ($staging[1][$cont['key']] as $col => $value) {
-                                        echo "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
+                                        if (!in_array($col, $ignore_list))
+                                            echo "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
                                     }
+                                    echo "<td>Status</td>";
                                     echo "</tr>";
                                     ?>
                                     <?php
                                     foreach ($staging as $key => $rows) {
-                                        $bg = '';
-//                                        $bg = $staging[$key][$cont['key']]['success'] == '1' ? '' : '#F2DEDE';
+                                        $bg = $status[$rows[$cont['key']]['import_status']]['bg_color'];
+                                        $txt_clr = $status[$rows[$cont['key']]['import_status']]['text_color'];
+                                        $sts = $status[$rows[$cont['key']]['import_status']]['status'];
+                                        
                                         echo "<tr style='background-color:$bg'>";
                                         foreach ($staging[$key][$cont['key']] as $col => $value) {
-                                            echo "<td>";
-                                            echo $value == "" && $value != "0" ? "<strong><span class='errorMessage'>empty</span><strong>" : $value;
-                                            echo "</td>";
+                                            if (!in_array($col, $ignore_list)) {
+                                                echo "<td>";
+                                                if($value == "")
+                                                    echo "<strong><span class='errorMessage'>empty</span><strong>";
+                                                else if($value == "Invalid format")
+                                                    echo "<strong><span class='errorMessage'>$value</span><strong>";
+                                                else
+                                                    echo $value;
+                                                echo "</td>";
+                                            }
                                         }
+                                        echo "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
                                         echo "</tr>";
                                     }
                                     ?>

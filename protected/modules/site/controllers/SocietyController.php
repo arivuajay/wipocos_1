@@ -364,15 +364,18 @@ class SocietyController extends Controller {
                 /* Set Value */
                 $val = '';
                 if (isset($fieldsets['fieldsets'][$i])) {
+                    $value = $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue();
                     if (in_array($fieldsets['fieldsets'][$i], $dateFields)) {
-                        if (Myclass::is_date($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()))
-                            $val = date('Y-m-d', strtotime($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                        if (Myclass::is_date($value))
+                            $val = date('Y-m-d', strtotime($value));
+                        else if (is_int($val))
+                            $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($value));
                         else
-                            $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue()));
+                            $val = 'Invalid format';
                     }else if (in_array($fieldsets['fieldsets'][$i], $timeFields)) {
-                        $val = PHPExcel_Style_NumberFormat::toFormattedString($objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue(), 'hh:mm:ss');
+                        $val = PHPExcel_Style_NumberFormat::toFormattedString($value, 'hh:mm:ss');
                     } else {
-                        $val = $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue();
+                        $val = $value;
                     }
                 }
                 /* End */
@@ -462,43 +465,13 @@ class SocietyController extends Controller {
             ),
         );
     }
-    
+
     public function importRequiredDateFields() {
         return array(
             'Auth_DOB',
             'Auth_Mnge_Entry_Date',
             'Auth_Mnge_Entry_Date_2',
         );
-    }
-    
-    public function importAddMaster($model, $col_name, $col_id, $name) {
-        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
-        if (empty($id)) {
-            $model = new $model;
-            $model->setAttribute($col_name, $name);
-            $model->save(false);
-            $id = $model->$col_id;
-        }
-        return $id;
-    }
-
-    public function importAddMasterTypeRights($name, $occupation, $domain, $rank) {
-        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
-        if (empty($id) && $name != '') {
-            $model = new MasterTypeRights;
-            $attr = array(
-                'Type_Rights_Name' => $name,
-                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
-                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
-                'Type_Rights_Rank' => $rank,
-                'Type_Rights_Occupation' => $occupation,
-                'Type_Rights_Domain' => $domain,
-            );
-            $model->attributes = $attr;
-            $model->save(false);
-            $id = $model->Master_Type_Rights_Id;
-        }
-        return $id;
     }
 
     public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
@@ -516,18 +489,22 @@ class SocietyController extends Controller {
                     if ($value == '')
                         $valid = false;
                     if (in_array($col, $date_validate_fields)) {
-                        $d = DateTime::createFromFormat('Y-m-d', $value);
-                        if ($d && $d->format('Y-m-d') != $value)
+                        if ($value != "Invalid format") {
+                            $d = DateTime::createFromFormat('Y-m-d', $value);
+                            if ($d && $d->format('Y-m-d') != $value)
+                                $valid = false;
+                        }else {
                             $valid = false;
+                        }
                     }
                 }
             }
         }
-        if(!$valid)
+        if (!$valid)
             $this->_stage_rows[$key][$model_key]['success'] = 0;
         return $valid;
     }
-    
+
     /* Author Importing */
 
     public function importAuthorLoopOptions() {
@@ -614,22 +591,27 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         $this->_stage_rows = $this->_import_rows;
 
+        foreach ($this->_stage_rows as $key => $stage) {
+            foreach ($stage as $col => $row) {
+                $this->_stage_rows[$key][$col]['import_status'] = 0;
+            }
+        }
+
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Auth_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
-            $import_row['basic_val']['Auth_Nationality_Id'] = $this->importAddMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
-            $import_row['basic_val']['Auth_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
-            $import_row['basic_val']['Auth_Marital_Status_Id'] = $this->importAddMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
+            $import_row['basic_val']['Auth_Birth_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
+            $import_row['basic_val']['Auth_Nationality_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
+            $import_row['basic_val']['Auth_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
+            $import_row['basic_val']['Auth_Marital_Status_Id'] = Myclass::addMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
             $import_row['basic_val']['Auth_Gender'] = strtoupper(substr($import_row['basic_val']['Auth_Gender'], 0, 1));
-            $import_row['payment_val']['Auth_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
-            $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
+            $import_row['payment_val']['Auth_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
+            $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
+            $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
 
-//            $this->_stage_rows[$key] = $import_row;
             if ($this->importValidate('author', $key, 'basic_val')) {
                 /* Save Records */
                 $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
@@ -639,6 +621,7 @@ class SocietyController extends Controller {
                     if ($model->validate()) {
                         $success_records++;
                         $model->save(false);
+                        $this->_stage_rows[$key]['basic_val']['import_status'] = 1;
 
                         foreach ($import_row as $catKey => $values) {
                             $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
@@ -658,13 +641,18 @@ class SocietyController extends Controller {
                         foreach ($related_records as $relModal => $arrKey) {
                             $rel_model = new $relModal;
                             $rel_model->attributes = $import_row[$arrKey];
-                            if ($this->importValidate('author', $key, $arrKey))
+                            if ($this->importValidate('author', $key, $arrKey)) {
                                 $rel_model->save(false);
+                                $this->_stage_rows[$key][$arrKey]['import_status'] = 1;
+                            }
                         }
                     } else {
                         $unsuccess_records++;
                     }
                 } else {
+                    foreach ($stage as $col => $row) {
+                        $this->_stage_rows[$key][$col]['import_status'] = 2;
+                    }
                     $duplicate_records++;
                 }
             } else {
@@ -702,11 +690,11 @@ class SocietyController extends Controller {
             'AuthorManageRights' => array(
                 'title' => 'Managed Rights',
                 'key' => 'copyright_val',
-            ), 
+            ),
             'AuthorDeathInheritance' => array(
                 'title' => 'Death Inheritance',
                 'key' => 'death_val',
-            ) 
+            )
         );
     }
 
@@ -795,16 +783,16 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Perf_Birth_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Perf_Birth_Country_Id']);
-            $import_row['basic_val']['Perf_Nationality_Id'] = $this->importAddMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Perf_Nationality_Id']);
-            $import_row['basic_val']['Perf_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Perf_Language_Id']);
-            $import_row['basic_val']['Perf_Marital_Status_Id'] = $this->importAddMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Perf_Marital_Status_Id']);
-            $import_row['payment_val']['Perf_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Perf_Pay_Method_id']);
-            $import_row['pseudonym_val']['Perf_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Perf_Pseudo_Type_Id']);
-            $import_row['copyright_val']['Perf_Rel_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Perf_Rel_Internal_Position_Id']);
-            $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id']);
-            $import_row['copyright_val']['Perf_Rel_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Perf_Rel_Territories_Id']);
-            $import_row['copyright_val']['Perf_Rel_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Perf_Rel_Region_Id']);
+            $import_row['basic_val']['Perf_Birth_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Perf_Birth_Country_Id']);
+            $import_row['basic_val']['Perf_Nationality_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Perf_Nationality_Id']);
+            $import_row['basic_val']['Perf_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Perf_Language_Id']);
+            $import_row['basic_val']['Perf_Marital_Status_Id'] = Myclass::addMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Perf_Marital_Status_Id']);
+            $import_row['payment_val']['Perf_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Perf_Pay_Method_id']);
+            $import_row['pseudonym_val']['Perf_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Perf_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Perf_Rel_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Perf_Rel_Internal_Position_Id']);
+            $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Perf_Rel_Managed_Rights_Id']);
+            $import_row['copyright_val']['Perf_Rel_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Perf_Rel_Territories_Id']);
+            $import_row['copyright_val']['Perf_Rel_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Perf_Rel_Region_Id']);
 
             /* Save Records */
             $check_exists = PerformerAccount::model()->findByAttributes(array('Perf_First_Name' => $import_row['basic_val']['Perf_First_Name'], 'Perf_Sur_Name' => $import_row['basic_val']['Perf_Sur_Name']));
@@ -935,18 +923,18 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Pub_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pub_Country_Id']);
-            $import_row['basic_val']['Pub_Legal_Form_id'] = $this->importAddMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pub_Legal_Form_id']);
-            $import_row['basic_val']['Pub_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pub_Language_Id']);
-            $import_row['payment_val']['Pub_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pub_Pay_Method_id']);
-            $import_row['pseudonym_val']['Pub_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pub_Pseudo_Type_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pub_Mnge_Territories_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pub_Mnge_Region_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pub_Mnge_Profession_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id'] = $this->importAddMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id']);
-            $import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'] = $this->importAddMasterTypeRights($import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
+            $import_row['basic_val']['Pub_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pub_Country_Id']);
+            $import_row['basic_val']['Pub_Legal_Form_id'] = Myclass::addMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pub_Legal_Form_id']);
+            $import_row['basic_val']['Pub_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pub_Language_Id']);
+            $import_row['payment_val']['Pub_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pub_Pay_Method_id']);
+            $import_row['pseudonym_val']['Pub_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pub_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pub_Mnge_Internal_Position_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pub_Mnge_Managed_Rights_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pub_Mnge_Territories_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pub_Mnge_Region_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pub_Mnge_Profession_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id'] = Myclass::addMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pub_Mnge_Avl_Work_Cat_Id']);
+            $import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'] = Myclass::addMasterTypeRights($import_row['copyright_val']['Pub_Mnge_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
 
             /* Save Records */
             $check_exists = PublisherAccount::model()->findByAttributes(array('Pub_Corporate_Name' => $import_row['basic_val']['Pub_Corporate_Name']));
@@ -1075,18 +1063,18 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Pro_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pro_Country_Id']);
-            $import_row['basic_val']['Pro_Legal_Form_id'] = $this->importAddMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pro_Legal_Form_id']);
-            $import_row['basic_val']['Pro_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pro_Language_Id']);
-            $import_row['payment_val']['Pro_Pay_Method_id'] = $this->importAddMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pro_Pay_Method_id']);
-            $import_row['pseudonym_val']['Pro_Pseudo_Type_Id'] = $this->importAddMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pro_Pseudo_Type_Id']);
-            $import_row['copyright_val']['Pro_Rel_Internal_Position_Id'] = $this->importAddMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pro_Rel_Internal_Position_Id']);
-            $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id'] = $this->importAddMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id']);
-            $import_row['copyright_val']['Pro_Rel_Territories_Id'] = $this->importAddMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pro_Rel_Territories_Id']);
-            $import_row['copyright_val']['Pro_Rel_Region_Id'] = $this->importAddMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pro_Rel_Region_Id']);
-            $import_row['copyright_val']['Pro_Rel_Profession_Id'] = $this->importAddMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pro_Rel_Profession_Id']);
-            $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id'] = $this->importAddMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id']);
-//            $import_row['copyright_val']['Pro_Rel_Type_Rght_Id'] = $this->importAddMasterTypeRights($import_row['copyright_val']['Pro_Rel_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
+            $import_row['basic_val']['Pro_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Pro_Country_Id']);
+            $import_row['basic_val']['Pro_Legal_Form_id'] = Myclass::addMaster('MasterLegalForm', 'Legal_Form_Name', 'Master_Legal_Form_Id', $import_row['basic_val']['Pro_Legal_Form_id']);
+            $import_row['basic_val']['Pro_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Pro_Language_Id']);
+            $import_row['payment_val']['Pro_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Pro_Pay_Method_id']);
+            $import_row['pseudonym_val']['Pro_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Pro_Pseudo_Type_Id']);
+            $import_row['copyright_val']['Pro_Rel_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Pro_Rel_Internal_Position_Id']);
+            $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Pro_Rel_Managed_Rights_Id']);
+            $import_row['copyright_val']['Pro_Rel_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Pro_Rel_Territories_Id']);
+            $import_row['copyright_val']['Pro_Rel_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Pro_Rel_Region_Id']);
+            $import_row['copyright_val']['Pro_Rel_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Pro_Rel_Profession_Id']);
+            $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id'] = Myclass::addMaster('MasterWorksCategory', 'Work_Category_Name', 'Master_Work_Category_Id', $import_row['copyright_val']['Pro_Rel_Avl_Work_Cat_Id']);
+//            $import_row['copyright_val']['Pro_Rel_Type_Rght_Id'] = Myclass::addMasterTypeRights($import_row['copyright_val']['Pro_Rel_Type_Rght_Id'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
 
             /* Save Records */
             $check_exists = ProducerAccount::model()->findByAttributes(array('Pro_Corporate_Name' => $import_row['basic_val']['Pro_Corporate_Name']));
@@ -1178,18 +1166,18 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Work_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Work_Language_Id']);
-            $import_row['basic_val']['Work_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Work_Type_Id']);
-            $import_row['basic_val']['Work_Factor_Id'] = $this->importAddMaster('MasterFactor', 'Factor', 'Master_Factor_Id', $import_row['basic_val']['Work_Factor_Id']);
-            $import_row['subtitle_val']['Work_Subtitle_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Work_Subtitle_Language_Id']);
-            $import_row['subtitle_val']['Work_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Work_Subtitle_Type_Id']);
-            $import_row['document_val']['Work_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['document_val']['Work_Doc_Status_Id']);
-            $import_row['document_val']['Work_Doc_Type_Id'] = $this->importAddMaster('MasterDocument', 'Doc_Name', 'Master_Doc_Id', $import_row['document_val']['Work_Doc_Type_Id']);
+            $import_row['basic_val']['Work_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Work_Language_Id']);
+            $import_row['basic_val']['Work_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Work_Type_Id']);
+            $import_row['basic_val']['Work_Factor_Id'] = Myclass::addMaster('MasterFactor', 'Factor', 'Master_Factor_Id', $import_row['basic_val']['Work_Factor_Id']);
+            $import_row['subtitle_val']['Work_Subtitle_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Work_Subtitle_Language_Id']);
+            $import_row['subtitle_val']['Work_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Work_Subtitle_Type_Id']);
+            $import_row['document_val']['Work_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['document_val']['Work_Doc_Status_Id']);
+            $import_row['document_val']['Work_Doc_Type_Id'] = Myclass::addMaster('MasterDocument', 'Doc_Name', 'Master_Doc_Id', $import_row['document_val']['Work_Doc_Type_Id']);
 
             $inst_val = array();
             $instruments = explode(',', $import_row['basic_val']['Work_Instrumentation']);
             foreach ($instruments as $instrument) {
-                array_push($inst_val, $this->importAddMaster('MasterInstrument', 'Instrument_Name', 'Master_Inst_Id', $instrument));
+                array_push($inst_val, Myclass::addMaster('MasterInstrument', 'Instrument_Name', 'Master_Inst_Id', $instrument));
             }
             $import_row['basic_val']['Work_Instrumentation'] = json_encode($inst_val);
 
@@ -1266,14 +1254,14 @@ class SocietyController extends Controller {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         foreach ($this->_import_rows as $key => $import_row) {
             /* Add Master fields */
-            $import_row['basic_val']['Rcd_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Rcd_Type_Id']);
-            $import_row['basic_val']['Rcd_Record_Country_id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Record_Country_id']);
-            $import_row['basic_val']['Rcd_Product_Country_Id'] = $this->importAddMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Product_Country_Id']);
-            $import_row['basic_val']['Rcd_Record_Type_Id'] = $this->importAddMaster('MasterRecordType', 'Rec_Type_Name', 'Master_Rec_Type_Id', $import_row['basic_val']['Rcd_Record_Type_Id']);
-            $import_row['basic_val']['Rcd_Label_Id'] = $this->importAddMaster('MasterLabel', 'Label_Name', 'Master_Label_Id', $import_row['basic_val']['Rcd_Label_Id']);
-            $import_row['basic_val']['Rcd_Doc_Status_Id'] = $this->importAddMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
-            $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = $this->importAddMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
-            $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = $this->importAddMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
+            $import_row['basic_val']['Rcd_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Rcd_Type_Id']);
+            $import_row['basic_val']['Rcd_Record_Country_id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Record_Country_id']);
+            $import_row['basic_val']['Rcd_Product_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Product_Country_Id']);
+            $import_row['basic_val']['Rcd_Record_Type_Id'] = Myclass::addMaster('MasterRecordType', 'Rec_Type_Name', 'Master_Rec_Type_Id', $import_row['basic_val']['Rcd_Record_Type_Id']);
+            $import_row['basic_val']['Rcd_Label_Id'] = Myclass::addMaster('MasterLabel', 'Label_Name', 'Master_Label_Id', $import_row['basic_val']['Rcd_Label_Id']);
+            $import_row['basic_val']['Rcd_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
+            $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
+            $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
 
             /* Save Records */
             $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
