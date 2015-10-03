@@ -366,9 +366,9 @@ class SocietyController extends Controller {
                 if (isset($fieldsets['fieldsets'][$i])) {
                     $value = $objWorksheet->getCellByColumnAndRow($fieldsets['col'], $row)->getValue();
                     if (in_array($fieldsets['fieldsets'][$i], $dateFields)) {
-                        if (Myclass::is_date($value))
+                            if (Myclass::is_date($value))
                             $val = date('Y-m-d', strtotime($value));
-                        else if (is_int($val))
+                        else if (is_numeric($value))
                             $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($value));
                         else
                             $val = 'Invalid format';
@@ -409,6 +409,29 @@ class SocietyController extends Controller {
 
     /* end */
 
+
+    /* fields */
+
+    public function importRequiredFields() {
+        return array(
+            'author' => array(
+                'basic_val' => array(
+                    'Auth_Sur_Name',
+                    'Auth_DOB',
+                    'Auth_Gender',
+                ),
+                'copyright_val' => array(
+                    'Auth_Mnge_Entry_Date',
+                    'Auth_Mnge_Internal_Position_Id',
+                    'Auth_Mnge_Entry_Date_2',
+//                    'Auth_Mnge_Sector',
+                    'Auth_Mnge_Managed_Rights_Id',
+                    'Auth_Mnge_Territories_Id',
+                ),
+            ),
+        );
+    }
+
     public function importDateFields() {
         return array(
             'Auth_DOB',
@@ -445,28 +468,16 @@ class SocietyController extends Controller {
             'Rcd_Duration',
         );
     }
-
-    public function importRequiredFields() {
+    
+    public function importIntegerOnlyFields() {
         return array(
-            'author' => array(
-                'basic_val' => array(
-                    'Auth_Sur_Name',
-                    'Auth_DOB',
-                    'Auth_Gender',
-                ),
-                'copyright_val' => array(
-                    'Auth_Mnge_Entry_Date',
-                    'Auth_Mnge_Internal_Position_Id',
-                    'Auth_Mnge_Entry_Date_2',
-//                    'Auth_Mnge_Sector',
-                    'Auth_Mnge_Managed_Rights_Id',
-                    'Auth_Mnge_Territories_Id',
-                ),
-            ),
+            'Auth_Ipi',
+            'Auth_Ipi_Base_Number',
+            'Auth_Ipn_Number',
         );
     }
 
-    public function importRequiredDateFields() {
+    public function importNumericalOnlyFields() {
         return array(
             'Auth_DOB',
             'Auth_Mnge_Entry_Date',
@@ -474,32 +485,102 @@ class SocietyController extends Controller {
         );
     }
 
+    public function importStringOnlyFields() {
+        return array(
+            'Auth_Sur_Name',
+            'Auth_First_Name',
+            'Auth_Spouse_Name',
+            'Auth_Gender',
+            "Auth_Birth_Country_Id",
+            "Auth_Nationality_Id",
+            "Auth_Language_Id",
+            "Auth_Marital_Status_Id",
+            "Auth_Death_Inhrt_Firstname",
+            "Auth_Death_Inhrt_Surname",
+        );
+    }
+
+    public function importEmailFields() {
+        return array(
+            'Auth_Home_Email',
+            'Auth_Mailing_Email',
+            'Auth_Death_Inhrt_Email',
+        );
+    }
+
+    public function importWebsiteFields() {
+        return array(
+            'Auth_Home_Website',
+            'Auth_Mailing_Website',
+        );
+    }
+
+    /* end */
+
     public function setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records) {
-        return "<span class='badge bg-blue'>{$total_records}</span> Total records.&nbsp;&nbsp;&nbsp;<span class='badge bg-green no-bgcolor'>{$success_records}</span> Successfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-red'>{$unsuccess_records}</span> Unsuccessfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-yellow'>{$duplicate_records}</span> Duplicate records.";
+        return "<span class='badge bg-blue'>{$total_records}</span> Total Main records.&nbsp;&nbsp;&nbsp;<span class='badge bg-green no-bgcolor'>{$success_records}</span> Successfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-red'>{$unsuccess_records}</span> Unsuccessfull records.&nbsp;&nbsp;&nbsp;<span class='badge bg-yellow'>{$duplicate_records}</span> Duplicate records.";
     }
 
     public function importValidate($user_type, $key, $model_key) {
         $validate_fields = $this->importRequiredFields();
-        $date_validate_fields = $this->importRequiredDateFields();
+        $date_validate_fields = $this->importDateFields();
+        $int_validate_fields = $this->importIntegerOnlyFields();
+        $string_validate_fields = $this->importStringOnlyFields();
+        $email_validate_fields = $this->importEmailFields();
+        $url_validate_fields = $this->importWebsiteFields();
+
         $valid = true;
         $this->_stage_rows[$key][$model_key]['success'] = 1;
-        if (isset($validate_fields[$user_type][$model_key])) {
-            foreach ($this->_stage_rows[$key][$model_key] as $col => $value) {
+
+        foreach ($this->_stage_rows[$key][$model_key] as $col => $value) {
+            /* validate required fields */
+            if (isset($validate_fields[$user_type][$model_key])) {
                 if (in_array($col, $validate_fields[$user_type][$model_key])) {
-                    if ($value == '')
+                    if ($value == '' || $value == "Invalid format")
                         $valid = false;
-                    if (in_array($col, $date_validate_fields)) {
-                        if ($value != "Invalid format") {
-                            $d = DateTime::createFromFormat('Y-m-d', $value);
-                            if ($d && $d->format('Y-m-d') != $value)
-                                $valid = false;
-                        }else {
-                            $valid = false;
-                        }
-                    }
+                }
+            }
+
+            /* validate date fields */
+            if (in_array($col, $date_validate_fields)) {
+                if ($value != "Invalid format") {
+                    $d = DateTime::createFromFormat('Y-m-d', $value);
+                    if ($d && $d->format('Y-m-d') != $value)
+                        $valid = false;
+                }else {
+                    $valid = false;
+                }
+            }
+            /* validate integer only */
+            if (in_array($col, $int_validate_fields)) {
+                if (!is_numeric($value)) {
+                    $valid = false;
+                    $this->_stage_rows[$key][$model_key][$col] = "Integer Only";
+                }
+            }
+            /* validate string only */
+            if (in_array($col, $string_validate_fields)) {
+                if (!preg_match('/^[a-zA-Z\s]+$/', $value)) {
+                    $valid = false;
+                    $this->_stage_rows[$key][$model_key][$col] = "Letters Only";
+                }
+            }
+            /* validate email */
+            if (in_array($col, $email_validate_fields)) {
+                if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    $valid = false;
+                    $this->_stage_rows[$key][$model_key][$col] = "Invalid Email Format";
+                }
+            }
+            /* validate url */
+            if (in_array($col, $url_validate_fields)) {
+                if (!filter_var($value, FILTER_VALIDATE_URL)) {
+                    $valid = false;
+                    $this->_stage_rows[$key][$model_key][$col] = "Invalid URL Format";
                 }
             }
         }
+
         if (!$valid)
             $this->_stage_rows[$key][$model_key]['success'] = 0;
         return $valid;
@@ -590,29 +671,34 @@ class SocietyController extends Controller {
     public function importAuthor() {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         $this->_stage_rows = $this->_import_rows;
-
         foreach ($this->_stage_rows as $key => $stage) {
             foreach ($stage as $col => $row) {
                 $this->_stage_rows[$key][$col]['import_status'] = 0;
             }
         }
-
+        $related_records = $this->_stage_tables = $this->importAuthorStageTables();
         foreach ($this->_import_rows as $key => $import_row) {
-            /* Add Master fields */
-            $import_row['basic_val']['Auth_Birth_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
-            $import_row['basic_val']['Auth_Nationality_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
-            $import_row['basic_val']['Auth_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
-            $import_row['basic_val']['Auth_Marital_Status_Id'] = Myclass::addMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
-            $import_row['basic_val']['Auth_Gender'] = strtoupper(substr($import_row['basic_val']['Auth_Gender'], 0, 1));
-            $import_row['payment_val']['Auth_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
-            $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
-            $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
-
-            if ($this->importValidate('author', $key, 'basic_val')) {
+            foreach ($related_records as $relModal => $arrKey) {
+                $this->importValidate('author', $key, $arrKey['key']);
+            }
+        }
+        unset($related_records['AuthorAccount']);
+        foreach ($this->_import_rows as $key => $import_row) {
+            $int_code = '-';
+            if ($this->_stage_rows[$key]['basic_val']['success'] == 1) {
+                /* Add Master fields */
+                $import_row['basic_val']['Auth_Birth_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
+                $import_row['basic_val']['Auth_Nationality_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
+                $import_row['basic_val']['Auth_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
+                $import_row['basic_val']['Auth_Marital_Status_Id'] = Myclass::addMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
+                $import_row['basic_val']['Auth_Gender'] = strtoupper(substr($import_row['basic_val']['Auth_Gender'], 0, 1));
+                $import_row['payment_val']['Auth_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
+                $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
+                $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
+                $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
+                $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
+                $import_row['copyright_val']['Auth_Mnge_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
+                $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
                 /* Save Records */
                 $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
                 if (empty($check_exists)) {
@@ -621,35 +707,25 @@ class SocietyController extends Controller {
                     if ($model->validate()) {
                         $success_records++;
                         $model->save(false);
+                        $int_code = $model->Auth_Internal_Code;
                         $this->_stage_rows[$key]['basic_val']['import_status'] = 1;
-
                         foreach ($import_row as $catKey => $values) {
                             $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
                         }
-
-                        $related_records = array(
-                            'AuthorAccountAddress' => 'address_val',
-                            'AuthorPaymentMethod' => 'payment_val',
-                            'AuthorBiography' => 'biograph_val',
-                            'AuthorPseudonym' => 'pseudonym_val',
-                            'AuthorManageRights' => 'copyright_val',
-                            'AuthorDeathInheritance' => 'death_val',
-                        );
-
                         $import_row['copyright_val']['Auth_Mnge_Society_Id'] = $this->_import_society;
-
                         foreach ($related_records as $relModal => $arrKey) {
                             $rel_model = new $relModal;
-                            $rel_model->attributes = $import_row[$arrKey];
-                            if ($this->importValidate('author', $key, $arrKey)) {
+                            $rel_model->attributes = $import_row[$arrKey['key']];
+                            if ($this->_stage_rows[$key][$arrKey['key']]['success'] == 1) {
                                 $rel_model->save(false);
-                                $this->_stage_rows[$key][$arrKey]['import_status'] = 1;
+                                $this->_stage_rows[$key][$arrKey['key']]['import_status'] = 1;
                             }
                         }
                     } else {
                         $unsuccess_records++;
                     }
                 } else {
+                    $int_code = $check_exists->Auth_Internal_Code;
                     foreach ($stage as $col => $row) {
                         $this->_stage_rows[$key][$col]['import_status'] = 2;
                     }
@@ -658,13 +734,14 @@ class SocietyController extends Controller {
             } else {
                 $unsuccess_records++;
             }
+            $this->_stage_rows[$key]['basic_val']['Auth_Internal_Code'] = $int_code;
+            $this->_stage_rows[$key]['basic_val'] = Myclass::reArrangeArray($this->_stage_rows[$key]['basic_val']);
             $total_records++;
         }
-        $this->_stage_tables = $this->importAuthorStageTables();
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
         return true;
     }
-
+    
     public function importAuthorStageTables() {
         return array(
             'AuthorAccount' => array(

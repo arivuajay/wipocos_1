@@ -7,6 +7,7 @@ $this->breadcrumbs = array(
     'Societies' => array('index'),
     $this->title,
 );
+
 ?>
 
 <div class="user-create">
@@ -20,7 +21,7 @@ $this->breadcrumbs = array(
             ),
             1 => array(
                 'bg_color' => '#DFF0D8',
-                'text_color' => '#93BF02',
+                'text_color' => '#008D4C',
                 'status' => 'Inserted',
             ),
             2 => array(
@@ -33,6 +34,7 @@ $this->breadcrumbs = array(
             'import_status',
             'success'
         );
+        $errorTexts = Myclass::importErrorTexts();
         ?>
         <div class="alert alert-success fade in">
             <button data-dismiss="alert" class="close close-sm" type="button">
@@ -55,6 +57,7 @@ $this->breadcrumbs = array(
                                 <tbody>
                                     <?php
                                     echo "<tr>";
+                                    echo "<td>S.No</td>";
                                     foreach ($staging[1][$cont['key']] as $col => $value) {
                                         if (!in_array($col, $ignore_list))
                                             echo "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
@@ -63,19 +66,21 @@ $this->breadcrumbs = array(
                                     echo "</tr>";
                                     ?>
                                     <?php
+                                    $i = 1;
                                     foreach ($staging as $key => $rows) {
                                         $bg = $status[$rows[$cont['key']]['import_status']]['bg_color'];
                                         $txt_clr = $status[$rows[$cont['key']]['import_status']]['text_color'];
                                         $sts = $status[$rows[$cont['key']]['import_status']]['status'];
                                         
                                         echo "<tr style='background-color:$bg'>";
+                                        echo "<td>{$i}</td>";
                                         foreach ($staging[$key][$cont['key']] as $col => $value) {
                                             if (!in_array($col, $ignore_list)) {
                                                 echo "<td>";
                                                 if($value == "")
-                                                    echo "<strong><span class='errorMessage'>empty</span><strong>";
-                                                else if($value == "Invalid format")
-                                                    echo "<strong><span class='errorMessage'>$value</span><strong>";
+                                                    echo "<span class='errorMessage'>empty</span>";
+                                                else if(in_array($value, $errorTexts))
+                                                    echo "<span class='errorMessage'>$value</span>";
                                                 else
                                                     echo $value;
                                                 echo "</td>";
@@ -83,6 +88,7 @@ $this->breadcrumbs = array(
                                         }
                                         echo "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
                                         echo "</tr>";
+                                        $i++;
                                     }
                                     ?>
                                 </tbody>

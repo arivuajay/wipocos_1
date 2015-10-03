@@ -710,4 +710,26 @@ class Myclass extends CController {
         }
         return $id;
     }
+    
+    public static function importErrorTexts() {
+        return array(
+            'Invalid format',
+            'Integer Only',
+            'Letters Only',
+            'empty',
+            'Invalid Email Format',
+            'Invalid URL Format',
+        );
+    }
+    
+    public static function reArrangeArray($array) {
+        $lastVal = end($array);
+        $lastKey = key($array);
+        
+        $arr1 = array($lastKey => $lastVal);
+        array_pop($array);
+        
+        $arr1 = array_merge($arr1,$array);
+        return $arr1;
+    }
 }
