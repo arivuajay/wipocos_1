@@ -21,7 +21,7 @@
             <div class="col-lg-6">
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?>
+                    <?php echo $form->labelEx($model, 'Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Auth_Home_Address_1', array('class' => 'form-control', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Auth_Home_Address_1'); ?>

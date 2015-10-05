@@ -35,7 +35,7 @@
  * @property AuthorAccount $authAcc
  */
 class AuthorAccountAddress extends RActiveRecord {
-    
+
     public $after_save_enable = true;
 
     /**
@@ -52,7 +52,8 @@ class AuthorAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Home_Address_1, Auth_Mailing_Address_1', 'required'),
+            array('Auth_Acc_Id', 'required'),
+            array('Auth_Home_Address_1, Auth_Mailing_Address_1', 'customRequired'),
             array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Home_Email, Auth_Mailing_Email', 'email'),
             array('Auth_Home_Website, Auth_Mailing_Website', 'url'),
@@ -66,6 +67,13 @@ class AuthorAccountAddress extends RActiveRecord {
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Addr_Id, Auth_Acc_Id, Auth_Home_Address_1, Auth_Home_Address_2, Auth_Home_Address_3, Auth_Home_Fax, Auth_Home_Telephone, Auth_Home_Email, Auth_Home_Website, Auth_Mailing_Address_1, Auth_Mailing_Address_2, Auth_Mailing_Address_3, Auth_Mailing_Telephone, Auth_Mailing_Fax, Auth_Mailing_Email, Auth_Mailing_Website, Auth_Author_Account_1, Auth_Author_Account_2, Auth_Author_Account_3, Auth_Performer_Account_1, Auth_Performer_Account_2, Auth_Performer_Account_3, Auth_Unknown_Address, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
+    }
+
+    public function customRequired($attribute, $params) {
+        if ($this->Auth_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
     }
 
     /**
@@ -184,9 +192,9 @@ class AuthorAccountAddress extends RActiveRecord {
             )
         ));
     }
-    
+
     protected function afterSave() {
-        if($this->after_save_enable)
+        if ($this->after_save_enable)
             AuthorAccount::afterTabsave('PerformerAccountAddress', 'performerAccountAddresses');
         return parent::afterSave();
     }

@@ -285,7 +285,7 @@ $js = <<< EOD
         });
         
         $('body').on('click','.row-delete', function(){
-            if(confirm('Are you sure you want to Delete this record?'))
+            if(confirm('Are you sure you want to remove this record?'))
                 $(this).closest('tr').remove();
             return false;
         });
