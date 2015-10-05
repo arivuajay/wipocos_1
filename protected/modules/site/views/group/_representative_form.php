@@ -48,21 +48,21 @@
             <div class="clearfix"></div>
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Home_Address_1', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Group_Home_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                <?php echo $form->textArea($model, 'Group_Home_Address_1', array('class' => 'form-control', 'rows' => '5')); ?>
                 <?php echo $form->error($model, 'Group_Home_Address_1'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Home_Address_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Home_Address_2'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Home_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Home_Address_3'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Home_Address_4', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Home_Address_4'); ?>
             </div>
@@ -72,21 +72,21 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Mailing_Address_1', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Group_Mailing_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                <?php echo $form->textArea($model, 'Group_Mailing_Address_1', array('class' => 'form-control', 'rows' => '5')); ?>
                 <?php echo $form->error($model, 'Group_Mailing_Address_1'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Mailing_Address_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Mailing_Address_2'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Mailing_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Mailing_Address_3'); ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
                 <?php echo $form->textField($model, 'Group_Mailing_Address_4', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Group_Mailing_Address_4'); ?>
             </div>

@@ -33,6 +33,7 @@
  */
 class PerformerRelatedRights extends RActiveRecord {
 //    const FILE_SIZE = 10;
+    public $not_available;
 
     public function init() {
         parent::init();
@@ -66,7 +67,7 @@ class PerformerRelatedRights extends RActiveRecord {
             array('Perf_Rel_Duration', 'length', 'max' => 100),
             array('Perf_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Perf_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Perf_Rel_Exit_Date, Perf_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Perf_Rel_Exit_Date, Perf_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
 //            array('Perf_Rel_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -185,5 +186,21 @@ class PerformerRelatedRights extends RActiveRecord {
                 'fileField' => 'Perf_Rel_File',
             )
         );
+    }
+    
+    protected function afterSave() {
+        $model = PerformerAccount::model()->findByPk($this->Perf_Acc_Id);
+        if(!empty($model)){
+//            $model->before_save_enable = false;
+//            $model->after_save_enable = false;
+            $model->Perf_Non_Member = $this->not_available;
+            $model->save(false);
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        $this->not_available = $this->perfAcc->Perf_Non_Member;
+        return parent::afterFind();
     }
 }

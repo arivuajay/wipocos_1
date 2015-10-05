@@ -29,6 +29,14 @@
         </div>
 
         <div class="form-group">
+            <?php echo $form->labelEx($model, 'Perf_Death_Inhrt_Decease_Date', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textField($model, 'Perf_Death_Inhrt_Decease_Date', array('class' => 'form-control date', 'maxlength' => 50)); ?>
+                <?php echo $form->error($model, 'Perf_Death_Inhrt_Decease_Date'); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->labelEx($model, 'Perf_Death_Inhrt_Email', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Perf_Death_Inhrt_Email', array('class' => 'form-control', 'maxlength' => 100)); ?>

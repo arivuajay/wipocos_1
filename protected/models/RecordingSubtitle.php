@@ -40,7 +40,7 @@ class RecordingSubtitle extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id', 'required'),
+            array('Rcd_Id, Rcd_Subtitle_Name, Rcd_Subtitle_Type_Id', 'required'),
             array('Rcd_Id, Rcd_Subtitle_Type_Id, Rcd_Subtitle_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Rcd_Subtitle_Name', 'length', 'max' => 255),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),

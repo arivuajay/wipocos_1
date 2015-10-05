@@ -237,7 +237,7 @@ class AuthoraccountController extends Controller {
 
                 GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Auth_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
-                    foreach ($_POST['group_ids'] as $gid):
+                    foreach ($_POST['group_ids'] as $gid => $val):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
                         $group->Group_Member_GUID = $model->Auth_GUID;

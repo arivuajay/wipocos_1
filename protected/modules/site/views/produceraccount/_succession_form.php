@@ -37,6 +37,14 @@
         </div>
 
         <div class="form-group">
+            <?php echo $form->labelEx($model, 'Pro_Suc_Liquidation_Date', array('class' => 'col-sm-3 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textField($model, 'Pro_Suc_Liquidation_Date', array('class' => 'form-control date', 'size' => 60, 'maxlength' => 255)); ?>
+                <?php echo $form->error($model, 'Pro_Suc_Liquidation_Date'); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->labelEx($model, 'Pro_Suc_Address_1', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php echo $form->textField($model, 'Pro_Suc_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 500)); ?>

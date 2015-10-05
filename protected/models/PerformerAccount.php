@@ -101,7 +101,7 @@ class PerformerAccount extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code', 'required'),
+            array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Birth_Country_Id', 'required'),
             array('Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),

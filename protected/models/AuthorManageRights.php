@@ -33,6 +33,8 @@
  * @property MasterWorksCategory $authMngeAvlWorkCat
  */
 class AuthorManageRights extends RActiveRecord {
+    
+    public $not_available;
 
     public function init() {
         parent::init();
@@ -67,7 +69,7 @@ class AuthorManageRights extends RActiveRecord {
             array('Auth_Mnge_Duration', 'length', 'max' => 100),
             array('Auth_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Auth_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Mnge_Rgt_Id, Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Entry_Date, Auth_Mnge_Exit_Date, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Entry_Date_2, Auth_Mnge_Exit_Date_2, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_File, Auth_Mnge_Duration, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'safe', 'on' => 'search'),
@@ -116,6 +118,7 @@ class AuthorManageRights extends RActiveRecord {
             'Auth_Mnge_Type_Rght_Id' => 'Membership Role',
             'Auth_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Auth_Mnge_Territories_Id' => 'Territories',
+            'not_available' => 'Not Available',
         );
     }
 
@@ -188,4 +191,19 @@ class AuthorManageRights extends RActiveRecord {
         );
     }
 
+    protected function afterSave() {
+        $model = AuthorAccount::model()->findByPk($this->Auth_Acc_Id);
+        if(!empty($model)){
+//            $model->before_save_enable = false;
+//            $model->after_save_enable = false;
+            $model->Auth_Non_Member = $this->not_available;
+            $model->save(false);
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        $this->not_available = $this->authAcc->Auth_Non_Member;
+        return parent::afterFind();
+    }
 }

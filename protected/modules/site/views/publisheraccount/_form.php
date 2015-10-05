@@ -213,7 +213,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <?php echo $form->labelEx($model, 'Pub_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Pub_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Non_Member'); ?>

@@ -34,6 +34,8 @@
  */
 class PublisherManageRights extends RActiveRecord {
 
+    public $not_available;
+    
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -66,7 +68,7 @@ class PublisherManageRights extends RActiveRecord {
             array('Pub_Mnge_Duration', 'length', 'max' => 100),
             array('Pub_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Pub_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Pub_Mnge_Exit_Date, Pub_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Pub_Mnge_Exit_Date, Pub_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Mnge_Rgt_Id, Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Entry_Date, Pub_Mnge_Exit_Date, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Entry_Date_2, Pub_Mnge_Exit_Date_2, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_File, Pub_Mnge_Duration, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id', 'safe', 'on' => 'search'),
@@ -115,6 +117,7 @@ class PublisherManageRights extends RActiveRecord {
             'Pub_Mnge_Type_Rght_Id' => 'Membership Role',
             'Pub_Mnge_Managed_Rights_Id' => 'Managed Rights',
             'Pub_Mnge_Territories_Id' => 'Territories',
+            'not_available' => 'Not Available',
         );
     }
 
@@ -178,4 +181,19 @@ class PublisherManageRights extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        $model = PublisherAccount::model()->findByPk($this->Pub_Acc_Id);
+        if(!empty($model)){
+//            $model->before_save_enable = false;
+//            $model->after_save_enable = false;
+            $model->Pub_Non_Member = $this->not_available;
+            $model->save(false);
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        $this->not_available = $this->pubAcc->Pub_Non_Member;
+        return parent::afterFind();
+    }
 }

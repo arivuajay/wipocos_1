@@ -23,12 +23,12 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Pro_Head_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
-                        <?php echo $form->textField($model, 'Pro_Head_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->textArea($model, 'Pro_Head_Address_1', array('class' => 'form-control', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Pro_Head_Address_1'); ?>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hide">
                     <?php echo CHtml::label('&nbsp;', '', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Pro_Head_Address_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hide">
                     <?php echo CHtml::label('&nbsp;', '', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Pro_Head_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -56,12 +56,12 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Pro_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
-                        <?php echo $form->textField($model, 'Pro_Mailing_Address_1', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->textArea($model, 'Pro_Mailing_Address_1', array('class' => 'form-control', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Pro_Mailing_Address_1'); ?>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hide">
                     <?php echo CHtml::label('&nbsp;', '', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Pro_Mailing_Address_2', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hide">
                     <?php echo CHtml::label('&nbsp;', '', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Pro_Mailing_Address_3', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>

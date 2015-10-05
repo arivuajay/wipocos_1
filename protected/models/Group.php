@@ -68,7 +68,7 @@ class Group extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Group_Name, Group_Internal_Code, Group_Date', 'required'),
+            array('Group_Name, Group_Internal_Code, Group_Date, Group_Country_Id', 'required'),
             array('Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Name, Group_Place', 'length', 'max' => 100),
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
@@ -114,7 +114,7 @@ class Group extends RActiveRecord {
             'Group_Is_Performer' => 'Performer',
             'Group_Internal_Code' => 'Internal Code',
             'Group_IPI_Name_Number' => 'IPI Name Number',
-            'Group_IPN_Base_Number' => 'IPN Base Number',
+            'Group_IPN_Base_Number' => 'IPI Base Number',
             'Group_IPN_Number' => 'IPN Number',
             'Group_Date' => ' Date of Foundation',
             'Group_Place' => 'Place',

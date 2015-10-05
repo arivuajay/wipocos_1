@@ -10,6 +10,7 @@
  * @property string $Perf_Death_Inhrt_Address_2
  * @property string $Perf_Death_Inhrt_Address_3
  * @property string $Perf_Death_Inhrt_Addtion_Annotation
+ * @property string $Perf_Death_Inhrt_Decease_Date
  *
  * The followings are the available model relations:
  * @property PerformerAccount $perfAcc
@@ -35,7 +36,8 @@ class PerformerDeathInheritance extends RActiveRecord {
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Death_Inhrt_Surname', 'length', 'max' => 50),
             array('Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3', 'length', 'max' => 500),
-            array('Perf_Death_Inhrt_Addtion_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Perf_Death_Inhrt_Decease_Date', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d"), 'operator' => '<=', 'message' => '{attribute} must be lesser than "{compareValue}".'),
+            array('Perf_Death_Inhrt_Addtion_Annotation, Created_Date, Rowversion, Created_By, Updated_By, Perf_Death_Inhrt_Decease_Date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Perf_Death_Inhrt_Id, Perf_Acc_Id, Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3, Perf_Death_Inhrt_Addtion_Annotation', 'safe', 'on' => 'search'),
@@ -70,6 +72,7 @@ class PerformerDeathInheritance extends RActiveRecord {
             'Perf_Death_Inhrt_Address_2' => 'Address 2',
             'Perf_Death_Inhrt_Address_3' => 'Address 3',
             'Perf_Death_Inhrt_Addtion_Annotation' => 'Annotation',
+            'Perf_Death_Inhrt_Decease_Date' => 'Date of Decease',
         );
     }
 
@@ -128,4 +131,9 @@ class PerformerDeathInheritance extends RActiveRecord {
         parent::afterSave();
     }
 
+    protected function afterFind() {
+        if($this->Perf_Death_Inhrt_Decease_Date == '0000-00-00')
+            $this->Perf_Death_Inhrt_Decease_Date = '';
+        parent::afterFind();
+    }
 }

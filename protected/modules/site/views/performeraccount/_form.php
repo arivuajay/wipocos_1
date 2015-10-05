@@ -47,10 +47,10 @@ $regions = Myclass::getMasterRegion();
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
+                <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <?php if ($model->Perf_Is_Author == 'Y') { ?>
                     <li><a id="a_tab_9" href="#tab_9" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Managed Rights</a></li>
                 <?php } ?>
-                <li><a id="a_tab_6" href="#tab_6" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Related Rights</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Address</a></li>
                 <li><a id="a_tab_3" href="#tab_3" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Payment</a></li>
                 <li><a id="a_tab_4" href="#tab_4" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>Biography</a></li>
@@ -203,7 +203,7 @@ $regions = Myclass::getMasterRegion();
                                     <?php echo $form->error($model, 'Perf_Language_Id'); ?>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <?php echo $form->labelEx($model, 'Perf_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Perf_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Perf_Non_Member'); ?>

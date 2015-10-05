@@ -266,7 +266,7 @@ class Work extends RActiveRecord {
 
         if ($work->workRightholders) {
             $column .= "<br /><br />";
-            $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
+            $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
             //Author
             foreach ($work->workRightholders as $key => $rightholder) {
                 if ($rightholder->workAuthor) {

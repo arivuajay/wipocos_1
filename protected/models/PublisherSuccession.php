@@ -11,6 +11,7 @@
  * @property string $Pub_Suc_Address_1
  * @property string $Pub_Suc_Address_2
  * @property string $Pub_Suc_Annotation
+ * @property string $Pub_Suc_Liquidation_Date
  *
  * The followings are the available model relations:
  * @property PublisherAccount $pubAcc
@@ -36,7 +37,8 @@ class PublisherSuccession extends RActiveRecord {
             array('Pub_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Suc_Name', 'length', 'max' => 255),
             array('Pub_Suc_Address_1, Pub_Suc_Address_2', 'length', 'max' => 500),
-            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Pub_Suc_Liquidation_Date', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d"), 'operator' => '<=', 'message' => '{attribute} must be lesser than "{compareValue}".'),
+            array('Pub_Suc_Date_Transfer, Pub_Suc_Annotation, Created_Date, Rowversion, Created_By, Updated_By, Pub_Suc_Liquidation_Date', 'safe'),
             array(
                 'Pub_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -73,6 +75,7 @@ class PublisherSuccession extends RActiveRecord {
             'Pub_Suc_Address_1' => 'Address 1',
             'Pub_Suc_Address_2' => 'Address 2',
             'Pub_Suc_Annotation' => 'Additional Annotations',
+            'Pub_Suc_Liquidation_Date' => 'Date of Liquidation',
         );
     }
 
@@ -131,5 +134,11 @@ class PublisherSuccession extends RActiveRecord {
         if($this->after_save_enable)
             PublisherAccount::afterTabsave('ProducerSuccession', 'producerSuccessions');
         return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        if($this->Pub_Suc_Liquidation_Date == '0000-00-00')
+            $this->Pub_Suc_Liquidation_Date = '';
+        parent::afterFind();
     }
 }

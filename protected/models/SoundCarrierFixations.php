@@ -28,7 +28,7 @@ class SoundCarrierFixations extends RActiveRecord {
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
             $this->Sound_Car_Fix_Country_Id = DEFAULT_COUNTRY_ID;
-            $this->Sound_Car_Fix_Studio = DEFAULT_COUNTRY_ID;
+//            $this->Sound_Car_Fix_Studio = DEFAULT_COUNTRY_ID;
         }
     }
 

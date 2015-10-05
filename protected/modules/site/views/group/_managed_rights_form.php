@@ -81,7 +81,11 @@
                 <?php echo $form->error($model, 'Group_Mnge_Region_Id'); ?>
             </div>
 
-
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'not_available', array('class' => '')); ?><br />
+                <?php echo $form->checkBox($model, 'not_available', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                <?php echo $form->error($model, 'not_available'); ?>
+            </div>
         </div>
     </div>
     <div class="col-lg-1"></div>

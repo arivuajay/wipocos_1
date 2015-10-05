@@ -97,7 +97,7 @@ class AuthorAccount extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code', 'required'),
+            array('Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Birth_Country_Id', 'required'),
             array('Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Marital_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Sur_Name', 'length', 'max' => 50),
             array('Auth_First_Name, Auth_Internal_Code, Auth_Identity_Number, Auth_Spouse_Name', 'length', 'max' => 255),

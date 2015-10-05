@@ -50,11 +50,11 @@ class PerformerAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Acc_Id, Perf_Home_Address_1, Perf_Home_Telephone, Perf_Home_Email, Perf_Mailing_Address_1, Perf_Mailing_Telephone, Perf_Mailing_Email', 'required'),
+            array('Perf_Acc_Id, Perf_Home_Address_1, Perf_Mailing_Address_1', 'required'),
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Home_Email, Perf_Mailing_Email', 'email'),
             array('Perf_Home_Website, Perf_Mailing_Website', 'url'),
-            array('Perf_Home_Address_1, Perf_Home_Address_2, Perf_Home_Address_3, Perf_Mailing_Address_1, Perf_Mailing_Address_2, Perf_Mailing_Address_3, Perf_Author_Account_1, Perf_Author_Account_2, Perf_Author_Account_3, Perf_Performer_Account_1, Perf_Performer_Account_2, Perf_Performer_Account_3', 'length', 'max' => 255),
+            array('Perf_Home_Address_2, Perf_Home_Address_3, Perf_Mailing_Address_2, Perf_Mailing_Address_3, Perf_Author_Account_1, Perf_Author_Account_2, Perf_Author_Account_3, Perf_Performer_Account_1, Perf_Performer_Account_2, Perf_Performer_Account_3', 'length', 'max' => 255),
             array('Perf_Home_Fax, Perf_Home_Telephone, Perf_Mailing_Telephone, Perf_Mailing_Fax', 'length', 'max' => 25),
             array('Perf_Home_Email, Perf_Mailing_Email', 'length', 'max' => 50),
             array('Perf_Home_Website, Perf_Mailing_Website', 'length', 'max' => 100),

@@ -256,7 +256,7 @@ class Recording extends RActiveRecord {
         $column .= "Type - {$recording->rcdType->Type_Name}, Documentary Status - {$recording->rcdDocStatus->Document_Sts_Name}";
         if ($recording->recordingRightholders) {
             $column .= "<br /><br />";
-            $column .= "<table border = '1' class='match_det_table'><thead><th>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
+            $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
             foreach ($recording->recordingRightholders as $key => $rightholder) {
                 if ($rightholder->recordingPerformer) {
                     $column .= '<tr>';

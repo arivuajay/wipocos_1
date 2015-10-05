@@ -14,17 +14,6 @@
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
     $right_types = Myclass::getMasterTypeRight(MasterTypeRights::OCCUPATION_AUTHOR, MasterTypeRights::AUTHOR_RANK, MasterTypeRights::AUTHOR_DOMAIN);
-    //Hard cord
-//    $r = array();
-//    $need = array(1,9);
-//    foreach($right_types as $k => $v){
-//        if(in_array($k, $need)){
-//            $r[$k] = $v;
-//        }
-//    }
-//    $right_types = $r;
-    //Hard cord
-
     $territories = Myclass::getMasterTerritory();
     $managed_rights = MasterManagedRights::getMasterManagedRightbyRank(MasterManagedRights::AUTHOR_RANK);
     $internal_positions = Myclass::getMasterInternalPosition();
@@ -35,7 +24,7 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Auth_Mnge_Society_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control','disabled'=>'disabled')); ?>
+                <?php echo $form->dropDownList($model, 'Auth_Mnge_Society_Id', $societies, array('class' => 'form-control', 'disabled' => 'disabled')); ?>
                 <?php echo $form->error($model, 'Auth_Mnge_Society_Id'); ?>
             </div>
 
@@ -87,6 +76,11 @@
                 <?php echo $form->error($model, 'Auth_Mnge_Region_Id'); ?>
             </div>
 
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'not_available', array('class' => '')); ?><br />
+                <?php echo $form->checkBox($model, 'not_available', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                <?php echo $form->error($model, 'not_available'); ?>
+            </div>
 
         </div>
     </div>
@@ -112,11 +106,11 @@
                                 </div>-->
             <?php } ?>
 
-                       <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
-            <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-            <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
-                       </div>
+            <div class="form-group">
+                <?php echo $form->labelEx($model, 'Auth_Mnge_Duration', array('class' => '')); ?>
+                <?php echo $form->textField($model, 'Auth_Mnge_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                <?php echo $form->error($model, 'Auth_Mnge_Duration'); ?>
+            </div>
 
             <div class="form-group foundation">
                 <div class="box-header">

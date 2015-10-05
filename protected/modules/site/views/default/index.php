@@ -50,7 +50,7 @@ $this->breadcrumbs = array(
                 $uncompleted_profie_perf = ($performer_count - $performer_reg_count);
                 ?>
                 <h3><?php echo $uncompleted_profie_auth + $uncompleted_profie_perf ?></h3>
-                <p>Uncompleted Records</p>
+                <p>Incompleted Records</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -165,14 +165,14 @@ $this->breadcrumbs = array(
                     <li>
                         <?php 
                         $text = '<span class="text">No. of Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$publisher_expiry_count.'</small>';
-                        echo MyHtml::link($text, array('/site/work/contractexpiry'), array());
+                        echo MyHtml::link($text, array('/site/work/contractexpiry', 'filter' => 'pub'), array());
                         ?>
                         <!--<small class="label label-danger"><i class="fa fa-clock-o"></i> 20 mins</small>-->
                     </li>
                     <li>
                         <?php 
                         $text = '<span class="text">No. of Sub-Publisher contract expiry: </span>&nbsp;<small class="badge bg-red">'.$sub_publisher_expiry_count.'</small>';
-                        echo MyHtml::link($text, array('/site/work/contractexpiry'), array());
+                        echo MyHtml::link($text, array('/site/work/contractexpiry', 'filter' => 'sub'), array());
                         ?>
                         
                     </li>

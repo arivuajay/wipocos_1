@@ -91,7 +91,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Work Name</th>
+                                <th>Title</th>
                                 <th>Publisher Name</th>
                                 <th>Role</th>
                                 <th>Contract End Date</th>
@@ -192,7 +192,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <table class="table table-striped table-bordered table-datatable">
                     <thead>
                         <tr>
-                            <th>Work Name</th>
+                            <th>Title</th>
                             <th>Publisher Name</th>
                             <th>Role</th>
                             <th>Contract End Date</th>

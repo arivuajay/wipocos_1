@@ -110,7 +110,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->error($model, 'Pub_Group_IPN_Base_Number'); ?>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <?php echo $form->labelEx($model, 'Pub_Group_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Pub_Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Pub_Group_Non_Member'); ?>

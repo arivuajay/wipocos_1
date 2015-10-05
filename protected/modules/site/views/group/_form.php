@@ -118,10 +118,6 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                         <span><strong>Note:</strong> Once you add new profile picture, the old profile picture will be overwritten</span>
                                     </div>
                                 <?php } ?>
-                                <div class="form-group">
-                                    <label>Status</label><br />
-                                    <?php echo $model->status; ?>
-                                </div>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -167,10 +163,14 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                     <?php echo $form->dropDownList($model, 'Group_Language_Id', $languages, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Group_Language_Id'); ?>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <?php echo $form->labelEx($model, 'Group_Non_Member', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Group_Non_Member', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Group_Non_Member'); ?>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label><br />
+                                    <?php echo $model->status; ?>
                                 </div>
 
                             </div>

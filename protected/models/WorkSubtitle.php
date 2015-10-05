@@ -41,7 +41,7 @@ class WorkSubtitle extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Work_Id, Work_Subtitle_Name, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id', 'required'),
+            array('Work_Id, Work_Subtitle_Name, Work_Subtitle_Type_Id', 'required'),
             array('Work_Id, Work_Subtitle_Type_Id, Work_Subtitle_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Work_Subtitle_Name', 'length', 'max' => 255),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),

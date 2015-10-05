@@ -42,7 +42,8 @@ class AuthorDeathInheritance extends RActiveRecord {
             array('Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Phone', 'length', 'max' => 50),
             array('Auth_Death_Inhrt_Email', 'length', 'max' => 100),
             array('Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3', 'length', 'max' => 500),
-            array('Auth_Death_Inhrt_Addtion_Annotation, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Auth_Death_Inhrt_Decease_Date', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d"), 'operator' => '<=', 'message' => '{attribute} must be lesser than "{compareValue}".'),
+            array('Auth_Death_Inhrt_Addtion_Annotation, Created_Date, Rowversion, Created_By, Updated_By, Auth_Death_Inhrt_Decease_Date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Auth_Death_Inhrt_Id, Auth_Acc_Id, Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Email, Auth_Death_Inhrt_Phone, Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3, Auth_Death_Inhrt_Addtion_Annotation', 'safe', 'on' => 'search'),
@@ -77,6 +78,7 @@ class AuthorDeathInheritance extends RActiveRecord {
             'Auth_Death_Inhrt_Address_2' => 'Address 2',
             'Auth_Death_Inhrt_Address_3' => 'Address 3',
             'Auth_Death_Inhrt_Addtion_Annotation' => 'Annotation',
+            'Auth_Death_Inhrt_Decease_Date' => 'Date of Decease',
         );
     }
 

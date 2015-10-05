@@ -52,11 +52,11 @@ class AuthorAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Home_Address_1, Auth_Home_Telephone, Auth_Home_Email, Auth_Mailing_Address_1, Auth_Mailing_Telephone, Auth_Mailing_Email', 'required'),
+            array('Auth_Acc_Id, Auth_Home_Address_1, Auth_Mailing_Address_1', 'required'),
             array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Home_Email, Auth_Mailing_Email', 'email'),
             array('Auth_Home_Website, Auth_Mailing_Website', 'url'),
-            array('Auth_Home_Address_1, Auth_Home_Address_2, Auth_Home_Address_3, Auth_Mailing_Address_1, Auth_Mailing_Address_2, Auth_Mailing_Address_3, Auth_Author_Account_1, Auth_Author_Account_2, Auth_Author_Account_3, Auth_Performer_Account_1, Auth_Performer_Account_2, Auth_Performer_Account_3', 'length', 'max' => 255),
+            array('Auth_Home_Address_2, Auth_Home_Address_3, Auth_Mailing_Address_2, Auth_Mailing_Address_3, Auth_Author_Account_1, Auth_Author_Account_2, Auth_Author_Account_3, Auth_Performer_Account_1, Auth_Performer_Account_2, Auth_Performer_Account_3', 'length', 'max' => 255),
             array('Auth_Home_Fax, Auth_Home_Telephone, Auth_Mailing_Telephone, Auth_Mailing_Fax', 'length', 'max' => 25),
             array('Auth_Home_Email, Auth_Mailing_Email', 'length', 'max' => 50),
             array('Auth_Home_Website, Auth_Mailing_Website', 'length', 'max' => 100),

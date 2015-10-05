@@ -13,6 +13,7 @@
  * @property string $Pro_Suc_Annotation
  * @property string $Created_Date
  * @property string $Rowversion
+ * @property string $Pro_Suc_Liquidation_Date
  *
  * The followings are the available model relations:
  * @property ProducerAccount $proAcc
@@ -38,7 +39,8 @@ class ProducerSuccession extends RActiveRecord {
             array('Pro_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Suc_Name', 'length', 'max' => 255),
             array('Pro_Suc_Address_1, Pro_Suc_Address_2', 'length', 'max' => 500),
-            array('Pro_Suc_Date_Transfer, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Pro_Suc_Liquidation_Date', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d"), 'operator' => '<=', 'message' => '{attribute} must be lesser than "{compareValue}".'),
+            array('Pro_Suc_Date_Transfer, Created_Date, Rowversion, Created_By, Updated_By, Pro_Suc_Liquidation_Date', 'safe'),
             array(
                 'Pro_Suc_Name',
                 'match', 'pattern' => '/^[a-zA-Z\s]+$/',
@@ -77,6 +79,7 @@ class ProducerSuccession extends RActiveRecord {
             'Pro_Suc_Annotation' => 'Additional Annotation',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'Pro_Suc_Liquidation_Date' => 'Date of Liquidation',
         );
     }
 
@@ -136,5 +139,11 @@ class ProducerSuccession extends RActiveRecord {
     protected function afterSave() {
         ProducerAccount::afterTabsave('PublisherSuccession', 'publisherSuccessions');
         return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        if($this->Pro_Suc_Liquidation_Date == '0000-00-00')
+            $this->Pro_Suc_Liquidation_Date = '';
+        parent::afterFind();
     }
 }

@@ -35,6 +35,8 @@
  */
 class ProducerRelatedRights extends RActiveRecord {
 
+    public $not_available;
+    
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -65,7 +67,7 @@ class ProducerRelatedRights extends RActiveRecord {
             array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Internal_Position_Id, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Rel_File', 'length', 'max' => 255),
             array('Pro_Rel_Duration', 'length', 'max' => 100),
-            array('Pro_Rel_Exit_Date, Pro_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Pro_Rel_Exit_Date, Pro_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             array('Pro_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Pro_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
@@ -117,6 +119,7 @@ class ProducerRelatedRights extends RActiveRecord {
             'Pro_Rel_Territories_Id' => 'Territories',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'not_available' => 'Not Available',
         );
     }
 
@@ -182,4 +185,19 @@ class ProducerRelatedRights extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        $model = ProducerAccount::model()->findByPk($this->Pro_Acc_Id);
+        if(!empty($model)){
+//            $model->before_save_enable = false;
+//            $model->after_save_enable = false;
+            $model->Pro_Non_Member = $this->not_available;
+            $model->save(false);
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        $this->not_available = $this->proAcc->Pro_Non_Member;
+        return parent::afterFind();
+    }
 }

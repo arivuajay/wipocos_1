@@ -73,7 +73,7 @@ class PublisherGroup extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Name, Pub_Group_Internal_Code, Pub_Group_Date', 'required'),
+            array('Pub_Group_Name, Pub_Group_Internal_Code, Pub_Group_Date, Pub_Group_Country_Id', 'required'),
             array('Pub_Group_Id, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Name, Pub_Group_Place', 'length', 'max' => 100),
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
@@ -125,7 +125,7 @@ class PublisherGroup extends RActiveRecord {
             'Pub_Group_Is_Producer' => 'Producer',
             'Pub_Group_Internal_Code' => 'Internal Code',
             'Pub_Group_IPI_Name_Number' => 'IPI Name Number',
-            'Pub_Group_IPN_Base_Number' => 'IPN Base Number',
+            'Pub_Group_IPN_Base_Number' => 'IPI Base Number',
             'Pub_Group_IPD_Number' => 'IPD Number',
             'Pub_Group_Date' => ' Date of Foundation',
             'Pub_Group_Place' => 'Place',

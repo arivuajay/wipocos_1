@@ -36,6 +36,8 @@
  */
 class PublisherGroupManageRights extends RActiveRecord {
 
+    public $not_available;
+    
     public $is_pub_producer;
 
     public function init() {
@@ -68,7 +70,7 @@ class PublisherGroupManageRights extends RActiveRecord {
             array('Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Region_Id, Pub_Group_Mnge_Profession_Id, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Pub_Group_Mnge_Managed_Rights_Id, Pub_Group_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Mnge_File', 'length', 'max' => 255),
             array('Pub_Group_Mnge_Duration', 'length', 'max' => 100),
-            array('Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
+            array('Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             array('Pub_Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Pub_Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
@@ -121,6 +123,7 @@ class PublisherGroupManageRights extends RActiveRecord {
             'Pub_Group_Mnge_Territories_Id' => 'Territories',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
+            'not_available' => 'Not Available',
         );
         if (isset($this->is_pub_producer) && $this->is_pub_producer == 'PU') {
             $label = array(
@@ -142,6 +145,7 @@ class PublisherGroupManageRights extends RActiveRecord {
                 'Pub_Group_Mnge_Territories_Id' => 'Territories',
                 'Created_Date' => 'Created Date',
                 'Rowversion' => 'Rowversion',
+            'not_available' => 'Not Available',
             );
         } elseif (isset($this->is_pub_producer) && $this->is_pub_producer == 'PR') {
             $label = array(
@@ -163,6 +167,7 @@ class PublisherGroupManageRights extends RActiveRecord {
                 'Pub_Group_Mnge_Territories_Id' => 'Territories',
                 'Created_Date' => 'Created Date',
                 'Rowversion' => 'Rowversion',
+            'not_available' => 'Not Available',
             );
         }
         return $label;
@@ -230,4 +235,19 @@ class PublisherGroupManageRights extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        $model = PublisherGroup::model()->findByPk($this->Pub_Group_Id);
+        if(!empty($model)){
+//            $model->before_save_enable = false;
+//            $model->after_save_enable = false;
+            $model->Pub_Group_Non_Member = $this->not_available;
+            $model->save(false);
+        }
+        return parent::afterSave();
+    }
+    
+    protected function afterFind() {
+        $this->not_available = $this->pubGroup->Pub_Group_Non_Member;
+        return parent::afterFind();
+    }
 }

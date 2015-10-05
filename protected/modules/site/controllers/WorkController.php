@@ -428,8 +428,16 @@ class WorkController extends Controller {
                 $sub_criteria->addCondition("Work_Sub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
             $search_sub_model = WorkSubPublishing::model()->with('work')->expiry()->findAll($sub_criteria);
         }
+        
         $pub_model = WorkPublishing::model()->expiry()->findAll();
         $sub_model = WorkSubPublishing::model()->expiry()->findAll();
+            
+        if (isset($_GET['filter'])){
+            if($_GET['filter'] == 'pub')
+                $sub_model = array();
+            if($_GET['filter'] == 'sub')
+                $pub_model = array();
+        }
         $this->render('contractexpiry', compact('pub_model', 'sub_model', 'search_pub_model', 'search_sub_model', 'search'));
     }
 
