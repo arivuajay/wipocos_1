@@ -432,13 +432,17 @@ class WorkController extends Controller {
         $pub_model = WorkPublishing::model()->expiry()->findAll();
         $sub_model = WorkSubPublishing::model()->expiry()->findAll();
             
+        $title = 'Contract Expiry';
         if (isset($_GET['filter'])){
-            if($_GET['filter'] == 'pub')
+            if($_GET['filter'] == 'pub'){
                 $sub_model = array();
-            if($_GET['filter'] == 'sub')
+                $title = 'Contract Expiry (Publisher)';
+            }else if($_GET['filter'] == 'sub'){
                 $pub_model = array();
+                $title = 'Contract Expiry (Sub-Publisher)';
+            }
         }
-        $this->render('contractexpiry', compact('pub_model', 'sub_model', 'search_pub_model', 'search_sub_model', 'search'));
+        $this->render('contractexpiry', compact('pub_model', 'sub_model', 'search_pub_model', 'search_sub_model', 'search', 'title'));
     }
 
     /**

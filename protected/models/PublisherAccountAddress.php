@@ -59,7 +59,8 @@ class PublisherAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Acc_Id, Pub_Head_Address_1, Pub_Mailing_Address_1, Pub_Addr_Country_Id', 'required'),
+            array('Pub_Acc_Id', 'required'),
+            array('Pub_Head_Address_1, Pub_Mailing_Address_1, Pub_Addr_Country_Id', 'customRequired'),
             array('Pub_Acc_Id, Pub_Addr_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Head_Address_2, Pub_Head_Address_3, Pub_Mailing_Address_2, Pub_Mailing_Address_3, Pub_Publisher_Account_1, Pub_Publisher_Account_2, Pub_Publisher_Account_3, Pub_Producer_Account_1, Pub_Producer_Account_2, Pub_Producer_Account_3', 'length', 'max' => 255),
             array('Pub_Head_Fax, Pub_Head_Telephone, Pub_Mailing_Telephone, Pub_Mailing_Fax', 'length', 'max' => 25),
@@ -75,6 +76,12 @@ class PublisherAccountAddress extends RActiveRecord {
         );
     }
 
+    public function customRequired($attribute, $params) {
+        if ($this->Pub_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
+    }
     /**
      * @return array relational rules.
      */

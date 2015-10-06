@@ -108,7 +108,7 @@ $territories = Myclass::getMasterTerritory();
                                     <?php echo $form->error($model, 'Work_Type_Id'); ?>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group hide">
                                     <?php echo $form->labelEx($model, 'Work_Unknown', array('class' => '')); ?><br />
                                     <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Work_Unknown'); ?>

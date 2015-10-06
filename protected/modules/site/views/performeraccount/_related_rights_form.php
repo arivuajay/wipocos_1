@@ -22,8 +22,6 @@
     <div class="col-lg-5">
         <div class="box-body">
 
-
-
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Perf_Rel_Society_Id', array('class' => '')); ?>
                 <?php echo $form->dropDownList($model, 'Perf_Rel_Society_Id', $societies, array('class' => 'form-control','disabled'=>'disabled')); ?>

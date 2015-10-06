@@ -138,4 +138,15 @@ class WorkDocumentation extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        $doc_sts_name = $this->workDocStatus->Document_Sts_Name;
+        $unknown = 'N';
+        if(!empty($doc_sts_name) && strcasecmp($doc_sts_name, 'unknown') == 0){
+            $unknown = 'Y';
+        }
+        $model = $this->work;
+        $model->setAttribute('Work_Unknown', $unknown);
+        $model->save(false);
+        return parent::afterSave();
+    }
 }

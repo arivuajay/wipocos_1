@@ -21,37 +21,55 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     echo $form->hiddenField($model, 'Perf_Acc_Id', array('value' => $performer_model->Perf_Acc_Id));
     $groups = Group::model()->with('groupManageRights')->isStatusActive()->findAll('Group_Is_Performer = :performer', array(':performer' => '1'));
     $group_ids = $performer_model->groupMembers ? CHtml::listData($performer_model->groupMembers, 'Group_Member_Id', 'Group_Id') : array();
+    $user_groups = Group::model()->findAllByAttributes(array('Group_Id' => $group_ids));
     ?>
     <div class="box-body">
-        <div class="form-group">
-            <label for="base_table_search" class="col-sm-2 control-label required">Search</label>                    
-            <div class="col-sm-5">
-                <input type="text" id="base_table_search" class="form-control">
-            </div>
-        </div>
 
         <div class="form-group">
             <label for="GroupMembers_Group_Id" class="col-sm-2 control-label">Groups </label>
-            <div class="col-sm-5" style="max-height: 200px; overflow-y: scroll">
-                <table class="table table-bordered table-datatable">
+            <div class="col-sm-10">
+                <table class="table table-striped table-bordered" id="usergroup">
                     <thead>
                         <tr>
-                            <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
                             <th>Group Name</th>
                             <th>Code</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($groups as $key => $group) { ?>
-                            <tr>
-                                <?php $checked = (!empty($group_ids) && in_array($group->Group_Id, $group_ids)) ? 'checked' : ''; ?>
-                                <td><input type="checkbox" class="group_ids" name="group_ids[<?php echo $group->Group_Id ?>]" value="<?php echo $group->Group_Id ?>" <?php echo $checked ?> /></td>
-                                <td><?php echo $group->Group_Name ?></td>
-                                <td><?php echo $group->Group_Internal_Code ?></td>
-                            </tr>
-                        <?php } ?>
+                        <?php
+                        if (!empty($user_groups)) {
+                            foreach ($user_groups as $key => $group) {
+                                ?>
+                        <tr id="grp_ids_<?php echo $group->Group_Id ?>">
+                                    <input type="hidden" name="group_ids[<?php echo $group->Group_Id ?>]" />
+                                    <td><?php echo $group->Group_Name ?></td>
+                                    <td><?php echo $group->Group_Internal_Code ?></td>
+                                    <td><a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>
+                                </tr>
+                                <?php
+                            }
+                        }else{
+                            echo '<tr id="no_data"><td colspan="3">No data found</td></tr>';
+                        }
+                        ?>
                     </tbody>
                 </table>
+                <br />
+                <?php
+                $this->widget(
+                        'application.components.MyTbButton', array(
+                    'label' => 'Search & Add Groups',
+                    'context' => 'warning',
+                    'htmlOptions' => array(
+                        'id' => 'newgroupbutton',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#groupModal',
+                        'onclick' => '{$("#group-dismiss").trigger("click");}'
+                    ),
+                        )
+                );
+                ?>
             </div>
         </div>
 
@@ -155,24 +173,104 @@ if (!empty($uploaded_files)) {
     </div>
 <?php }
 ?>
+
+<!--Group Modal -->
 <?php
-$js = <<< EOD
-    $(document).ready(function() {
-        $('#group_id').on('ifChecked', function(event){
-            $('.group_ids').iCheck('check');
-        });
-        $('#group_id').on('ifUnchecked', function(event){
-            $('.group_ids').iCheck('uncheck');
-        });
-        
-        $('#member-submit').click(function(ev) {
-            $("#base_table_search").val('').trigger("keyup");
-            return true;
-        });
-    });
-EOD;
-Yii::app()->clientScript->registerScript('_bio_form', $js);
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'groupModal')
+);
 ?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>Search & Add Groups</h4>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="base_table_search" class="control-label required">Search</label>                    
+        <div>
+            <input type="text" id="base_table_search" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="GroupMembers_Group_Id" class="control-label">Groups </label>
+        <div style="max-height: 300px; overflow-y: scroll">
+            <table class="table table-bordered table-datatable">
+                <thead>
+                    <tr>
+                        <th style="width: 10px"><?php echo CHtml::checkBox('group_id', false, array('id' => 'group_id')) ?></th>
+                        <th>Group Name</th>
+                        <th>Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($groups as $key => $group) { ?>
+                    <tr id="tr_group_<?php echo $group->Group_Id?>" data-name="<?php echo $group->Group_Name ?>" data-intcode="<?php echo $group->Group_Internal_Code ?>">
+                            <td><input type="checkbox" value="<?php echo $group->Group_Id ?>" class="group_ids" name="grpchk"/></td>
+                            <td><?php echo $group->Group_Name ?></td>
+                            <td><?php echo $group->Group_Internal_Code ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <p class="errorMessage text-center col-sm-5" id="art-modelerror"></p>
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'context' => 'primary',
+        'label' => 'Add Group',
+        'url' => '#',
+        'htmlOptions' => array(
+            'onclick' => '{
+                    var _row = [];
+                    $("input[name=grpchk]:checked").map(function() {
+                        _row.push(this.value);
+                    });
+                    if(_row.length == 0){
+                        $("#art-modelerror").html("Select Alteast one Group");
+                    }else{
+                        $("#art-modelerror").html("");
+                        $("#no_data").remove();
+                        $(_row).each(function(index, val) {
+                            tr = $("#tr_group_"+val);
+                            if($("#grp_ids_"+val).length == 0){
+                                insert = \'<tr id="grp_ids_\'+val+\'">\';
+                                insert += \'<input type="hidden" name="group_ids[\'+val+\']" />\';
+                                insert += \'<td>\'+tr.data("name")+\'</td>\';
+                                insert += \'<td>\'+tr.data("intcode")+\'</td>\';
+                                insert += \'<td><a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>\';
+                                insert += \'</tr>\';
+                                
+                                $("#usergroup tbody").append(insert);
+                            }
+                        });
+                        $("#group_id").iCheck("uncheck");
+                        $(".group_ids").iCheck("uncheck");
+                        $("#group-dismiss").trigger("click");
+                    }
+                }',
+            'id' => 'set_group_btn'
+        ),
+            )
+    );
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'group-dismiss'),
+            )
+    );
+    ?>
+</div>
+<?php $this->endWidget(); ?>
+<!---End -->
+
+
 <?php
 $js = <<< EOD
     $(document).ready(function() {
@@ -186,6 +284,11 @@ $js = <<< EOD
         $('#member-submit').click(function(ev) {
             $("#base_table_search").val('').trigger("keyup");
             return true;
+        });
+        $('body').on('click','.row-delete', function(){
+            if(confirm('Are you sure you want to remove this record?'))
+                $(this).closest('tr').remove();
+            return false;
         });
     });
 EOD;

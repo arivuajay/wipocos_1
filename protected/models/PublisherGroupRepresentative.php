@@ -51,7 +51,8 @@ class PublisherGroupRepresentative extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pub_Group_Id, Pub_Group_Rep_Name, Pub_Group_Home_Address_1, Pub_Group_Mailing_Address_1', 'required'),
+            array('Pub_Group_Id', 'required'),
+            array('Pub_Group_Rep_Name, Pub_Group_Home_Address_1, Pub_Group_Mailing_Address_1', 'customRequired'),
             array('Pub_Group_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Rep_Name, Pub_Group_Home_Website, Pub_Group_Mailing_Website', 'length', 'max' => 100),
             array('Pub_Group_Rep_Address_1, Pub_Group_Rep_Address_2, Pub_Group_Rep_Address_3, Pub_Group_Rep_Address_4, Pub_Group_Home_Address_2, Pub_Group_Home_Address_3, Pub_Group_Home_Address_4, Pub_Group_Mailing_Address_2, Pub_Group_Mailing_Address_3, Pub_Group_Mailing_Address_4', 'length', 'max' => 255),
@@ -59,6 +60,7 @@ class PublisherGroupRepresentative extends RActiveRecord {
             array('Pub_Group_Home_Email, Pub_Group_Mailing_Email', 'length', 'max' => 50),
             array('Pub_Group_Unknown_Address, Active', 'length', 'max' => 1),
             array('Pub_Group_Home_Email, Pub_Group_Mailing_Email', 'email'),
+            array('Pub_Group_Home_Website, Pub_Group_Mailing_Website', 'url'),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             array(
                 'Pub_Group_Rep_Name',
@@ -71,6 +73,12 @@ class PublisherGroupRepresentative extends RActiveRecord {
         );
     }
 
+    public function customRequired($attribute, $params) {
+        if ($this->Pub_Group_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
+    }
     /**
      * @return array relational rules.
      */

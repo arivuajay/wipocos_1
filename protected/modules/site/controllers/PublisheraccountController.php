@@ -127,8 +127,8 @@ class PublisheraccountController extends Controller {
                 $tab = '1';
             }
         } else {
-            $model->Pub_Country_Id = 2;
-            $model->Pub_Language_Id = 1;
+//            $model->Pub_Country_Id = 2;
+//            $model->Pub_Language_Id = 1;
         }
 
         $this->render('create', array(
@@ -230,7 +230,7 @@ class PublisheraccountController extends Controller {
                 
                 PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_GUID = '{$model->Pub_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
-                    foreach ($_POST['group_ids'] as $gid):
+                    foreach ($_POST['group_ids'] as $gid => $val):
                         $group = new PublisherGroupMembers;
                         $group->Pub_Group_Id = $gid;
                         $group->Pub_Group_Member_GUID = $model->Pub_GUID;

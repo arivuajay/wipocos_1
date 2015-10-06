@@ -59,12 +59,15 @@ class GroupRepresentative extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Group_Id, Group_Rep_Name, Group_Home_Address_1, Group_Mailing_Address_1, Group_Country_Id', 'required'),
+            array('Group_Id', 'required'),
+            array('Group_Rep_Name, Group_Home_Address_1, Group_Mailing_Address_1, Group_Country_Id', 'customRequired'),
             array('Group_Id, Group_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Rep_Name, Group_Home_Website, Group_Mailing_Website', 'length', 'max' => 100),
             array('Group_Rep_Address_1, Group_Rep_Address_2, Group_Rep_Address_3, Group_Rep_Address_4, Group_Home_Address_2, Group_Home_Address_3, Group_Home_Address_4, Group_Mailing_Address_2, Group_Mailing_Address_3, Group_Mailing_Address_4', 'length', 'max' => 255),
             array('Group_Home_Fax, Group_Home_Telephone, Group_Mailing_Telephone, Group_Mailing_Fax', 'length', 'max' => 25),
             array('Group_Home_Email, Group_Mailing_Email', 'length', 'max' => 50),
+            array('Group_Home_Email, Group_Mailing_Email', 'email'),
+            array('Group_Home_Website, Group_Mailing_Website', 'url'),
             array('Group_Unknown_Address, Active', 'length', 'max' => 1),
             array('Created_Date, Rowversion, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
@@ -73,6 +76,12 @@ class GroupRepresentative extends RActiveRecord {
         );
     }
 
+    public function customRequired($attribute, $params) {
+        if ($this->Group_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
+    }
     /**
      * @return array relational rules.
      */

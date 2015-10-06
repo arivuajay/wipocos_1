@@ -48,7 +48,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                                 <?php
                             }
                         }else{
-                            echo '<tr><td colspan="3">No data found</td></tr>';
+                            echo '<tr id="no_data"><td colspan="3">No data found</td></tr>';
                         }
                         ?>
                     </tbody>
@@ -58,7 +58,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                 $this->widget(
                         'application.components.MyTbButton', array(
                     'label' => 'Search & Add Groups',
-                    'context' => 'success',
+                    'context' => 'warning',
                     'htmlOptions' => array(
                         'id' => 'newgroupbutton',
                         'data-toggle' => 'modal',
@@ -232,10 +232,9 @@ $this->beginWidget(
                         $("#art-modelerror").html("Select Alteast one Group");
                     }else{
                         $("#art-modelerror").html("");
+                        $("#no_data").remove();
                         $(_row).each(function(index, val) {
                             tr = $("#tr_group_"+val);
-                            tr.data("name");
-                            tr.data("intcode");
                             if($("#grp_ids_"+val).length == 0){
                                 insert = \'<tr id="grp_ids_\'+val+\'">\';
                                 insert += \'<input type="hidden" name="group_ids[\'+val+\']" />\';

@@ -131,9 +131,9 @@ class PerformeraccountController extends Controller {
                 $tab = '1';
             }
         } else {
-            $model->Perf_Birth_Country_Id = 2;
-            $model->Perf_Nationality_Id = 2;
-            $model->Perf_Language_Id = 1;
+//            $model->Perf_Birth_Country_Id = 2;
+//            $model->Perf_Nationality_Id = 2;
+//            $model->Perf_Language_Id = 1;
         }
 
         $this->render('create', array(
@@ -245,7 +245,7 @@ class PerformeraccountController extends Controller {
                 
                 GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Perf_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
-                    foreach ($_POST['group_ids'] as $gid):
+                    foreach ($_POST['group_ids'] as $gid => $val):
                         $group = new GroupMembers;
                         $group->Group_Id = $gid;
                         $group->Group_Member_GUID = $model->Perf_GUID;

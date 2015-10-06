@@ -50,7 +50,8 @@ class PerformerAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Acc_Id, Perf_Home_Address_1, Perf_Mailing_Address_1', 'required'),
+            array('Perf_Acc_Id', 'required'),
+            array('Perf_Home_Address_1, Perf_Mailing_Address_1', 'customRequired'),
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Home_Email, Perf_Mailing_Email', 'email'),
             array('Perf_Home_Website, Perf_Mailing_Website', 'url'),
@@ -66,6 +67,12 @@ class PerformerAccountAddress extends RActiveRecord {
         );
     }
 
+    public function customRequired($attribute, $params) {
+        if ($this->Perf_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
+    }
     /**
      * @return array relational rules.
      */

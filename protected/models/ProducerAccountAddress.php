@@ -60,7 +60,8 @@ class ProducerAccountAddress extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Pro_Acc_Id, Pro_Head_Address_1, Pro_Mailing_Address_1, Pro_Addr_Country_Id', 'required'),
+            array('Pro_Acc_Id', 'required'),
+            array('Pro_Head_Address_1, Pro_Mailing_Address_1, Pro_Addr_Country_Id', 'customRequired'),
             array('Pro_Acc_Id, Pro_Addr_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Head_Address_2, Pro_Head_Address_3, Pro_Mailing_Address_2, Pro_Mailing_Address_3, Pro_Publisher_Account_1, Pro_Publisher_Account_2, Pro_Publisher_Account_3, Pro_Producer_Account_1, Pro_Producer_Account_2, Pro_Producer_Account_3', 'length', 'max' => 255),
             array('Pro_Head_Fax, Pro_Head_Telephone, Pro_Mailing_Telephone, Pro_Mailing_Fax', 'length', 'max' => 25),
@@ -76,6 +77,12 @@ class ProducerAccountAddress extends RActiveRecord {
         );
     }
 
+    public function customRequired($attribute, $params) {
+        if ($this->Pro_Unknown_Address == 'N') {
+            if ($this->$attribute == '')
+                $this->addError($attribute, "{$this->getAttributeLabel($attribute)} cannot be blank.");
+        }
+    }
     /**
      * @return array relational rules.
      */

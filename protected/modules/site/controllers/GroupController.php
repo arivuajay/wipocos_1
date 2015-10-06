@@ -182,7 +182,7 @@ class GroupController extends Controller {
         } elseif (isset($_POST['GroupMembers'])) {
             GroupMembers::model()->deleteAll("Group_Id = '{$model->Group_Id}'");
             if (isset($_POST['user_ids']) && !empty($_POST['user_ids'])) {
-                foreach ($_POST['user_ids'] as $uid):
+                foreach ($_POST['user_ids'] as $uid => $val):
                     $group = new GroupMembers;
                     $group->Group_Id = $model->Group_Id;
                     $group->Group_Member_GUID = $uid;

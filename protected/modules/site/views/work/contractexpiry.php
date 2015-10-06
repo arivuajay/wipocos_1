@@ -2,7 +2,7 @@
 /* @var $this WorkPublishingController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Contract Expiry';
+$this->title = $title;
 $this->breadcrumbs = array(
     'Contract Expiry',
 );
