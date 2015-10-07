@@ -45,7 +45,7 @@ class AuthoraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'biofiledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'download', 'biofiledelete', 'memberdelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -480,4 +480,10 @@ class AuthoraccountController extends Controller {
         }
     }
 
+    public function actionMemberdelete() {
+        if(isset($_POST['group_id']) && isset($_POST['guid'])){
+            GroupMembers::model()->deleteAllByAttributes(array('Group_Member_GUID' => $_POST['guid'], 'Group_Id' => $_POST['group_id']));
+            Yii::app()->end();
+        }
+    }
 }

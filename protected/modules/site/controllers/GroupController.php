@@ -7,7 +7,6 @@ class GroupController extends Controller {
      */
     /**/
 
-
     /**
      * @return array action filters
      */
@@ -45,8 +44,8 @@ class GroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -160,7 +159,7 @@ class GroupController extends Controller {
 //        $member_model = empty($member_exists) ? new GroupMember : $member_exists;
 
         $biograph_upload_model = new GroupBiographUploads;
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $payment_model, $managed_model, $biograph_model, $address_model, $psedonym_model));
 
@@ -212,13 +211,13 @@ class GroupController extends Controller {
                         $biograph_new_upload_model = new GroupBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
                         $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
                         $biograph_new_upload_model->Group_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Group_Biogrph_Upl_File = $newName;
                         $biograph_new_upload_model->Group_Biogrph_Upl_Description = $_POST['GroupBiographUploads']['Group_Biogrph_Upl_Description'];
-                        if($biograph_new_upload_model->validate()){
+                        if ($biograph_new_upload_model->validate()) {
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
@@ -320,9 +319,10 @@ class GroupController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->groupBiogrph->group->Group_Name} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->groupBiogrph->Group_Id , 'tab' => '4'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->groupBiogrph->Group_Id, 'tab' => '4'));
         }
     }
+
     /**
      * Lists all models.
      */
@@ -392,4 +392,10 @@ class GroupController extends Controller {
         }
     }
 
+    public function actionMemberdelete() {
+        if (isset($_POST['group_id']) && isset($_POST['guid'])) {
+            GroupMembers::model()->deleteAllByAttributes(array('Group_Member_GUID' => $_POST['guid'], 'Group_Id' => $_POST['group_id']));
+            Yii::app()->end();
+        }
+    }
 }

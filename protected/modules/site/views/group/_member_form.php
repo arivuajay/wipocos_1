@@ -47,7 +47,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         <?php
                         foreach ($group_authors as $key => $user) {
                             ?>
-                            <tr id="grp_ids_<?php echo $user->Auth_GUID ?>">
+                            <tr id="grp_ids_<?php echo $user->Auth_GUID ?>" data-guid = "<?php echo $user->Auth_GUID ?>">
                         <input type="hidden" name="user_ids[<?php echo $user->Auth_GUID ?>]" />
                         <td><?php echo $user->Auth_First_Name ?></td>
                         <td><?php echo $user->Auth_Sur_Name ?></td>
@@ -60,7 +60,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     <?php
                     foreach ($group_performers as $key => $user) {
                         ?>
-                        <tr id="grp_ids_<?php echo $user->Perf_GUID ?>">
+                        <tr id="grp_ids_<?php echo $user->Perf_GUID ?>" data-guid = "<?php echo $user->Perf_GUID ?>">
                         <input type="hidden" name="user_ids[<?php echo $user->Perf_GUID ?>]" />
                         <td><?php echo $user->Perf_First_Name ?></td>
                         <td><?php echo $user->Perf_Sur_Name ?></td>
@@ -194,7 +194,7 @@ $this->beginWidget(
                         $(_row).each(function(index, val) {
                             tr = $("#tr_group_"+val);
                             if($("#grp_ids_"+val).length == 0){
-                                insert = \'<tr id="grp_ids_\'+val+\'">\';
+                                insert = \'<tr id="grp_ids_\'+val+\'" data-guid = "\'+val+\'">\';
                                 insert += \'<input type="hidden" name="user_ids[\'+val+\']" />\';
                                 insert += \'<td>\'+tr.data("firstname")+\'</td>\';
                                 insert += \'<td>\'+tr.data("surname")+\'</td>\';
@@ -226,6 +226,9 @@ $this->beginWidget(
 <!---End -->
 
 <?php
+$delete_url = Yii::app()->createAbsoluteUrl('/site/group/memberdelete');
+$groupid = $group_model->Group_Id;
+
 $js = <<< EOD
     $(document).ready(function() {
         $('#user_id').on('ifChecked', function(event){
@@ -241,8 +244,19 @@ $js = <<< EOD
         });
 
         $('body').on('click','.row-delete', function(){
-            if(confirm('Are you sure you want to remove this record?'))
-                $(this).closest('tr').remove();
+            if(confirm('Are you sure you want to delete this record?')){
+                tr = $(this).closest('tr');
+                 $.ajax({
+                    type: "POST",
+                    url: "$delete_url",
+                    data: {group_id: "$groupid", guid: tr.data('guid')},
+                    success: function(result){
+                        tr.remove();
+                        if($('#usergroup tbody tr').length == 0)
+                            $('#usergroup tbody').append('<tr id="no_data"><td colspan="4">No data found</td></tr>');
+                    }
+                });
+            }
             return false;
         });
     });

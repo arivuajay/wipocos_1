@@ -111,7 +111,7 @@ class UserIdentity extends CUserIdentity {
                 $insert_actions = array('create', 'insertright', 'insertlabel', 'newperformer', 'newproducer', 'newrecording');
                 $update_actions = array('update');
                 $view_actions = array('index', 'view', 'download', 'print', 'pdf', 'searchright', 'contractexpiry', 'invoice', 'backdated', 'searchcontract', 'getinvoice');
-                $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove', 'publicationdelete', 'fixationdelete', 'foliodelete');
+                $delete_actions = array('delete', 'filedelete', 'biofiledelete', 'subtitledelete', 'linkdelete', 'holderremove', 'publicationdelete', 'fixationdelete', 'foliodelete', 'memberdelete');
                 $other_actions = array();
 
                 if (in_array($action, $insert_actions)) {

@@ -7,7 +7,6 @@ class PerformeraccountController extends Controller {
      */
     /**/
 
-
     /**
      * @return array action filters
      */
@@ -45,8 +44,8 @@ class PerformeraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'biofiledelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'filedelete', 'biofiledelete', 'memberdelete'),
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -221,7 +220,7 @@ class PerformeraccountController extends Controller {
 
             if ($biograph_model->save()) {
                 Myclass::addAuditTrail("Updated Performer Biography {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
-                
+
                 $bio_id = $biograph_model->Perf_Biogrph_Id;
                 $images = CUploadedFile::getInstancesByName('Perf_Biogrph_Upl_File');
 
@@ -242,7 +241,7 @@ class PerformeraccountController extends Controller {
                         }
                     }
                 }
-                
+
                 GroupMembers::model()->deleteAll("Group_Member_GUID = '{$model->Perf_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid => $val):
@@ -484,6 +483,13 @@ class PerformeraccountController extends Controller {
                 $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'performer-account-address-form' || $_POST['ajax'] === 'performer-payment-method-form' || $_POST['ajax'] === 'performer-pseudonym-form' || $_POST['ajax'] === 'performer-death-inheritance-form' || $_POST['ajax'] === 'performer-related-rights-form' || $_POST['ajax'] === 'performer-managed-rights-form' || $_POST['ajax'] === 'performer-biography-form' || $_POST['ajax'] === 'performer-upload-form' || $_POST['ajax'] === 'author-managed-rights-form'
                 )) {
             echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+    public function actionMemberdelete() {
+        if (isset($_POST['group_id']) && isset($_POST['guid'])) {
+            GroupMembers::model()->deleteAllByAttributes(array('Group_Member_GUID' => $_POST['guid'], 'Group_Id' => $_POST['group_id']));
             Yii::app()->end();
         }
     }

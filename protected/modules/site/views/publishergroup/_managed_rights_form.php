@@ -14,7 +14,7 @@
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
     $occ = $group_model->Pub_Group_Is_Publisher == '1' ? MasterTypeRights::OCCUPATION_PUBLISHER : MasterTypeRights::OCCUPATION_PRODUCER;
-    $rank = $group_model->Pub_Group_Is_Publisher == '1' ? MasterTypeRights::PUBLISHER_RANK : MasterTypeRights::PRODUCER_DOMAIN;
+    $rank = $group_model->Pub_Group_Is_Publisher == '1' ? MasterTypeRights::PUBLISHER_RANK : MasterTypeRights::PRODUCER_RANK;
     $domain = $group_model->Pub_Group_Is_Publisher == '1' ? MasterTypeRights::PUBLISHER_DOMAIN : MasterTypeRights::PRODUCER_DOMAIN;
     $right_types = Myclass::getMasterTypeRight($occ, $rank, $domain);
     $territories = Myclass::getMasterTerritory();

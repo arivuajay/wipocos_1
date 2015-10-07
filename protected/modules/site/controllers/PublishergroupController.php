@@ -43,7 +43,7 @@ class PublishergroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
                 'expression'=> 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -212,7 +212,7 @@ class PublishergroupController extends Controller {
         } elseif (isset($_POST['GroupMembers'])) {
             PublisherGroupMembers::model()->deleteAll("Pub_Group_Id = '{$model->Pub_Group_Id}'");
             if (isset($_POST['user_ids']) && !empty($_POST['user_ids'])) {
-                foreach ($_POST['user_ids'] as $uid):
+                foreach ($_POST['user_ids'] as $uid => $val):
                     $group = new PublisherGroupMembers;
                     $group->Pub_Group_Id = $model->Pub_Group_Id;
                     $group->Pub_Group_Member_GUID = $uid;
@@ -475,4 +475,10 @@ class PublishergroupController extends Controller {
         }
     }
 
+    public function actionMemberdelete() {
+        if (isset($_POST['group_id']) && isset($_POST['guid'])) {
+            PublisherGroupMembers::model()->deleteAllByAttributes(array('Pub_Group_Member_GUID' => $_POST['guid'], 'Pub_Group_Id' => $_POST['group_id']));
+            Yii::app()->end();
+        }
+    }
 }

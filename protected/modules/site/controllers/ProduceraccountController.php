@@ -45,7 +45,7 @@ class ProduceraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
                 'expression'=> 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -422,4 +422,10 @@ class ProduceraccountController extends Controller {
         }
     }
 
+    public function actionMemberdelete() {
+        if (isset($_POST['group_id']) && isset($_POST['guid'])) {
+            PublisherGroupMembers::model()->deleteAllByAttributes(array('Pub_Group_Member_GUID' => $_POST['guid'], 'Pub_Group_Id' => $_POST['group_id']));
+            Yii::app()->end();
+        }
+    }
 }
