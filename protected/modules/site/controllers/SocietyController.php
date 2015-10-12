@@ -38,7 +38,7 @@ class SocietyController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'import'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'import', 'exportimporteddata', 'testexport'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -493,6 +493,19 @@ class SocietyController extends Controller {
                     'Work_Doc_Sign_Date',
                 ),
             ),
+            'recording' => array(
+                'basic_val' => array(
+                    'Rcd_Title',
+                    'Rcd_Type_Id',
+                    'Rcd_Duration',
+                    'Rcd_Date',
+                    'Rcd_Record_Country_id',
+                    'Rcd_Product_Country_Id',
+                    'Rcd_Doc_Status_Id',
+                    'Rcd_Record_Type_Id',
+                    'Rcd_Label_Id',
+                ),
+            ),
         );
     }
 
@@ -504,13 +517,11 @@ class SocietyController extends Controller {
             'Auth_Mnge_Entry_Date_2',
             'Auth_Mnge_Exit_Date_2',
             'Auth_Death_Inhrt_Decease_Date',
-            
             'Perf_Rel_Entry_Date',
             'Perf_Rel_Exit_Date',
             'Perf_Rel_Entry_Date_2',
             'Perf_Rel_Exit_Date_2',
             'Perf_Death_Inhrt_Decease_Date',
-            
             'Pub_Date',
             'Pub_Reg_Date',
             'Pub_Excerpt_Date',
@@ -519,7 +530,6 @@ class SocietyController extends Controller {
             'Pub_Mnge_Entry_Date_2',
             'Pub_Mnge_Exit_Date_2',
             'Pub_Suc_Liquidation_Date',
-            
             'Pro_Date',
             'Pro_Reg_Date',
             'Pro_Excerpt_Date',
@@ -528,9 +538,7 @@ class SocietyController extends Controller {
             'Pro_Rel_Entry_Date_2',
             'Pro_Rel_Exit_Date_2',
             'Pro_Suc_Liquidation_Date',
-            
             'Work_Doc_Sign_Date',
-            
             'Rcd_Date',
         );
     }
@@ -547,17 +555,13 @@ class SocietyController extends Controller {
             'Auth_Ipi',
             'Auth_Ipi_Base_Number',
             'Auth_Ipn_Number',
-            
             'Perf_Ipi',
             'Perf_Ipi_Base_Number',
             'Perf_Ipn_Number',
-            
             'Pub_Ipi',
             'Pub_Ipi_Base_Number',
-            
             'Pro_Ipi',
             'Pro_Ipi_Base_Number',
-            
             'Work_Creation',
             'Work_Opus_Number',
         );
@@ -580,7 +584,6 @@ class SocietyController extends Controller {
             "Auth_Marital_Status_Id",
             "Auth_Death_Inhrt_Firstname",
             "Auth_Death_Inhrt_Surname",
-            
             'Perf_Sur_Name',
             'Perf_First_Name',
             'Perf_Spouse_Name',
@@ -591,18 +594,19 @@ class SocietyController extends Controller {
             "Perf_Marital_Status_Id",
             "Perf_Death_Inhrt_Firstname",
             "Perf_Death_Inhrt_Surname",
-            
             "Pub_Language_Id",
             "Pub_Country_Id",
             "Pub_Addr_Country_Id",
             "Pub_Suc_Name",
-            
             "Pro_Language_Id",
             "Pro_Country_Id",
             "Pro_Addr_Country_Id",
             "Pro_Suc_Name",
-            
             "Work_Language_Id",
+            "Work_Subtitle_Language_Id",
+            'Rcd_Record_Country_id',
+            'Rcd_Product_Country_Id',
+            'Rcd_Subtitle_Language_Id',
         );
     }
 
@@ -611,14 +615,11 @@ class SocietyController extends Controller {
             'Auth_Home_Email',
             'Auth_Mailing_Email',
             'Auth_Death_Inhrt_Email',
-            
             'Perf_Home_Email',
             'Perf_Mailing_Email',
             'Perf_Death_Inhrt_Email',
-            
             'Pub_Head_Email',
             'Pub_Mailing_Email',
-            
             'Pro_Head_Email',
             'Pro_Mailing_Email',
         );
@@ -628,13 +629,10 @@ class SocietyController extends Controller {
         return array(
             'Auth_Home_Website',
             'Auth_Mailing_Website',
-            
             'Perf_Home_Website',
             'Perf_Mailing_Website',
-            
             'Pub_Head_Website',
             'Pub_Mailing_Website',
-            
             'Pro_Head_Website',
             'Pro_Mailing_Website',
         );
@@ -1293,6 +1291,7 @@ class SocietyController extends Controller {
             )
         );
     }
+
     /* Producer Importing */
 
     public function importProducerLoopOptions() {
@@ -1483,6 +1482,7 @@ class SocietyController extends Controller {
             )
         );
     }
+
     /* Work Importing */
 
     public function importWorkLoopOptions() {
@@ -1542,6 +1542,7 @@ class SocietyController extends Controller {
                 $this->importValidate('work', $key, $arrKey['key']);
             }
         }
+        unset($related_records['Work']);
         foreach ($this->_import_rows as $key => $import_row) {
             $int_code = '-';
             if ($this->_stage_rows[$key]['basic_val']['success'] == 1) {
@@ -1617,6 +1618,7 @@ class SocietyController extends Controller {
             ),
         );
     }
+
     /* Recording Importing */
 
     public function importRecordingLoopOptions() {
@@ -1651,50 +1653,177 @@ class SocietyController extends Controller {
 
     public function importRecording() {
         $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
+        $this->_stage_rows = $this->_import_rows;
+        foreach ($this->_stage_rows as $key => $stage) {
+            foreach ($stage as $col => $row) {
+                $this->_stage_rows[$key][$col]['import_status'] = 0;
+            }
+        }
+        $related_records = $this->_stage_tables = $this->importRecordingStageTables();
         foreach ($this->_import_rows as $key => $import_row) {
-            /* Add Master fields */
-            $import_row['basic_val']['Rcd_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Rcd_Type_Id']);
-            $import_row['basic_val']['Rcd_Record_Country_id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Record_Country_id']);
-            $import_row['basic_val']['Rcd_Product_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Product_Country_Id']);
-            $import_row['basic_val']['Rcd_Record_Type_Id'] = Myclass::addMaster('MasterRecordType', 'Rec_Type_Name', 'Master_Rec_Type_Id', $import_row['basic_val']['Rcd_Record_Type_Id']);
-            $import_row['basic_val']['Rcd_Label_Id'] = Myclass::addMaster('MasterLabel', 'Label_Name', 'Master_Label_Id', $import_row['basic_val']['Rcd_Label_Id']);
-            $import_row['basic_val']['Rcd_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
-            $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
-            $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
-
-            /* Save Records */
-            $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
-            if (empty($check_exists)) {
-                $model = new Recording;
-                $model->attributes = $import_row['basic_val'];
-                $model->setDuration();
-                if ($model->validate()) {
-                    $success_records++;
-                    $model->save(false);
-
-                    foreach ($import_row as $catKey => $values) {
-                        $import_row[$catKey]['Rcd_Id'] = $model->Rcd_Id;
-                    }
-
-                    $related_records = array(
-                        'RecordingSubtitle' => 'subtitle_val',
-                    );
-
-                    foreach ($related_records as $relModal => $arrKey) {
-                        $rel_model = new $relModal;
-                        $rel_model->attributes = $import_row[$arrKey];
-                        $rel_model->save(false);
+            foreach ($related_records as $relModal => $arrKey) {
+                $this->importValidate('recording', $key, $arrKey['key']);
+            }
+        }
+        unset($related_records['Recording']);
+        foreach ($this->_import_rows as $key => $import_row) {
+            $int_code = '-';
+            if ($this->_stage_rows[$key]['basic_val']['success'] == 1) {
+                /* Add Master fields */
+                $import_row['basic_val']['Rcd_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['basic_val']['Rcd_Type_Id']);
+                $import_row['basic_val']['Rcd_Record_Country_id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Record_Country_id']);
+                $import_row['basic_val']['Rcd_Product_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Rcd_Product_Country_Id']);
+                $import_row['basic_val']['Rcd_Record_Type_Id'] = Myclass::addMaster('MasterRecordType', 'Rec_Type_Name', 'Master_Rec_Type_Id', $import_row['basic_val']['Rcd_Record_Type_Id']);
+                $import_row['basic_val']['Rcd_Label_Id'] = Myclass::addMaster('MasterLabel', 'Label_Name', 'Master_Label_Id', $import_row['basic_val']['Rcd_Label_Id']);
+                $import_row['basic_val']['Rcd_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
+                $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
+                $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
+                /* Save Records */
+                $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
+                if (empty($check_exists)) {
+                    $model = new Recording;
+                    $model->attributes = $import_row['basic_val'];
+                    $model->setDuration();
+                    if ($model->validate()) {
+                        $success_records++;
+                        $model->save(false);
+                        $int_code = $model->Rcd_Internal_Code;
+                        $this->_stage_rows[$key]['basic_val']['import_status'] = 1;
+                        foreach ($import_row as $catKey => $values) {
+                            $import_row[$catKey]['Rcd_Id'] = $model->Rcd_Id;
+                        }
+                        foreach ($related_records as $relModal => $arrKey) {
+                            $rel_model = new $relModal;
+                            $rel_model->attributes = $import_row[$arrKey['key']];
+                            if ($this->_stage_rows[$key][$arrKey['key']]['success'] == 1) {
+                                $rel_model->save(false);
+                                $this->_stage_rows[$key][$arrKey['key']]['import_status'] = 1;
+                            }
+                        }
+                    } else {
+                        $unsuccess_records++;
                     }
                 } else {
-                    $unsuccess_records++;
+                    $int_code = $check_exists->Rcd_Internal_Code;
+                    foreach ($stage as $col => $row) {
+                        $this->_stage_rows[$key][$col]['import_status'] = 2;
+                    }
+                    $duplicate_records++;
                 }
             } else {
-                $duplicate_records++;
+                $unsuccess_records++;
             }
+            $this->_stage_rows[$key]['basic_val']['Rcd_Internal_Code'] = $int_code;
+            $this->_stage_rows[$key]['basic_val'] = Myclass::reArrangeArray($this->_stage_rows[$key]['basic_val']);
             $total_records++;
         }
         $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        $this->_imported_table = 'Recording Import';
         return true;
+    }
+
+    public function importRecordingStageTables() {
+        return array(
+            'Recording' => array(
+                'title' => 'Basic Data',
+                'key' => 'basic_val',
+            ),
+            'RecordingSubtitle' => array(
+                'title' => 'Subtitle',
+                'key' => 'subtitle_val',
+            ),
+        );
+    }
+
+    public function actionExportimporteddata() {
+        if (!empty($staging = Yii::app()->session['staging']) && !empty($staging_tables = Yii::app()->session['staging_tables']) && !empty($title = Yii::app()->session['title'])) {
+            $status = Myclass::importViewStatus();
+            $ignore_list = Myclass::importViewIgnoreList();
+
+            $filename = str_replace(' ', '', $title) . ".csv";
+            $fp = fopen('php://output', 'w');
+            header('Content-type: application/csv');
+            header('Content-Disposition: attachment; filename=' . $filename);
+
+            fputcsv($fp, array($title));
+            fputcsv($fp, array());
+            foreach ($staging_tables as $table => $cont) {
+                fputcsv($fp, array($cont['title']));
+                $header = array();
+                $header[] = "S.No";
+                foreach ($staging[1][$cont['key']] as $col => $value) {
+                    if (!in_array($col, $ignore_list))
+                        $header[] = $table::model()->getAttributeLabel($col);
+                }
+                $header[] = "Status";
+                fputcsv($fp, $header);
+                $i = 1;
+                foreach ($staging as $key => $rows) {
+                    $sts = $status[$rows[$cont['key']]['import_status']]['status'];
+                    $tr = array();
+                    $tr[] = $i++;
+                    foreach ($staging[$key][$cont['key']] as $col => $value) {
+                        if (!in_array($col, $ignore_list)) {
+                            $tr[] = $value;
+                        }
+                    }
+                    $tr[] = $sts;
+                    fputcsv($fp, $tr);
+                }
+                fputcsv($fp, array());
+            }
+        }
+        exit;
+    }
+
+    public function actionTestexport() {
+        /** Error reporting */
+        error_reporting(E_ALL);
+
+        /** Include path * */
+        ini_set('include_path', ini_get('include_path') . ';../Classes/');
+
+        /** PHPExcel */
+        Yii::import('application.vendors.PHPExcel', true);
+//        include 'PHPExcel.php';
+
+        /** PHPExcel_Writer_Excel2007 */
+        Yii::import('application.vendors.PHPExcel.Writer.Excel2007', true);
+//        include 'PHPExcel/Writer/Excel2007.php';
+
+// Create new PHPExcel object
+        echo date('H:i:s') . " Create new PHPExcel object\n";
+        $objPHPExcel = new PHPExcel();
+
+// Set properties
+        echo date('H:i:s') . " Set properties\n";
+        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw");
+        $objPHPExcel->getProperties()->setLastModifiedBy("Maarten Balliauw");
+        $objPHPExcel->getProperties()->setTitle("Office 2007 XLSX Test Document");
+        $objPHPExcel->getProperties()->setSubject("Office 2007 XLSX Test Document");
+        $objPHPExcel->getProperties()->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.");
+
+
+// Add some data
+        echo date('H:i:s') . " Add some data\n";
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Hello');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'world!');
+        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Hello');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D2', 'world!');
+
+// Rename sheet
+        echo date('H:i:s') . " Rename sheet\n";
+        $objPHPExcel->getActiveSheet()->setTitle('Simple');
+
+
+// Save Excel 2007 file
+        echo date('H:i:s') . " Write to Excel2007 format\n";
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save(UPLOAD_DIR.'/export.xlsx');
+
+// Echo done
+        echo date('H:i:s') . " Done writing file.\r\n";
     }
 
 }

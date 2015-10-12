@@ -56,7 +56,7 @@
 
 
                 <div class="form-group">
-                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Mailing_Address_1').' *', 'PublisherAccountAddress_Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Mailing_Address_1'), 'PublisherAccountAddress_Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
                     <?php // echo $form->labelEx($model, 'Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Pub_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>

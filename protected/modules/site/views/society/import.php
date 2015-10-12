@@ -13,32 +13,19 @@ $this->breadcrumbs = array(
 <div class="user-create">
     <?php
     if (isset($staging) && !empty($staging)) {
-        $status = array(
-            0 => array(
-                'bg_color' => '#F2DEDE',
-                'text_color' => '#B74442',
-                'status' => 'Not Inserted',
-            ),
-            1 => array(
-                'bg_color' => '#DFF0D8',
-                'text_color' => '#008D4C',
-                'status' => 'Inserted',
-            ),
-            2 => array(
-                'bg_color' => '#FCF8E3',
-                'text_color' => '#F39C12',
-                'status' => 'Duplicate Record',
-            ),
-        );
-        $ignore_list = array(
-            'import_status',
-            'success'
-        );
+        Yii::app()->session['staging_tables'] = $staging_tables;
+        Yii::app()->session['staging'] = $staging;
+        Yii::app()->session['title'] = $imported_table;
+        $status = Myclass::importViewStatus();
+        $ignore_list = Myclass::importViewIgnoreList();
         $errorTexts = Myclass::importErrorTexts();
         ?>
         <div class="row mb10">
             <div class="col-lg-12 col-xs-12">
-                <?php echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-success")) ?>
+                <?php
+                echo MyHtml::link('<i class="fa fa-file-excel-o"></i> Export CSV', array('/site/society/exportimporteddata'), array('class' => "pull-right btn btn-danger", 'style' => 'margin-left:10px;'));
+                echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-success"));
+                ?>
             </div>
         </div>
         <div class="alert alert-success fade in">
@@ -47,7 +34,7 @@ $this->breadcrumbs = array(
             </button>
             XLS Imported Successfully!!!   <br /><?php echo $import_status; ?>             
         </div>
-        <?php echo CHtml::link('asd', $staging); ?>
+        <?php // echo CHtml::link('asd', $staging); ?>
         <div class="row">
             <div class="col-lg-12 col-xs-12">
                 <div class="col-lg-12">

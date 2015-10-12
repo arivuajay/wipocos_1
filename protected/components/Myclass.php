@@ -673,7 +673,7 @@ class Myclass extends CController {
 
     public static function is_date($str) {
         $stamp = strtotime($str);
-        if (!is_numeric($stamp)/* || !preg_match("^\d{1,2}[.-/]\d{2}[.-/]\d{4}^", $str)*/)
+        if (!is_numeric($stamp)/* || !preg_match("^\d{1,2}[.-/]\d{2}[.-/]\d{4}^", $str) */)
             return FALSE;
         $month = date('m', $stamp);
         $day = date('d', $stamp);
@@ -681,25 +681,25 @@ class Myclass extends CController {
         return checkdate($month, $day, $year);
     }
 
-    public static function addMaster($model, $col_name, $col_id, $name) {
-        $id = $model::model()->findByAttributes(array($col_name => $name))->$col_id;
+    public static function addMaster($model, $col_name, $col_id, $value) {
+        $id = $model::model()->findByAttributes(array($col_name => $value))->$col_id;
         if (empty($id)) {
             $model = new $model;
-            $model->setAttribute($col_name, $name);
+            $model->setAttribute($col_name, $value);
             $model->save(false);
             $id = $model->$col_id;
         }
         return $id;
     }
 
-    public static function addMasterTypeRights($name, $occupation, $domain, $rank) {
-        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $name))->Master_Type_Rights_Id;
-        if (empty($id) && $name != '') {
+    public static function addMasterTypeRights($value, $occupation, $domain, $rank) {
+        $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $value))->Master_Type_Rights_Id;
+        if (empty($id) && $value != '') {
             $model = new MasterTypeRights;
             $attr = array(
-                'Type_Rights_Name' => $name,
-                'Type_Rights_Code' => strtoupper(substr($name, 0, 2)),
-                'Type_Rights_Standard' => strtoupper(substr($name, 0, 2)),
+                'Type_Rights_Name' => $value,
+                'Type_Rights_Code' => strtoupper(substr($value, 0, 2)),
+                'Type_Rights_Standard' => strtoupper(substr($value, 0, 2)),
                 'Type_Rights_Rank' => $rank,
                 'Type_Rights_Occupation' => $occupation,
                 'Type_Rights_Domain' => $domain,
@@ -710,7 +710,7 @@ class Myclass extends CController {
         }
         return $id;
     }
-    
+
     public static function importErrorTexts() {
         return array(
             'Invalid format',
@@ -721,15 +721,48 @@ class Myclass extends CController {
             'Invalid URL Format',
         );
     }
-    
+
+    public static function importViewStatus() {
+        return array(
+            0 => array(
+                'bg_color' => '#F2DEDE',
+                'text_color' => '#B74442',
+                'status' => 'Not Inserted',
+            ),
+            1 => array(
+                'bg_color' => '#DFF0D8',
+                'text_color' => '#008D4C',
+                'status' => 'Inserted',
+            ),
+            2 => array(
+                'bg_color' => '#FCF8E3',
+                'text_color' => '#F39C12',
+                'status' => 'Duplicate Record',
+            ),
+        );
+    }
+
+    public static function importViewIgnoreList() {
+        return array(
+            'import_status',
+            'success'
+        );
+    }
+
     public static function reArrangeArray($array) {
         $lastVal = end($array);
         $lastKey = key($array);
-        
+
         $arr1 = array($lastKey => $lastVal);
         array_pop($array);
-        
-        $arr1 = array_merge($arr1,$array);
+
+        $arr1 = array_merge($arr1, $array);
         return $arr1;
     }
+
+    public static function cleanData(&$str) {
+        $str = preg_replace("/\t/", "\\t", $str);
+        $str = preg_replace("/\r?\n/", "\\n", $str);
+    }
+
 }

@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <?php // echo $form->labelEx($model, 'Perf_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
-                    <?php echo CHtml::label($model->getAttributeLabel('Perf_Mailing_Address_1').' *', 'PerformerAccountAddress_Perf_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Perf_Mailing_Address_1'), 'PerformerAccountAddress_Perf_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Perf_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Perf_Mailing_Address_1'); ?>
