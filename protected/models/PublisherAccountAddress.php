@@ -60,7 +60,7 @@ class PublisherAccountAddress extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id', 'required'),
-            array('Pub_Head_Address_1, Pub_Mailing_Address_1, Pub_Addr_Country_Id', 'customRequired'),
+            array('Pub_Head_Address_1, Pub_Addr_Country_Id', 'customRequired'), //Pub_Mailing_Address_1,
             array('Pub_Acc_Id, Pub_Addr_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Head_Address_2, Pub_Head_Address_3, Pub_Mailing_Address_2, Pub_Mailing_Address_3, Pub_Publisher_Account_1, Pub_Publisher_Account_2, Pub_Publisher_Account_3, Pub_Producer_Account_1, Pub_Producer_Account_2, Pub_Producer_Account_3', 'length', 'max' => 255),
             array('Pub_Head_Fax, Pub_Head_Telephone, Pub_Mailing_Telephone, Pub_Mailing_Fax', 'length', 'max' => 25),

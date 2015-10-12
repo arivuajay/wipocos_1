@@ -23,7 +23,7 @@
             <div class="form-group">
                 <?php echo CHtml::label($model->getAttributeLabel('Group_Rep_Name').' *', 'GroupRepresentative_Group_Rep_Name', array('class' => '')); ?> 
                 <?php // echo $form->labelEx($model, 'Group_Rep_Name', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Group_Rep_Name', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 100)); ?>
+                <?php echo $form->textField($model, 'Group_Rep_Name', array('class' => 'form-control addr-input addr-input1', 'size' => 60, 'maxlength' => 100)); ?>
                 <?php echo $form->error($model, 'Group_Rep_Name'); ?>
             </div>
             <div class="form-group">
@@ -48,10 +48,10 @@
 
             <div class="clearfix"></div>
             <div class="form-group">
-                <?php echo CHtml::label($model->getAttributeLabel('Group_Home_Address_1').' *', 'GroupRepresentative_Group_Home_Address_1', array('class' => '')); ?> 
+                <?php //echo CHtml::label($model->getAttributeLabel('Group_Home_Address_1').' *', 'GroupRepresentative_Group_Home_Address_1', array('class' => '')); ?> 
                 <?php // echo $form->labelEx($model, 'Group_Home_Address_1', array('class' => '')); ?>
-                <?php echo $form->textArea($model, 'Group_Home_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
-                <?php echo $form->error($model, 'Group_Home_Address_1'); ?>
+                <?php //echo $form->textArea($model, 'Group_Home_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
+                <?php //echo $form->error($model, 'Group_Home_Address_1'); ?>
             </div>
 
             <div class="form-group hide">
@@ -73,10 +73,10 @@
 
 
             <div class="form-group">
-                <?php echo CHtml::label($model->getAttributeLabel('Group_Mailing_Address_1').' *', 'GroupRepresentative_Group_Mailing_Address_1', array('class' => '')); ?> 
+                <?php //echo CHtml::label($model->getAttributeLabel('Group_Mailing_Address_1').' *', 'GroupRepresentative_Group_Mailing_Address_1', array('class' => '')); ?> 
                 <?php // echo $form->labelEx($model, 'Group_Mailing_Address_1', array('class' => '')); ?>
-                <?php echo $form->textArea($model, 'Group_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
-                <?php echo $form->error($model, 'Group_Mailing_Address_1'); ?>
+                <?php //echo $form->textArea($model, 'Group_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
+                <?php //echo $form->error($model, 'Group_Mailing_Address_1'); ?>
             </div>
 
             <div class="form-group hide">
@@ -182,6 +182,7 @@ $js = <<< EOD
     $(document).ready(function(){
         $('#GroupRepresentative_Group_Unknown_Address').on('ifChecked', function(event){
             $('.addr-input').attr("readonly", true);
+            $('.addr-input1').attr("readonly", false);
         });
 
         $('#GroupRepresentative_Group_Unknown_Address').on('ifUnchecked', function(event){
@@ -190,6 +191,7 @@ $js = <<< EOD
     
         if(unknown == 'Y'){
             $('.addr-input').attr("readonly", true);
+            $('.addr-input1').attr("readonly", false);
         }
     
         if(unknown == 'N'){

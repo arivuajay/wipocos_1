@@ -53,7 +53,7 @@ class AuthorAccountAddress extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id', 'required'),
-            array('Auth_Home_Address_1, Auth_Mailing_Address_1', 'customRequired'),
+            array('Auth_Home_Address_1', 'customRequired'), //, Auth_Mailing_Address_1
             array('Auth_Acc_Id', 'numerical', 'integerOnly' => true),
             array('Auth_Home_Email, Auth_Mailing_Email', 'email'),
             array('Auth_Home_Website, Auth_Mailing_Website', 'url'),

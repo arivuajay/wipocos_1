@@ -24,7 +24,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Doc_Inclusion', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->checkBox($model, 'Work_Doc_Inclusion', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                <?php echo $form->checkBox($model, 'Work_Doc_Inclusion', array('class' => 'form-control addr-input', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
                 <?php echo $form->error($model, 'Work_Doc_Inclusion'); ?>
             </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Doc_Dispute', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->checkBox($model, 'Work_Doc_Dispute', array('class' => 'form-control', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
+                <?php echo $form->checkBox($model, 'Work_Doc_Dispute', array('class' => 'form-control addr-input', 'value'=>'Y', 'uncheckValue'=>'N')); ?>
                 <?php echo $form->error($model, 'Work_Doc_Dispute'); ?>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Doc_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->dropDownList($model, 'Work_Doc_Type_Id', $doc_type, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Work_Doc_Type_Id', $doc_type, array('class' => 'form-control addr-input')); ?>
                 <?php echo $form->error($model, 'Work_Doc_Type_Id'); ?>
             </div>
         </div>
@@ -48,7 +48,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Doc_Sign_Date', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textField($model, 'Work_Doc_Sign_Date', array('class' => 'form-control date')); ?>
+                <?php echo $form->textField($model, 'Work_Doc_Sign_Date', array('class' => 'form-control date addr-input')); ?>
                 <?php echo $form->error($model, 'Work_Doc_Sign_Date'); ?>
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Doc_File', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textField($model, 'Work_Doc_File', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                <?php echo $form->textField($model, 'Work_Doc_File', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Work_Doc_File'); ?>
             </div>
         </div>
@@ -71,3 +71,25 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+
+<script type="text/javascript">
+
+    $('#WorkDocumentation_Work_Doc_Status_Id').change(function () {
+
+		var ttt1 = $('#WorkDocumentation_Work_Doc_Status_Id :selected').val();
+		
+		if($('#WorkDocumentation_Work_Doc_Status_Id :selected').val() =='9')
+		{
+			$('.addr-input').attr("disabled", true);
+		}
+		else
+		{
+		$('.addr-input').attr("disabled", false);
+		}
+		
+
+    });
+    
+</script>
+

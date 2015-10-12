@@ -51,7 +51,7 @@ class PerformerAccountAddress extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id', 'required'),
-            array('Perf_Home_Address_1, Perf_Mailing_Address_1', 'customRequired'),
+            array('Perf_Home_Address_1', 'customRequired'), //, Perf_Mailing_Address_1
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Home_Email, Perf_Mailing_Email', 'email'),
             array('Perf_Home_Website, Perf_Mailing_Website', 'url'),

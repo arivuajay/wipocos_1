@@ -60,7 +60,7 @@ class GroupRepresentative extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id', 'required'),
-            array('Group_Rep_Name, Group_Home_Address_1, Group_Mailing_Address_1, Group_Country_Id', 'customRequired'),
+            array('Group_Rep_Name, Group_Country_Id', 'customRequired'), //Group_Home_Address_1, Group_Mailing_Address_1
             array('Group_Id, Group_Country_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Rep_Name, Group_Home_Website, Group_Mailing_Website', 'length', 'max' => 100),
             array('Group_Rep_Address_1, Group_Rep_Address_2, Group_Rep_Address_3, Group_Rep_Address_4, Group_Home_Address_2, Group_Home_Address_3, Group_Home_Address_4, Group_Mailing_Address_2, Group_Mailing_Address_3, Group_Mailing_Address_4', 'length', 'max' => 255),
