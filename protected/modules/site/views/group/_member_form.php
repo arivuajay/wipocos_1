@@ -244,7 +244,7 @@ $js = <<< EOD
         });
 
         $('body').on('click','.row-delete', function(){
-            if(confirm('Are you sure you want to delete this record?')){
+            if(confirm('Are you sure you want to Delete this record?')){
                 tr = $(this).closest('tr');
                  $.ajax({
                     type: "POST",

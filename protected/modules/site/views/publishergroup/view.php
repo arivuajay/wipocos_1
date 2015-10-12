@@ -373,6 +373,11 @@ $this->breadcrumbs = array(
                         'value' => isset($managed_model->pubGroupMngeTerritories->Territory_Name) ? $managed_model->pubGroupMngeTerritories->Territory_Name : 'Not Set'
                     ),
                     array(
+                        'name' => 'not_available',
+                        'type' => 'raw',
+                        'value' => $managed_model->not_available == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+                    array(
                         'name' => 'Created_By',
                         'value' => isset($managed_model->createdBy->name) ? $managed_model->createdBy->name : ''
                     ),

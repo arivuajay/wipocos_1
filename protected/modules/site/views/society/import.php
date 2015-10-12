@@ -36,60 +36,61 @@ $this->breadcrumbs = array(
         );
         $errorTexts = Myclass::importErrorTexts();
         ?>
+        <div class="row mb10">
+            <div class="col-lg-12 col-xs-12">
+                <?php echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-success")) ?>
+            </div>
+        </div>
         <div class="alert alert-success fade in">
             <button data-dismiss="alert" class="close close-sm" type="button">
                 <i class="fa fa-times"></i>
             </button>
             XLS Imported Successfully!!!   <br /><?php echo $import_status; ?>             
         </div>
-        <div class="row mb10">
-            <div class="col-lg-12 col-xs-12">
-                <?php echo MyHtml::link('<< Back to Import', array('/site/society/import', 'sid' => $model->Society_Id), array('class' => "pull-right btn btn-success")) ?>
-            </div>
-        </div>
+        <?php echo CHtml::link('asd', $staging); ?>
         <div class="row">
             <div class="col-lg-12 col-xs-12">
                 <div class="col-lg-12">
                     <div class="box-body" style="width: 100%;">
+                        <h3 class="box-title text-center text-capitalize"><?php echo $imported_table; ?></h3>
                         <?php foreach ($staging_tables as $table => $cont) { ?>
-                            <h3 class="box-title"><?php echo $cont['title']; ?></h3>
+                            <h4 class="box-title"><?php echo $cont['title']; ?></h4>
                             <table class="table table-bordered">
                                 <tbody>
                                     <?php
-                                    echo "<tr>";
-                                    echo "<td>S.No</td>";
+                                    $tr = "<tr>";
+                                    $tr .= "<td>S.No</td>";
                                     foreach ($staging[1][$cont['key']] as $col => $value) {
                                         if (!in_array($col, $ignore_list))
-                                            echo "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
+                                            $tr .= "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
                                     }
-                                    echo "<td>Status</td>";
-                                    echo "</tr>";
-                                    ?>
-                                    <?php
+                                    $tr .= "<td>Status</td>";
+                                    $tr .= "</tr>";
                                     $i = 1;
                                     foreach ($staging as $key => $rows) {
                                         $bg = $status[$rows[$cont['key']]['import_status']]['bg_color'];
                                         $txt_clr = $status[$rows[$cont['key']]['import_status']]['text_color'];
                                         $sts = $status[$rows[$cont['key']]['import_status']]['status'];
                                         
-                                        echo "<tr style='background-color:$bg'>";
-                                        echo "<td>{$i}</td>";
+                                        $tr .= "<tr style='background-color:$bg'>";
+                                        $tr .= "<td>{$i}</td>";
                                         foreach ($staging[$key][$cont['key']] as $col => $value) {
                                             if (!in_array($col, $ignore_list)) {
-                                                echo "<td>";
+                                                $tr .= "<td>";
                                                 if($value == "")
-                                                    echo "<span class='errorMessage'>empty</span>";
+                                                    $tr .= "<span class='errorMessage'>empty</span>";
                                                 else if(in_array($value, $errorTexts))
-                                                    echo "<span class='errorMessage'>$value</span>";
+                                                    $tr .= "<span class='errorMessage'>$value</span>";
                                                 else
-                                                    echo $value;
-                                                echo "</td>";
+                                                    $tr .= $value;
+                                                $tr .= "</td>";
                                             }
                                         }
-                                        echo "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
-                                        echo "</tr>";
+                                        $tr .= "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
+                                        $tr .= "</tr>";
                                         $i++;
                                     }
+                                    echo $tr;
                                     ?>
                                 </tbody>
                             </table>

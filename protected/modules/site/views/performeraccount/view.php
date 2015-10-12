@@ -146,12 +146,12 @@ if ($export == false) {
                     'Perf_Mailing_Fax',
                     'Perf_Mailing_Email',
                     'Perf_Mailing_Website',
-                    'Perf_Performer_Account_1',
-                    'Perf_Performer_Account_2',
-                    'Perf_Performer_Account_3',
-                    'Perf_Performer_Account_1',
-                    'Perf_Performer_Account_2',
-                    'Perf_Performer_Account_3',
+//                    'Perf_Performer_Account_1',
+//                    'Perf_Performer_Account_2',
+//                    'Perf_Performer_Account_3',
+//                    'Perf_Performer_Account_1',
+//                    'Perf_Performer_Account_2',
+//                    'Perf_Performer_Account_3',
                     array(
                         'name' => 'Perf_Unknown_Address',
                         'type' => 'raw',
@@ -397,6 +397,11 @@ if ($export == false) {
                     array(
                         'name' => 'Perf_Rel_Territories_Id',
                         'value' => isset($related_model->perfRelTerritories->Territory_Name) ? $related_model->perfRelTerritories->Territory_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'not_available',
+                        'type' => 'raw',
+                        'value' => $related_model->not_available == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
                     array(
                         'name' => 'Created_By',

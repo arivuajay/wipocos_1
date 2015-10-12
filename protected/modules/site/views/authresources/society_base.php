@@ -1,7 +1,7 @@
 <?php
 $this->title = 'Society Privilage';
 $this->breadcrumbs = array(
-    'Societies' => array('/site/societies/index'),
+    'Societies' => array('/site/society/index'),
     $this->title
 );
 ?>

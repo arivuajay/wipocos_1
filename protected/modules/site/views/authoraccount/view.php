@@ -143,12 +143,12 @@ if ($export == false) {
                     'Auth_Mailing_Fax',
                     'Auth_Mailing_Email',
                     'Auth_Mailing_Website',
-                    'Auth_Author_Account_1',
-                    'Auth_Author_Account_2',
-                    'Auth_Author_Account_3',
-                    'Auth_Performer_Account_1',
-                    'Auth_Performer_Account_2',
-                    'Auth_Performer_Account_3',
+//                    'Auth_Author_Account_1',
+//                    'Auth_Author_Account_2',
+//                    'Auth_Author_Account_3',
+//                    'Auth_Performer_Account_1',
+//                    'Auth_Performer_Account_2',
+//                    'Auth_Performer_Account_3',
                     array(
                         'name' => 'Auth_Unknown_Address',
                         'type' => 'raw',
@@ -394,6 +394,11 @@ if ($export == false) {
                     array(
                         'name' => 'Auth_Mnge_Territories_Id',
                         'value' => isset($managed_model->authMngeTerritories->Territory_Name) ? $managed_model->authMngeTerritories->Territory_Name : 'Not Set'
+                    ),
+                    array(
+                        'name' => 'not_available',
+                        'type' => 'raw',
+                        'value' => $managed_model->not_available == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
                     ),
                     array(
                         'name' => 'Created_By',

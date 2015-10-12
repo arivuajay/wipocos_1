@@ -356,6 +356,11 @@ if ($export == false) {
                         'value' => isset($related_model->proRelTerritories->Territory_Name) ? $related_model->proRelTerritories->Territory_Name : 'Not Set'
                     ),
                     array(
+                        'name' => 'not_available',
+                        'type' => 'raw',
+                        'value' => $related_model->not_available == 'Y' ? '<i class="fa fa-circle text-green"></i>' : '<i class="fa fa-circle text-red"></i>'
+                    ),
+                    array(
                         'name' => 'Created_By',
                         'value' => isset($related_model->createdBy->name) ? $related_model->createdBy->name : ''
                     ),

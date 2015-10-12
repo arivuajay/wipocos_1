@@ -78,7 +78,7 @@ class WorkDocumentation extends RActiveRecord {
             'Work_Doc_Status_Id' => 'Documentary status',
             'Work_Doc_Inclusion' => 'Inclusion in WID',
             'Work_Doc_Dispute' => 'Dispute',
-            'Work_Doc_Type_Id' => 'Type',
+            'Work_Doc_Type_Id' => 'Type of Document',
             'Work_Doc_Sign_Date' => 'Date of signature',
             'Work_Doc_File' => 'File',
             'Created_Date' => 'Created Date',

@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
+<!--                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Perf_Author_Account_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Perf_Author_Account_1', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
@@ -106,7 +106,7 @@
                         <?php echo $form->textField($model, 'Perf_Author_Account_3', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                         <?php echo $form->error($model, 'Perf_Author_Account_3'); ?>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'Perf_Unknown_Address', array('class' => 'col-sm-4 control-label')); ?>
@@ -183,7 +183,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+<!--                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Perf_Performer_Account_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textField($model, 'Perf_Performer_Account_1', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
@@ -205,7 +205,7 @@
                         <?php echo $form->textField($model, 'Perf_Performer_Account_3', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                         <?php echo $form->error($model, 'Perf_Performer_Account_3'); ?>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

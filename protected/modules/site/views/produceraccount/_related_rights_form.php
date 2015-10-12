@@ -120,7 +120,7 @@
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Pro_Rel_Type_Rght_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Pro_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control', 'disabled' => empty($right_types))); ?>
+                            <?php echo $form->dropDownList($model, 'Pro_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control', 'disabled' => empty($right_types) , 'prompt' => '')); ?>
                             <?php echo $form->error($model, 'Pro_Rel_Type_Rght_Id'); ?>
                         </div>
 

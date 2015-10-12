@@ -50,7 +50,7 @@ $this->breadcrumbs = array(
                 $uncompleted_profie_perf = ($performer_count - $performer_reg_count);
                 ?>
                 <h3><?php echo $uncompleted_profie_auth + $uncompleted_profie_perf ?></h3>
-                <p>Incompleted Records</p>
+                <p>Incomplete Records</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
