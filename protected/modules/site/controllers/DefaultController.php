@@ -30,7 +30,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron', 'testmail'),
+                'actions' => array('login', 'error', 'request-password-reset', 'screens', 'dailycron', 'testmail', 'logsheet'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -422,6 +422,10 @@ class DefaultController extends Controller {
 
         var_dump($mail->send('prakash.paramanandam@arkinfotec.com', $subject, $message));
         exit;
+    }
+    
+    public function actionLogsheet() {
+        $this->render('logsheet');
     }
 
 }
