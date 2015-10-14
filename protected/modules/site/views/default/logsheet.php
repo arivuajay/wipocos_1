@@ -219,7 +219,7 @@ $this->breadcrumbs = array(
                         </div>
 
                     </div>
-                    <div class="box-footer">
+                    <div class="box-footer" style="border-top: none">
                         <div class="form-group">
                             <div class="col-lg-12">
                                     <input type="submit" value="Add" name="yt2" id="right_insert" class="btn btn-warning">
