@@ -27,7 +27,7 @@ $this->breadcrumbs = array(
                                 <input type="text" id="WorkRightholder_Work_Right_Broad_Share" name="WorkRightholder[Work_Right_Broad_Share]" maxlength="10" class="form-control" value="2015" readonly="">                               
                                 <div style="display:none" id="WorkRightholder_Work_Right_Broad_Share_em_" class="errorMessage"></div>                        
                             </div>
-                            
+
                         </div>
                         <div class="col-lg-1"></div>
                         <div class="col-lg-5">
@@ -197,8 +197,8 @@ $this->breadcrumbs = array(
                                     <option value="3">4.00</option>
                                     <option value="4">5.00</option>
                                 </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
-                                
-                                <div class="form-group">
+
+                            <div class="form-group">
                                 <label for="Work_Work_Iswc" class="">Coefficient</label>                                    <input type="text" value="" id="Work_Work_Iswc" name="Work[Work_Iswc]" maxlength="100" size="60" class="form-control">                                    <div style="display:none" id="Work_Work_Iswc_em_" class="errorMessage"></div>                                </div>
 
 
@@ -207,34 +207,30 @@ $this->breadcrumbs = array(
                         <div class="col-lg-5">
                             <div class="form-group">
                                 <label for="DistributionClass_Class_Internal_Code" class="">Date</label>                    
-<input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
+                                <input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
                             <div class="form-group">
                                 <label for="DistributionClass_Class_Internal_Code" class="">Event or show</label>                    
-<input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
+                                <input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
                             <div class="form-group">
                                 <label for="DistributionClass_Class_Internal_Code" class="">Sequence Number</label>                    
-<input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
+                                <input type="text" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" maxlength="255" size="60" class="form-control">                            </div>
 
 
                         </div>
 
                     </div>
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                    <input type="submit" value="Add" name="yt2" id="right_insert" class="btn btn-warning">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="box-footer">
-            <div class="form-group">
-                <div class="col-lg-12">
-                    <div class="col-lg-1">
-                        <input type="hidden" value="0" id="main_pub">
-                        <input type="hidden" value="0" id="sub_pub">
-                        <input type="submit" value="Add" name="yt2" id="right_insert" class="btn btn-warning">                </div>
-                    <div class="col-lg-11 help-block">
-                        <div style="display:none" id="WorkRightholder_Work_Member_GUID_em_" class="errorMessage"></div>                </div>
-                </div>
-            </div>
-        </div>
+
+
     </form>
     <div class="row">
         <div class="col-lg-12">
