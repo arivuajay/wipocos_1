@@ -7,7 +7,7 @@ $this->breadcrumbs = array(
 
 <div class="box box-primary">
 
-    <form method="get" action="/wipocos_1/branches/dev/site/work/update/id/7/tab/7" id="work-rightholder-search-form" onsubmit="return false;" class="form-horizontal MultiFile-intercepted" role="form">    
+    <form method="get" id="work-rightholder-search-form" onsubmit="return false;" class="form-horizontal MultiFile-intercepted" role="form">    
 
         <div class="col-lg-12">
             <div class="box-body">
@@ -90,7 +90,7 @@ $this->breadcrumbs = array(
 
 
     </form>
-    <form method="get" action="/wipocos_1/branches/dev/site/work/update/id/7/tab/7" id="work-rightholder-search-form" onsubmit="return false;" class="form-horizontal MultiFile-intercepted" role="form">    <div class="col-lg-12">
+    <form method="get" id="work-rightholder-search-form" onsubmit="return false;" class="form-horizontal MultiFile-intercepted" role="form">    <div class="col-lg-12">
             <div class="box-body">
                 <div class="form-group foundation">
                     <div class="box-header">
@@ -113,7 +113,7 @@ $this->breadcrumbs = array(
             </div>
         </div>
     </form>    
-    <form method="post" action="/wipocos_1/branches/dev/site/work/update/id/7/tab/7" id="work-rightholder-form" class="form-horizontal MultiFile-intercepted" role="form"><input type="hidden" id="WorkRightholder_Work_Id" name="WorkRightholder[Work_Id]" value="7"><input type="hidden" id="WorkRightholder_Work_Member_GUID" name="WorkRightholder[Work_Member_GUID]" value="c08b44ca-14e4-11e5-b10a-74d435d335fe"><input type="hidden" id="WorkRightholder_Work_Member_Internal_Code" name="WorkRightholder[Work_Member_Internal_Code]" value="SOC-A-0001004">
+    <form method="post" id="work-rightholder-form" class="form-horizontal MultiFile-intercepted" role="form"><input type="hidden" id="WorkRightholder_Work_Id" name="WorkRightholder[Work_Id]" value="7"><input type="hidden" id="WorkRightholder_Work_Member_GUID" name="WorkRightholder[Work_Member_GUID]" value="c08b44ca-14e4-11e5-b10a-74d435d335fe"><input type="hidden" id="WorkRightholder_Work_Member_Internal_Code" name="WorkRightholder[Work_Member_Internal_Code]" value="SOC-A-0001004">
 
         <div id="search_right_result"><!--<div class="col-lg-12 row">
         <div class="col-lg-12 col-md-12">
@@ -241,7 +241,7 @@ $this->breadcrumbs = array(
                 <div class="text-left total_share hide show_pub_hint">Main Publisher : <span id="is_main_added"></span></div>
                 <br>
                 <div class="form-group foundation">
-                    <form method="post" action="/wipocos_1/branches/dev/site/work/insertright" id="right_form" class="form-horizontal MultiFile-intercepted" role="form">                    <div class="box-header">
+                    <form method="post" id="right_form" class="form-horizontal MultiFile-intercepted" role="form">                    <div class="box-header">
                             <h3 class="box-title">Logsheet List</h3>
                         </div>
                         <div class="box-body">
