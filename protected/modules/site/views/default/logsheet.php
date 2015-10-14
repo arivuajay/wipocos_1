@@ -30,8 +30,8 @@ $this->breadcrumbs = array(
                             
                             <div class="form-group">
                                 <label for="Work_Work_Factor_Id" class=" required">Users <span class="required">*</span></label>                                    <select id="Work_Work_Factor_Id" name="Work[Work_Factor_Id]" class="form-control">
-                                    <option value="5">FULBARI F.M. 100.6 MHZ (#9104)</option>
-                                    <option selected="selected" value="1">Television</option>
+                                    <option selected="selected" value="5">FULBARI F.M. 100.6 MHZ (#9104)</option>
+                                    <option value="1">Television</option>
                                 </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
 
 
