@@ -28,19 +28,6 @@ $this->breadcrumbs = array(
                                 <div style="display:none" id="WorkRightholder_Work_Right_Broad_Share_em_" class="errorMessage"></div>                        
                             </div>
                             
-                            <div class="form-group">
-                                <label for="Work_Work_Factor_Id" class=" required">Users <span class="required">*</span></label>                                    <select id="Work_Work_Factor_Id" name="Work[Work_Factor_Id]" class="form-control">
-                                    <option selected="selected" value="5">FULBARI F.M. 100.6 MHZ (#9104)</option>
-                                    <option value="1">ABCD F.M. 100.6 MHZ (#9104)</option>
-                                </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
-
-                            <div class="form-group">
-                                <label for="Work_Work_Factor_Id" class=" required">Place <span class="required">*</span></label>                                    <select id="Work_Work_Factor_Id" name="Work[Work_Factor_Id]" class="form-control">
-                                    <option selected="selected" value="5">RADIOS</option>
-                                    <option value="1">TELEVISIONS</option>
-                                </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
-
-
                         </div>
                         <div class="col-lg-1"></div>
                         <div class="col-lg-5">
@@ -64,6 +51,33 @@ $this->breadcrumbs = array(
                                 <div class="col-sm-5">
                                     <input type="text" value="2015-05-01" id="DistributionClass_Class_Internal_Code" name="DistributionClass[Class_Internal_Code]" readonly="readonly" maxlength="255" size="60" class="form-control">                        <div style="display:none" id="DistributionClass_Class_Internal_Code_em_" class="errorMessage"></div>                    </div>
                             </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="box-body">
+                <div class="form-group foundation">
+                    <div class="box-body">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="Work_Work_Factor_Id" class=" required">Users <span class="required">*</span></label>                                    <select id="Work_Work_Factor_Id" name="Work[Work_Factor_Id]" class="form-control">
+                                    <option selected="selected" value="5">FULBARI F.M. 100.6 MHZ (#9104)</option>
+                                    <option value="1">ABCD F.M. 100.6 MHZ (#9104)</option>
+                                </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
+
+                        </div>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="Work_Work_Factor_Id" class=" required">Place <span class="required">*</span></label>                                    <select id="Work_Work_Factor_Id" name="Work[Work_Factor_Id]" class="form-control">
+                                    <option selected="selected" value="5">RADIOS</option>
+                                    <option value="1">TELEVISIONS</option>
+                                </select>                                    <div style="display:none" id="Work_Work_Factor_Id_em_" class="errorMessage"></div>                                </div>
 
 
                         </div>
