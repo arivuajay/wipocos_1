@@ -30,6 +30,15 @@ class DistributionLogsheetList extends RActiveRecord {
     /**
      * @return string the associated database table name
      */
+    public function init() {
+        parent::init();
+        if ($this->isNewRecord) {
+            $this->duration_hours = 0;
+            $this->duration_minutes = 0;
+            $this->duration_seconds = 0;
+        }
+    }
+    
     public function tableName() {
         return '{{distribution_logsheet_list}}';
     }
@@ -41,14 +50,18 @@ class DistributionLogsheetList extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Log_Id, Log_List_Record_GUID, Log_List_Date', 'required'),
+            array('Log_List_Date', 'required'),
+            array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
+            array('Log_Id, Log_List_Date', 'required', 'on' => 'form2'),
             array('Log_Id, Log_List_Factor_Id, Log_List_Seq_Number, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Log_List_Record_GUID', 'length', 'max' => 50),
             array('Log_List_Coefficient', 'length', 'max' => 10),
             array('Log_List_Event', 'length', 'max' => 100),
             array('Log_List_Duration, Created_Date, Rowversion', 'safe'),
+            array('duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
+            array('Log_List_Coefficient', 'numerical', 'min' => 0, 'max' => 100),
             array('duration_hours, duration_minutes, duration_seconds', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -65,6 +78,7 @@ class DistributionLogsheetList extends RActiveRecord {
         return array(
             'logListFactor' => array(self::BELONGS_TO, 'MasterFactor', 'Log_List_Factor_Id'),
             'log' => array(self::BELONGS_TO, 'DistributionLogsheet', 'Log_Id'),
+            'listRecording' => array(self::BELONGS_TO, 'Recording', 'Log_List_Record_GUID', 'foreignKey' => array('Log_List_Record_GUID' => 'Rcd_GUID'), 'order'=>'Rcd_Title ASC'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -78,12 +92,12 @@ class DistributionLogsheetList extends RActiveRecord {
             'Log_List_Id' => 'Log List',
             'Log_Id' => 'Log',
             'Log_List_Record_GUID' => 'Log List Record Guid',
-            'Log_List_Duration' => 'Log List Duration',
-            'Log_List_Factor_Id' => 'Log List Factor',
-            'Log_List_Coefficient' => 'Log List Coefficient',
-            'Log_List_Date' => 'Log List Date',
-            'Log_List_Event' => 'Log List Event',
-            'Log_List_Seq_Number' => 'Log List Seq Number',
+            'Log_List_Duration' => 'Duration',
+            'Log_List_Factor_Id' => 'Factor',
+            'Log_List_Coefficient' => 'Coefficient',
+            'Log_List_Date' => 'Date',
+            'Log_List_Event' => 'Event or Show',
+            'Log_List_Seq_Number' => 'Sequence Number',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
@@ -156,6 +170,11 @@ class DistributionLogsheetList extends RActiveRecord {
         $this->duration_hours = $time[0];
         $this->duration_minutes = $time[1];
         $this->duration_seconds = $time[2];
+    }
+    
+    protected function beforeSave() {
+        $this->Log_List_Duration = $this->duration_hours . ':' . $this->duration_minutes . ':' . $this->duration_seconds;
+        return parent::beforeSave();
     }
     
     protected function afterFind() {

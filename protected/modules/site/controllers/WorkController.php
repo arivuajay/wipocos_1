@@ -531,7 +531,7 @@ class WorkController extends Controller {
             
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
-            $updated_by = "0000-00-00 00:00:00";
+            $updated_date = "0000-00-00 00:00:00";
             $holders = WorkRightholder::model()->findAllByAttributes(array('Work_Id' => $work_id));
             if(empty($holders)){
                 $created_by = Yii::app()->user->id;

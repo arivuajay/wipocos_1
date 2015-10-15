@@ -67,8 +67,8 @@ class DistributionLogsheet extends RActiveRecord {
         return array(
             'Log_Id' => 'Log',
             'Period_Id' => 'Period',
-            'Log_User_Cust_Id' => 'Log User Cust',
-            'Log_Place_Id' => 'Log Place',
+            'Log_User_Cust_Id' => 'User',
+            'Log_Place_Id' => 'Type(Place)',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',

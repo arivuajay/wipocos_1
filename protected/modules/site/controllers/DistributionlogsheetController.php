@@ -35,7 +35,7 @@ class DistributionlogsheetController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -194,7 +194,7 @@ class DistributionlogsheetController extends Controller {
      * @param DistributionLogsheet $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'distribution-logsheet-form') {
+        if (isset($_POST['ajax']) /*&& $_POST['ajax'] === 'distribution-logsheet-form'*/) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
@@ -209,6 +209,90 @@ class DistributionlogsheetController extends Controller {
         }else{
             $period_model = $model->period;
         }
+        
+        // Uncomment the following line if AJAX validation is needed
+        $this->performAjaxValidation(array($model, $list_model));
+        if (isset($_POST['DistributionLogsheet'])) {
+            echo '<pre>';
+            print_r($_POST['DistributionLogsheet']);
+            print_r($_POST['DistributionLogsheetList']);
+            exit;
+            $model->attributes = $_POST['DistributionLogsheet'];
+            if ($model->save()) {
+                Myclass::addAuditTrail("Updated DistributionLogsheet successfully.", "user");
+                Yii::app()->user->setFlash('success', 'DistributionLogsheet Updated Successfully!!!');
+                $this->redirect(array('/site/distributionlogsheet/index'));
+            }
+        }
+        
         $this->render('logsheet', compact('model', 'period_model', 'list_model'));
+    }
+    
+    public function actionSearchrecords() {
+        $criteria = new CDbCriteria();
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Rcd_Title', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Isrc_Code', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Iswc_Number', $search_txt, true, 'OR');
+            $criteria->compare('Rcd_Reference', $search_txt, true, 'OR');
+        }
+
+        if ($_REQUEST['is_record'] == '1') {
+            $recordings = Recording::model()->findAll($criteria);
+        }
+        $this->renderPartial('_search_recordings', compact('recordings'));
+    }
+    
+    public function actionInsertlog() {
+        if (isset($_POST['DistributionLogsheetList']) && !empty($_POST['DistributionLogsheetList']) && isset($_POST['DistributionLogsheet']) && !empty($_POST['DistributionLogsheet'])) {
+            $period_id = $_POST['DistributionLogsheet']['Period_Id'];
+
+            $created_by = $updated_by = '';
+            $created_date = date('Y-m-d H:i:s');
+            $updated_date = "0000-00-00 00:00:00";
+            
+            $log = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $period_id));
+            if(empty($log)){
+                $log_model = new DistributionLogsheet;
+                $created_by = Yii::app()->user->id;
+            }else{
+                $log_model = $log;
+                $created_by = $log->Created_By;
+                $created_date = $log->Created_Date;
+                $updated_by = Yii::app()->user->id;
+                $updated_date = date('Y-m-d H:i:s');
+            }
+
+            $time_set = array(
+                'Created_By' => $created_by,
+                'Updated_By' => $updated_by,
+                'Created_Date' => $created_date,
+                'Rowversion' => $updated_date,
+            );
+
+            $_POST['DistributionLogsheet'] = array_merge($_POST['DistributionLogsheet'], $time_set);
+            $log_model->attributes = $_POST['DistributionLogsheet'];
+            if($log_model->save()){
+                $log_id = $log_model->Log_Id;
+                DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id));
+                $valid = true;
+                foreach ($_POST['DistributionLogsheetList'] as $values) {
+                    $values = array_merge($values, $time_set);
+                    $model = new DistributionLogsheetList;
+                    $model->attributes = $values;
+                    $model->setAttribute('Log_Id', $log_id);
+                    $valid = $valid && $model->save(false);
+                    if ($valid)
+                        Myclass::addAuditTrail("Logsheet list saved for {$model->log->period->Period_Internal_Code} successfully.", "fa fa-bar-chart");
+                }
+                if ($valid)
+                    Yii::app()->user->setFlash('success', 'Logsheet Saved Successfully!!!');
+            }else{
+                Yii::app()->user->setFlash('danger', 'Failed to save!!!');
+            }
+        }
+        $this->redirect(array('/site/distributionlogsheet/logsheet', 'id' => $period_id));
     }
 }

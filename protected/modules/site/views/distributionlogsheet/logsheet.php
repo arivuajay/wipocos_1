@@ -3,6 +3,13 @@
 /* @var $model DistributionLogsheet */
 /* @var $form CActiveForm */
 
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
+$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
 $this->title = 'Logsheets';
 $this->breadcrumbs = array(
     'Utlization Periods ' => array('/site/distributionutlizationperiod/index'),
@@ -17,10 +24,11 @@ $this->breadcrumbs = array(
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
+            'afterValidate' => 'js:InsertLog'
         ),
         'enableAjaxValidation' => true,
     ));
-    $users = CHtml::listData(CustomerUser::model()->findAll(), 'User_Cust_Internal_Code', 'User_Cust_Name');
+    $users = CHtml::listData(CustomerUser::model()->findAll(), 'User_Cust_Id', 'User_Cust_Name');
     $places = Myclass::getMasterPlace();
     $factors = Myclass::getMasterFactor();
     ?>  
@@ -33,7 +41,7 @@ $this->breadcrumbs = array(
                 <div class="box-body">
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <?php echo CHtml::textField('class_name', $period_model->class->Class_Name, array('class' => 'form-control', 'readonly' => true)) ?>
+                            <?php echo CHtml::textField('class_title', $period_model->class->Class_Name, array('class' => 'form-control', 'readonly' => true)) ?>
                         </div>
 
                         <div class="form-group">
@@ -121,13 +129,17 @@ $this->breadcrumbs = array(
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'distribution-logsheetlist--form',
+        'id' => 'distribution-logsheetlist-form',
         'htmlOptions' => array('role' => 'form', 'class' => 'form-horizontal'),
         'clientOptions' => array(
             'validateOnSubmit' => true,
+            'afterValidate' => 'js:InsertLoglist'
         ),
         'enableAjaxValidation' => true,
     ));
+
+    echo $form->hiddenField($list_model, 'Log_List_Record_GUID');
+    echo $form->hiddenField($list_model, 'Log_Id');
     ?>  
     <div id="search_right_result">
     </div>
@@ -146,6 +158,7 @@ $this->breadcrumbs = array(
                             <div class="row">
                                 <div class="col-lg-4">
                                     <?php echo $form->textField($list_model, 'duration_hours', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($list_model, 'duration_hours'); ?>
                                 </div>
                                 <div class="col-lg-4">
                                     <?php echo $form->textField($list_model, 'duration_minutes', array('class' => 'form-control')); ?>
@@ -194,110 +207,105 @@ $this->breadcrumbs = array(
                 <div class="box-footer" style="border-top: none">
                     <div class="form-group">
                         <div class="col-lg-12">
-                            <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-warning', 'id' => 'right_insert')); ?>
-                            <?php echo $form->error($model, 'Sound_Car_Right_Member_GUID'); ?>
+                            <div class="col-lg-1">
+                                <?php echo CHtml::submitButton('Add', array('class' => 'btn btn-warning', 'id' => 'right_insert')); ?>
+                            </div>
+                            <div class="col-lg-11 help-block">
+                                <?php echo $form->error($list_model, 'Log_List_Record_GUID'); ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
-                <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100 %</span> </div>
-                <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100 %</span></div>
-                <div class="text-left total_share hide show_pub_hint">Publisher Share : <span id="pub_total">100 %</span></div>
-                <div class="text-left total_share hide show_pub_hint">Main Publisher : <span id="is_main_added"></span></div>
-                <br>
                 <div class="form-group foundation">
-                    <form method="post" id="right_form" class="form-horizontal MultiFile-intercepted" role="form">                    <div class="box-header">
-                            <h3 class="box-title">Logsheet List</h3>
+                    <?php echo CHtml::form(array('/site/distributionlogsheet/insertlog'), 'post', array('role' => 'form', 'class' => 'form-horizontal', 'id' => 'right_form')) ?>
+                    <div class="box-header">
+                        <h3 class="box-title">Logsheet List</h3>
+                    </div>
+                    <?php
+                    echo CHtml::hiddenField("DistributionLogsheet[Period_Id]", $period_model->Period_Id, array('id' => 'h_period_id'));
+                    echo CHtml::hiddenField("DistributionLogsheet[Log_User_Cust_Id]", $model->Log_User_Cust_Id, array('id' => 'h_cust_id'));
+                    echo CHtml::hiddenField("DistributionLogsheet[Log_Place_Id]", $model->Log_Place_Id, array('id' => 'h_place_id'));
+                    ?>
+                    <div class="box-body">
+                        <table id="linked-holders" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Original Title</th>
+                                    <th>Internal Code</th>
+                                    <th>Duration</th>
+                                    <th>Factor</th>
+                                    <th>Coefficient</th>
+                                    <th>Date</th>
+                                    <th>Event or show</th>
+                                    <th>Sequence Number</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($model->distributionLogsheetLists) {
+                                    foreach ($model->distributionLogsheetLists as $key => $list) {
+                                        ?>
+                                        <tr data-uid="<?php echo $list->Log_List_Record_GUID ?>" data-title="<?php echo $list->listRecording->Rcd_Title ?>" data-intcode="<?php echo $list->listRecording->Rcd_Internal_Code ?>">
+                                            <td><?php echo $list->listRecording->Rcd_Title; ?></td>
+                                            <td><?php echo $list->listRecording->Rcd_Internal_Code; ?></td>
+                                            <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><?php echo $list->Log_List_Duration; ?></td>
+                                            <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
+                                            <td><?php echo $list->Log_List_Coefficient; ?></td>
+                                            <td><?php echo $list->Log_List_Date; ?></td>
+                                            <td><?php echo $list->Log_List_Event; ?></td>
+                                            <td><?php echo $list->Log_List_Seq_Number; ?></td>
+                                            <td>
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit')); ?>&nbsp;&nbsp;
+                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
+                                            </td>
+                                            <td class="hide">
+                                                <?php
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Id]", $list->Log_List_Id);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_Id]", $list->Log_Id);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Record_GUID]", $list->Log_List_Record_GUID);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Duration]", $list->Log_List_Duration);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Factor_Id]", $list->Log_List_Factor_Id);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Coefficient]", $list->Log_List_Coefficient);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Date]", $list->Log_List_Date);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Event]", $list->Log_List_Event);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Seq_Number]", $list->Log_List_Seq_Number);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_hours]", $list->duration_hours);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_minutes]", $list->duration_minutes);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_seconds]", $list->duration_seconds);
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                } else {
+                                    echo "<tr id='norecord_tr'><td colspan='9'>No data created</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <input type="button" value="Save" name="yt3" disabled="disabled" id="right_ajax_submit" class="btn btn-primary">                            </div>
                         </div>
-                        <div class="box-body">
-                            <table id="linked-holders" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Original Title</th>
-                                        <th>Internal Code</th>
-                                        <th>Duration</th>
-                                        <th>Factor</th>
-                                        <th>Coefficient</th>
-                                        <!--<th>Broadcasting Organization</th>-->
-                                        <th>Date</th>
-                                        <th>Event or show</th>
-                                        <!--<th>Mechanical Organization</th>-->
-                                        <th>Sequence Number</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr data-intcode="SOC-A-0001015" data-name="Vinodh Arumugam" data-uid="c08b4ad2-14e4-11e5-b10a-74d435d335fe" data-urole="AU">
-                                        <td>As long as </td>
-                                        <td>SOC-T-0001015</td>
-                                        <td>04:00:00</td>
-                                        <td>1.00</td>
-                                        <td>1.00</td>
-                                        <td>2015-05-01</td>
-                                        <td></td>
-                                        <td>2500</td>
-                                    </tr>
-                                    <tr data-intcode="SOC-A-0001015" data-name="Vinodh Arumugam" data-uid="c08b4ad2-14e4-11e5-b10a-74d435d335fe" data-urole="AU">
-                                        <td>ride the lightning</td>
-                                        <td>SOC-T-0001016</td>
-                                        <td>04:00:00</td>
-                                        <td>1.00</td>
-                                        <td>1.00</td>
-                                        <td>2015-05-01</td>
-                                        <td></td>
-                                        <td>2100</td>
-                                    </tr>
-                                    <tr data-intcode="SOC-A-0001015" data-name="Vinodh Arumugam" data-uid="c08b4ad2-14e4-11e5-b10a-74d435d335fe" data-urole="AU">
-                                        <td>dookie</td>
-                                        <td>SOC-T-0001017</td>
-                                        <td>04:00:00</td>
-                                        <td>1.00</td>
-                                        <td>1.00</td>
-                                        <td>2015-05-01</td>
-                                        <td></td>
-                                        <td>2800</td>
-                                    </tr>
-                                    <tr data-intcode="SOC-A-0001015" data-name="Vinodh Arumugam" data-uid="c08b4ad2-14e4-11e5-b10a-74d435d335fe" data-urole="AU">
-                                        <td>Wild wild west</td>
-                                        <td>SOC-T-0001018</td>
-                                        <td>04:00:00</td>
-                                        <td>1.00</td>
-                                        <td>1.00</td>
-                                        <td>2015-05-01</td>
-                                        <td></td>
-                                        <td>2900</td>
-                                    </tr>
-                                    <tr data-intcode="SOC-A-0001015" data-name="Vinodh Arumugam" data-uid="c08b4ad2-14e4-11e5-b10a-74d435d335fe" data-urole="AU">
-                                        <td>nothing else matters</td>
-                                        <td>SOC-T-0001019</td>
-                                        <td>04:00:00</td>
-                                        <td>1.00</td>
-                                        <td>1.00</td>
-                                        <td>2015-05-01</td>
-                                        <td></td>
-                                        <td>5800</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="box-footer">
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <input type="submit" value="Save" name="yt3" disabled="disabled" id="right_ajax_submit" class="btn btn-primary">                            </div>
-                            </div>
-                        </div>
-                        <div class="overlay loader"></div>
-                        <div class="loading-img loader"></div>
-                    </form>                </div>
-                <div class="text-left help-block hide">
-                    <span><strong>Note:</strong> Data will be automatically saved after Broadcasting Share &amp; Mechanical Share is 100 % and One main publisher is added and (Publisher and Sub-Publisher) Shares is 50% Minimum</span>
+                    </div>
+                    <div class="overlay loader"></div>
+                    <div class="loading-img loader"></div>
+                    <?php echo CHtml::endForm(); ?>
+                </div>
+                <div class="text-left help-block">
+                    <span><strong>Note:</strong> Save will be enabled when at least one list is added</span>
                 </div>
 
             </div>
@@ -307,12 +315,14 @@ $this->breadcrumbs = array(
 </div>
 
 <?php
-$search_url = Yii::app()->createAbsoluteUrl("site/soundcarrier/searchrecords");
+$search_url = Yii::app()->createAbsoluteUrl("site/distributionlogsheet/searchrecords");
 
 $js = <<< EOD
+    var rowCount = $('#linked-holders tbody tr').length;
     $(document).ready(function() {
+        checkLog();
+        
         $('#search_button').on("click", function(){
-            var data=$("#record-rightholder-search-form-rec-2").serialize();
             $.ajax({
                 type: 'GET',
                 url: '$search_url',
@@ -327,12 +337,143 @@ $js = <<< EOD
             });
         });
         
-        $('body').on('click','#record_search tr, #link-performer-rec tr, #rightperformertable tr', function(){
+        $('body').on('click','#record_search tbody tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
+            $("#DistributionLogsheetList_Log_List_Record_GUID").val($(this).data('uid'));
+            $("#DistributionLogsheetList_duration_hours").val($(this).data('duration_hours'));
+            $("#DistributionLogsheetList_duration_minutes").val($(this).data('duration_minutes'));
+            $("#DistributionLogsheetList_duration_seconds").val($(this).data('duration_seconds'));
+            $("#DistributionLogsheetList_Log_List_Date").val($(this).data('date'));
         });
         
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
+        $('body').on('click','.row-delete', function(){
+            $(this).closest('tr').remove();
+            rowCount++;
+            checkLog();
+            $('#distribution-logsheetlist-form :input').val('');
+            $("#right_insert").val('Add');
+            return false;
+        });
+        
+        $('#right_ajax_submit').on('click', function(){
+            $('#distribution-logsheet-form').submit();
+        });
+        
+        $('body').on('click','.holder-edit', function(){
+            $("#right_insert").val('Edit');
+            tr = $(this).closest('tr');
+            tr.addClass('highlight').siblings().removeClass('highlight');
+            
+            $('#DistributionLogsheetList_Log_List_Record_GUID').val(tr.data('uid'));
+            $('#DistributionLogsheetList_duration_hours').val(tr.find('.td_duration').data('hour'));
+            $('#DistributionLogsheetList_duration_minutes').val(tr.find('.td_duration').data('minute'));
+            $('#DistributionLogsheetList_duration_seconds').val(tr.find('.td_duration').data('second'));
+            $('#DistributionLogsheetList_Log_List_Factor_Id').val(tr.find('.td_factor').data('factor'));
+            $('#DistributionLogsheetList_Log_List_Coefficient').val(tr.find('td:nth-child(5)').html());
+            $('#DistributionLogsheetList_Log_List_Date').val(tr.find('td:nth-child(6)').html());
+            $('#DistributionLogsheetList_Log_List_Event').val(tr.find('td:nth-child(7)').html());
+            $('#DistributionLogsheetList_Log_List_Seq_Number').val(tr.find('td:nth-child(8)').html());
+        });
     });
         
+    function InsertLoglist(form, data, hasError) {
+        if (hasError == false) {
+            $("#right_insert").attr("disabled", true);
+            _uid = $(".highlight").data('uid');
+            _intcode = $(".highlight").data('intcode');
+            _title = $(".highlight").data('title');
+        
+            chk_tr = $("#linked-holders").find("[data-uid='" + _uid + "']");
+            if(chk_tr.length == 1){
+                var tr = '';
+            }else{
+                var tr = '<tr data-uid="'+_uid+'" data-title="'+_title+'" data-intcode="'+_intcode+'">';
+            }
+            var form_data = form.serializeArray();
+            $('#norecord_tr').remove();
+            hide_td = '<td class="hide">';
+            $.each(form_data, function (key, value) {
+                if(value['name'] != "base_table_search"){
+                    var name = value['name'];
+                    name = name.replace("[","[" + rowCount + "][");
+
+                    //set hidden form values
+                    hide_td += '<input type="hidden" name="' + name + '" value="' + value['value'] + '" />';
+
+                    if(value['name'] != "DistributionLogsheetList[duration_hours]" && value['name'] != "DistributionLogsheetList[duration_minutes]" && value['name'] != "DistributionLogsheetList[duration_seconds]"){
+                        if(value['name'] == "DistributionLogsheetList[Log_List_Factor_Id]"){
+                            tr += '<td class="td_factor" data-factor="'+$('#DistributionLogsheetList_Log_List_Factor_Id').val()+'">';
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Duration]"){
+                            hr = ("0"+$("#DistributionLogsheetList_duration_hours").val()).slice(-2);
+                            min = ("0"+$("#DistributionLogsheetList_duration_minutes").val()).slice(-2);
+                            sec = ("0"+$("#DistributionLogsheetList_duration_seconds").val()).slice(-2);
+                            tr += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
+                        }else{
+                            tr += '<td>';
+                        }
+        
+                        if(value['name'] == "DistributionLogsheetList[Log_List_Record_GUID]"){
+                            tr += _title;
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Factor_Id]"){
+                            tr += $('select[name="' + value['name'] + '"] option:selected').text();
+                        }else if(value['name'] == "DistributionLogsheetList[Log_Id]"){
+                            tr += _intcode;
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Duration]"){
+                            tr += hr+':'+min+':'+sec;
+                        }else{
+                            tr += value['value'];
+                        }
+                        tr += '</td>';
+                    }
+                }
+            });
+            tr += '<td>';
+            tr += '<a href="#role-foundation" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
+            tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
+            tr += '</td>';
+            hide_td += '</td>';
+            tr += hide_td;
+        
+            if(chk_tr.length == 1){
+                chk_tr.html(tr);
+            }else{
+                tr += '</tr>';
+                $('#linked-holders tbody').append(tr);
+            }
+            rowCount++;
+        
+            $('#distribution-logsheetlist-form :input').val('');
+            $('.loader').hide();
+            $("#right_insert").removeAttr("disabled");
+            $("#right_insert").val('Add');
+
+            $("#record_search tr[data-uid='"+_uid+"']").remove();
+            checkLog();
+        }
+        return false;
+    }
+        
+    function InsertLog(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.each(form_data, function (key, value) {
+                if(value['name'] == "DistributionLogsheet[Log_User_Cust_Id]"){
+                    $('#h_cust_id').val(value['value']);
+                }
+                if(value['name'] == "DistributionLogsheet[Log_Place_Id]"){
+                    $('#h_place_id').val(value['value']);
+                }
+            });
+            $('#right_form').submit();
+        }
+        return false;
+    }
+        
+    function checkLog(){
+        $('#right_ajax_submit').attr('disabled', $("#linked-holders tbody tr:not('[id*=norecord_tr]')").length <= 0);
+    }
         
 EOD;
 Yii::app()->clientScript->registerScript('_logsheet', $js);
