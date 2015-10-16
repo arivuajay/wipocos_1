@@ -35,7 +35,7 @@ class DistributionlogsheetController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog', 'availperiods'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -285,7 +285,7 @@ class DistributionlogsheetController extends Controller {
                     $model->setAttribute('Log_Id', $log_id);
                     $valid = $valid && $model->save(false);
                     if ($valid)
-                        Myclass::addAuditTrail("Logsheet list saved for {$model->log->period->Period_Internal_Code} successfully.", "fa fa-bar-chart");
+                        Myclass::addAuditTrail("Logsheet list saved for { {$model->log->period->Period_Internal_Code} - {$model->listRecording->Rcd_Title} } successfully.", "fa fa-newspaper-o");
                 }
                 if ($valid)
                     Yii::app()->user->setFlash('success', 'Logsheet Saved Successfully!!!');
@@ -294,5 +294,25 @@ class DistributionlogsheetController extends Controller {
             }
         }
         $this->redirect(array('/site/distributionlogsheet/logsheet', 'id' => $period_id));
+    }
+    
+    public function actionAvailperiods() {
+        $search = false;
+
+        $model = new DistributionUtlizationPeriod();
+        $searchModel = new DistributionUtlizationPeriod('search');
+        $searchModel->unsetAttributes();  // clear any default values
+        if (isset($_GET['DistributionUtlizationPeriod'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['DistributionUtlizationPeriod'];
+            $searchModel->search();
+        }
+        
+        $criteria = new CDbCriteria();
+        $criteria->distinct = 'Period_Year';
+        $criteria->order = 'Period_Year ASC';
+        $years = CHtml::listData(DistributionUtlizationPeriod::model()->findAll($criteria), 'Period_Year', 'Period_Year');
+
+        $this->render('availperiods', compact('searchModel', 'search', 'model', 'years'));
     }
 }

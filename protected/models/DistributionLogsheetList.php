@@ -51,7 +51,7 @@ class DistributionLogsheetList extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Log_List_Date', 'required'),
-            array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select user before you save'),
+            array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select Record before you save'),
             array('Log_Id, Log_List_Date', 'required', 'on' => 'form2'),
             array('Log_Id, Log_List_Factor_Id, Log_List_Seq_Number, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Log_List_Record_GUID', 'length', 'max' => 50),
@@ -62,6 +62,8 @@ class DistributionLogsheetList extends RActiveRecord {
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
             array('Log_List_Coefficient', 'numerical', 'min' => 0, 'max' => 100),
+            array('duration_hours', 'durationValidate'),
+            array('duration_hours', 'recordingValidate'),
             array('duration_hours, duration_minutes, duration_seconds', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -69,6 +71,22 @@ class DistributionLogsheetList extends RActiveRecord {
         );
     }
 
+    public function durationValidate($attribute, $params) {
+        if ($this->duration_hours == '0' || $this->duration_hours == '') {
+            if (($this->duration_minutes == '0' && $this->duration_seconds == '0') || ($this->duration_minutes == '' && $this->duration_seconds == ''))
+                $this->addError($attribute, 'Duration should not be Zero');
+        }
+    }
+    
+    public function recordingValidate($attribute, $params) {
+        if($this->Log_List_Record_GUID != '' && is_numeric($this->duration_hours) && is_numeric($this->duration_minutes) && is_numeric($this->duration_seconds)){
+            $recording = Recording::model()->findByAttributes(array('Rcd_GUID' => $this->Log_List_Record_GUID));
+            $tot_duration = mktime($this->duration_hours, $this->duration_minutes, $this->duration_seconds);
+            if($tot_duration < strtotime($recording->Rcd_Duration)){
+                $this->addError($attribute, "Duration should be greater than or equal to {$recording->Rcd_Duration}");
+            }
+        }
+    }
     /**
      * @return array relational rules.
      */
@@ -92,7 +110,7 @@ class DistributionLogsheetList extends RActiveRecord {
             'Log_List_Id' => 'Log List',
             'Log_Id' => 'Log',
             'Log_List_Record_GUID' => 'Log List Record Guid',
-            'Log_List_Duration' => 'Duration',
+            'Log_List_Duration' => 'Total Duration',
             'Log_List_Factor_Id' => 'Factor',
             'Log_List_Coefficient' => 'Coefficient',
             'Log_List_Date' => 'Date',

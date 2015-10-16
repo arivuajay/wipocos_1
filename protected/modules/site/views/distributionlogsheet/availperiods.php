@@ -2,9 +2,9 @@
 /* @var $this DistributionutlizationperiodController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Utlization Periods';
+$this->title = 'Classes & Available Periods';
 $this->breadcrumbs = array(
-    'Utlization Periods',
+    'Classes & Available Periods',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -17,8 +17,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
-        <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>    </div>
-    <div class="row" id="advance-search-form">
+        <?php // echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>    </div>
+    <div class="row" id="advance-search-form_xxx">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">
@@ -32,53 +32,15 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'search-form',
                         'method' => 'get',
-                        'action' => array('/site/distributionutlizationperiod/index'),
+                        'action' => array('/site/distributionlogsheet/availperiods'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-                    $classes = DistributionClass::classList();
-                    $settings = DistributionSetting::settingList();
                     ?>
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Period_Internal_Code', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Period_Internal_Code', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Period_Year', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Period_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Period_Number', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Period_Number', array('class' => 'form-control')); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Period_From', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Period_From', array('class' => 'form-control date')); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Period_To', array('class' => ' control-label')); ?>
-                            <?php echo $form->textField($searchModel, 'Period_To', array('class' => 'form-control date')); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Class_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Class_Id', $classes, array('class' => 'form-control', 'prompt' => '')); ?>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Setting_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Setting_Id', $settings, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Period_Year', $years, array('class' => 'form-control', 'prompt' => '')); ?>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
@@ -101,24 +63,27 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <div class="row">
             <?php
             $gridColumns = array(
-                'Period_Internal_Code',
-                'Period_Year',
-                'Period_Number',
-                'Period_From',
-                'Period_To',
                 array(
-                    'name' => 'Class_Id',
+                    'name' => 'Class',
+                    'value' => '$data->class->Class_Internal_Code'
+                ),
+                array(
+                    'name' => 'Name of Class',
                     'value' => '$data->class->Class_Name'
                 ),
+                'Period_From',
+                'Period_To',
+                'Period_Number',
                 array(
                     'name' => 'Setting_Id',
                     'value' => '$data->setting->Setting_Date'
                 ),
+                'Period_Year',
                 array(
-                    'header' => 'Actions',
+                    'header' => 'Add Logsheet',
                     'class' => 'application.components.MyActionButtonColumn',
-                    'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{addLog}{view}{update}{delete}',
+                    'htmlOptions' => array('style' => 'width: 180px;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                    'template' => '{addLog}',
                     'buttons' => array(
                         'addLog' => array(//the name {reply} must be same
                             'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -154,16 +119,16 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
         <?php
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'Create Utlization Period',
-            'icon' => 'fa fa-plus',
-            'url' => array('/site/distributionutlizationperiod/create'),
-            'buttonType' => 'link',
-            'context' => 'success',
-            'htmlOptions' => array('class' => 'pull-right'),
-                )
-        );
+//        $this->widget(
+//                'application.components.MyTbButton', array(
+//            'label' => 'Create Utlization Period',
+//            'icon' => 'fa fa-plus',
+//            'url' => array('/site/distributionutlizationperiod/create'),
+//            'buttonType' => 'link',
+//            'context' => 'success',
+//            'htmlOptions' => array('class' => 'pull-right'),
+//                )
+//        );
         ?>
     </div>
 </div>
@@ -172,24 +137,27 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
     <div class="row">
         <?php
         $gridColumns = array(
-            'Period_Internal_Code',
-            'Period_Year',
-            'Period_Number',
-            'Period_From',
-            'Period_To',
             array(
-                'name' => 'Class_Id',
+                'name' => 'Class',
+                'value' => '$data->class->Class_Internal_Code'
+            ),
+            array(
+                'name' => 'Name of Class',
                 'value' => '$data->class->Class_Name'
             ),
+            'Period_From',
+            'Period_To',
+            'Period_Number',
             array(
                 'name' => 'Setting_Id',
                 'value' => '$data->setting->Setting_Date'
             ),
+            'Period_Year',
             array(
-                'header' => 'Actions',
+                'header' => 'Add Logsheet',
                 'class' => 'application.components.MyActionButtonColumn',
-                'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{addLog}{view}{update}{delete}',
+                'htmlOptions' => array('style' => 'width: 180px;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
+                'template' => '{addLog}',
                 'buttons' => array(
                     'addLog' => array(//the name {reply} must be same
                         'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -207,7 +175,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Utlization Periods</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Classes & Available Periods</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );

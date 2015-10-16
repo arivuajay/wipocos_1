@@ -20,6 +20,7 @@
                             <tr>
                                 <th>Orginial Title</th>
                                 <th>Internal Code</th>
+                                <th>Duration</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,6 +31,7 @@
                                     <tr data-uid="<?php echo $recording->Rcd_GUID ?>" data-title="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-duration_hours="<?php echo $recording->duration_hours ?>" data-duration_minutes="<?php echo $recording->duration_minutes ?>" data-duration_seconds="<?php echo $recording->duration_seconds ?>" data-duration="<?php echo $recording->Rcd_Duration ?>" data-date="<?php echo $recording->Rcd_Date?>">
                                         <td><?php echo $recording->Rcd_Title ?></td>
                                         <td><?php echo $recording->Rcd_Internal_Code ?></td>
+                                        <td class="td_rcd_duration" data-hour="<?php echo $recording->duration_hours; ?>" data-minute="<?php echo $recording->duration_minutes; ?>" data-second="<?php echo $recording->duration_seconds; ?>"><?php echo $recording->Rcd_Duration ?></td>
                                     </tr>
                                     <?php
                                 }

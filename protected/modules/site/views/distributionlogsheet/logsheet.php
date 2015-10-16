@@ -12,7 +12,8 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
 $this->title = 'Logsheets';
 $this->breadcrumbs = array(
-    'Utlization Periods ' => array('/site/distributionutlizationperiod/index'),
+    'Utlization Periods' => array('/site/distributionutlizationperiod/index'),
+//    'Classes & Available Periods ' => array('/site/distributionlogsheet/availperiods'),
     $this->title,
 );
 ?>
@@ -41,12 +42,12 @@ $this->breadcrumbs = array(
                 <div class="box-body">
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <?php echo CHtml::textField('class_title', $period_model->class->Class_Name, array('class' => 'form-control', 'readonly' => true)) ?>
+                            <?php echo CHtml::textField('class_title', $period_model->class->Class_Name, array('class' => 'form-control', 'disabled' => true)) ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo CHtml::label('Year', 'year', array('class' => '')); ?>
-                            <?php echo CHtml::textField('year', $period_model->Period_Year, array('class' => 'form-control', 'readonly' => true)) ?>
+                            <?php echo CHtml::textField('year', $period_model->Period_Year, array('class' => 'form-control', 'disabled' => true)) ?>
                         </div>
 
                     </div>
@@ -57,10 +58,10 @@ $this->breadcrumbs = array(
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <div class="col-lg-12">
-                                        <?php echo CHtml::textField('from', $period_model->Period_From, array('class' => 'form-control', 'readonly' => true)) ?>
+                                        <?php echo CHtml::textField('from', $period_model->Period_From, array('class' => 'form-control', 'disabled' => true)) ?>
                                     </div>
                                     <div class="col-lg-13">
-                                        <?php echo CHtml::textField('to', $period_model->Period_To, array('class' => 'form-control', 'readonly' => true)) ?>
+                                        <?php echo CHtml::textField('to', $period_model->Period_To, array('class' => 'form-control', 'disabled' => true)) ?>
                                     </div>
                                 </div>
 
@@ -69,7 +70,7 @@ $this->breadcrumbs = array(
                         <div class="form-group">
                             <?php echo CHtml::label('Account', 'account', array('class' => 'col-sm-2 control-label')); ?>
                             <div class="col-sm-5">
-                                <?php echo CHtml::textField('account', date('Y-m-d'), array('class' => 'form-control', 'readonly' => true)) ?>
+                                <?php echo CHtml::textField('account', $period_model->setting->Setting_Date, array('class' => 'form-control', 'disabled' => true)) ?>
                             </div>
                         </div>
                     </div>
@@ -157,16 +158,18 @@ $this->breadcrumbs = array(
                             <?php echo $form->hiddenField($list_model, 'Log_List_Duration'); ?>
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_hours', array('class' => 'form-control')); ?>
-                                    <?php echo $form->error($list_model, 'duration_hours'); ?>
+                                    <?php echo $form->textField($list_model, 'duration_hours', array('class' => 'form-control zero_fields')); ?>
                                 </div>
                                 <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_minutes', array('class' => 'form-control')); ?>
+                                    <?php echo $form->textField($list_model, 'duration_minutes', array('class' => 'form-control zero_fields')); ?>
                                     <?php echo $form->error($list_model, 'duration_minutes'); ?>
                                 </div>
                                 <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_seconds', array('class' => 'form-control')); ?>
+                                    <?php echo $form->textField($list_model, 'duration_seconds', array('class' => 'form-control zero_fields')); ?>
                                     <?php echo $form->error($list_model, 'duration_seconds'); ?>
+                                </div>
+                                <div class="col-lg-12">
+                                    <?php echo $form->error($list_model, 'duration_hours'); ?>
                                 </div>
                             </div>
                         </div>
@@ -179,7 +182,7 @@ $this->breadcrumbs = array(
 
                         <div class="form-group">
                             <?php echo $form->labelEx($list_model, 'Log_List_Coefficient', array('class' => '')); ?>
-                            <?php echo $form->textField($list_model, 'Log_List_Coefficient', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($list_model, 'Log_List_Coefficient', array('class' => 'form-control zero_fields')); ?>
                             <?php echo $form->error($list_model, 'Log_List_Coefficient'); ?>
                         </div>
 
@@ -247,6 +250,7 @@ $this->breadcrumbs = array(
                                     <th>Date</th>
                                     <th>Event or show</th>
                                     <th>Sequence Number</th>
+                                    <th>Total Duration</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -258,12 +262,13 @@ $this->breadcrumbs = array(
                                         <tr data-uid="<?php echo $list->Log_List_Record_GUID ?>" data-title="<?php echo $list->listRecording->Rcd_Title ?>" data-intcode="<?php echo $list->listRecording->Rcd_Internal_Code ?>">
                                             <td><?php echo $list->listRecording->Rcd_Title; ?></td>
                                             <td><?php echo $list->listRecording->Rcd_Internal_Code; ?></td>
-                                            <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><?php echo $list->Log_List_Duration; ?></td>
+                                            <td class="td_rcd_duration" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>
                                             <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
                                             <td><?php echo $list->Log_List_Coefficient; ?></td>
                                             <td><?php echo $list->Log_List_Date; ?></td>
                                             <td><?php echo $list->Log_List_Event; ?></td>
                                             <td><?php echo $list->Log_List_Seq_Number; ?></td>
+                                            <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><span class="badge bg-light-blue"><?php echo $list->Log_List_Duration; ?></span></td>
                                             <td>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit')); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
@@ -288,7 +293,7 @@ $this->breadcrumbs = array(
                                         <?php
                                     }
                                 } else {
-                                    echo "<tr id='norecord_tr'><td colspan='9'>No data created</td></tr>";
+                                    echo "<tr id='norecord_tr'><td colspan='10'>No data created</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -339,10 +344,14 @@ $js = <<< EOD
         
         $('body').on('click','#record_search tbody tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
+            $('#distribution-logsheetlist-form :input').val('');
+            $('.zero_fields').val('0');
+            $("#right_insert").val('Add');
+        
             $("#DistributionLogsheetList_Log_List_Record_GUID").val($(this).data('uid'));
-            $("#DistributionLogsheetList_duration_hours").val($(this).data('duration_hours'));
-            $("#DistributionLogsheetList_duration_minutes").val($(this).data('duration_minutes'));
-            $("#DistributionLogsheetList_duration_seconds").val($(this).data('duration_seconds'));
+//            $("#DistributionLogsheetList_duration_hours").val($(this).data('duration_hours'));
+//            $("#DistributionLogsheetList_duration_minutes").val($(this).data('duration_minutes'));
+//            $("#DistributionLogsheetList_duration_seconds").val($(this).data('duration_seconds'));
             $("#DistributionLogsheetList_Log_List_Date").val($(this).data('date'));
         });
         
@@ -353,6 +362,7 @@ $js = <<< EOD
             rowCount++;
             checkLog();
             $('#distribution-logsheetlist-form :input').val('');
+            $('.zero_fields').val('0');
             $("#right_insert").val('Add');
             return false;
         });
@@ -385,6 +395,10 @@ $js = <<< EOD
             _intcode = $(".highlight").data('intcode');
             _title = $(".highlight").data('title');
         
+            _rcd_hour = $(".highlight").find('.td_rcd_duration').data('hour');
+            _rcd_min = $(".highlight").find('.td_rcd_duration').data('minute');
+            _rcd_sec = $(".highlight").find('.td_rcd_duration').data('second');
+        
             chk_tr = $("#linked-holders").find("[data-uid='" + _uid + "']");
             if(chk_tr.length == 1){
                 var tr = '';
@@ -394,6 +408,7 @@ $js = <<< EOD
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
             hide_td = '<td class="hide">';
+            tot_dur_td = '';
             $.each(form_data, function (key, value) {
                 if(value['name'] != "base_table_search"){
                     var name = value['name'];
@@ -409,7 +424,9 @@ $js = <<< EOD
                             hr = ("0"+$("#DistributionLogsheetList_duration_hours").val()).slice(-2);
                             min = ("0"+$("#DistributionLogsheetList_duration_minutes").val()).slice(-2);
                             sec = ("0"+$("#DistributionLogsheetList_duration_seconds").val()).slice(-2);
-                            tr += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
+                            tr += '<td class="td_rcd_duration" data-hour="'+_rcd_hour+'" data-minute="'+_rcd_min+'" data-second="'+_rcd_sec+'">';
+        
+                            tot_dur_td += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
                         }else{
                             tr += '<td>';
                         }
@@ -421,7 +438,10 @@ $js = <<< EOD
                         }else if(value['name'] == "DistributionLogsheetList[Log_Id]"){
                             tr += _intcode;
                         }else if(value['name'] == "DistributionLogsheetList[Log_List_Duration]"){
-                            tr += hr+':'+min+':'+sec;
+                            tr += _rcd_hour+':'+_rcd_min+':'+_rcd_sec;
+        
+                            tot_dur_td += '<span class="badge bg-light-blue">'+hr+':'+min+':'+sec+'</span>';
+                            tot_dur_td += '</td>';
                         }else{
                             tr += value['value'];
                         }
@@ -429,6 +449,7 @@ $js = <<< EOD
                     }
                 }
             });
+            tr += tot_dur_td;
             tr += '<td>';
             tr += '<a href="#role-foundation" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
@@ -445,6 +466,7 @@ $js = <<< EOD
             rowCount++;
         
             $('#distribution-logsheetlist-form :input').val('');
+            $('.zero_fields').val('0');
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
             $("#right_insert").val('Add');
