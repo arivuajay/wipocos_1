@@ -210,6 +210,8 @@ class DistributionlogsheetController extends Controller {
             $period_model = $model->period;
         }
         
+        if(empty($period_model))
+            throw new CHttpException(404, 'The requested page does not exist.');
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $list_model));
         if (isset($_POST['DistributionLogsheet'])) {
