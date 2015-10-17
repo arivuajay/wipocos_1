@@ -93,6 +93,7 @@ return array(
         'request' => array(
             'enableCsrfValidation' => false,
         ),
+        'wipoimport' => array('class' => 'WipoImport'),
     ),
     // application-level parameters that can be accessed
     //setting the basic language value

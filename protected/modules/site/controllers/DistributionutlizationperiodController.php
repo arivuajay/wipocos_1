@@ -194,10 +194,9 @@ class DistributionutlizationperiodController extends Controller {
      * @param DistributionUtlizationPeriod $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'distribution-utlization-period-form') {
+        if (isset($_POST['ajax']) /*&& $_POST['ajax'] === 'distribution-utlization-period-form'*/) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
-
 }

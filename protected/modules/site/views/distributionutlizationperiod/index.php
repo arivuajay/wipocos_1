@@ -118,7 +118,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{addLog}{view}{update}{delete}',
+                    'template' => '{addLog}{import}{view}{update}{delete}',
                     'buttons' => array(
                         'addLog' => array(//the name {reply} must be same
                             'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -126,6 +126,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                 'title' => 'Add Logsheet',
                             ),
                             'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/logsheet/id/".rawurlencode($data->Period_Id)))',
+//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                        ),
+                        'import' => array(//the name {reply} must be same
+                            'label' => '<i class="fa fa-upload"></i>',
+                            'options' => array(
+                                'title' => 'Import XLS',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/import/id/".rawurlencode($data->Period_Id)))',
 //                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
                         ),
                     )
@@ -189,7 +197,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{addLog}{view}{update}{delete}',
+                'template' => '{addLog}{import}{view}{update}{delete}',
                 'buttons' => array(
                     'addLog' => array(//the name {reply} must be same
                         'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -199,6 +207,14 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/logsheet/id/".rawurlencode($data->Period_Id)))',
 //                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
                     ),
+                        'import' => array(//the name {reply} must be same
+                            'label' => '<i class="fa fa-upload"></i>',
+                            'options' => array(
+                                'title' => 'Import XLS',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/import/id/".rawurlencode($data->Period_Id)))',
+//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                        ),
                 )
             )
         );

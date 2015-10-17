@@ -13,6 +13,7 @@
  * @property string $Log_List_Date
  * @property string $Log_List_Event
  * @property integer $Log_List_Seq_Number
+ * @property integer $Log_List_Frequency
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -53,7 +54,7 @@ class DistributionLogsheetList extends RActiveRecord {
             array('Log_List_Date', 'required'),
             array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select Record before you save'),
             array('Log_Id, Log_List_Date', 'required', 'on' => 'form2'),
-            array('Log_Id, Log_List_Factor_Id, Log_List_Seq_Number, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Log_Id, Log_List_Factor_Id, Log_List_Seq_Number, Log_List_Frequency, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Log_List_Record_GUID', 'length', 'max' => 50),
             array('Log_List_Coefficient', 'length', 'max' => 10),
             array('Log_List_Event', 'length', 'max' => 100),
@@ -67,7 +68,7 @@ class DistributionLogsheetList extends RActiveRecord {
             array('duration_hours, duration_minutes, duration_seconds', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient, Log_List_Date, Log_List_Event, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -116,6 +117,7 @@ class DistributionLogsheetList extends RActiveRecord {
             'Log_List_Date' => 'Date',
             'Log_List_Event' => 'Event or Show',
             'Log_List_Seq_Number' => 'Sequence Number',
+            'Log_List_Frequency' => 'Frequency',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',

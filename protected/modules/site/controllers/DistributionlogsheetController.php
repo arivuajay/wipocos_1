@@ -1,6 +1,9 @@
 <?php
 
 class DistributionlogsheetController extends Controller {
+
+    private $_import_period;
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -35,7 +38,7 @@ class DistributionlogsheetController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog', 'availperiods'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog', 'availperiods', 'import'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -194,7 +197,7 @@ class DistributionlogsheetController extends Controller {
      * @param DistributionLogsheet $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) /*&& $_POST['ajax'] === 'distribution-logsheet-form'*/) {
+        if (isset($_POST['ajax']) /* && $_POST['ajax'] === 'distribution-logsheet-form' */) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
@@ -203,33 +206,20 @@ class DistributionlogsheetController extends Controller {
     public function actionLogsheet($id) {
         $model = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $id));
         $list_model = new DistributionLogsheetList;
-        if(empty($model)){
+        if (empty($model)) {
             $model = new DistributionLogsheet;
             $period_model = DistributionUtlizationPeriod::model()->findByPk($id);
-        }else{
+        } else {
             $period_model = $model->period;
         }
-        
-        if(empty($period_model))
+
+        if (empty($period_model))
             throw new CHttpException(404, 'The requested page does not exist.');
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $list_model));
-        if (isset($_POST['DistributionLogsheet'])) {
-            echo '<pre>';
-            print_r($_POST['DistributionLogsheet']);
-            print_r($_POST['DistributionLogsheetList']);
-            exit;
-            $model->attributes = $_POST['DistributionLogsheet'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated DistributionLogsheet successfully.", "user");
-                Yii::app()->user->setFlash('success', 'DistributionLogsheet Updated Successfully!!!');
-                $this->redirect(array('/site/distributionlogsheet/index'));
-            }
-        }
-        
         $this->render('logsheet', compact('model', 'period_model', 'list_model'));
     }
-    
+
     public function actionSearchrecords() {
         $criteria = new CDbCriteria();
         if (!empty($_REQUEST['searach_text'])) {
@@ -246,7 +236,7 @@ class DistributionlogsheetController extends Controller {
         }
         $this->renderPartial('_search_recordings', compact('recordings'));
     }
-    
+
     public function actionInsertlog() {
         if (isset($_POST['DistributionLogsheetList']) && !empty($_POST['DistributionLogsheetList']) && isset($_POST['DistributionLogsheet']) && !empty($_POST['DistributionLogsheet'])) {
             $period_id = $_POST['DistributionLogsheet']['Period_Id'];
@@ -254,12 +244,12 @@ class DistributionlogsheetController extends Controller {
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_date = "0000-00-00 00:00:00";
-            
+
             $log = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $period_id));
-            if(empty($log)){
+            if (empty($log)) {
                 $log_model = new DistributionLogsheet;
                 $created_by = Yii::app()->user->id;
-            }else{
+            } else {
                 $log_model = $log;
                 $created_by = $log->Created_By;
                 $created_date = $log->Created_Date;
@@ -276,7 +266,7 @@ class DistributionlogsheetController extends Controller {
 
             $_POST['DistributionLogsheet'] = array_merge($_POST['DistributionLogsheet'], $time_set);
             $log_model->attributes = $_POST['DistributionLogsheet'];
-            if($log_model->save()){
+            if ($log_model->save()) {
                 $log_id = $log_model->Log_Id;
                 DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id));
                 $valid = true;
@@ -291,13 +281,13 @@ class DistributionlogsheetController extends Controller {
                 }
                 if ($valid)
                     Yii::app()->user->setFlash('success', 'Logsheet Saved Successfully!!!');
-            }else{
+            }else {
                 Yii::app()->user->setFlash('danger', 'Failed to save!!!');
             }
         }
         $this->redirect(array('/site/distributionlogsheet/logsheet', 'id' => $period_id));
     }
-    
+
     public function actionAvailperiods() {
         $search = false;
 
@@ -309,7 +299,7 @@ class DistributionlogsheetController extends Controller {
             $searchModel->attributes = $_GET['DistributionUtlizationPeriod'];
             $searchModel->search();
         }
-        
+
         $criteria = new CDbCriteria();
         $criteria->distinct = 'Period_Year';
         $criteria->order = 'Period_Year ASC';
@@ -317,4 +307,67 @@ class DistributionlogsheetController extends Controller {
 
         $this->render('availperiods', compact('searchModel', 'search', 'model', 'years'));
     }
+
+    public function actionImport($id) {
+        $model = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $id));
+        if (empty($model)) {
+            $period_model = DistributionUtlizationPeriod::model()->findByPk($id);
+        } else {
+            $period_model = $model->period;
+        }
+
+        if (empty($period_model))
+            throw new CHttpException(404, 'The requested page does not exist.');
+
+        // Uncomment the following line if AJAX validation is needed
+        $this->performAjaxValidation($model);
+
+        if (isset($_POST['DistributionLogsheet'])) {
+            $model->attributes = $_POST['DistributionLogsheet'];
+            $model->setAttribute('import_file', isset($_FILES['DistributionLogsheet']['name']['import_file']) ? $_FILES['DistributionLogsheet']['name']['import_file'] : '');
+            if ($model->validate()) {
+                if ($_FILES['DistributionLogsheet']['name']['import_file']) {
+                    $model->import_file = CUploadedFile::getInstance($model, 'import_file');
+                    if (!is_dir(UPLOAD_DIR . '/temp/'))
+                        mkdir(UPLOAD_DIR . '/temp/');
+                    $path = UPLOAD_DIR . '/temp/' . $model->import_file;
+                    $model->import_file->saveAs($path);
+                    $this->_import_period = $id;
+                    $success = $this->importExcel($path);
+                    exit;
+                    if ($success && $model->save()) {
+                        Myclass::addAuditTrail("XLS Imported to Society : {$model->Society_Code} successfully.", "group");
+                        $this->render('import', array(
+                            'model' => $model,
+                            'staging' => Yii::app()->wipoimport->getStageRow(),
+                            'import_status' => Yii::app()->wipoimport->getImportStatus(),
+                            'staging_tables' => Yii::app()->wipoimport->getStageTables(),
+                            'imported_table' => Yii::app()->wipoimport->getImportedTable(),
+                        ));
+                        Yii::app()->end();
+//                        Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
+//                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                    } else {
+                        Yii::app()->user->setFlash('danger', "XLS not Imported !!! Please Try after sometime");
+                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                    }
+                }
+            }
+        }
+        $this->render('import', compact('model', 'period_model'));
+    }
+
+    public function importExcel($file_path) {
+        Yii::import('application.vendors.PHPExcel', true);
+        $objReader = new PHPExcel_Reader_Excel5;
+        $objPHPExcel = $objReader->load(@$file_path);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+        Yii::app()->wipoimport->setWorkSheet($objWorksheet);
+        Yii::app()->wipoimport->setImportPeriod($this->_import_period);
+
+        unlink($file_path);
+
+        $return = Yii::app()->wipoimport->importLogsheet();
+    }
+
 }

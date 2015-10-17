@@ -204,6 +204,11 @@ $this->breadcrumbs = array(
                             <?php echo $form->textField($list_model, 'Log_List_Seq_Number', array('class' => 'form-control')); ?>
                             <?php echo $form->error($list_model, 'Log_List_Seq_Number'); ?>
                         </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($list_model, 'Log_List_Frequency', array('class' => '')); ?>
+                            <?php echo $form->textField($list_model, 'Log_List_Frequency', array('class' => 'form-control')); ?>
+                            <?php echo $form->error($list_model, 'Log_List_Frequency'); ?>
+                        </div>
                     </div>
 
                 </div>
@@ -250,6 +255,7 @@ $this->breadcrumbs = array(
                                     <th>Date</th>
                                     <th>Event or show</th>
                                     <th>Sequence Number</th>
+                                    <th>Frequency</th>
                                     <th>Total Duration</th>
                                     <th>Action</th>
                                 </tr>
@@ -268,6 +274,7 @@ $this->breadcrumbs = array(
                                             <td><?php echo $list->Log_List_Date; ?></td>
                                             <td><?php echo $list->Log_List_Event; ?></td>
                                             <td><?php echo $list->Log_List_Seq_Number; ?></td>
+                                            <td><?php echo $list->Log_List_Frequency; ?></td>
                                             <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><span class="badge bg-light-blue"><?php echo $list->Log_List_Duration; ?></span></td>
                                             <td>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit')); ?>&nbsp;&nbsp;
@@ -284,6 +291,7 @@ $this->breadcrumbs = array(
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Date]", $list->Log_List_Date);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Event]", $list->Log_List_Event);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Seq_Number]", $list->Log_List_Seq_Number);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Frequency]", $list->Log_List_Frequency);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_hours]", $list->duration_hours);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_minutes]", $list->duration_minutes);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][duration_seconds]", $list->duration_seconds);
@@ -293,7 +301,7 @@ $this->breadcrumbs = array(
                                         <?php
                                     }
                                 } else {
-                                    echo "<tr id='norecord_tr'><td colspan='10'>No data created</td></tr>";
+                                    echo "<tr id='norecord_tr'><td colspan='11'>No data created</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -385,6 +393,7 @@ $js = <<< EOD
             $('#DistributionLogsheetList_Log_List_Date').val(tr.find('td:nth-child(6)').html());
             $('#DistributionLogsheetList_Log_List_Event').val(tr.find('td:nth-child(7)').html());
             $('#DistributionLogsheetList_Log_List_Seq_Number').val(tr.find('td:nth-child(8)').html());
+            $('#DistributionLogsheetList_Log_List_Frequency').val(tr.find('td:nth-child(9)').html());
         });
     });
         
