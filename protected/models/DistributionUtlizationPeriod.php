@@ -10,7 +10,7 @@
  * @property integer $Period_Number
  * @property string $Period_From
  * @property string $Period_To
- * @property integer $Class_Id
+ * @property integer $Sub_Class_Id
  * @property integer $Setting_Id
  * @property string $Created_Date
  * @property string $Rowversion
@@ -18,7 +18,7 @@
  * @property integer $Updated_By
  *
  * The followings are the available model relations:
- * @property DistributionClass $class
+ * @property DistributionSubclass $class
  * @property DistributionSetting $setting
  */
 class DistributionUtlizationPeriod extends RActiveRecord {
@@ -44,15 +44,16 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Period_Internal_Code', 'required'),
+            array('Period_Year, Period_Number, Period_From, Period_To, Sub_Class_Id, Setting_Id, Period_Internal_Code', 'required'),
             array('Period_Internal_Code', 'unique'),
-            array('Period_Year, Period_Number, Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Period_Year, Period_Number, Sub_Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Period_Year', 'length', 'max' => 4),
             array('Period_Year', 'numerical', 'min' => date('Y')-10, 'max' => date('Y')+10),
+            array('Period_To', 'compare', 'compareAttribute'=>'Period_From', 'allowEmpty' => false, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Period_Id, Period_Internal_Code, Period_Year, Period_Number, Period_From, Period_To, Class_Id, Setting_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Period_Id, Period_Internal_Code, Period_Year, Period_Number, Period_From, Period_To, Sub_Class_Id, Setting_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,7 +64,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'class' => array(self::BELONGS_TO, 'DistributionClass', 'Class_Id'),
+            'subclass' => array(self::BELONGS_TO, 'DistributionSubclass', 'Sub_Class_Id'),
             'setting' => array(self::BELONGS_TO, 'DistributionSetting', 'Setting_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
@@ -81,7 +82,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
             'Period_Number' => 'Period Number',
             'Period_From' => 'Period From',
             'Period_To' => 'Period To',
-            'Class_Id' => 'Class',
+            'Sub_Class_Id' => 'Class',
             'Setting_Id' => 'Setting',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
@@ -113,7 +114,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         $criteria->compare('Period_Number', $this->Period_Number);
         $criteria->compare('Period_From', $this->Period_From, true);
         $criteria->compare('Period_To', $this->Period_To, true);
-        $criteria->compare('Class_Id', $this->Class_Id);
+        $criteria->compare('Sub_Class_Id', $this->Sub_Class_Id);
         $criteria->compare('Setting_Id', $this->Setting_Id);
         $criteria->compare('Created_Date', $this->Created_Date, true);
         $criteria->compare('Rowversion', $this->Rowversion, true);
@@ -157,4 +158,5 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         $ranges =  range(date('Y', strtotime("-10 Years")), date('Y', strtotime("+10 Years")));
         return array_combine($ranges, $ranges);
     }
+    
 }

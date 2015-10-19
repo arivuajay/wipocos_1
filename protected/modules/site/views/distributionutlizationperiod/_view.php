@@ -25,8 +25,8 @@
 	<?php echo CHtml::encode($data->Period_To); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Class_Id')); ?>:</b>
-	<?php echo CHtml::encode($data->Class_Id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Sub_Class_Id')); ?>:</b>
+	<?php echo CHtml::encode($data->Sub_Class_Id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Setting_Id')); ?>:</b>

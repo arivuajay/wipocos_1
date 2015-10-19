@@ -37,8 +37,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Class_Id'); ?>
-		<?php echo $form->textField($model,'Class_Id',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Sub_Class_Id'); ?>
+		<?php echo $form->textField($model,'Sub_Class_Id',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

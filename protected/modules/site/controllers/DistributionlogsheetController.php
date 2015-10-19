@@ -38,7 +38,7 @@ class DistributionlogsheetController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'insertlog', 'availperiods', 'import'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'searchworks', 'insertlog', 'availperiods', 'import'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -237,6 +237,22 @@ class DistributionlogsheetController extends Controller {
         $this->renderPartial('_search_recordings', compact('recordings'));
     }
 
+    public function actionSearchworks() {
+        $criteria = new CDbCriteria();
+        if (!empty($_REQUEST['searach_text'])) {
+            $search_txt = $_REQUEST['searach_text'];
+            $criteria->compare('Work_Org_Title', $search_txt, true, 'OR');
+            $criteria->compare('Work_Internal_Code', $search_txt, true, 'OR');
+            $criteria->compare('Work_Iswc', $search_txt, true, 'OR');
+            $criteria->compare('Work_Wic_Code', $search_txt, true, 'OR');
+        }
+
+        if ($_REQUEST['is_record'] == '1') {
+            $works = Work::model()->findAll($criteria);
+        }
+        $this->renderPartial('_search_works', compact('works'));
+    }
+
     public function actionInsertlog() {
         if (isset($_POST['DistributionLogsheetList']) && !empty($_POST['DistributionLogsheetList']) && isset($_POST['DistributionLogsheet']) && !empty($_POST['DistributionLogsheet'])) {
             $period_id = $_POST['DistributionLogsheet']['Period_Id'];
@@ -268,11 +284,32 @@ class DistributionlogsheetController extends Controller {
             $log_model->attributes = $_POST['DistributionLogsheet'];
             if ($log_model->save()) {
                 $log_id = $log_model->Log_Id;
-                DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id));
+                $edit_list_guids = array();
+                $edit_models = array();
+                foreach ($_POST['DistributionLogsheetList'] as $values) {
+                    $exist = DistributionLogsheetList::model()->findByAttributes(array('Log_List_Record_GUID' => $values['Log_List_Record_GUID'], 'Log_Id' => $log_id));
+                    if(!empty($exist)){
+                        $edit_list_guids[] = $values['Log_List_Record_GUID'];
+                        $edit_models[$values['Log_List_Record_GUID']] = $exist;
+                    }
+                }
+                if(!empty($edit_list_guids)){
+                    $log_lists = DistributionLogsheetList::model()->findAllByAttributes(array('Log_Id' => $log_id));
+                    foreach ($log_lists as $list) {
+                        if(!in_array($list->Log_List_Record_GUID, $edit_list_guids)){
+                            DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id, 'Log_List_Record_GUID' => $list->Log_List_Record_GUID));
+                        }
+                    }
+                }else{
+                    DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id));
+                }
                 $valid = true;
                 foreach ($_POST['DistributionLogsheetList'] as $values) {
                     $values = array_merge($values, $time_set);
                     $model = new DistributionLogsheetList;
+                    if(in_array($values['Log_List_Record_GUID'], $edit_list_guids)){
+                        $model = $edit_models[$values['Log_List_Record_GUID']];
+                    }
                     $model->attributes = $values;
                     $model->setAttribute('Log_Id', $log_id);
                     $valid = $valid && $model->save(false);
@@ -315,6 +352,7 @@ class DistributionlogsheetController extends Controller {
         } else {
             $period_model = $model->period;
         }
+        $model->setScenario('import');
 
         if (empty($period_model))
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -334,15 +372,12 @@ class DistributionlogsheetController extends Controller {
                     $model->import_file->saveAs($path);
                     $this->_import_period = $id;
                     $success = $this->importExcel($path);
-                    exit;
                     if ($success && $model->save()) {
-                        Myclass::addAuditTrail("XLS Imported to Society : {$model->Society_Code} successfully.", "group");
+                        Myclass::addAuditTrail("Logsheet XLS Imported Successfully.", "group");
                         $this->render('import', array(
                             'model' => $model,
                             'staging' => Yii::app()->wipoimport->getStageRow(),
                             'import_status' => Yii::app()->wipoimport->getImportStatus(),
-                            'staging_tables' => Yii::app()->wipoimport->getStageTables(),
-                            'imported_table' => Yii::app()->wipoimport->getImportedTable(),
                         ));
                         Yii::app()->end();
 //                        Yii::app()->user->setFlash('success', "XLS Imported Successfully!!! <br />{$this->_import_status}");
@@ -368,6 +403,7 @@ class DistributionlogsheetController extends Controller {
         unlink($file_path);
 
         $return = Yii::app()->wipoimport->importLogsheet();
+        return $return;
     }
 
 }

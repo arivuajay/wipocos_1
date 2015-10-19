@@ -35,7 +35,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'action' => array('/site/distributionutlizationperiod/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-                    $classes = DistributionClass::classList();
+                    $classes = DistributionSubclass::classList();
+                    
                     $settings = DistributionSetting::settingList();
                     ?>
 
@@ -71,8 +72,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Class_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Class_Id', $classes, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->labelEx($searchModel, 'Sub_Class_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Sub_Class_Id', $classes, array('class' => 'form-control', 'prompt' => '')); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -107,8 +108,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'Period_From',
                 'Period_To',
                 array(
-                    'name' => 'Class_Id',
-                    'value' => '$data->class->Class_Name'
+                    'name' => 'Sub_Class_Id',
+                    'value' => '$data->subclass->Subclass_Name'
                 ),
                 array(
                     'name' => 'Setting_Id',
@@ -186,8 +187,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'Period_From',
             'Period_To',
             array(
-                'name' => 'Class_Id',
-                'value' => '$data->class->Class_Name'
+                'name' => 'Sub_Class_Id',
+                'value' => '$data->subclass->Subclass_Name'
             ),
             array(
                 'name' => 'Setting_Id',

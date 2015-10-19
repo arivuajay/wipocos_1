@@ -61,7 +61,7 @@ $this->breadcrumbs = array(
             'Period_From',
             'Period_To',
             array(
-                'name' => 'Class_Id',
+                'name' => 'Sub_Class_Id',
                 'value' => $model->class->Class_Name
             ),
             array(

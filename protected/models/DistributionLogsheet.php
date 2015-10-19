@@ -38,7 +38,7 @@ class DistributionLogsheet extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Period_Id, Log_User_Cust_Id', 'required'),
-            array('import_file, import_category', 'required', 'on' => 'import'),
+            array('import_file', 'required', 'on' => 'import'),
             array('Period_Id, Log_User_Cust_Id, Log_Place_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('import_file', 'file', 'allowEmpty' => true, 'types' => self::IMPORT_TYPE),
             array('Created_Date, Rowversion', 'safe'),

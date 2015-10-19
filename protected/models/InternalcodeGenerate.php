@@ -44,6 +44,8 @@ class InternalcodeGenerate extends RActiveRecord {
     const DIST_SUBCLASS_CODE = 'DSCL';
     const DIST_DATES_CODE = 'DDI';
     const DIST_UTILIZATION_PERIOD_CODE = 'DUPD';
+    
+    const DIST_LOGSHEET_LIST_SEQ_CODE = 'LS';
 
 
     public $fullcode;
@@ -216,6 +218,7 @@ class InternalcodeGenerate extends RActiveRecord {
             self::DIST_SUBCLASS_CODE => 'Sub-class',
             self::DIST_DATES_CODE => 'Setting Dates',
             self::DIST_UTILIZATION_PERIOD_CODE => 'Utilization Periods',
+            self::DIST_LOGSHEET_LIST_SEQ_CODE => 'Logsheet List Sequence',
         );
         
         if($user_type == NULL && isset($this->Gen_User_Type))

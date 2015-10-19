@@ -1492,6 +1492,7 @@ class WipoImport extends CApplicationComponent {
     }
 
     public function importLogsheet() {
+        $total_records = $success_records = $unsuccess_records = $duplicate_records = 0;
         $objWorksheet = $this->_import_worksheet;
         $highestRow = $objWorksheet->getHighestRow(); // e.g. 10
         $highestColumn = $objWorksheet->getHighestColumn(); // e.g 'F'
@@ -1552,6 +1553,7 @@ class WipoImport extends CApplicationComponent {
                 
                 foreach ($import_rows['log_list'] as $key => $list) {
                     $valid = true;
+                    ## VALIDATION ##
                     if (is_numeric($list['Log_List_Duration'])) {
                         $val = PHPExcel_Style_NumberFormat::toFormattedString($list['Log_List_Duration'], 'hh:mm:ss');
                         if (!preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $val)) {
@@ -1560,6 +1562,7 @@ class WipoImport extends CApplicationComponent {
                         $this->_stage_rows['log_list'][$key]['Log_List_Duration'] = $val;
                     }
                     
+                    
                     if (Myclass::is_date($list['Log_List_Date']))
                         $val = date('Y-m-d', strtotime($list['Log_List_Date']));
                     else if (is_numeric($list['Log_List_Date']))
@@ -1567,11 +1570,19 @@ class WipoImport extends CApplicationComponent {
                     else
                         $val = 'Invalid format';
 
+                    
                     $d = DateTime::createFromFormat('Y-m-d', $val);
                     if ($d && $d->format('Y-m-d') != $val) {
                         $valid = $valid && false;
                     }
                     $this->_stage_rows['log_list'][$key]['Log_List_Date'] = $val;
+                    
+                    $check_exist = Recording::model()->findByAttributes(array('Rcd_Title' => $list['Log_List_Record_GUID']));
+                    if(empty($check_exist))
+                        $valid = false;
+                    else
+                        $list['Log_List_Record_GUID'] = $check_exist->Rcd_GUID;
+                    ## VALIDATION END ##
 
                     if ($valid){
                         $list_model = new DistributionLogsheetList;
@@ -1579,110 +1590,25 @@ class WipoImport extends CApplicationComponent {
                         $list_model->attributes = $list;
                         if($list_model->save(false)){
                             $this->_stage_rows['log_list'][$key]['import_status'] = 1;
+                            $success_records++;
+                        }else{
+                            $unsuccess_records++;
                         }
+                    }else{
+                        $unsuccess_records++;
                     }
+                    $total_records ++;
                 }
-                exit;
             } else {
                 Yii::app()->user->setFlash('danger', "Failed to save Logsheet");
                 Yii::app()->controller->redirect(array('/site/distributionlogsheet/import', 'id' => $this->_period_id));
             }
-
-            /* validate date fields */
-            if (in_array($col, $date_validate_fields)) {
-                if ($value != "Invalid format") {
-                    $d = DateTime::createFromFormat('Y-m-d', $value);
-                    if ($d && $d->format('Y-m-d') != $value)
-                        $valid = false;
-                }else {
-                    $valid = false;
-                }
-            }
-            /* validate time fields */
-            if (in_array($col, $time_validate_fields)) {
-                if ($value != "Invalid format") {
-                    if (!preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $value))
-                        $valid = false;
-                }else {
-                    $valid = false;
-                }
-            }
-
-            $related_records = $this->_stage_tables = $this->importLogStageTables();
-            foreach ($this->_import_rows as $key => $import_row) {
-                foreach ($related_records as $relModal => $arrKey) {
-                    $this->importValidate('author', $key, $arrKey['key']);
-                }
-            }
-            exit;
-            unset($related_records['AuthorAccount']);
-            foreach ($this->_import_rows as $key => $import_row) {
-                $int_code = '-';
-                if ($this->_stage_rows[$key]['basic_val']['success'] == 1) {
-                    /* Add Master fields */
-                    $import_row['basic_val']['Auth_Birth_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['basic_val']['Auth_Birth_Country_Id']);
-                    $import_row['basic_val']['Auth_Nationality_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['basic_val']['Auth_Nationality_Id']);
-                    $import_row['basic_val']['Auth_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['basic_val']['Auth_Language_Id']);
-                    $import_row['basic_val']['Auth_Marital_Status_Id'] = Myclass::addMaster('MasterMaritalStatus', 'Marital_State', 'Master_Marital_State_Id', $import_row['basic_val']['Auth_Marital_Status_Id']);
-                    $import_row['basic_val']['Auth_Gender'] = strtoupper(substr($import_row['basic_val']['Auth_Gender'], 0, 1));
-                    $import_row['address_val']['Auth_Unknown_Address'] = strtoupper(substr($import_row['address_val']['Auth_Unknown_Address'], 0, 1));
-                    $import_row['payment_val']['Auth_Pay_Method_id'] = Myclass::addMaster('MasterPaymentMethod', 'Paymode_Name', 'Master_Paymode_Id', $import_row['payment_val']['Auth_Pay_Method_id']);
-                    $import_row['pseudonym_val']['Auth_Pseudo_Type_Id'] = Myclass::addMaster('MasterPseudonymTypes', 'Pseudo_Code', 'Pseudo_Id', $import_row['pseudonym_val']['Auth_Pseudo_Type_Id']);
-                    $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id'] = Myclass::addMaster('MasterInternalPosition', 'Int_Post_Name', 'Master_Int_Post_Id', $import_row['copyright_val']['Auth_Mnge_Internal_Position_Id']);
-                    $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id'] = Myclass::addMaster('MasterManagedRights', 'Mgd_Rights_Name', 'Master_Mgd_Rights_Id', $import_row['copyright_val']['Auth_Mnge_Managed_Rights_Id']);
-                    $import_row['copyright_val']['Auth_Mnge_Territories_Id'] = Myclass::addMaster('MasterTerritories', 'Territory_Name', 'Master_Territory_Id', $import_row['copyright_val']['Auth_Mnge_Territories_Id']);
-                    $import_row['copyright_val']['Auth_Mnge_Region_Id'] = Myclass::addMaster('MasterRegion', 'Region_Name', 'Master_Region_Id', $import_row['copyright_val']['Auth_Mnge_Region_Id']);
-                    $import_row['copyright_val']['Auth_Mnge_Profession_Id'] = Myclass::addMaster('MasterProfession', 'Profession_Name', 'Master_Profession_Id', $import_row['copyright_val']['Auth_Mnge_Profession_Id']);
-                    /* Save Records */
-                    $check_exists = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $import_row['basic_val']['Auth_First_Name'], 'Auth_Sur_Name' => $import_row['basic_val']['Auth_Sur_Name']));
-                    if (empty($check_exists)) {
-                        $model = new AuthorAccount;
-                        $model->attributes = $import_row['basic_val'];
-                        if ($model->validate()) {
-                            $success_records++;
-                            $model->save(false);
-                            $int_code = $model->Auth_Internal_Code;
-                            $this->_stage_rows[$key]['basic_val']['import_status'] = 1;
-                            foreach ($import_row as $catKey => $values) {
-                                $import_row[$catKey]['Auth_Acc_Id'] = $model->Auth_Acc_Id;
-                            }
-                            $import_row['copyright_val']['Auth_Mnge_Society_Id'] = $this->_import_society;
-                            foreach ($related_records as $relModal => $arrKey) {
-                                $rel_model = new $relModal;
-                                $rel_model->attributes = $import_row[$arrKey['key']];
-                                if ($this->_stage_rows[$key][$arrKey['key']]['success'] == 1) {
-                                    $rel_model->save(false);
-                                    $this->_stage_rows[$key][$arrKey['key']]['import_status'] = 1;
-                                }
-                            }
-                        } else {
-                            $unsuccess_records++;
-                        }
-                    } else {
-                        $int_code = $check_exists->Auth_Internal_Code;
-                        foreach ($stage as $col => $row) {
-                            $this->_stage_rows[$key][$col]['import_status'] = 2;
-                        }
-                        $duplicate_records++;
-                    }
-                } else {
-                    $unsuccess_records++;
-                }
-                $this->_stage_rows[$key]['basic_val']['Auth_Internal_Code'] = $int_code;
-                $this->_stage_rows[$key]['basic_val'] = Myclass::reArrangeArray($this->_stage_rows[$key]['basic_val']);
-                $total_records++;
-            }
-            $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
-            $this->_imported_table = 'Author Import';
-            return true;
-            echo '<pre>';
-            print_r($log_list);
-            exit;
         } else {
             Yii::app()->user->setFlash('danger', "Its not a Valid File (NOT IN PREDEFINED FORMAT)");
             Yii::app()->controller->redirect(array('/site/distributionlogsheet/import', 'id' => $this->_period_id));
         }
-        exit;
+        $this->_import_status = $this->setImportStatus($total_records, $success_records, $unsuccess_records, $duplicate_records);
+        return true;
     }
 
     public function importLogStageTables() {

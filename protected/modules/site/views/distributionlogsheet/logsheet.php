@@ -16,6 +16,8 @@ $this->breadcrumbs = array(
 //    'Classes & Available Periods ' => array('/site/distributionlogsheet/availperiods'),
     $this->title,
 );
+
+$measure_unit = $period_model->subclass->Subclass_Measure_Unit;
 ?>
 
 <div class="box box-primary">
@@ -29,7 +31,7 @@ $this->breadcrumbs = array(
         ),
         'enableAjaxValidation' => true,
     ));
-    $users = CHtml::listData(CustomerUser::model()->findAll(), 'User_Cust_Id', 'User_Cust_Name');
+    $users = CHtml::listData(CustomerUser::model()->findAll(), 'User_Cust_Id', 'namewithcontract');
     $places = Myclass::getMasterPlace();
     $factors = Myclass::getMasterFactor();
     ?>  
@@ -42,7 +44,7 @@ $this->breadcrumbs = array(
                 <div class="box-body">
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <?php echo CHtml::textField('class_title', $period_model->class->Class_Name, array('class' => 'form-control', 'disabled' => true)) ?>
+                            <?php echo CHtml::textField('class_title', $period_model->subclass->fullname, array('class' => 'form-control', 'disabled' => true)) ?>
                         </div>
 
                         <div class="form-group">
@@ -90,7 +92,7 @@ $this->breadcrumbs = array(
                         </div>
                     </div>
                     <div class="col-lg-1"></div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-5 hide">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Log_Place_Id', array('class' => '')); ?>
                             <?php echo $form->dropDownList($model, 'Log_Place_Id', $places, array('class' => 'form-control', 'prompt' => '')); ?>
@@ -153,26 +155,34 @@ $this->breadcrumbs = array(
                 </div>
                 <div class="box-body">
                     <div class="col-lg-5">
-                        <div class="form-group">
-                            <?php echo $form->labelEx($list_model, 'Log_List_Duration', array('class' => '')) . ' (H : m : s)'; ?>
-                            <?php echo $form->hiddenField($list_model, 'Log_List_Duration'); ?>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_hours', array('class' => 'form-control zero_fields')); ?>
-                                </div>
-                                <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_minutes', array('class' => 'form-control zero_fields')); ?>
-                                    <?php echo $form->error($list_model, 'duration_minutes'); ?>
-                                </div>
-                                <div class="col-lg-4">
-                                    <?php echo $form->textField($list_model, 'duration_seconds', array('class' => 'form-control zero_fields')); ?>
-                                    <?php echo $form->error($list_model, 'duration_seconds'); ?>
-                                </div>
-                                <div class="col-lg-12">
-                                    <?php echo $form->error($list_model, 'duration_hours'); ?>
+                        <?php if ($measure_unit == 'D') { ?>
+                            <div class="form-group">
+                                <?php echo $form->labelEx($list_model, 'Log_List_Duration', array('class' => '')) . ' (H : m : s)'; ?>
+                                <?php echo $form->hiddenField($list_model, 'Log_List_Duration'); ?>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <?php echo $form->textField($list_model, 'duration_hours', array('class' => 'form-control zero_fields')); ?>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <?php echo $form->textField($list_model, 'duration_minutes', array('class' => 'form-control zero_fields')); ?>
+                                        <?php echo $form->error($list_model, 'duration_minutes'); ?>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <?php echo $form->textField($list_model, 'duration_seconds', array('class' => 'form-control zero_fields')); ?>
+                                        <?php echo $form->error($list_model, 'duration_seconds'); ?>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <?php echo $form->error($list_model, 'duration_hours'); ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } else if ($measure_unit == 'F') { ?>
+                            <div class="form-group">
+                                <?php echo $form->labelEx($list_model, 'Log_List_Frequency', array('class' => '')); ?>
+                                <?php echo $form->textField($list_model, 'Log_List_Frequency', array('class' => 'form-control')); ?>
+                                <?php echo $form->error($list_model, 'Log_List_Frequency'); ?>
+                            </div>
+                        <?php } ?>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($list_model, 'Log_List_Factor_Id', array('class' => '')); ?>
@@ -200,14 +210,9 @@ $this->breadcrumbs = array(
                             <?php echo $form->error($list_model, 'Log_List_Event'); ?>
                         </div>
                         <div class="form-group">
-                            <?php echo $form->labelEx($list_model, 'Log_List_Seq_Number', array('class' => '')); ?>
-                            <?php echo $form->textField($list_model, 'Log_List_Seq_Number', array('class' => 'form-control')); ?>
+                            <?php echo $form->labelEx($list_model, 'Log_List_Seq_Number', array('class' => '')) . ' ( Auto Generate )'; ?>
+                            <?php echo $form->textField($list_model, 'Log_List_Seq_Number', array('class' => 'form-control', 'readonly' => true)); ?>
                             <?php echo $form->error($list_model, 'Log_List_Seq_Number'); ?>
-                        </div>
-                        <div class="form-group">
-                            <?php echo $form->labelEx($list_model, 'Log_List_Frequency', array('class' => '')); ?>
-                            <?php echo $form->textField($list_model, 'Log_List_Frequency', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($list_model, 'Log_List_Frequency'); ?>
                         </div>
                     </div>
 
@@ -247,16 +252,15 @@ $this->breadcrumbs = array(
                         <table id="linked-holders" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Original Title</th>
-                                    <th>Internal Code</th>
-                                    <th>Duration</th>
-                                    <th>Factor</th>
-                                    <th>Coefficient</th>
-                                    <th>Date</th>
-                                    <th>Event or show</th>
-                                    <th>Sequence Number</th>
-                                    <th>Frequency</th>
-                                    <th>Total Duration</th>
+                                    <th><?php echo Recording::model()->getAttributeLabel('Rcd_Title'); ?></th>
+                                    <th><?php echo Recording::model()->getAttributeLabel('Rcd_Internal_Code'); ?></th>
+                                    <!--<th class="hide">Duration</th>-->
+                                    <th><?php echo $measure_unit == 'D' ? DistributionLogsheetList::model()->getAttributeLabel('Log_List_Duration') : DistributionLogsheetList::model()->getAttributeLabel('Log_List_Frequency'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Factor_Id'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Coefficient'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Date'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Event'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Seq_Number'); ?></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -264,18 +268,28 @@ $this->breadcrumbs = array(
                                 <?php
                                 if ($model->distributionLogsheetLists) {
                                     foreach ($model->distributionLogsheetLists as $key => $list) {
+                                        if($measure_unit == 'D'){
+                                            $title = $list->listWork->Work_Org_Title;
+                                            $int_code = $list->listWork->Work_Internal_Code;
+                                        }else if($measure_unit == 'F'){
+                                            $title = $list->listRecording->Rcd_Title;
+                                            $int_code = $list->listRecording->Rcd_Internal_Code;
+                                        }
                                         ?>
-                                        <tr data-uid="<?php echo $list->Log_List_Record_GUID ?>" data-title="<?php echo $list->listRecording->Rcd_Title ?>" data-intcode="<?php echo $list->listRecording->Rcd_Internal_Code ?>">
-                                            <td><?php echo $list->listRecording->Rcd_Title; ?></td>
-                                            <td><?php echo $list->listRecording->Rcd_Internal_Code; ?></td>
-                                            <td class="td_rcd_duration" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>
+                                        <tr data-uid="<?php echo $list->Log_List_Record_GUID ?>" data-title="<?php echo $title ?>" data-intcode="<?php echo $int_code ?>">
+                                            <td><?php echo $title; ?></td>
+                                            <td><?php echo $int_code; ?></td>
+                                            <?php if ($measure_unit == 'D') { ?>
+                                                <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><span class="badge bg-light-blue"><?php echo $list->Log_List_Duration; ?></span></td>
+                                            <?php } else { ?>
+                                                <td><?php echo $list->Log_List_Frequency; ?></td>
+                                            <?php } ?>
+                                            <!--<td class="td_rcd_duration hide" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>-->
                                             <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
                                             <td><?php echo $list->Log_List_Coefficient; ?></td>
                                             <td><?php echo $list->Log_List_Date; ?></td>
                                             <td><?php echo $list->Log_List_Event; ?></td>
                                             <td><?php echo $list->Log_List_Seq_Number; ?></td>
-                                            <td><?php echo $list->Log_List_Frequency; ?></td>
-                                            <td class="td_duration" data-hour="<?php echo $list->duration_hours; ?>" data-minute="<?php echo $list->duration_minutes; ?>" data-second="<?php echo $list->duration_seconds; ?>"><span class="badge bg-light-blue"><?php echo $list->Log_List_Duration; ?></span></td>
                                             <td>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit')); ?>&nbsp;&nbsp;
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
@@ -301,7 +315,7 @@ $this->breadcrumbs = array(
                                         <?php
                                     }
                                 } else {
-                                    echo "<tr id='norecord_tr'><td colspan='11'>No data created</td></tr>";
+                                    echo "<tr id='norecord_tr'><td colspan='10'>No data created</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -328,10 +342,14 @@ $this->breadcrumbs = array(
 </div>
 
 <?php
-$search_url = Yii::app()->createAbsoluteUrl("site/distributionlogsheet/searchrecords");
-
+if ($measure_unit == 'F') {
+    $search_url = Yii::app()->createAbsoluteUrl("site/distributionlogsheet/searchrecords");
+} else if ($measure_unit == 'D') {
+    $search_url = Yii::app()->createAbsoluteUrl("site/distributionlogsheet/searchworks");
+}
 $js = <<< EOD
     var rowCount = $('#linked-holders tbody tr').length;
+    var measureUnit = '$measure_unit';
     $(document).ready(function() {
         checkLog();
         
@@ -385,15 +403,18 @@ $js = <<< EOD
             tr.addClass('highlight').siblings().removeClass('highlight');
             
             $('#DistributionLogsheetList_Log_List_Record_GUID').val(tr.data('uid'));
-            $('#DistributionLogsheetList_duration_hours').val(tr.find('.td_duration').data('hour'));
-            $('#DistributionLogsheetList_duration_minutes').val(tr.find('.td_duration').data('minute'));
-            $('#DistributionLogsheetList_duration_seconds').val(tr.find('.td_duration').data('second'));
+            if(measureUnit == 'D'){
+                $('#DistributionLogsheetList_duration_hours').val(tr.find('.td_duration').data('hour'));
+                $('#DistributionLogsheetList_duration_minutes').val(tr.find('.td_duration').data('minute'));
+                $('#DistributionLogsheetList_duration_seconds').val(tr.find('.td_duration').data('second'));
+            }else if(measureUnit == 'F'){
+                $('#DistributionLogsheetList_Log_List_Frequency').val(tr.find('td:nth-child(3)').html());
+            }
             $('#DistributionLogsheetList_Log_List_Factor_Id').val(tr.find('.td_factor').data('factor'));
             $('#DistributionLogsheetList_Log_List_Coefficient').val(tr.find('td:nth-child(5)').html());
             $('#DistributionLogsheetList_Log_List_Date').val(tr.find('td:nth-child(6)').html());
             $('#DistributionLogsheetList_Log_List_Event').val(tr.find('td:nth-child(7)').html());
             $('#DistributionLogsheetList_Log_List_Seq_Number').val(tr.find('td:nth-child(8)').html());
-            $('#DistributionLogsheetList_Log_List_Frequency').val(tr.find('td:nth-child(9)').html());
         });
     });
         
@@ -433,9 +454,9 @@ $js = <<< EOD
                             hr = ("0"+$("#DistributionLogsheetList_duration_hours").val()).slice(-2);
                             min = ("0"+$("#DistributionLogsheetList_duration_minutes").val()).slice(-2);
                             sec = ("0"+$("#DistributionLogsheetList_duration_seconds").val()).slice(-2);
-                            tr += '<td class="td_rcd_duration" data-hour="'+_rcd_hour+'" data-minute="'+_rcd_min+'" data-second="'+_rcd_sec+'">';
-        
-                            tot_dur_td += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
+//                            tr += '<td class="td_rcd_duration hide" data-hour="'+_rcd_hour+'" data-minute="'+_rcd_min+'" data-second="'+_rcd_sec+'">';
+//                            tot_dur_td += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
+                            tr += '<td class="td_duration" data-hour="'+hr+'" data-minute="'+min+'" data-second="'+sec+'">';
                         }else{
                             tr += '<td>';
                         }
@@ -447,10 +468,16 @@ $js = <<< EOD
                         }else if(value['name'] == "DistributionLogsheetList[Log_Id]"){
                             tr += _intcode;
                         }else if(value['name'] == "DistributionLogsheetList[Log_List_Duration]"){
-                            tr += _rcd_hour+':'+_rcd_min+':'+_rcd_sec;
-        
-                            tot_dur_td += '<span class="badge bg-light-blue">'+hr+':'+min+':'+sec+'</span>';
-                            tot_dur_td += '</td>';
+                            tr += '<span class="badge bg-light-blue">'+hr+':'+min+':'+sec+'</span>';
+//                            tr += _rcd_hour+':'+_rcd_min+':'+_rcd_sec;
+//                            tot_dur_td += '<span class="badge bg-light-blue">'+hr+':'+min+':'+sec+'</span>';
+//                            tot_dur_td += '</td>';
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Seq_Number]"){
+                            if(chk_tr.length == 1){
+                                tr += chk_tr.find('td:nth-child(8)').html()
+                            }else{
+                                tr += value['value'] == '' ? 'Auto Generate' : value['value'];
+                            }
                         }else{
                             tr += value['value'];
                         }
@@ -458,7 +485,7 @@ $js = <<< EOD
                     }
                 }
             });
-            tr += tot_dur_td;
+//            tr += tot_dur_td;
             tr += '<td>';
             tr += '<a href="#role-foundation" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';

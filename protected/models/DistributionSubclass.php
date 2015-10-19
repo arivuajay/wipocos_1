@@ -22,6 +22,7 @@
  *
  * The followings are the available model relations:
  * @property DistributionClass $class
+ * @property DistributionUtlizationPeriod[] $distributionUtlizationPeriods
  */
 class DistributionSubclass extends RActiveRecord {
 
@@ -69,6 +70,7 @@ class DistributionSubclass extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'class' => array(self::BELONGS_TO, 'DistributionClass', 'Class_Id'),
+            'distributionUtlizationPeriods' => array(self::HAS_MANY, 'DistributionUtlizationPeriod', 'Subclass_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -195,5 +197,16 @@ class DistributionSubclass extends RActiveRecord {
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_SUBCLASS_CODE);
         }
         return parent::afterSave();
+    }
+    
+    public static function classList($key = NULL) {
+        $list = CHtml::listData(self::model()->findAll(), 'Subclass_Id', 'fullname');
+        if($key != NULL)
+            return $list[$key];
+        return $list;
+    }
+    
+    public function getFullName() {
+        return $this->Subclass_Code.' - '.$this->Subclass_Name;
     }
 }

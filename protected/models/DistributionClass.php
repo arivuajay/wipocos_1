@@ -16,7 +16,6 @@
  * The followings are the available model relations:
  * @property DistributionMainClass $distributionMainclass
  * @property DistributionSubclass[] $distributionSubclasses
- * @property DistributionUtlizationPeriod[] $distributionUtlizationPeriods
  */
 class DistributionClass extends RActiveRecord {
 
@@ -60,8 +59,7 @@ class DistributionClass extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'distributionMainclass' => array(self::BELONGS_TO, 'DistributionMainClass', 'Main_Class_Id'),
-            'distributionSubclasses' => array(self::HAS_MANY, 'DistributionSubclass', 'Class_Id'),
-            'distributionUtlizationPeriods' => array(self::HAS_MANY, 'DistributionUtlizationPeriod', 'Class_Id'),
+            'distributionSubclass' => array(self::HAS_ONE, 'DistributionSubclass', 'Class_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );

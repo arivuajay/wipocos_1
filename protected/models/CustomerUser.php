@@ -164,4 +164,16 @@ class CustomerUser extends RActiveRecord {
         return parent::afterSave();
     }
 
+    public function getNameWithContract(){
+        $name = $this->User_Cust_Name;
+        $contracts = TariffContracts::model()->findAllByAttributes(array('Tarf_Cont_User_Id' => $this->User_Cust_Id));
+        if(!empty($contracts)){
+            $name .= " -";
+            foreach ($contracts as $contract) {
+                $name .= " {$contract->Tarf_Cont_Internal_Code},";
+            }
+            $name = rtrim($name, ',');
+        }
+        return $name;
+    }
 }
