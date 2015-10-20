@@ -137,7 +137,7 @@ class DistributionSetting extends RActiveRecord {
     }
 
     public static function settingList($key = NULL) {
-        $list = CHtml::listData(self::model()->findAll(), 'Setting_Id', 'Setting_Date');
+        $list = CHtml::listData(self::model()->findAll(), 'Setting_Id', 'namewithidentifier');
         if($key != NULL)
             return $list[$key];
         return $list;
@@ -148,5 +148,93 @@ class DistributionSetting extends RActiveRecord {
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_DATES_CODE);
         }
         return parent::afterSave();
+    }
+    
+    public function getNameWithIdentifier() {
+        return $this->Setting_Identifier.' - '. $this->Setting_Date;
+    }
+    
+    public static function setTotalDistributed($logId) {
+        $log = DistributionLogsheet::model()->findByPk($logId);
+        if (!empty($log) && !empty($log->distributionLogsheetLists)) {
+            $total_amt = self::totalDistributionFormula($log);
+            $setting_model = DistributionSetting::model()->findByPk($log->period->Setting_Id);
+            if(!empty($setting_model)){
+                $setting_model->Total_Distribute = $total_amt;
+                $setting_model->save(false);
+            }
+        }
+        return true;
+    }
+
+    public static function totalDistributionFormula($log) {
+        /* Formula Details
+         * ToTDuration = Sum(Di * Ci, Wi) [For all works]C
+         * Di = Duraion in Logsheet. ex: 4 min means -> 4
+         * Ci = Factor * Coefficient. ex: (4 * 1) = 4
+         * ToTDuration =(4*4)*1 = 16 (Factor given in Works Basic Data) (If it is for Recording then by default take 1 as factor to calculate.)
+         * AmountToDistribute = AmountPaid - Costs
+         * AmountToDistribute = 1000 – (3+1.5+2) Take All statutory deduction costs. ex: (6.5/100)*1000
+         * AmountToDistribute = 1000 – [(3+1.5+2)%] => 6.5/100 => 0.065 = 1000 – 65 => 935
+         * Unit_Tarif = AmountToDistribute/TotDuration = 935/16 => 58.43
+         * WorkAmount = (UnitTarif * Di *Ci)Wi [for each work] = 58.43 * 4 * 4 = 935
+         * 
+         * Di can be replaced by Ti where Ti is the number of times a work is used or performed while entering the data from the play list (log sheets).
+         * The use of Di or Ti will be determined while defining the distribution subclass under which the calculation of royalties will be made.
+         * Ti = Frequency in Logsheet
+         */
+//        $log = DistributionLogsheet::model()->findByPk($logId);
+        $totAmount = 0;
+
+        if (!empty($log) && !empty($log->distributionLogsheetLists)) {
+            $subclass = $log->period->subclass;
+            $measure_unit = $subclass->Subclass_Measure_Unit;
+            foreach ($log->distributionLogsheetLists as $key => $list) {
+                $Di = $measure_unit == 'F' ? $list->Log_List_Frequency : $list->duration_minutes;
+                $Ci = ($list->logListFactor->Factor * $list->Log_List_Coefficient);
+                $Wi = $measure_unit == 'F' ? 1 : $list->listWork->workFactor->Factor;
+
+                $ToTDuration = ($Di * $Ci) * $Wi;
+                $AmountToDistribute = $AmountPaid = $Costs = $Unit_Tarif = $WorkAmount = 0;
+
+                /* Amount Get through Invoice */
+//                $criteria = new CDbCriteria();
+//                $criteria->with = 'tarfCont';
+//                $criteria->select = 'Sum(Inv_Amount) as Inv_Amount';
+//                $criteria->group = 't.Tarf_Cont_Id';
+//                $criteria->condition = "tarfCont.Tarf_Cont_User_Id = {$list->log->Log_User_Cust_Id} And t.Inv_Date Between '{$list->log->period->Period_From}' And '{$list->log->period->Period_To}'";
+//                $invoice = ContractInvoice::model()->find($criteria);
+//                $inv_amt = $invoice->Inv_Amount;
+                /**/
+                
+                $inv_amt = $log->Log_Net_Amount;
+                
+                if (!empty($inv_amt)) {
+                    $AmountPaid = $inv_amt;
+
+                    $tot_statuary_percent = ($subclass->Subclass_Admin_Cost + $subclass->Subclass_Social_Deduct + $subclass->Subclass_Cultural_Deduct);
+                    $Costs = ($tot_statuary_percent / 100) * $AmountPaid;
+                    $AmountToDistribute = $AmountPaid - $Costs;
+                    if($AmountToDistribute > 0 && $ToTDuration > 0){
+                        $Unit_Tarif = $AmountToDistribute / $ToTDuration;
+                        $WorkAmount = ($Unit_Tarif * $Di * $Ci);
+                    }
+                }
+                $totAmount += $WorkAmount;
+
+//            echo 'Di:  '.$Di.'<br />';
+//            echo 'Ci:  '.$Ci.'<br />';
+//            echo 'Wi:  '.$Wi.'<br />';
+//            echo 'ToTDuration:  '.$ToTDuration.'<br />';
+//            echo 'AmountPaid:  '.$AmountPaid.'<br />';
+//            echo 'Costs:  '.$Costs.'<br />';
+//            echo 'AmountToDistribute:  '.$AmountToDistribute.'<br />';
+//            echo 'Unit_Tarif:  '.$Unit_Tarif.'<br />';
+//            echo 'WorkAmount:  '.$WorkAmount.'<br />';
+//            echo '###End###<br />';
+            }
+        }
+//        exit;
+        return $totAmount;
     }
 }

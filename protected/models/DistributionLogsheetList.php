@@ -39,6 +39,8 @@ class DistributionLogsheetList extends RActiveRecord {
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
             
+            $this->Log_List_Coefficient = 1;
+            
 //            $this->Log_List_Seq_Number = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_LOGSHEET_LIST_SEQ_CODE))->Fullcode;
         }
     }
@@ -54,9 +56,11 @@ class DistributionLogsheetList extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Log_List_Date', 'required'),
+            array('Log_List_Date, Log_List_Coefficient, Log_List_Factor_Id', 'required'),
             array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select Record before you save'),
-            array('Log_Id, Log_List_Date', 'required', 'on' => 'form2'),
+            array('Log_Id', 'required', 'on' => 'form2'),
+            array('Log_List_Frequency', 'required', 'on' => 'freqForm'),
+            array('Log_List_Duration', 'required', 'on' => 'durForm'),
             array('Log_Id, Log_List_Factor_Id, Log_List_Frequency, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Log_List_Record_GUID, Log_List_Seq_Number', 'length', 'max' => 50),
             array('Log_List_Coefficient', 'length', 'max' => 10),
@@ -65,7 +69,7 @@ class DistributionLogsheetList extends RActiveRecord {
             array('duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Log_List_Coefficient', 'numerical', 'min' => 1, 'max' => 1),
+            array('Log_List_Coefficient', 'numerical', 'min' => 1),
             array('duration_hours', 'durationValidate'),
             array('duration_hours', 'recordingValidate'),
             array('duration_hours, duration_minutes, duration_seconds', 'safe'),

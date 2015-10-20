@@ -38,7 +38,7 @@ class DistributionlogsheetController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'searchworks', 'insertlog', 'availperiods', 'import'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'pdf', 'download', 'logsheet', 'searchrecords', 'searchworks', 'insertlog', 'availperiods', 'import', 'sharecalc'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -215,9 +215,43 @@ class DistributionlogsheetController extends Controller {
 
         if (empty($period_model))
             throw new CHttpException(404, 'The requested page does not exist.');
+
+        $measure_unit = $period_model->subclass->Subclass_Measure_Unit;
+        if ($measure_unit == 'F')
+            $list_model->setScenario('freqForm');
+        else if ($measure_unit == 'D')
+            $list_model->setScenario('durForm');
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $list_model));
-        $this->render('logsheet', compact('model', 'period_model', 'list_model'));
+        $this->render('logsheet', compact('model', 'period_model', 'list_model', 'measure_unit'));
+    }
+
+    public function actionSharecalc($id) {
+        $model = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $id));
+        if (empty($model))
+            throw new CHttpException(404, 'The requested page does not exist.');
+        
+        $period_model = $model->period;
+        $model->setScenario('calc');
+        $measure_unit = $period_model->subclass->Subclass_Measure_Unit;
+
+        // Uncomment the following line if AJAX validation is needed
+        $this->performAjaxValidation(array($model));
+        if (isset($_POST['DistributionLogsheet'])) {
+            $model->attributes = $_POST['DistributionLogsheet'];
+            if ($model->save()) {
+                DistributionSetting::setTotalDistributed($model->Log_Id);
+                $message = "Total Distribution Amount ( {$model->period->setting->Total_Distribute} ) Saved Successfully.";
+                Myclass::addAuditTrail($message, "group");
+                Yii::app()->user->setFlash('success', $message);
+            } else {
+                Yii::app()->user->setFlash('danger', "Distribution Amount not saved successfully !!! Please Try after sometime");
+            }
+            $this->redirect(array('/site/distributionlogsheet/sharecalc', 'id' => $model->period->Period_Id));
+        }
+
+        $this->render('share_calc', compact('model', 'period_model', 'list_model', 'measure_unit'));
     }
 
     public function actionSearchrecords() {
@@ -288,26 +322,26 @@ class DistributionlogsheetController extends Controller {
                 $edit_models = array();
                 foreach ($_POST['DistributionLogsheetList'] as $values) {
                     $exist = DistributionLogsheetList::model()->findByAttributes(array('Log_List_Record_GUID' => $values['Log_List_Record_GUID'], 'Log_Id' => $log_id));
-                    if(!empty($exist)){
+                    if (!empty($exist)) {
                         $edit_list_guids[] = $values['Log_List_Record_GUID'];
                         $edit_models[$values['Log_List_Record_GUID']] = $exist;
                     }
                 }
-                if(!empty($edit_list_guids)){
+                if (!empty($edit_list_guids)) {
                     $log_lists = DistributionLogsheetList::model()->findAllByAttributes(array('Log_Id' => $log_id));
                     foreach ($log_lists as $list) {
-                        if(!in_array($list->Log_List_Record_GUID, $edit_list_guids)){
+                        if (!in_array($list->Log_List_Record_GUID, $edit_list_guids)) {
                             DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id, 'Log_List_Record_GUID' => $list->Log_List_Record_GUID));
                         }
                     }
-                }else{
+                } else {
                     DistributionLogsheetList::model()->deleteAllByAttributes(array('Log_Id' => $log_id));
                 }
                 $valid = true;
                 foreach ($_POST['DistributionLogsheetList'] as $values) {
                     $values = array_merge($values, $time_set);
                     $model = new DistributionLogsheetList;
-                    if(in_array($values['Log_List_Record_GUID'], $edit_list_guids)){
+                    if (in_array($values['Log_List_Record_GUID'], $edit_list_guids)) {
                         $model = $edit_models[$values['Log_List_Record_GUID']];
                     }
                     $model->attributes = $values;
@@ -316,9 +350,11 @@ class DistributionlogsheetController extends Controller {
                     if ($valid)
                         Myclass::addAuditTrail("Logsheet list saved for { {$model->log->period->Period_Internal_Code} - {$model->listRecording->Rcd_Title} } successfully.", "fa fa-newspaper-o");
                 }
-                if ($valid)
+                if ($valid) {
+//                    DistributionSetting::setTotalDistributed($log_id);
                     Yii::app()->user->setFlash('success', 'Logsheet Saved Successfully!!!');
-            }else {
+                }
+            } else {
                 Yii::app()->user->setFlash('danger', 'Failed to save!!!');
             }
         }
@@ -348,6 +384,7 @@ class DistributionlogsheetController extends Controller {
     public function actionImport($id) {
         $model = DistributionLogsheet::model()->findByAttributes(array('Period_Id' => $id));
         if (empty($model)) {
+            $model = new DistributionLogsheet;
             $period_model = DistributionUtlizationPeriod::model()->findByPk($id);
         } else {
             $period_model = $model->period;
@@ -384,7 +421,7 @@ class DistributionlogsheetController extends Controller {
 //                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
                     } else {
                         Yii::app()->user->setFlash('danger', "XLS not Imported !!! Please Try after sometime");
-                        $this->redirect(array('/site/society/import', 'sid' => $model->Society_Id));
+                        $this->redirect(array('/site/distributionlogsheet/import', 'sid' => $model->period->Period_Id));
                     }
                 }
             }

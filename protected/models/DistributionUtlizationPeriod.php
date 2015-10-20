@@ -18,7 +18,7 @@
  * @property integer $Updated_By
  *
  * The followings are the available model relations:
- * @property DistributionSubclass $class
+ * @property DistributionSubclass $subclass
  * @property DistributionSetting $setting
  */
 class DistributionUtlizationPeriod extends RActiveRecord {
@@ -46,6 +46,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         return array(
             array('Period_Year, Period_Number, Period_From, Period_To, Sub_Class_Id, Setting_Id, Period_Internal_Code', 'required'),
             array('Period_Internal_Code', 'unique'),
+            array('Setting_Id', 'unique', 'message' => 'Setting Date has already been taken.'),
             array('Period_Year, Period_Number, Sub_Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Period_Year', 'length', 'max' => 4),
             array('Period_Year', 'numerical', 'min' => date('Y')-10, 'max' => date('Y')+10),

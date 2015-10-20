@@ -1476,10 +1476,10 @@ class WipoImport extends CApplicationComponent {
                 'v_title' => 'Duration',
                 'c_name' => 'Log_List_Duration',
             ),
-//            4 => array(
-//                'v_title' => 'Frequency',
-//                'c_name' => '',
-//            ),
+            4 => array(
+                'v_title' => 'Frequency',
+                'c_name' => 'Log_List_Frequency',
+            ),
             5 => array(
                 'v_title' => 'Date',
                 'c_name' => 'Log_List_Date',
@@ -1550,55 +1550,86 @@ class WipoImport extends CApplicationComponent {
             if ($this->_stage_rows['log_val']['import_status'] == 1) {
                 DistributionLogsheet::model()->deleteAllByAttributes(array('Period_Id' => $import_rows['log_val']['Period_Id']));
                 $log_model->save(false);
-                
+                $log_id = $log_model->Log_Id;
+
                 foreach ($import_rows['log_list'] as $key => $list) {
                     $valid = true;
                     ## VALIDATION ##
+                    
+                    /* duration */
+                    $time_val = $date_val = "Invalid format";
                     if (is_numeric($list['Log_List_Duration'])) {
-                        $val = PHPExcel_Style_NumberFormat::toFormattedString($list['Log_List_Duration'], 'hh:mm:ss');
-                        if (!preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $val)) {
+                        $time_val = PHPExcel_Style_NumberFormat::toFormattedString($list['Log_List_Duration'], 'hh:mm:ss');
+                        if (!preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time_val)) {
                             $valid = $valid && false;
+                        } else {
+                            $time = explode(':', $time_val);
+                            $list['duration_hours'] = $time[0];
+                            $list['duration_minutes'] = $time[1];
+                            $list['duration_seconds'] = $time[2];
                         }
-                        $this->_stage_rows['log_list'][$key]['Log_List_Duration'] = $val;
                     }
-                    
-                    
-                    if (Myclass::is_date($list['Log_List_Date']))
-                        $val = date('Y-m-d', strtotime($list['Log_List_Date']));
-                    else if (is_numeric($list['Log_List_Date']))
-                        $val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($list['Log_List_Date']));
-                    else
-                        $val = 'Invalid format';
+                    $this->_stage_rows['log_list'][$key]['Log_List_Duration'] = $list['Log_List_Duration'] = $time_val;
 
-                    
-                    $d = DateTime::createFromFormat('Y-m-d', $val);
-                    if ($d && $d->format('Y-m-d') != $val) {
+                    /* Date */
+                    if (Myclass::is_date($list['Log_List_Date']))
+                        $date_val = date('Y-m-d', strtotime($list['Log_List_Date']));
+                    else if (is_numeric($list['Log_List_Date']))
+                        $date_val = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($list['Log_List_Date']));
+
+                    $d = DateTime::createFromFormat('Y-m-d', $date_val);
+                    if ($d && $d->format('Y-m-d') != $date_val) {
                         $valid = $valid && false;
                     }
-                    $this->_stage_rows['log_list'][$key]['Log_List_Date'] = $val;
-                    
-                    $check_exist = Recording::model()->findByAttributes(array('Rcd_Title' => $list['Log_List_Record_GUID']));
-                    if(empty($check_exist))
-                        $valid = false;
-                    else
-                        $list['Log_List_Record_GUID'] = $check_exist->Rcd_GUID;
+                    $this->_stage_rows['log_list'][$key]['Log_List_Date'] = $list['Log_List_Date'] = $date_val;
+
+                    /* Frequency */
+                    if (!is_numeric($list['Log_List_Frequency'])) {
+                        $this->_stage_rows['log_list'][$key]['Log_List_Frequency'] = "Invalid format";
+                    }
+
+                    /* Title Exists */
+                    $measurement = $log_model->period->subclass->Subclass_Measure_Unit;
+                    if ($measurement == 'F') {
+                        $check_exist = Recording::model()->findByAttributes(array('Rcd_Title' => $list['Log_List_Record_GUID']));
+                        if (!empty($check_exist)) {
+                            $list['Log_List_Record_GUID'] = $check_exist->Rcd_GUID;
+                        } else {
+                            $valid = false;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] . ' <strong style="color:#B74442">( Recording Not Found )</strong>';
+                        }
+                        unset($this->_stage_rows['log_list'][$key]['Log_List_Duration']);
+//                        unset($list['Log_List_Duration']);
+                    } else if ($measurement == 'D') {
+                        $check_exist = Work::model()->findByAttributes(array('Work_Org_Title' => $list['Log_List_Record_GUID']));
+                        if (!empty($check_exist)) {
+                            $list['Log_List_Record_GUID'] = $check_exist->Work_GUID;
+                        } else {
+                            $valid = false;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] . ' <strong style="color:#B74442">( Work Not Found )</strong>';
+                        }
+                        unset($this->_stage_rows['log_list'][$key]['Log_List_Frequency']);
+//                        unset($list['Log_List_Frequency']);
+                    }
+
                     ## VALIDATION END ##
 
-                    if ($valid){
+                    if ($valid) {
                         $list_model = new DistributionLogsheetList;
-                        $list_model->Log_Id = $log_model->Log_Id;
+                        $list_model->Log_Id = $log_id;
                         $list_model->attributes = $list;
-                        if($list_model->save(false)){
+                        if ($list_model->save(false)) {
                             $this->_stage_rows['log_list'][$key]['import_status'] = 1;
                             $success_records++;
-                        }else{
+                        } else {
                             $unsuccess_records++;
                         }
-                    }else{
+                    } else {
                         $unsuccess_records++;
                     }
                     $total_records ++;
                 }
+//                DistributionSetting::setTotalDistributed($log_id);
             } else {
                 Yii::app()->user->setFlash('danger', "Failed to save Logsheet");
                 Yii::app()->controller->redirect(array('/site/distributionlogsheet/import', 'id' => $this->_period_id));

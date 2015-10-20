@@ -764,5 +764,4 @@ class Myclass extends CController {
         $str = preg_replace("/\t/", "\\t", $str);
         $str = preg_replace("/\r?\n/", "\\n", $str);
     }
-
 }

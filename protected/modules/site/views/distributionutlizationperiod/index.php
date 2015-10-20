@@ -36,7 +36,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'htmlOptions' => array('role' => 'form')
                     ));
                     $classes = DistributionSubclass::classList();
-                    
+
                     $settings = DistributionSetting::settingList();
                     ?>
 
@@ -119,7 +119,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'header' => 'Actions',
                     'class' => 'application.components.MyActionButtonColumn',
                     'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                    'template' => '{addLog}{import}{view}{update}{delete}',
+                    'template' => '{addLog}{import}{calc}{view}{update}{delete}',
                     'buttons' => array(
                         'addLog' => array(//the name {reply} must be same
                             'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -132,10 +132,18 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'import' => array(//the name {reply} must be same
                             'label' => '<i class="fa fa-upload"></i>',
                             'options' => array(
-                                'title' => 'Import XLS',
+                                'title' => 'Import Logsheet',
                             ),
                             'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/import/id/".rawurlencode($data->Period_Id)))',
 //                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                        ),
+                        'calc' => array(//the name {reply} must be same
+                            'label' => '<i class="fa fa-calculator"></i>',
+                            'options' => array(
+                                'title' => 'Share Calculation',
+                            ),
+                            'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/sharecalc/id/".rawurlencode($data->Period_Id)))',
+                            'visible' => 'DistributionLogsheet::logExists(rawurlencode($data->Period_Id))'
                         ),
                     )
                 )
@@ -198,7 +206,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'header' => 'Actions',
                 'class' => 'application.components.MyActionButtonColumn',
                 'htmlOptions' => array('style' => 'width: 180px;;text-align:center', 'vAlign' => 'middle', 'class' => 'action_column'),
-                'template' => '{addLog}{import}{view}{update}{delete}',
+                'template' => '{addLog}{import}{calc}{view}{update}{delete}',
                 'buttons' => array(
                     'addLog' => array(//the name {reply} must be same
                         'label' => '<i class="fa fa-newspaper-o"></i>',
@@ -208,14 +216,22 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/logsheet/id/".rawurlencode($data->Period_Id)))',
 //                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
                     ),
-                        'import' => array(//the name {reply} must be same
-                            'label' => '<i class="fa fa-upload"></i>',
-                            'options' => array(
-                                'title' => 'Import XLS',
-                            ),
-                            'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/import/id/".rawurlencode($data->Period_Id)))',
-//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                    'import' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-upload"></i>',
+                        'options' => array(
+                            'title' => 'Import Logsheet',
                         ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/import/id/".rawurlencode($data->Period_Id)))',
+//                        'visible' => 'UserIdentity::checkPrivilages(rawurlencode($data->roleMdl->Rank))'
+                    ),
+                    'calc' => array(//the name {reply} must be same
+                        'label' => '<i class="fa fa-calculator"></i>',
+                        'options' => array(
+                            'title' => 'Share Calculation',
+                        ),
+                        'url' => 'CHtml::normalizeUrl(array("/site/distributionlogsheet/sharecalc/id/".rawurlencode($data->Period_Id)))',
+                        'visible' => 'DistributionLogsheet::logExists(rawurlencode($data->Period_Id))'
+                    ),
                 )
             )
         );

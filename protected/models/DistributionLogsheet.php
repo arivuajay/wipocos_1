@@ -8,6 +8,7 @@
  * @property integer $Period_Id
  * @property integer $Log_User_Cust_Id
  * @property integer $Log_Place_Id
+ * @property integer $Log_Net_Amount
  * @property string $Created_Date
  * @property string $Rowversion
  * @property integer $Created_By
@@ -39,9 +40,11 @@ class DistributionLogsheet extends RActiveRecord {
         return array(
             array('Period_Id, Log_User_Cust_Id', 'required'),
             array('import_file', 'required', 'on' => 'import'),
+            array('Log_Net_Amount', 'required', 'on' => 'calc'),
             array('Period_Id, Log_User_Cust_Id, Log_Place_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('import_file', 'file', 'allowEmpty' => true, 'types' => self::IMPORT_TYPE),
-            array('Created_Date, Rowversion', 'safe'),
+            array('Log_Net_Amount', 'numerical', 'integerOnly' => false),
+            array('Created_Date, Rowversion, Log_Net_Amount', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Log_Id, Period_Id, Log_User_Cust_Id, Log_Place_Id, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
@@ -78,6 +81,7 @@ class DistributionLogsheet extends RActiveRecord {
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
             'import_file' => 'Import XLS',
+            'Log_Net_Amount' => 'Net Amount',
         );
     }
 
@@ -133,4 +137,8 @@ class DistributionLogsheet extends RActiveRecord {
         ));
     }
 
+    public static function logExists($period_id) {
+        $exists = self::model()->findByAttributes(array('Period_Id' => $period_id));
+        return !empty($exists) && !empty($exists->distributionLogsheetLists);
+    }
 }

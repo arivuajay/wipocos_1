@@ -93,6 +93,7 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date', 'required'),
             array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
+            array('Tarf_Cont_User_Id', 'unique', 'message' => "This User has already been taken."),
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
             array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
