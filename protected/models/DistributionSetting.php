@@ -22,10 +22,11 @@ class DistributionSetting extends RActiveRecord {
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Setting_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_DATES_CODE))->Fullcode;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -138,28 +139,28 @@ class DistributionSetting extends RActiveRecord {
 
     public static function settingList($key = NULL) {
         $list = CHtml::listData(self::model()->findAll(), 'Setting_Id', 'namewithidentifier');
-        if($key != NULL)
+        if ($key != NULL)
             return $list[$key];
         return $list;
     }
-    
+
     protected function afterSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::DIST_DATES_CODE);
         }
         return parent::afterSave();
     }
-    
+
     public function getNameWithIdentifier() {
-        return $this->Setting_Identifier.' - '. $this->Setting_Date;
+        return $this->Setting_Identifier . ' - ' . $this->Setting_Date;
     }
-    
+
     public static function setTotalDistributed($logId) {
         $log = DistributionLogsheet::model()->findByPk($logId);
         if (!empty($log) && !empty($log->distributionLogsheetLists)) {
             $total_amt = self::totalDistributionFormula($log);
             $setting_model = DistributionSetting::model()->findByPk($log->period->Setting_Id);
-            if(!empty($setting_model)){
+            if (!empty($setting_model)) {
                 $setting_model->Total_Distribute = $total_amt;
                 $setting_model->save(false);
             }
@@ -206,21 +207,22 @@ class DistributionSetting extends RActiveRecord {
 //                $invoice = ContractInvoice::model()->find($criteria);
 //                $inv_amt = $invoice->Inv_Amount;
                 /**/
-                
+
                 /* For Manual Entry */
                 $inv_amt = $log->Log_Net_Amount;
-                
+
                 if (!empty($inv_amt)) {
                     $AmountPaid = $inv_amt;
 
                     $tot_statuary_percent = ($subclass->Subclass_Admin_Cost + $subclass->Subclass_Social_Deduct + $subclass->Subclass_Cultural_Deduct);
                     $Costs = ($tot_statuary_percent / 100) * $AmountPaid;
                     $AmountToDistribute = $AmountPaid - $Costs;
-                    if($AmountToDistribute > 0 && $ToTDuration > 0){
+                    if ($AmountToDistribute > 0 && $ToTDuration > 0) {
                         $Unit_Tarif = $AmountToDistribute / $ToTDuration;
                         $WorkAmount = ($Unit_Tarif * $Di * $Ci);
-                        
-                        /*Work And Record Update*/
+
+                        self::saveLogListMember($list,$WorkAmount, $measure_unit);
+
                         $list->Log_List_Unit_Tariff = $Unit_Tarif;
                         $list->Log_List_Work_Amount = $WorkAmount;
                         $list->save(false);
@@ -243,4 +245,35 @@ class DistributionSetting extends RActiveRecord {
 //        exit;
         return $totAmount;
     }
+
+    protected static function saveLogListMember($list,$WorkAmount,$measure_unit) {
+        DistributionLogsheetListMembers::model()->deleteAll("Log_List_Id = '{$list->Log_List_Id}'");
+        if ($measure_unit == 'D'):
+            foreach ($list->listWork->workRightholders as $holder):
+                $member = new DistributionLogsheetListMembers();
+                $member->Log_Member_Type = 'W';
+                $member->Log_List_Id = $list->Log_List_Id;
+                $member->Log_Member_GUID = $holder->Work_Member_GUID;
+                $member->Log_Share_Broad_Amount = $WorkAmount * ($holder->Work_Right_Broad_Share / 100);
+                $member->Log_Share_Mech_Amount = $WorkAmount * ($holder->Work_Right_Mech_Share / 100);
+
+                $member->save(false);
+            endforeach;
+        elseif($measure_unit == 'F'):
+            $totEqShare = $list->listRecording->totalRightholdersEqShare; 
+            $totBkShare = $list->listRecording->totalRightholdersBkShare; 
+        
+            foreach ($list->listRecording->recordingRightholders as $holder):
+                $member = new DistributionLogsheetListMembers();
+                $member->Log_Member_Type = 'R';
+                $member->Log_List_Id = $list->Log_List_Id;
+                $member->Log_Member_GUID = $holder->Rcd_Member_GUID;
+                $member->Log_Share_Broad_Amount = ($WorkAmount / $totEqShare) * ($holder->Rcd_Right_Equal_Share);
+                $member->Log_Share_Mech_Amount = ($WorkAmount / $totBkShare) * ($holder->Rcd_Right_Blank_Share);
+
+                $member->save(false);
+            endforeach;
+        endif;
+    }
+
 }

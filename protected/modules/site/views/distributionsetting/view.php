@@ -2,10 +2,10 @@
 /* @var $this DistributionsettingController */
 /* @var $model DistributionSetting */
 
-$this->title = 'View Setting Dates: ' . $model->Setting_Identifier;
+$this->title = 'View Distribution Timetable: ' . $model->Setting_Identifier;
 $this->breadcrumbs = array(
     'Setting Datess' => array('index'),
-    'View ' . 'Setting Dates',
+    'View ' . 'Distribution Timetable',
 );
 ?>
 <div class="user-view">

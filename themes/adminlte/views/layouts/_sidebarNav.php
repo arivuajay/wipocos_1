@@ -142,7 +142,7 @@
                     'items' => array(
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Class</span>', 'url' => array('/site/distributionclass/index'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-paw"></i> <span>Sub-Class</span>', 'url' => array('/site/distributionsubclass/index'), 'visible' => '1'),
-                        array('label' => '<i class="fa fa-calendar"></i> <span>Setting Dates</span>', 'url' => array('/site/distributionsetting/index'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-calendar"></i> <span>Distribution Timetable</span>', 'url' => array('/site/distributionsetting/index'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-area-chart"></i> <span>Utilization Periods</span>', 'url' => array('/site/distributionutlizationperiod/index'), 'visible' => '1'),
 //                        array('label' => '<i class="fa fa-bar-chart"></i> <span>Classes & Available Periods</span>', 'url' => array('/site/distributionlogsheet/availperiods'), 'visible' => '1'),
                     ),

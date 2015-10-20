@@ -24,6 +24,7 @@
  * The followings are the available model relations:
  * @property MasterFactor $logListFactor
  * @property DistributionLogsheet $log
+ * @property DistributionLogsheetList[] $distributionLogsheetListMembers
  */
 class DistributionLogsheetList extends RActiveRecord {
 
@@ -40,9 +41,9 @@ class DistributionLogsheetList extends RActiveRecord {
             $this->duration_hours = 0;
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
-            
+
             $this->Log_List_Coefficient = 1;
-            
+
 //            $this->Log_List_Seq_Number = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_LOGSHEET_LIST_SEQ_CODE))->Fullcode;
         }
     }
@@ -110,6 +111,7 @@ class DistributionLogsheetList extends RActiveRecord {
             'log' => array(self::BELONGS_TO, 'DistributionLogsheet', 'Log_Id'),
             'listWork' => array(self::BELONGS_TO, 'Work', 'Log_List_Work_GUID', 'foreignKey' => array('Log_List_Record_GUID' => 'Work_GUID'), 'order' => 'Work_Org_Title ASC'),
             'listRecording' => array(self::BELONGS_TO, 'Recording', 'Log_List_Record_GUID', 'foreignKey' => array('Log_List_Record_GUID' => 'Rcd_GUID'), 'order' => 'Rcd_Title ASC'),
+            'distributionLogsheetListMembers' => array(self::HAS_MANY, 'DistributionLogsheetList', 'Log_List_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -137,6 +139,8 @@ class DistributionLogsheetList extends RActiveRecord {
             'duration_hours' => 'Hours',
             'duration_minutes' => 'Minutes',
             'duration_seconds' => 'Seconds',
+            'Log_List_Unit_Tariff' => 'Unit Tariff',
+            'Log_List_Work_Amount' => 'Work Amount',
         );
     }
 
@@ -219,9 +223,93 @@ class DistributionLogsheetList extends RActiveRecord {
         }
         return parent::afterSave();
     }
+
     protected function afterFind() {
         $this->setDuration();
         return parent::afterFind();
+    }
+
+    public function getMatchingdetails($list_id, $guID, $measure_unit) {
+        if ($measure_unit == 'D') {
+            $work = Work::model()->with('workRightholders')->findByAttributes(array('Work_GUID' => $guID));
+            $work_id = $work->Work_Id;
+            $column = '';
+
+            if ($work->workRightholders) {
+                $column .= "<br /><br />";
+                $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
+                //Author
+                foreach ($work->workRightholders as $key => $rightholder) {
+                    if ($rightholder->workAuthor) {
+                        $column .= '<tr>';
+                        $column .= "<td>{$rightholder->workAuthor->fullname}</td>";
+                        $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                        $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= '</tr>';
+                    }
+                }
+                $main_publisher = (new WorkRightholder)->getMainPublisher($work_id);
+                //Main Publisher
+                foreach ($work->workRightholders as $key => $rightholder) {
+                    if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID == $rightholder->workPublisher->Pub_GUID) {
+                        $column .= '<tr>';
+                        $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                        $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                        $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= '</tr>';
+                    }
+                }
+                //Sub Publisher
+                foreach ($work->workRightholders as $key => $rightholder) {
+                    if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID != $rightholder->workPublisher->Pub_GUID) {
+                        $column .= '<tr>';
+                        $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                        $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                        $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= '</tr>';
+                    }
+                }
+                $column .= '</tbody></table>';
+            }
+        } elseif ($measure_unit == 'F') {
+            $recording = Recording::model()->with('recordingRightholders')->findByAttributes(array('Rcd_GUID' => $guID));
+            $column = '';
+            
+            if ($recording->recordingRightholders) {
+                $column .= "<br /><br />";
+                $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
+                foreach ($recording->recordingRightholders as $key => $rightholder) {
+                    if ($rightholder->recordingPerformer) {
+                        $column .= '<tr>';
+                        $column .= "<td>{$rightholder->recordingPerformer->fullname}</td>";
+                        $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                        $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Rcd_Right_Equal_Share})</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Rcd_Right_Blank_Share})</td>";
+                        $column .= '</tr>';
+                    }
+                }
+                foreach ($recording->recordingRightholders as $key => $rightholder) {
+                    if ($rightholder->recordingProducer) {
+                        $column .= '<tr>';
+                        $column .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
+                        $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                        $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Rcd_Right_Equal_Share})</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Rcd_Right_Blank_Share})</td>";
+                        $column .= '</tr>';
+                    }
+                }
+                $column .= '</tbody></table>';
+            }
+        }
+        return $column;
     }
 
 }

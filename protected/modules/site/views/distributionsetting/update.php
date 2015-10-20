@@ -2,10 +2,10 @@
 /* @var $this DistributionsettingController */
 /* @var $model DistributionSetting */
 
-$this->title='Update Setting Dates: '. $model->Setting_Identifier;
+$this->title='Update Distribution Timetable: '. $model->Setting_Identifier;
 $this->breadcrumbs=array(
-	'Setting Dates'=>array('index'),
-	'Update Setting Dates',
+	'Distribution Timetable'=>array('index'),
+	'Update Distribution Timetable',
 );
 ?>
 
