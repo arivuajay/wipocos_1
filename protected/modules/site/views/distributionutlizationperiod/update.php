@@ -2,10 +2,10 @@
 /* @var $this DistributionutlizationperiodController */
 /* @var $model DistributionUtlizationPeriod */
 
-$this->title='Update Utlization Periods: '. $model->Period_Year;
+$this->title='Update Utilization Periods: '. $model->Period_Year;
 $this->breadcrumbs=array(
-	'Utlization Periods'=>array('index'),
-	'Update Utlization Periods',
+	'Utilization Periods'=>array('index'),
+	'Update Utilization Periods',
 );
 ?>
 

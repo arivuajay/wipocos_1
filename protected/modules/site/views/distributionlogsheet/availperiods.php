@@ -121,7 +121,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
 //        $this->widget(
 //                'application.components.MyTbButton', array(
-//            'label' => 'Create Utlization Period',
+//            'label' => 'Create Utilization Period',
 //            'icon' => 'fa fa-plus',
 //            'url' => array('/site/distributionutlizationperiod/create'),
 //            'buttonType' => 'link',

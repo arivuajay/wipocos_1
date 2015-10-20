@@ -2,9 +2,9 @@
 /* @var $this DistributionutlizationperiodController */
 /* @var $model DistributionUtlizationPeriod */
 
-$this->title='Create Utlization Periods';
+$this->title='Create Utilization Periods';
 $this->breadcrumbs=array(
-	'Utlization Periods'=>array('index'),
+	'Utilization Periods'=>array('index'),
 	$this->title,
 );
 ?>

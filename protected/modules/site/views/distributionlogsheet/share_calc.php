@@ -12,7 +12,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 
 $this->title = 'Share Calculation';
 $this->breadcrumbs = array(
-    'Utlization Periods' => array('/site/distributionutlizationperiod/index'),
+    'Utilization Periods' => array('/site/distributionutlizationperiod/index'),
 //    'Classes & Available Periods ' => array('/site/distributionlogsheet/availperiods'),
     $this->title,
 );

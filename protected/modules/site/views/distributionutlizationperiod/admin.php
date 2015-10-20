@@ -3,7 +3,7 @@
 /* @var $model DistributionUtlizationPeriod */
 
 $this->breadcrumbs=array(
-	'Utlization Periods'=>array('index'),
+	'Utilization Periods'=>array('index'),
 	'Manage',
 );
 
@@ -18,7 +18,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#distribution-utlization-period-grid').yiiGridView('update', {
+	$('#distribution-Utilization-period-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Utlization Periods</h1>
+<h1>Manage Utilization Periods</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -41,7 +41,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'distribution-utlization-period-grid',
+	'id'=>'distribution-Utilization-period-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(

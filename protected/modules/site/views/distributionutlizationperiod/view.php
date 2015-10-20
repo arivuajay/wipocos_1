@@ -2,10 +2,10 @@
 /* @var $this DistributionutlizationperiodController */
 /* @var $model DistributionUtlizationPeriod */
 
-$this->title = 'View Utlization Period: ' . $model->Period_Year;
+$this->title = 'View Utilization Period: ' . $model->Period_Year;
 $this->breadcrumbs = array(
-    'Utlization Periods' => array('index'),
-    'View ' . 'Utlization Period',
+    'Utilization Periods' => array('index'),
+    'View ' . 'Utilization Period',
 );
 ?>
 <div class="user-view">
@@ -62,7 +62,7 @@ $this->breadcrumbs = array(
             'Period_To',
             array(
                 'name' => 'Sub_Class_Id',
-                'value' => $model->class->Class_Name
+                'value' => $model->subclass->fullname
             ),
             array(
                 'name' => 'Setting_Id',

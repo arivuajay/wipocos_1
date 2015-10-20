@@ -207,6 +207,7 @@ class DistributionSetting extends RActiveRecord {
 //                $inv_amt = $invoice->Inv_Amount;
                 /**/
                 
+                /* For Manual Entry */
                 $inv_amt = $log->Log_Net_Amount;
                 
                 if (!empty($inv_amt)) {

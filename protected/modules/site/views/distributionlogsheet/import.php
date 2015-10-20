@@ -4,7 +4,7 @@
 
 $this->title = isset($staging) && !empty($staging) ? 'Logsheet Staging Table' : 'Import Logsheet';
 $this->breadcrumbs = array(
-    'Utlization Periods' => array('/site/distributionutlizationperiod/index'),
+    'Utilization Periods' => array('/site/distributionutlizationperiod/index'),
     $this->title,
 );
 ?>

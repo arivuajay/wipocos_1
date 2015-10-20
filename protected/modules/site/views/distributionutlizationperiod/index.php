@@ -2,9 +2,9 @@
 /* @var $this DistributionutlizationperiodController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Utlization Periods';
+$this->title = 'Utilization Periods';
 $this->breadcrumbs = array(
-    'Utlization Periods',
+    'Utilization Periods',
 );
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
@@ -173,7 +173,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php
         $this->widget(
                 'application.components.MyTbButton', array(
-            'label' => 'Create Utlization Period',
+            'label' => 'Create Utilization Period',
             'icon' => 'fa fa-plus',
             'url' => array('/site/distributionutlizationperiod/create'),
             'buttonType' => 'link',
@@ -240,7 +240,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             'type' => 'striped bordered datatable',
             'dataProvider' => $model->dataProvider(),
             'responsiveTable' => true,
-            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Utlization Periods</h3></div><div class="panel-body">{items}{pager}</div></div>',
+            'template' => '<div class="panel panel-primary"><div class="panel-heading"><div class="pull-right">{summary}</div><h3 class="panel-title"><i class="glyphicon glyphicon-book"></i>  Utilization Periods</h3></div><div class="panel-body">{items}{pager}</div></div>',
             'columns' => $gridColumns
                 )
         );
