@@ -57,12 +57,12 @@ $measure_unit = $period_model->subclass->Subclass_Measure_Unit;
                     <div class="col-lg-5">
                         <div class="form-group">
                             <?php echo CHtml::label('Period', '', array('class' => 'col-sm-2 control-label')); ?>
-                            <div class="col-sm-5">
+                            <div class="col-sm-10">
                                 <div class="form-group">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <?php echo CHtml::textField('from', $period_model->Period_From, array('class' => 'form-control', 'disabled' => true)) ?>
                                     </div>
-                                    <div class="col-lg-13">
+                                    <div class="col-lg-6">
                                         <?php echo CHtml::textField('to', $period_model->Period_To, array('class' => 'form-control', 'disabled' => true)) ?>
                                     </div>
                                 </div>
