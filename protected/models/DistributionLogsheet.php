@@ -141,4 +141,12 @@ class DistributionLogsheet extends RActiveRecord {
         $exists = self::model()->findByAttributes(array('Period_Id' => $period_id));
         return !empty($exists) && !empty($exists->distributionLogsheetLists);
     }
+    
+    public function getTotalUnitTariff() {
+        $unit_tariff = 0;
+        foreach ($this->distributionLogsheetLists as $key => $list) {
+            $unit_tariff += $list->Log_List_Unit_Tariff;
+        }
+        return $unit_tariff;
+    }
 }

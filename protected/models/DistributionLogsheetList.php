@@ -18,6 +18,8 @@
  * @property string $Rowversion
  * @property integer $Created_By
  * @property integer $Updated_By
+ * @property integer $Log_List_Work_Amount
+ * @property integer $Log_List_Unit_Tariff
  *
  * The followings are the available model relations:
  * @property MasterFactor $logListFactor
@@ -66,13 +68,14 @@ class DistributionLogsheetList extends RActiveRecord {
             array('Log_List_Coefficient', 'length', 'max' => 10),
             array('Log_List_Event', 'length', 'max' => 100),
             array('Log_List_Duration, Created_Date, Rowversion', 'safe'),
+            array('Log_List_Work_Amount, Log_List_Unit_Tariff', 'numerical', 'integerOnly' => false),
             array('duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
             array('Log_List_Coefficient', 'numerical', 'min' => 1),
             array('duration_hours', 'durationValidate'),
             array('duration_hours', 'recordingValidate'),
-            array('duration_hours, duration_minutes, duration_seconds', 'safe'),
+            array('duration_hours, duration_minutes, duration_seconds, Log_List_Work_Amount, Log_List_Unit_Tariff', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),

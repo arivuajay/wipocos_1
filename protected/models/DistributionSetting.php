@@ -219,6 +219,11 @@ class DistributionSetting extends RActiveRecord {
                     if($AmountToDistribute > 0 && $ToTDuration > 0){
                         $Unit_Tarif = $AmountToDistribute / $ToTDuration;
                         $WorkAmount = ($Unit_Tarif * $Di * $Ci);
+                        
+                        /*Work And Record Update*/
+                        $list->Log_List_Unit_Tariff = $Unit_Tarif;
+                        $list->Log_List_Work_Amount = $WorkAmount;
+                        $list->save(false);
                     }
                 }
                 $totAmount += $WorkAmount;

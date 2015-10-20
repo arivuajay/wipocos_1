@@ -107,7 +107,7 @@ $this->breadcrumbs = array(
                     <h3 class="box-title">Calculation</h3>
                 </div>
                 <div class="box-body">
-                    <div class="col-lg-12">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Log_Net_Amount', array('class' => '')); ?>
                             <?php echo $form->textField($model, 'Log_Net_Amount', array('class' => 'form-control')); ?>
@@ -123,6 +123,31 @@ $this->breadcrumbs = array(
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-12">
+        <div class="box-body">
+            <div class="form-group foundation">
+                <div class="box-header">
+                    <h3 class="box-title">Statistics</h3>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-5">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Rate', 'Rate', array()); ?>
+                            <?php echo CHtml::textField('Rate', $model->Log_Net_Amount, array('class' => 'form-control', 'disabled' => true)); ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-5">
+                        <div class="form-group">
+                            <?php echo CHtml::label('Unit Tariff', 'Unit_Tariff', array()); ?>
+                            <?php echo CHtml::textField('Unit_Tariff', $model->totalunittariff, array('class' => 'form-control', 'disabled' => true)); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
