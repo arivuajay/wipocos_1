@@ -1615,6 +1615,11 @@ class WipoImport extends CApplicationComponent {
                     ## VALIDATION END ##
 
                     if ($valid) {
+                        if(empty($list['Log_List_Factor_Id']))
+                            $list['Log_List_Factor_Id'] = DEFAULT_FACTOR_ID;
+                        if(empty($list['Log_List_Coefficient']))
+                            $list['Log_List_Coefficient'] = 1;
+                        
                         $list_model = new DistributionLogsheetList;
                         $list_model->Log_Id = $log_id;
                         $list_model->attributes = $list;
