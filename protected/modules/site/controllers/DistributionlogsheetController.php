@@ -343,6 +343,7 @@ class DistributionlogsheetController extends Controller {
                     $model = new DistributionLogsheetList;
                     if (in_array($values['Log_List_Record_GUID'], $edit_list_guids)) {
                         $model = $edit_models[$values['Log_List_Record_GUID']];
+                        unset($values['Log_List_Seq_Number']);
                     }
                     $model->attributes = $values;
                     $model->setAttribute('Log_Id', $log_id);

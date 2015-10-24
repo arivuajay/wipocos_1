@@ -210,6 +210,8 @@ class DistributionSetting extends RActiveRecord {
 
                 /* For Manual Entry */
                 $inv_amt = $log->Log_Net_Amount;
+                //divide the work amount
+                $inv_amt = $inv_amt / count($log->distributionLogsheetLists);
 
                 if (!empty($inv_amt)) {
                     $AmountPaid = $inv_amt;
