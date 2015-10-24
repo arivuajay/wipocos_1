@@ -104,7 +104,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             $gridColumns = array(
                 'Period_Internal_Code',
                 'Period_Year',
-                'Period_Number',
+//                'Period_Number',
                 'Period_From',
                 'Period_To',
                 array(
@@ -191,7 +191,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         $gridColumns = array(
             'Period_Internal_Code',
             'Period_Year',
-            'Period_Number',
+//            'Period_Number',
             'Period_From',
             'Period_To',
             array(

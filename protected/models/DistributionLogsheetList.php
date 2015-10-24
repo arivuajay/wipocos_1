@@ -232,9 +232,9 @@ class DistributionLogsheetList extends RActiveRecord {
     }
 
     public function getMatchingdetails($list_id, $guID, $measure_unit, $defCurrency) {
-        $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Performance/Broadcast</th><th colspan='2'>Mechanical</th>";
         if ($measure_unit == 'D') {
-            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td></tr></thead><tbody>";
+            $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Performance/Broadcast</th><th colspan='2' class='hide'>Mechanical</th>";
+            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td><td class='hide'><b>Amount $defCurrency</b></td><td class='hide'><b>Share (%)</b></td></tr></thead><tbody>";
             $work = Work::model()->with('workRightholders')->findByAttributes(array('Work_GUID' => $guID));
             $work_id = $work->Work_Id;
             
@@ -248,8 +248,8 @@ class DistributionLogsheetList extends RActiveRecord {
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
                         $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
                         $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
-                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                        $column .= "<td class='hide'>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td class='hide'>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -263,8 +263,8 @@ class DistributionLogsheetList extends RActiveRecord {
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
                         $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
                         $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
-                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                        $column .= "<td class='hide'>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td class='hide'>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -277,13 +277,14 @@ class DistributionLogsheetList extends RActiveRecord {
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
                         $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
                         $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
-                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                        $column .= "<td class='hide'>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td class='hide'>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
             }
         } elseif ($measure_unit == 'F') {
+            $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Equal Remuneration</th><th colspan='2'>Blank Levy</th>";
             $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share</b></td><td><b>Amount</b></td><td><b>Share $defCurrency</b></td></tr></thead><tbody>";
             $recording = Recording::model()->with('recordingRightholders')->findByAttributes(array('Rcd_GUID' => $guID));
             
