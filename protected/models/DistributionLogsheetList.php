@@ -44,6 +44,7 @@ class DistributionLogsheetList extends RActiveRecord {
             $this->duration_seconds = 0;
 
             $this->Log_List_Coefficient_Id = 1;
+            $this->Log_List_Factor_Id = DEFAULT_FACTOR_ID;
 
 //            $this->Log_List_Seq_Number = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_LOGSHEET_LIST_SEQ_CODE))->Fullcode;
         }
@@ -237,7 +238,7 @@ class DistributionLogsheetList extends RActiveRecord {
             $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td><td class='hide'><b>Amount $defCurrency</b></td><td class='hide'><b>Share (%)</b></td></tr></thead><tbody>";
             $work = Work::model()->with('workRightholders')->findByAttributes(array('Work_GUID' => $guID));
             $work_id = $work->Work_Id;
-            
+
             if ($work->workRightholders) {
                 //Author
                 foreach ($work->workRightholders as $key => $rightholder) {
@@ -282,12 +283,14 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= '</tr>';
                     }
                 }
+            } else {
+                $column .= "<tr><td colspan='6' style='text-align: center'>No Rightholders</td></tr>";
             }
         } elseif ($measure_unit == 'F') {
             $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Equal Remuneration</th><th colspan='2'>Blank Levy</th>";
             $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share</b></td><td><b>Amount</b></td><td><b>Share $defCurrency</b></td></tr></thead><tbody>";
             $recording = Recording::model()->with('recordingRightholders')->findByAttributes(array('Rcd_GUID' => $guID));
-            
+
             if ($recording->recordingRightholders) {
                 foreach ($recording->recordingRightholders as $key => $rightholder) {
                     if ($rightholder->recordingPerformer) {
@@ -315,6 +318,8 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= '</tr>';
                     }
                 }
+            } else {
+                $column .= "<tr><td colspan='6' style='text-align: center'>No Rightholders</td></tr>";
             }
         }
         $column .= '</tbody></table>';
