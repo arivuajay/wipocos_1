@@ -33,6 +33,7 @@ $this->breadcrumbs = array(
     $users = CHtml::listData(CustomerUser::model()->findAll(), 'User_Cust_Id', 'namewithcontract');
     $places = Myclass::getMasterPlace();
     $factors = Myclass::getMasterFactor();
+    $coeff = Myclass::getMasterCoefficient();
     ?>  
     <div class="col-lg-12">
         <div class="box-body">
@@ -150,9 +151,9 @@ $this->breadcrumbs = array(
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($list_model, 'Log_List_Coefficient', array('class' => '')); ?>
-                            <?php echo $form->textField($list_model, 'Log_List_Coefficient', array('class' => 'form-control')); ?>
-                            <?php echo $form->error($list_model, 'Log_List_Coefficient'); ?>
+                            <?php echo $form->labelEx($list_model, 'Log_List_Coefficient_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($list_model, 'Log_List_Coefficient_Id', $coeff, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($list_model, 'Log_List_Coefficient_Id'); ?>
                         </div>
 
                     </div>
@@ -216,7 +217,7 @@ $this->breadcrumbs = array(
                                     <!--<th class="hide">Duration</th>-->
                                     <th><?php echo $measure_unit == 'D' ? DistributionLogsheetList::model()->getAttributeLabel('Log_List_Duration') : DistributionLogsheetList::model()->getAttributeLabel('Log_List_Frequency'); ?></th>
                                     <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Factor_Id'); ?></th>
-                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Coefficient'); ?></th>
+                                    <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Coefficient_Id'); ?></th>
                                     <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Date'); ?></th>
                                     <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Event'); ?></th>
                                     <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Seq_Number'); ?></th>
@@ -245,7 +246,7 @@ $this->breadcrumbs = array(
                                             <?php } ?>
                                             <!--<td class="td_rcd_duration hide" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>-->
                                             <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
-                                            <td><?php echo $list->Log_List_Coefficient; ?></td>
+                                            <td class="td_coeff" data-coeff="<?php echo $list->Log_List_Coefficient_Id; ?>"><?php echo $list->logListCoefficient->Coefficient; ?></td>
                                             <td><?php echo $list->Log_List_Date; ?></td>
                                             <td><?php echo $list->Log_List_Event; ?></td>
                                             <td><?php echo $list->Log_List_Seq_Number; ?></td>
@@ -260,7 +261,7 @@ $this->breadcrumbs = array(
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Record_GUID]", $list->Log_List_Record_GUID);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Duration]", $list->Log_List_Duration);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Factor_Id]", $list->Log_List_Factor_Id);
-                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Coefficient]", $list->Log_List_Coefficient);
+                                                echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Coefficient_Id]", $list->Log_List_Coefficient_Id);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Date]", $list->Log_List_Date);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Event]", $list->Log_List_Event);
                                                 echo CHtml::hiddenField("DistributionLogsheetList[{$key}][Log_List_Seq_Number]", $list->Log_List_Seq_Number);
@@ -334,9 +335,9 @@ $js = <<< EOD
             $("#right_insert").val('Add');
         
             $("#DistributionLogsheetList_Log_List_Record_GUID").val($(this).data('uid'));
-//            $("#DistributionLogsheetList_duration_hours").val($(this).data('duration_hours'));
-//            $("#DistributionLogsheetList_duration_minutes").val($(this).data('duration_minutes'));
-//            $("#DistributionLogsheetList_duration_seconds").val($(this).data('duration_seconds'));
+            $("#DistributionLogsheetList_duration_hours").val($(this).data('duration_hours'));
+            $("#DistributionLogsheetList_duration_minutes").val($(this).data('duration_minutes'));
+            $("#DistributionLogsheetList_duration_seconds").val($(this).data('duration_seconds'));
             $("#DistributionLogsheetList_Log_List_Date").val($(this).data('date'));
         });
         
@@ -370,7 +371,8 @@ $js = <<< EOD
                 $('#DistributionLogsheetList_Log_List_Frequency').val(tr.find('td:nth-child(3)').html());
             }
             $('#DistributionLogsheetList_Log_List_Factor_Id').val(tr.find('.td_factor').data('factor'));
-            $('#DistributionLogsheetList_Log_List_Coefficient').val(tr.find('td:nth-child(5)').html());
+            console.log(tr.find('.td_coeff').data('coeff'));
+            $('#DistributionLogsheetList_Log_List_Coefficient_Id').val(tr.find('.td_coeff').data('coeff'));
             $('#DistributionLogsheetList_Log_List_Date').val(tr.find('td:nth-child(6)').html());
             $('#DistributionLogsheetList_Log_List_Event').val(tr.find('td:nth-child(7)').html());
             $('#DistributionLogsheetList_Log_List_Seq_Number').val(tr.find('td:nth-child(8)').html());
@@ -409,6 +411,8 @@ $js = <<< EOD
                     if(value['name'] != "DistributionLogsheetList[duration_hours]" && value['name'] != "DistributionLogsheetList[duration_minutes]" && value['name'] != "DistributionLogsheetList[duration_seconds]"){
                         if(value['name'] == "DistributionLogsheetList[Log_List_Factor_Id]"){
                             tr += '<td class="td_factor" data-factor="'+$('#DistributionLogsheetList_Log_List_Factor_Id').val()+'">';
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Coefficient_Id]"){
+                            tr += '<td class="td_coeff" data-coeff="'+$('#DistributionLogsheetList_Log_List_Coefficient_Id').val()+'">';
                         }else if(value['name'] == "DistributionLogsheetList[Log_List_Duration]"){
                             hr = ("0"+$("#DistributionLogsheetList_duration_hours").val()).slice(-2);
                             min = ("0"+$("#DistributionLogsheetList_duration_minutes").val()).slice(-2);
@@ -423,6 +427,8 @@ $js = <<< EOD
                         if(value['name'] == "DistributionLogsheetList[Log_List_Record_GUID]"){
                             tr += _title;
                         }else if(value['name'] == "DistributionLogsheetList[Log_List_Factor_Id]"){
+                            tr += $('select[name="' + value['name'] + '"] option:selected').text();
+                        }else if(value['name'] == "DistributionLogsheetList[Log_List_Coefficient_Id]"){
                             tr += $('select[name="' + value['name'] + '"] option:selected').text();
                         }else if(value['name'] == "DistributionLogsheetList[Log_Id]"){
                             tr += _intcode;

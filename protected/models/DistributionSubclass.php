@@ -31,6 +31,8 @@ class DistributionSubclass extends RActiveRecord {
         if($this->isNewRecord){
             $this->Subclass_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_SUBCLASS_CODE))->Fullcode;
             $this->Subclass_Admin_Cost = DEFAULT_ADMINISTRATIVE_COST;
+            $this->Subclass_Cultural_Deduct = 0;
+            $this->Subclass_Social_Deduct = 0;
         }
     }
     /**

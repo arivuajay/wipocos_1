@@ -41,7 +41,7 @@ class DistributionSetting extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Setting_Identifier, Setting_Date, Setting_Internal_Code', 'required'),
+            array('Setting_Date, Setting_Internal_Code', 'required'),
             array('Setting_Internal_Code', 'unique'),
             array('Setting_Identifier, Closing_Distribute, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Total_Distribute', 'length', 'max' => 10),
@@ -152,7 +152,7 @@ class DistributionSetting extends RActiveRecord {
     }
 
     public function getNameWithIdentifier() {
-        return $this->Setting_Identifier . ' - ' . $this->Setting_Date;
+        return $this->Setting_Internal_Code . ' - ' . $this->Setting_Date;
     }
 
     public static function setTotalDistributed($logId) {
@@ -192,7 +192,7 @@ class DistributionSetting extends RActiveRecord {
             $measure_unit = $subclass->Subclass_Measure_Unit;
             foreach ($log->distributionLogsheetLists as $key => $list) {
                 $Di = $measure_unit == 'F' ? $list->Log_List_Frequency : $list->duration_minutes;
-                $Ci = ($list->logListFactor->Factor * $list->Log_List_Coefficient);
+                $Ci = ($list->logListFactor->Factor * $list->Log_List_Coefficient_Id);
                 $Wi = $measure_unit == 'F' ? 1 : $list->listWork->workFactor->Factor;
 
                 $ToTDuration = ($Di * $Ci) * $Wi;

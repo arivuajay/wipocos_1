@@ -44,7 +44,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Period_Year, Period_Number, Period_From, Period_To, Sub_Class_Id, Setting_Id, Period_Internal_Code', 'required'),
+            array('Period_Year, Period_From, Period_To, Sub_Class_Id, Setting_Id, Period_Internal_Code', 'required'),
             array('Period_Internal_Code', 'unique'),
             array('Setting_Id', 'unique', 'message' => 'Setting Date has already been taken.'),
             array('Period_Year, Period_Number, Sub_Class_Id, Setting_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),

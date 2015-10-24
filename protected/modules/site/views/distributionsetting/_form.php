@@ -32,7 +32,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hide">
                     <?php echo $form->labelEx($model, 'Setting_Identifier', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-5">
                         <?php echo $form->textField($model, 'Setting_Identifier', array('class' => 'form-control')); ?>

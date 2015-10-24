@@ -57,7 +57,7 @@ $this->breadcrumbs = array(
 //            'Period_Id',
             'Period_Internal_Code',
             'Period_Year',
-            'Period_Number',
+//            'Period_Number',
             'Period_From',
             'Period_To',
             array(

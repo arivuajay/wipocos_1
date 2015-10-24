@@ -319,7 +319,10 @@ class SocietyController extends Controller {
 //    }
 
     public function actionExportimporteddata() {
-        if (!empty($staging = Yii::app()->session['staging']) && !empty($staging_tables = Yii::app()->session['staging_tables']) && !empty($title = Yii::app()->session['title'])) {
+        if (!empty(Yii::app()->session['staging']) && !empty(Yii::app()->session['staging_tables']) && !empty(Yii::app()->session['title'])) {
+            $staging = Yii::app()->session['staging'];
+            $staging_tables = Yii::app()->session['staging_tables'];
+            $title = Yii::app()->session['title'];
             $status = Myclass::importViewStatus();
             $ignore_list = Myclass::importViewIgnoreList();
 

@@ -9,7 +9,7 @@
  * @property string $Log_List_Record_GUID
  * @property string $Log_List_Duration
  * @property integer $Log_List_Factor_Id
- * @property string $Log_List_Coefficient
+ * @property string $Log_List_Coefficient_Id
  * @property string $Log_List_Date
  * @property string $Log_List_Event
  * @property string $Log_List_Seq_Number
@@ -22,6 +22,7 @@
  * @property integer $Log_List_Unit_Tariff
  *
  * The followings are the available model relations:
+ * @property MasterCoefficient $logListCoefficient
  * @property MasterFactor $logListFactor
  * @property DistributionLogsheet $log
  * @property DistributionLogsheetList[] $distributionLogsheetListMembers
@@ -42,7 +43,7 @@ class DistributionLogsheetList extends RActiveRecord {
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
 
-            $this->Log_List_Coefficient = 1;
+            $this->Log_List_Coefficient_Id = 1;
 
 //            $this->Log_List_Seq_Number = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::DIST_LOGSHEET_LIST_SEQ_CODE))->Fullcode;
         }
@@ -59,27 +60,27 @@ class DistributionLogsheetList extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Log_List_Date, Log_List_Coefficient, Log_List_Factor_Id', 'required'),
+            array('Log_List_Date, Log_List_Coefficient_Id, Log_List_Factor_Id', 'required'),
             array('Log_List_Record_GUID', 'required', 'message' => 'Seacrh & select Record before you save'),
             array('Log_Id', 'required', 'on' => 'form2'),
             array('Log_List_Frequency', 'required', 'on' => 'freqForm'),
             array('Log_List_Duration', 'required', 'on' => 'durForm'),
             array('Log_Id, Log_List_Factor_Id, Log_List_Frequency, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Log_List_Record_GUID, Log_List_Seq_Number', 'length', 'max' => 50),
-            array('Log_List_Coefficient', 'length', 'max' => 10),
+            array('Log_List_Coefficient_Id', 'length', 'max' => 10),
             array('Log_List_Event', 'length', 'max' => 100),
             array('Log_List_Duration, Created_Date, Rowversion', 'safe'),
             array('Log_List_Work_Amount, Log_List_Unit_Tariff', 'numerical', 'integerOnly' => false),
             array('duration_hours, duration_minutes, duration_seconds', 'numerical', 'integerOnly' => true),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Log_List_Coefficient', 'numerical', 'min' => 1),
+            array('Log_List_Coefficient_Id', 'numerical', 'min' => 1),
             array('duration_hours', 'durationValidate'),
             array('duration_hours', 'recordingValidate'),
             array('duration_hours, duration_minutes, duration_seconds, Log_List_Work_Amount, Log_List_Unit_Tariff', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient_Id, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
         );
     }
 
@@ -107,6 +108,7 @@ class DistributionLogsheetList extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'logListCoefficient' => array(self::BELONGS_TO, 'MasterCoefficient', 'Log_List_Coefficient_Id'),
             'logListFactor' => array(self::BELONGS_TO, 'MasterFactor', 'Log_List_Factor_Id'),
             'log' => array(self::BELONGS_TO, 'DistributionLogsheet', 'Log_Id'),
             'listWork' => array(self::BELONGS_TO, 'Work', 'Log_List_Work_GUID', 'foreignKey' => array('Log_List_Record_GUID' => 'Work_GUID'), 'order' => 'Work_Org_Title ASC'),
@@ -127,7 +129,7 @@ class DistributionLogsheetList extends RActiveRecord {
             'Log_List_Record_GUID' => 'Title',
             'Log_List_Duration' => 'Duration',
             'Log_List_Factor_Id' => 'Factor',
-            'Log_List_Coefficient' => 'Coefficient',
+            'Log_List_Coefficient_Id' => 'Coefficient',
             'Log_List_Date' => 'Date',
             'Log_List_Event' => 'Event or Show',
             'Log_List_Seq_Number' => 'Sequence Number',
@@ -166,7 +168,7 @@ class DistributionLogsheetList extends RActiveRecord {
         $criteria->compare('Log_List_Record_GUID', $this->Log_List_Record_GUID, true);
         $criteria->compare('Log_List_Duration', $this->Log_List_Duration, true);
         $criteria->compare('Log_List_Factor_Id', $this->Log_List_Factor_Id);
-        $criteria->compare('Log_List_Coefficient', $this->Log_List_Coefficient, true);
+        $criteria->compare('Log_List_Coefficient_Id', $this->Log_List_Coefficient_Id, true);
         $criteria->compare('Log_List_Date', $this->Log_List_Date, true);
         $criteria->compare('Log_List_Event', $this->Log_List_Event, true);
         $criteria->compare('Log_List_Seq_Number', $this->Log_List_Seq_Number);
@@ -229,15 +231,14 @@ class DistributionLogsheetList extends RActiveRecord {
         return parent::afterFind();
     }
 
-    public function getMatchingdetails($list_id, $guID, $measure_unit) {
+    public function getMatchingdetails($list_id, $guID, $measure_unit, $defCurrency) {
+        $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Performance/Broadcast</th><th colspan='2'>Mechanical</th>";
         if ($measure_unit == 'D') {
+            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td><td><b>Amount $defCurrency</b></td><td><b>Share (%)</b></td></tr></thead><tbody>";
             $work = Work::model()->with('workRightholders')->findByAttributes(array('Work_GUID' => $guID));
             $work_id = $work->Work_Id;
-            $column = '';
-
+            
             if ($work->workRightholders) {
-                $column .= "<br /><br />";
-                $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
                 //Author
                 foreach ($work->workRightholders as $key => $rightholder) {
                     if ($rightholder->workAuthor) {
@@ -245,8 +246,10 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= "<td>{$rightholder->workAuthor->fullname}</td>";
                         $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
-                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -258,8 +261,10 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
                         $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
-                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -270,28 +275,29 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
                         $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Work_Member_GUID, 'Log_List_Id' => $list_id));
-                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Work_Right_Broad_Share} %)</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Work_Right_Mech_Share} %)</td>";
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
                         $column .= '</tr>';
                     }
                 }
-                $column .= '</tbody></table>';
             }
         } elseif ($measure_unit == 'F') {
+            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share</b></td><td><b>Amount</b></td><td><b>Share $defCurrency</b></td></tr></thead><tbody>";
             $recording = Recording::model()->with('recordingRightholders')->findByAttributes(array('Rcd_GUID' => $guID));
-            $column = '';
             
             if ($recording->recordingRightholders) {
-                $column .= "<br /><br />";
-                $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
                 foreach ($recording->recordingRightholders as $key => $rightholder) {
                     if ($rightholder->recordingPerformer) {
                         $column .= '<tr>';
                         $column .= "<td>{$rightholder->recordingPerformer->fullname}</td>";
                         $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
-                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Rcd_Right_Equal_Share})</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Rcd_Right_Blank_Share})</td>";
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
+                        $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -301,14 +307,16 @@ class DistributionLogsheetList extends RActiveRecord {
                         $column .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
                         $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
-                        $column .= "<td>{$listMem->Log_Share_Broad_Amount} ({$rightholder->Rcd_Right_Equal_Share})</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount} ({$rightholder->Rcd_Right_Blank_Share})</td>";
+                        $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
+                        $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
                         $column .= '</tr>';
                     }
                 }
-                $column .= '</tbody></table>';
             }
         }
+        $column .= '</tbody></table>';
         return $column;
     }
 

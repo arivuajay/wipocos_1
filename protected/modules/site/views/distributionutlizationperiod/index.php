@@ -52,7 +52,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php echo $form->textField($searchModel, 'Period_Year', array('class' => 'form-control', 'size' => 4, 'maxlength' => 4)); ?>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4 hide">
                         <div class="form-group">
                             <?php echo $form->labelEx($searchModel, 'Period_Number', array('class' => ' control-label')); ?>
                             <?php echo $form->textField($searchModel, 'Period_Number', array('class' => 'form-control')); ?>

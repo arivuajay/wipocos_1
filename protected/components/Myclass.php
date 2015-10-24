@@ -457,6 +457,16 @@ class Myclass extends CController {
         return $factors;
     }
 
+    public static function getMasterCoefficient($is_active = TRUE, $key = NULL) {
+        if ($is_active && $key == NULL)
+            $coefficents = CHtml::listData(MasterCoefficient::model()->isActive()->findAll(array('order' => 'Coefficient')), 'Master_Coeff_Id', 'Coefficient');
+        else
+            $coefficents = CHtml::listData(MasterCoefficient::model()->findAll(array('order' => 'Coefficient')), 'Master_Coeff_Id', 'Coefficient');
+        if ($key != NULL)
+            return $coefficents[$key];
+        return $coefficents;
+    }
+
     public static function getMasterInstrument($is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)
             $instruments = CHtml::listData(MasterInstrument::model()->isActive(array('order' => 'Instrument_Name'))->findAll(), 'Master_Inst_Id', 'Instrument_Name');

@@ -54,14 +54,17 @@ $this->breadcrumbs = array(
                                 <!--<th class="hide">Duration</th>-->
                                 <th><?php echo $measure_unit == 'D' ? DistributionLogsheetList::model()->getAttributeLabel('Log_List_Duration') : DistributionLogsheetList::model()->getAttributeLabel('Log_List_Frequency'); ?></th>
                                 <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Factor_Id'); ?></th>
-                                <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Coefficient'); ?></th>
+                                <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Coefficient_Id'); ?></th>
                                 <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Unit_Tariff'); ?></th>
                                 <th><?php echo DistributionLogsheetList::model()->getAttributeLabel('Log_List_Work_Amount'); ?></th>
-                                <th>Matchingdetails</th>
+                                <th>Matching Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
+                            $defCurrency = MasterCurrency::model()->findByPk(DEFAULT_CURRENCY_ID)->Currency_Code;
+                            if(!empty($defCurrency))
+                                $defCurrency = "({$defCurrency})";
                             if ($model->distributionLogsheetLists) {
                                 foreach ($model->distributionLogsheetLists as $key => $list) {
                                     if ($measure_unit == 'D') {
@@ -82,10 +85,10 @@ $this->breadcrumbs = array(
                                         <?php } ?>
                                     <!--<td class="td_rcd_duration hide" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>-->
                                         <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
-                                        <td><?php echo $list->Log_List_Coefficient; ?></td>
+                                        <td><?php echo $list->Log_List_Coefficient_Id; ?></td>
                                         <td><?php echo $list->Log_List_Unit_Tariff; ?></td>
                                         <td><?php echo $list->Log_List_Work_Amount; ?></td>
-                                        <td><?php echo $list->getMatchingdetails($list->Log_List_Id,$list->Log_List_Record_GUID,$measure_unit); ?></td>
+                                        <td><?php echo $list->getMatchingdetails($list->Log_List_Id,$list->Log_List_Record_GUID,$measure_unit, $defCurrency); ?></td>
                                     </tr>
                                     <?php
                                 }

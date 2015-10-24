@@ -56,7 +56,7 @@ $this->breadcrumbs = array(
         'attributes' => array(
 //            'Setting_Id',
             'Setting_Internal_Code',
-            'Setting_Identifier',
+//            'Setting_Identifier',
             'Setting_Date',
             'Total_Distribute',
             'Closing_Distribute',

@@ -42,6 +42,7 @@ if ($society) {
     defined('DEFAULT_MEDIUM_ID') || @define('DEFAULT_MEDIUM_ID', $society->Soceity_Medium_Id);
     defined('DEFAULT_LEGAL_FORM_ID') || @define('DEFAULT_LEGAL_FORM_ID', $society->Soceity_Legal_Form_Id);
     defined('DEFAULT_ADMINISTRATIVE_COST') || @define('DEFAULT_ADMINISTRATIVE_COST', $society->socOrg->Org_Administrative_Cost);
+    defined('DEFAULT_CURRENCY_ID') || @define('DEFAULT_CURRENCY_ID', $society->socOrg->Org_Currency_Id);
 }
 
 defined('SITEURL') ||
