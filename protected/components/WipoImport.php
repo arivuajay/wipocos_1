@@ -1603,7 +1603,7 @@ class WipoImport extends CApplicationComponent {
                             );
                             $rcd_model->attributes = $attr;
                             $rcd_model->save(false);
-                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] = $rcd_model->Rcd_Title;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $rcd_model->Rcd_Title;
                         }
                         unset($this->_stage_rows['log_list'][$key]['Log_List_Duration']);
 //                        unset($list['Log_List_Duration']);
@@ -1620,7 +1620,7 @@ class WipoImport extends CApplicationComponent {
                             );
                             $work_model->attributes = $attr;
                             $work_model->save(false);
-                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] = $work_model->Work_Org_Title;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $work_model->Work_Org_Title;
                         }
                         unset($this->_stage_rows['log_list'][$key]['Log_List_Frequency']);
 //                        unset($list['Log_List_Frequency']);
