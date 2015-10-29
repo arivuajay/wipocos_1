@@ -85,7 +85,7 @@ $this->breadcrumbs = array(
                                         <?php } ?>
                                     <!--<td class="td_rcd_duration hide" data-hour="<?php echo $list->listRecording->duration_hours; ?>" data-minute="<?php echo $list->listRecording->duration_minutes; ?>" data-second="<?php echo $list->listRecording->duration_seconds; ?>"><?php echo $list->listRecording->Rcd_Duration; ?></td>-->
                                         <td class="td_factor" data-factor="<?php echo $list->Log_List_Factor_Id; ?>"><?php echo $list->logListFactor->Factor; ?></td>
-                                        <td><?php echo $list->Log_List_Coefficient_Id; ?></td>
+                                        <td><?php echo $list->logListCoefficient->Coefficient; ?></td>
                                         <td><?php echo $list->Log_List_Unit_Tariff; ?></td>
                                         <td><?php echo $list->Log_List_Work_Amount; ?></td>
                                         <td><?php echo $list->getMatchingdetails($list->Log_List_Id,$list->Log_List_Record_GUID,$measure_unit, $defCurrency); ?></td>

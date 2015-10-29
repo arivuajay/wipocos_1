@@ -287,8 +287,8 @@ class DistributionLogsheetList extends RActiveRecord {
                 $column .= "<tr><td colspan='6' style='text-align: center'>No Rightholders</td></tr>";
             }
         } elseif ($measure_unit == 'F') {
-            $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Equal Remuneration</th><th colspan='2'>Blank Levy</th>";
-            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share</b></td><td><b>Amount</b></td><td><b>Share $defCurrency</b></td></tr></thead><tbody>";
+            $column = "<table border = '1' class='match_det_table'><thead><tr><th rowspan='2'>Right Holders</th><th rowspan='2'>Role</th><th colspan='2'>Equal Remuneration</th><th colspan='2' class='hide'>Blank Levy</th>";
+            $column .= "</tr><tr><td><b>Amount $defCurrency</b></td><td><b>Share</b></td><td class='hide'><b>Amount</b></td><td class='hide'><b>Share $defCurrency</b></td></tr></thead><tbody>";
             $recording = Recording::model()->with('recordingRightholders')->findByAttributes(array('Rcd_GUID' => $guID));
 
             if ($recording->recordingRightholders) {
@@ -300,8 +300,8 @@ class DistributionLogsheetList extends RActiveRecord {
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
                         $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
                         $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
-                        $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                        $column .= "<td class='hide'>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td class='hide'>{$rightholder->Rcd_Right_Blank_Share}</td>";
                         $column .= '</tr>';
                     }
                 }
@@ -313,8 +313,8 @@ class DistributionLogsheetList extends RActiveRecord {
                         $listMem = DistributionLogsheetListMembers::model()->findByAttributes(array('Log_Member_GUID' => $rightholder->Rcd_Member_GUID, 'Log_List_Id' => $list_id));
                         $column .= "<td>{$listMem->Log_Share_Broad_Amount}</td>";
                         $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
-                        $column .= "<td>{$listMem->Log_Share_Mech_Amount}</td>";
-                        $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                        $column .= "<td class='hide'>{$listMem->Log_Share_Mech_Amount}</td>";
+                        $column .= "<td class='hide'>{$rightholder->Rcd_Right_Blank_Share}</td>";
                         $column .= '</tr>';
                     }
                 }

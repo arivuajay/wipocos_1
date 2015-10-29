@@ -184,21 +184,32 @@ class DistributionSetting extends RActiveRecord {
          * The use of Di or Ti will be determined while defining the distribution subclass under which the calculation of royalties will be made.
          * Ti = Frequency in Logsheet
          */
-//        $log = DistributionLogsheet::model()->findByPk($logId);
         $totAmount = 0;
 
         if (!empty($log) && !empty($log->distributionLogsheetLists)) {
             $subclass = $log->period->subclass;
             $measure_unit = $subclass->Subclass_Measure_Unit;
+
+            $sumToTDuration = 0;
+            $TotDurationArr = array();
             foreach ($log->distributionLogsheetLists as $key => $list) {
-                $Di = $measure_unit == 'F' ? $list->Log_List_Frequency : $list->duration_minutes;
-                $Ci = ($list->logListFactor->Factor * $list->Log_List_Coefficient_Id);
-                $Wi = $measure_unit == 'F' ? 1 : $list->listWork->workFactor->Factor;
+                if ($measure_unit == 'F') {
+                    $Di = $list->Log_List_Frequency;
+                } else if ($measure_unit == 'D') {
+                    $time = explode(":", $list->Log_List_Duration);
+                    $Di = intval($time[0]) * 60 + intval($time[1]);
+                }
+                $Ci = ($list->logListFactor->Factor * $list->logListCoefficient->Coefficient);
+                
+//                $Wi = $measure_unit == 'F' ? 1 : $list->listWork->workFactor->Factor;
+//                $TotDurationArr[$list->Log_List_Id] = ($Di * $Ci) * $Wi;
+                
+                $TotDurationArr[$list->Log_List_Id] = ($Di * $Ci);
+                $sumToTDuration += ($Di * $Ci);
+            }
 
-                $ToTDuration = ($Di * $Ci) * $Wi;
-                $AmountToDistribute = $AmountPaid = $Costs = $Unit_Tarif = $WorkAmount = 0;
-
-                /* Amount Get through Invoice */
+            $AmountToDistribute = $Costs = $Unit_Tarif = 0;
+            /* Amount Get through Invoice */
 //                $criteria = new CDbCriteria();
 //                $criteria->with = 'tarfCont';
 //                $criteria->select = 'Sum(Inv_Amount) as Inv_Amount';
@@ -206,49 +217,36 @@ class DistributionSetting extends RActiveRecord {
 //                $criteria->condition = "tarfCont.Tarf_Cont_User_Id = {$list->log->Log_User_Cust_Id} And t.Inv_Date Between '{$list->log->period->Period_From}' And '{$list->log->period->Period_To}'";
 //                $invoice = ContractInvoice::model()->find($criteria);
 //                $inv_amt = $invoice->Inv_Amount;
-                /**/
+            /**/
+            /* For Manual Entry */
+            $AmountPaid = $log->Log_Net_Amount;
+            /**/
+            $tot_statuary_percent = ($subclass->Subclass_Admin_Cost + $subclass->Subclass_Social_Deduct + $subclass->Subclass_Cultural_Deduct);
+            $Costs = ($tot_statuary_percent / 100) * $AmountPaid;
+            $AmountToDistribute = $AmountPaid - $Costs;
+            if ($AmountToDistribute > 0 && $sumToTDuration > 0) {
+                $Unit_Tarif = number_format(($AmountToDistribute / $sumToTDuration), 2, '.', '');;
+            }
 
-                /* For Manual Entry */
-                $inv_amt = $log->Log_Net_Amount;
-                //divide the work amount
-                $inv_amt = $inv_amt / count($log->distributionLogsheetLists);
+            foreach ($log->distributionLogsheetLists as $key => $list) {
+                $ToTDuration = $TotDurationArr[$list->Log_List_Id];
+                $WorkAmount = 0;
 
-                if (!empty($inv_amt)) {
-                    $AmountPaid = $inv_amt;
-
-                    $tot_statuary_percent = ($subclass->Subclass_Admin_Cost + $subclass->Subclass_Social_Deduct + $subclass->Subclass_Cultural_Deduct);
-                    $Costs = ($tot_statuary_percent / 100) * $AmountPaid;
-                    $AmountToDistribute = $AmountPaid - $Costs;
-                    if ($AmountToDistribute > 0 && $ToTDuration > 0) {
-                        $Unit_Tarif = $AmountToDistribute / $ToTDuration;
-                        $WorkAmount = ($Unit_Tarif * $Di * $Ci);
-
-                        self::saveLogListMember($list,$WorkAmount, $measure_unit);
-
-                        $list->Log_List_Unit_Tariff = $Unit_Tarif;
-                        $list->Log_List_Work_Amount = $WorkAmount;
-                        $list->save(false);
-                    }
+                if ($ToTDuration > 0 && $Unit_Tarif > 0) {
+                    $WorkAmount = ($Unit_Tarif * $ToTDuration);
                 }
+                
+                self::saveLogListMember($list, $WorkAmount, $measure_unit);
+                $list->Log_List_Unit_Tariff = $Unit_Tarif;
+                $list->Log_List_Work_Amount = $WorkAmount;
+                $list->save(false);
                 $totAmount += $WorkAmount;
-
-//            echo 'Di:  '.$Di.'<br />';
-//            echo 'Ci:  '.$Ci.'<br />';
-//            echo 'Wi:  '.$Wi.'<br />';
-//            echo 'ToTDuration:  '.$ToTDuration.'<br />';
-//            echo 'AmountPaid:  '.$AmountPaid.'<br />';
-//            echo 'Costs:  '.$Costs.'<br />';
-//            echo 'AmountToDistribute:  '.$AmountToDistribute.'<br />';
-//            echo 'Unit_Tarif:  '.$Unit_Tarif.'<br />';
-//            echo 'WorkAmount:  '.$WorkAmount.'<br />';
-//            echo '###End###<br />';
             }
         }
-//        exit;
         return $totAmount;
     }
 
-    protected static function saveLogListMember($list,$WorkAmount,$measure_unit) {
+    protected static function saveLogListMember($list, $WorkAmount, $measure_unit) {
         DistributionLogsheetListMembers::model()->deleteAll("Log_List_Id = '{$list->Log_List_Id}'");
         if ($measure_unit == 'D'):
             foreach ($list->listWork->workRightholders as $holder):
@@ -261,10 +259,10 @@ class DistributionSetting extends RActiveRecord {
 
                 $member->save(false);
             endforeach;
-        elseif($measure_unit == 'F'):
-            $totEqShare = $list->listRecording->totalRightholdersEqShare; 
-            $totBkShare = $list->listRecording->totalRightholdersBkShare; 
-        
+        elseif ($measure_unit == 'F'):
+            $totEqShare = $list->listRecording->totalRightholdersEqShare;
+            $totBkShare = $list->listRecording->totalRightholdersBkShare;
+
             foreach ($list->listRecording->recordingRightholders as $holder):
                 $member = new DistributionLogsheetListMembers();
                 $member->Log_Member_Type = 'R';
