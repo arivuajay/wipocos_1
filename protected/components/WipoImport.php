@@ -1595,15 +1595,8 @@ class WipoImport extends CApplicationComponent {
                         if (!empty($check_exist)) {
                             $list['Log_List_Record_GUID'] = $check_exist->Rcd_GUID;
                         } else {
-                            $rcd_model = new Recording;
-                            $attr = array(
-                                'Work_Org_Title' => $list['Log_List_Record_GUID'],
-                                'Work_Duration' => $list['Log_List_Duration'],
-                                'Work_Unknown' => 'Y',
-                            );
-                            $rcd_model->attributes = $attr;
-                            $rcd_model->save(false);
-                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $rcd_model->Rcd_Title;
+                            $valid = false;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] . ' <strong style="color:#B74442">( Recording Not Found )</strong>';
                         }
                         unset($this->_stage_rows['log_list'][$key]['Log_List_Duration']);
 //                        unset($list['Log_List_Duration']);
@@ -1612,15 +1605,8 @@ class WipoImport extends CApplicationComponent {
                         if (!empty($check_exist)) {
                             $list['Log_List_Record_GUID'] = $check_exist->Work_GUID;
                         } else {
-                            $work_model = new Work;
-                            $attr = array(
-                                'Work_Org_Title' => $list['Log_List_Record_GUID'],
-                                'Work_Duration' => $list['Log_List_Duration'],
-                                'Work_Unknown' => 'Y',
-                            );
-                            $work_model->attributes = $attr;
-                            $work_model->save(false);
-                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $work_model->Work_Org_Title;
+                            $valid = false;
+                            $this->_stage_rows['log_list'][$key]['Log_List_Record_GUID'] = $list['Log_List_Record_GUID'] . ' <strong style="color:#B74442">( Work Not Found )</strong>';
                         }
                         unset($this->_stage_rows['log_list'][$key]['Log_List_Frequency']);
 //                        unset($list['Log_List_Frequency']);
