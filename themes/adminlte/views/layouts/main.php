@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?php echo $this->title//CHtml::encode($this->title); ?></title>
+        <title><?php echo $this->title//CHtml::encode($this->title);   ?></title>
         <?php
         $themeUrl = $this->themeUrl;
         $cs = Yii::app()->getClientScript();
@@ -13,6 +13,7 @@
         $cs->registerCssFile($themeUrl . '/css/AdminLTE.css');
 //        $cs->registerCssFile('http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css');
         $cs->registerCssFile($themeUrl . '/css/bootstrap-theme.css');
+        $cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
         $cs->registerCssFile($themeUrl . '/css/custom.css');
         ?>
     </head>
@@ -31,6 +32,19 @@
         $cs->registerScriptFile($themeUrl . '/js/dropdown.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/iCheck/icheck.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/app.js', $cs_pos_end);
+        $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+        $cs->registerScriptFile($themeUrl . '/js/mask.min.js', $cs_pos_end);
+
+        $js = <<< EOD
+    $(document).ready(function(){
+        $(".date").mask("9999-99-99");
+        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        $('.date').keypress(function(key) {
+            if(key.charCode < 48 || key.charCode > 57) return false;
+        });
+     });
+EOD;
+        Yii::app()->clientScript->registerScript('_custom_js', $js);
         ?>
     </body>
 </html>

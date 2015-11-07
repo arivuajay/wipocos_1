@@ -9,8 +9,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
@@ -211,7 +211,7 @@ $search_url = Yii::app()->createAbsoluteUrl("site/contractinvoice/searchcontract
 $invoice_url = Yii::app()->createAbsoluteUrl("site/contractinvoice/getinvoice");
 $js = <<< EOD
         $(document).ready(function(){
-            $('.date').datepicker({ format: 'yyyy-mm-dd' });
+            
             $('#search_button').on("click", function(){
                 var data=$("#search-form").serialize();
                 $.ajax({

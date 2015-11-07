@@ -20,18 +20,21 @@
                             <tr>
                                 <th>Orginial Title</th>
                                 <th>Internal Code</th>
-                                <th>Duration</th>
+                                <!--<th>Duration</th>-->
+                                <th>Matching Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             if (!empty($recordings)) {
+                                $model = new Recording;
                                 foreach ($recordings as $key => $recording) {
                                     ?>
-                                    <tr data-uid="<?php echo $recording->Rcd_GUID ?>" data-title="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-duration_hours="<?php echo $recording->duration_hours ?>" data-duration_minutes="<?php echo $recording->duration_minutes ?>" data-duration_seconds="<?php echo $recording->duration_seconds ?>" data-duration="<?php echo $recording->Rcd_Duration ?>" data-date="<?php echo $recording->Rcd_Date?>">
+                                    <tr data-uid="<?php echo $recording->Rcd_GUID ?>" data-title="<?php echo $recording->Rcd_Title; ?>" data-intcode = "<?php echo $recording->Rcd_Internal_Code ?>" data-duration_hours="<?php echo $recording->duration_hours ?>" data-duration_minutes="<?php echo $recording->duration_minutes ?>" data-duration_seconds="<?php echo $recording->duration_seconds ?>" data-duration="<?php echo $recording->Rcd_Duration ?>" data-date="<?php echo $recording->Rcd_Date ?>">
                                         <td><?php echo $recording->Rcd_Title ?></td>
                                         <td><?php echo $recording->Rcd_Internal_Code ?></td>
-                                        <td class="td_rcd_duration" data-hour="<?php echo $recording->duration_hours; ?>" data-minute="<?php echo $recording->duration_minutes; ?>" data-second="<?php echo $recording->duration_seconds; ?>"><?php echo $recording->Rcd_Duration ?></td>
+                                        <td class="td_rcd_duration hide" data-hour="<?php echo $recording->duration_hours; ?>" data-minute="<?php echo $recording->duration_minutes; ?>" data-second="<?php echo $recording->duration_seconds; ?>"><?php echo $recording->Rcd_Duration ?></td>
+                                        <td><?php echo $model->getMatchingdetails($recording->Rcd_Id); ?></td>
                                     </tr>
                                     <?php
                                 }
@@ -46,7 +49,7 @@
                     <div class="form-group">
                         <div class="col-lg-10">
                             <?php
-                            if(empty($recordings)){
+                            if (empty($recordings)) {
                                 echo '<div class="errorMessage text-center aft_search">No Recordings Found</div>';
                             }
                             ?>

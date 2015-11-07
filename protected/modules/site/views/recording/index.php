@@ -10,8 +10,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 
@@ -238,11 +238,24 @@ $labels = Myclass::getMasterLabel();
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['Recording']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Rcd_Internal_Code');
+            
+            foreach ($_GET['Recording'] as $col => $value) {
+                if(!in_array($col, $ExceptList))
+                    $search_data .= "Recording[{$col}]={$value}&";
+            }
+            
+            $search_data = rtrim($search_data, '&');
+        }
+        
         $this->widget(
                 'application.components.MyTbButton', array(
             'label' => 'Create Recording',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/recording/create'),
+            'url' => array("/site/recording/create{$search_data}"),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),
@@ -317,7 +330,7 @@ $labels = Myclass::getMasterLabel();
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

@@ -7,8 +7,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 
 $this->title = 'Logsheets';
 $this->breadcrumbs = array(
@@ -329,6 +329,7 @@ $js = <<< EOD
         });
         
         $('body').on('click','#record_search tbody tr', function(){
+            $('.match_det_table tbody tr').removeClass('highlight');
             $(this).addClass('highlight').siblings().removeClass('highlight');
 //            $('#distribution-logsheetlist-form :input').val('');
 //            $('.zero_fields').val('0');
@@ -341,7 +342,7 @@ $js = <<< EOD
             $("#DistributionLogsheetList_Log_List_Date").val($(this).data('date'));
         });
         
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
         
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();

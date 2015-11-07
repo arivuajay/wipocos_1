@@ -6,8 +6,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
@@ -240,7 +240,7 @@ $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
      });
 EOD;

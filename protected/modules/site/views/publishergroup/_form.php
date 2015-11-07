@@ -7,8 +7,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 ?>
 <div class="row pull-right" style="margin: 0 0 10px;">
     <div class="col-lg-12">
@@ -271,7 +271,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
         $("#PublisherGroupManageRights_Pub_Group_Mnge_Entry_Date").on("change", function(){
             $("#PublisherGroupManageRights_Pub_Group_Mnge_Entry_Date_2").val($(this).val());

@@ -7,8 +7,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 
 $marital_status = Myclass::getMasterMaritalStatus();
 $countries = Myclass::getMasterCountry();
@@ -300,7 +300,7 @@ $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('#PublisherAccount_Pub_Gender').find("br").remove();
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
 
         $("#PublisherManageRights_Pub_Mnge_Entry_Date").on("change", function(){

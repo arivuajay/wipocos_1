@@ -22,18 +22,21 @@
                                 <tr>
                                     <th>Orginial Title</th>
                                     <th>Internal Code</th>
-                                    <th>Duration</th>
+                                    <!--<th>Duration</th>-->
+                                    <th>Matching Details</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 if (!empty($works)) {
+                                    $model = new Work;
                                     foreach ($works as $key => $work) {
                                         ?>
                                         <tr data-uid="<?php echo $work->Work_GUID ?>" data-title="<?php echo $work->Work_Org_Title; ?>" data-intcode = "<?php echo $work->Work_Internal_Code ?>" data-duration_hours="<?php echo $work->duration_hours ?>" data-duration_minutes="<?php echo $work->duration_minutes ?>" data-duration_seconds="<?php echo $work->duration_seconds ?>" data-duration="<?php echo $work->Work_Duration ?>" data-date="">
                                             <td><?php echo $work->Work_Org_Title ?></td>
                                             <td><?php echo $work->Work_Internal_Code ?></td>
-                                            <td class="td_rcd_duration" data-hour="<?php echo $work->duration_hours; ?>" data-minute="<?php echo $work->duration_minutes; ?>" data-second="<?php echo $work->duration_seconds; ?>"><?php echo $work->Work_Duration ?></td>
+                                            <td class="td_rcd_duration hide" data-hour="<?php echo $work->duration_hours; ?>" data-minute="<?php echo $work->duration_minutes; ?>" data-second="<?php echo $work->duration_seconds; ?>"><?php echo $work->Work_Duration ?></td>
+                                            <td><?php echo $model->getMatchingdetails($work->Work_Id); ?></td>
                                         </tr>
                                         <?php
                                     }

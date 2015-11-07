@@ -88,6 +88,9 @@ class RecordingController extends Controller {
             }
         }
 
+        if(isset($_GET['Recording'])){
+            $model->attributes = $_GET['Recording'];
+        }
         $this->render('create', array(
             'model' => $model,
         ));

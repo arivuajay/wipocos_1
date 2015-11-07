@@ -225,11 +225,24 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['Work']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Work_Internal_Code');
+            
+            foreach ($_GET['Work'] as $col => $value) {
+                if(!in_array($col, $ExceptList))
+                    $search_data .= "Work[{$col}]={$value}&";
+            }
+            
+            $search_data = rtrim($search_data, '&');
+        }
+        
         $this->widget(
                 'application.components.MyTbButton', array(
             'label' => 'Create Work',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/work/create'),
+            'url' => array("/site/work/create{$search_data}"),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),

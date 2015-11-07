@@ -108,6 +108,9 @@ class WorkController extends Controller {
             }
         }
 
+        if(isset($_GET['Work'])){
+            $model->attributes = $_GET['Work'];
+        }
         $this->render('create', array(
             'model' => $model,
             'tab' => 1,

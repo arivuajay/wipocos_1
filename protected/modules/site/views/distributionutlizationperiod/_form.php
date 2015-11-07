@@ -6,8 +6,8 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 ?>
 
 <div class="row">
@@ -98,7 +98,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

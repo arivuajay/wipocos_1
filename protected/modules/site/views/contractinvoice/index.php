@@ -12,8 +12,8 @@ $cs_pos_end = CClientScript::POS_END;
 
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
-$cs->registerCssFile($themeUrl . '/css/datepicker/datepicker3.css');
-$cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $cs_pos_end);
+
+
 ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
@@ -255,7 +255,7 @@ $cs->registerScriptFile($themeUrl . '/js/datepicker/bootstrap-datepicker.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        $('.date').datepicker({ format: 'yyyy-mm-dd' });
+        
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);
