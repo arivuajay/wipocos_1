@@ -119,6 +119,10 @@ class GroupController extends Controller {
             }
         }
 
+        if (isset($_GET['Group'])) {
+            $model->attributes = $_GET['Group'];
+        }
+
         $tab = 1;
         $this->render('create', compact('model', 'tab', 'type'));
     }

@@ -22,14 +22,14 @@
                                 <?php
                                 $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
                                 $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
-                                
+
                                 $is_auth = $_REQUEST['is_auth'] == 1;
                                 $is_publ = $_REQUEST['is_publ'] == 1;
-                                if(!$view_author)
+                                if (!$view_author)
                                     $is_publ = true;
-                                if(!$view_publisher)
+                                if (!$view_publisher)
                                     $is_auth = true;
-                                
+
                                 if ($view_author) {
                                     echo CHtml::label('Author', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
@@ -83,6 +83,23 @@
 
     <div id="search_right_result">
         <?php // $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
+    </div>
+    <div id="add_new_auth_publ">
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'New Author',
+            'context' => 'success',
+            'htmlOptions' => array(
+//                'class' => 'hide',
+                'id' => 'newauthorbutton',
+                'data-toggle' => 'modal',
+                'data-target' => '#newauthorModal',
+//                            'onclick' => '{$("#artist-dismiss").trigger("click");}'
+            ),
+                )
+        );
+        ?>
     </div>
 
     <a name="role-foundation">&nbsp;</a>
@@ -528,7 +545,7 @@ $js = <<< EOD
         $(".total_share").removeClass('hide');
         _equal_color = _broad_share != 100 ? '#D9534F' : '#698801';
         $("#equal_total").html(_broad_share.toFixed(2)+' %').css({ 'color': _equal_color});
-        
+
         _blank_color = _mech_share != 100 ? '#D9534F' : '#698801';
         $("#blank_total").html(_mech_share.toFixed(2)+' %').css({ 'color': _blank_color});
         _val = _broad_share + _mech_share;
@@ -544,7 +561,7 @@ $js = <<< EOD
         _pub_color = _publisher_share < 50 ? '#D9534F' : '#698801';
         $("#pub_total").html(_publisher_share+' %').css({ 'color': _pub_color});
         ////// End //////////////
-        
+
         var not_cent_percent = _val != '200';
 
         ////// Checking One publisher is added //////
@@ -573,7 +590,7 @@ $js = <<< EOD
             _publisher_validate = _publisher_share >= 50 && _isMainPubAdded;
         }
         ////// End //////////////
-        
+
         if(not_cent_percent == false && _publisher_validate){
             $("#right_form").submit();
         }
@@ -622,3 +639,5 @@ $js = <<< EOD
 EOD;
 Yii::app()->clientScript->registerScript('_right_form', $js);
 ?>
+
+

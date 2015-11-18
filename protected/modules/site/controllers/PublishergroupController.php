@@ -44,7 +44,7 @@ class PublishergroupController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -121,6 +121,10 @@ class PublishergroupController extends Controller {
             }
         }
 
+        if (isset($_GET['PublisherGroup'])) {
+            $model->attributes = $_GET['PublisherGroup'];
+        }
+
         $tab = 1;
         $this->render('create', compact('model', 'tab', 'type'));
     }
@@ -188,7 +192,7 @@ class PublishergroupController extends Controller {
         }
 
         $biograph_upload_model = new PublisherGroupBiographUploads;
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $managed_model, $payment_model, $rel_payment_model, $biograph_model,
             $psedonym_model, $address_model, $org_publisher_model, $sub_publisher_model, $org_publisher_model,
@@ -250,19 +254,19 @@ class PublishergroupController extends Controller {
                         $biograph_new_upload_model = new PublisherGroupBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
                         $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
                         $biograph_new_upload_model->Pub_Group_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Pub_Group_Biogrph_Upl_File = $newName;
                         $biograph_new_upload_model->Pub_Group_Biogrph_Upl_Description = $_POST['PublisherGroupBiographUploads']['Pub_Group_Biogrph_Upl_Description'];
-                        if($biograph_new_upload_model->validate()){
+                        if ($biograph_new_upload_model->validate()) {
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
                     }
                 }
-                
+
                 Yii::app()->user->setFlash('success', 'Biography Saved Successfully!!!');
                 Myclass::addAuditTrail("Updated Publisher Group Biography {$model->Pub_Group_Internal_Code} successfully.", "group");
                 $this->redirect(array('publishergroup/update/id/' . $biograph_model->Pub_Group_Id . '/tab/4'));
@@ -402,9 +406,10 @@ class PublishergroupController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->pubGroupBiogrph->pubGroup->Pub_Group_Name} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->pubGroupBiogrph->Pub_Group_Id , 'tab' => '4'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->pubGroupBiogrph->Pub_Group_Id, 'tab' => '4'));
         }
     }
+
     /**
      * Lists all models.
      */
@@ -481,4 +486,5 @@ class PublishergroupController extends Controller {
             Yii::app()->end();
         }
     }
+
 }

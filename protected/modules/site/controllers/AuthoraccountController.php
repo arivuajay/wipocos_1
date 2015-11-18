@@ -7,7 +7,6 @@ class AuthoraccountController extends Controller {
      */
     /**/
 
-
     /**
      * @return array action filters
      */
@@ -128,6 +127,10 @@ class AuthoraccountController extends Controller {
             } else {
                 $tab = '1';
             }
+        }
+
+        if (isset($_GET['AuthorAccount'])) {
+            $model->attributes = $_GET['AuthorAccount'];
         }
 
         $this->render('create', array(
@@ -481,9 +484,10 @@ class AuthoraccountController extends Controller {
     }
 
     public function actionMemberdelete() {
-        if(isset($_POST['group_id']) && isset($_POST['guid'])){
+        if (isset($_POST['group_id']) && isset($_POST['guid'])) {
             GroupMembers::model()->deleteAllByAttributes(array('Group_Member_GUID' => $_POST['guid'], 'Group_Id' => $_POST['group_id']));
             Yii::app()->end();
         }
     }
+
 }

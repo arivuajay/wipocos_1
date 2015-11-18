@@ -237,6 +237,19 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['AuthorAccount']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Auth_Internal_Code');
+
+            foreach ($_GET['AuthorAccount'] as $col => $value) {
+                if (!in_array($col, $ExceptList))
+                    $search_data .= "AuthorAccount[{$col}]={$value}&";
+            }
+
+            $search_data = rtrim($search_data, '&');
+        }
+
         $this->widget(
                 'application.components.MyTbButton', array(
             'label' => 'Create Author Group',
@@ -251,7 +264,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'application.components.MyTbButton', array(
             'label' => 'Create Author',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/authoraccount/create'),
+            'url' => array("/site/authoraccount/create{$search_data}"),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),
@@ -314,7 +327,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'name' => 'Auth_Is_Performer',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
-                    'visible' => UserIdentity::checkAccess(null, 'performeraccount', 'view'),
+                'visible' => UserIdentity::checkAccess(null, 'performeraccount', 'view'),
                 'value' => function($data) {
             echo $data->Auth_Is_Performer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
         },
@@ -363,7 +376,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

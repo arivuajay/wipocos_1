@@ -21,7 +21,7 @@ class PublisheraccountController extends Controller {
             'download' => 'application.components.actions.download',
         );
     }
-    
+
     public function behaviors() {
         return array(
             'exportableGrid' => array(
@@ -44,7 +44,7 @@ class PublisheraccountController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'biofiledelete', 'download', 'memberdelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -131,6 +131,10 @@ class PublisheraccountController extends Controller {
 //            $model->Pub_Language_Id = 1;
         }
 
+        if (isset($_GET['PublisherAccount'])) {
+            $model->attributes = $_GET['PublisherAccount'];
+        }
+
         $this->render('create', array(
             'model' => $model,
             'tab' => 1
@@ -167,7 +171,7 @@ class PublisheraccountController extends Controller {
         $related_model = empty($related_exists) ? new ProducerRelatedRights : $related_exists;
 
         $biograph_upload_model = new PublisherBiographUploads;
-        
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $address_model, $managed_model, $payment_model, $psedonym_model,
             $succession_model, $biograph_model, $related_model));
@@ -215,19 +219,19 @@ class PublisheraccountController extends Controller {
                         $biograph_new_upload_model = new PublisherBiographUploads;
                         $path = DIRECTORY_SEPARATOR . UPLOAD_DIR;
                         $newName = DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model)) . DIRECTORY_SEPARATOR . trim(md5(mt_rand())) . '.' . CFileHelper::getExtension($pic->name);
-                        $dir = UPLOAD_DIR.DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
+                        $dir = UPLOAD_DIR . DIRECTORY_SEPARATOR . strtolower(get_class($biograph_new_upload_model));
                         if (!is_dir($dir))
                             mkdir($dir);
                         $biograph_new_upload_model->Pub_Biogrph_Id = $bio_id;
                         $biograph_new_upload_model->Pub_Biogrph_Upl_File = $newName;
                         $biograph_new_upload_model->Pub_Biogrph_Upl_Description = $_POST['PublisherBiographUploads']['Pub_Biogrph_Upl_Description'];
-                        if($biograph_new_upload_model->validate()){
+                        if ($biograph_new_upload_model->validate()) {
                             $biograph_new_upload_model->save();
                             $pic->saveAs(Yii::getPathOfAlias('webroot') . $path . $newName);
                         }
                     }
                 }
-                
+
                 PublisherGroupMembers::model()->deleteAll("Pub_Group_Member_GUID = '{$model->Pub_GUID}'");
                 if (isset($_POST['group_ids']) && !empty($_POST['group_ids'])) {
                     foreach ($_POST['group_ids'] as $gid => $val):
@@ -350,10 +354,10 @@ class PublisheraccountController extends Controller {
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->pubBiogrph->pubAcc->Pub_Corporate_Name} successfully.");
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/publisheraccount/update', 'id' => $model->pubBiogrph->Pub_Acc_Id , 'tab' => '4'));
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/publisheraccount/update', 'id' => $model->pubBiogrph->Pub_Acc_Id, 'tab' => '4'));
         }
     }
-    
+
     /**
      * Lists all models.
      */
@@ -426,4 +430,5 @@ class PublisheraccountController extends Controller {
             Yii::app()->end();
         }
     }
+
 }

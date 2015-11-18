@@ -36,13 +36,13 @@ class WorkController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
-                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'biofiledelete'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'biofiledelete', 'newauthor'),
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('contractexpiry'),
-                'expression'=> 'UserIdentity::checkAccess(NULL, "contractexpiry", "view")',
+                'expression' => 'UserIdentity::checkAccess(NULL, "contractexpiry", "view")',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -108,7 +108,7 @@ class WorkController extends Controller {
             }
         }
 
-        if(isset($_GET['Work'])){
+        if (isset($_GET['Work'])) {
             $model->attributes = $_GET['Work'];
         }
         $this->render('create', array(
@@ -156,9 +156,11 @@ class WorkController extends Controller {
 
         $biograph_upload_model = new WorkBiographUploads;
         $focus = 'publisher_contactform';
+        $author_model = new AuthorAccount;
+
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
-            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model));
+            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model, $author_model));
 
         if (isset($_POST['Work'])) {
             $model->attributes = $_POST['Work'];
@@ -311,7 +313,7 @@ class WorkController extends Controller {
         }
 
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model', 'author_model'));
     }
 
     /**
@@ -431,16 +433,16 @@ class WorkController extends Controller {
                 $sub_criteria->addCondition("Work_Sub_Contact_End = '{$_GET['Work']['contract_end_date']}'");
             $search_sub_model = WorkSubPublishing::model()->with('work')->expiry()->findAll($sub_criteria);
         }
-        
+
         $pub_model = WorkPublishing::model()->expiry()->findAll();
         $sub_model = WorkSubPublishing::model()->expiry()->findAll();
-            
+
         $title = 'Contract Expiry';
-        if (isset($_GET['filter'])){
-            if($_GET['filter'] == 'pub'){
+        if (isset($_GET['filter'])) {
+            if ($_GET['filter'] == 'pub') {
                 $sub_model = array();
                 $title = 'Contract Expiry (Publisher)';
-            }else if($_GET['filter'] == 'sub'){
+            } else if ($_GET['filter'] == 'sub') {
                 $pub_model = array();
                 $title = 'Contract Expiry (Sub-Publisher)';
             }
@@ -497,7 +499,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'  || $_POST['ajax'] === 'author-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -531,20 +533,20 @@ class WorkController extends Controller {
                 }
             }
             //end
-            
+
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_date = "0000-00-00 00:00:00";
             $holders = WorkRightholder::model()->findAllByAttributes(array('Work_Id' => $work_id));
-            if(empty($holders)){
+            if (empty($holders)) {
                 $created_by = Yii::app()->user->id;
-            }else{
+            } else {
                 $created_by = $holders[0]->Created_By;
                 $created_date = $holders[0]->Created_Date;
                 $updated_by = Yii::app()->user->id;
                 $updated_date = date('Y-m-d H:i:s');
             }
-            
+
             WorkRightholder::model()->deleteAllByAttributes(array('Work_Id' => $work_id));
             $valid = true;
             foreach ($_POST['WorkRightholder'] as $values) {
@@ -657,6 +659,42 @@ class WorkController extends Controller {
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', "Deleted a Biography file from {$model->workBiogrph->work->Work_Org_Title} successfully.");
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/work/update', 'id' => $model->workBiogrph->Work_Id, 'tab' => '3'));
+        }
+    }
+
+    public function actionNewauthor() {
+        $ret = array();
+        if (isset($_POST['AuthorAccount'])) {
+            $model = new AuthorAccount;
+            $model->attributes = $_POST['AuthorAccount'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Author {$model->Auth_First_Name} {$model->Auth_Sur_Name} successfully.", "music");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Auth_Acc_Id,
+                        'first_name' => $model->Auth_First_Name,
+                        'last_name' => $model->Auth_Sur_Name,
+                        'name' => trim($model->Auth_First_Name." ".$model->Auth_Sur_Name),
+                        'int_code' => $model->Auth_Internal_Code,
+                        'uid' => $model->Auth_GUID,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
+    }
+
+    protected function performAjaxAuthorValidation($model) {
+        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form')) {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
         }
     }
 

@@ -267,6 +267,19 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
         <?php echo CHtml::link('Clear', array('/site/performeraccount/index'), array('class' => 'btn btn-primary btn-sm')); ?>
                 </div>-->
         <?php
+        $search_data = '';
+        if (isset($_GET['PerformerAccount']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Perf_Internal_Code');
+
+            foreach ($_GET['PerformerAccount'] as $col => $value) {
+                if (!in_array($col, $ExceptList))
+                    $search_data .= "PerformerAccount[{$col}]={$value}&";
+            }
+
+            $search_data = rtrim($search_data, '&');
+        }
+
         $this->widget(
                 'application.components.MyTbButton', array(
             'label' => 'Create Performer Group',
@@ -281,7 +294,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'application.components.MyTbButton', array(
             'label' => 'Create Performer',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/performeraccount/create'),
+            'url' => array("/site/performeraccount/create{$search_data}"),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),
@@ -341,7 +354,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'name' => 'Perf_Is_Author',
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
-                    'visible' => UserIdentity::checkAccess(null, 'authoraccount', 'view'),
+                'visible' => UserIdentity::checkAccess(null, 'authoraccount', 'view'),
                 'value' => function($data) {
             echo $data->Perf_Is_Author == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
         },
@@ -394,7 +407,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

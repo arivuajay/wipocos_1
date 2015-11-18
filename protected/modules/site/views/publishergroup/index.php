@@ -228,23 +228,38 @@ $legal_forms = Myclass::getMasterLegalForm();
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['PublisherGroup']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Pub_Group_Internal_Code');
+
+            foreach ($_GET['PublisherGroup'] as $col => $value) {
+                if (!in_array($col, $ExceptList))
+                    $search_data .= "PublisherGroup[{$col}]={$value}&";
+            }
+
+            $search_data = rtrim($search_data, '&');
+        }
+
         if ($role == 'publisher') {
+            $search_data = (empty($search_data)) ? "?type=publisher" : $search_data . "&type=publisher";
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Create Publisher Group',
                 'icon' => 'fa fa-plus',
-                'url' => array('/site/publishergroup/create', 'type' => 'publisher'),
+                'url' => array("/site/publishergroup/create{$search_data}"),
                 'buttonType' => 'link',
                 'context' => 'success',
                 'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
                     )
             );
         } elseif ($role == 'producer') {
+            $search_data = (empty($search_data)) ? "?type=producer" : $search_data . "&type=producer";
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Create Producer Group',
                 'icon' => 'fa fa-plus',
-                'url' => array('/site/publishergroup/create', 'type' => 'producer'),
+                'url' => array("/site/publishergroup/create{$search_data}"),
                 'buttonType' => 'link',
                 'context' => 'success',
                 'htmlOptions' => array('class' => 'pull-right'),
@@ -332,7 +347,7 @@ $legal_forms = Myclass::getMasterLegalForm();
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

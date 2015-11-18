@@ -5,27 +5,27 @@
     </div>
 </div>-->
 <div class="col-lg-12">
-    <?php if (!empty($authusers) || !empty($publusers)) { ?>
-        <div class="box-body">
-            <div class="form-group foundation">
-                <div class="box-header">
-                    <div class="col-lg-12 col-md-12">
-                        <h3 class="box-title">Rightholders</h3>
-                    </div>
-
+    <div class="box-body">
+        <div class="form-group foundation">
+            <div class="box-header">
+                <div class="col-lg-12 col-md-12">
+                    <h3 class="box-title">Rightholders</h3>
                 </div>
-                <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
-                    <div class="col-lg-12 col-md-12 row">
-                        <table id="search_result" class="table table-bordered selectable table-datatable">
-                            <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Internal Code</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+
+            </div>
+            <div class="box-body"  style="max-height: 300px; overflow-y: scroll">
+                <div class="col-lg-12 col-md-12 row">
+                    <table id="search_result" class="table table-bordered selectable table-datatable">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Internal Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($authusers) || !empty($publusers)) {
                                 if ($authusers) {
                                     foreach ($authusers as $key => $user) {
                                         ?>
@@ -49,15 +49,16 @@
                                         <?php
                                     }
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            } else {
+                                echo '<tr class="empty-record"><td colspan="3" class="errorMessage text-center">No Users Found</td></tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    <?php }else{
-        echo '<div class="errorMessage text-center">No Users Found</div>';
-    }
+    </div>
+    <?php
     ?>
 </div>

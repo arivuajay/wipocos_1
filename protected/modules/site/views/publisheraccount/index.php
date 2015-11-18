@@ -19,7 +19,7 @@ $countries = Myclass::getMasterCountry();
 $languages = Myclass::getMasterLanguage();
 $legal_forms = Myclass::getMasterLegalForm();
 ?>
-<?php $this->renderPartial('/default/_colors')?>
+<?php $this->renderPartial('/default/_colors') ?>
 <div class="col-lg-12 col-md-12" id="advance-search-block">
     <div class="row mb10" id="advance-search-label">
         <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
@@ -160,7 +160,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                 'Pub_Corporate_Name',
                 'Pub_Internal_Code',
                 'Pub_Ipi',
-               // 'Pub_Ipi_Base_Number',
+                // 'Pub_Ipi_Base_Number',
                 'Pub_Date',
 //                'Pub_Place',
                 array(
@@ -218,6 +218,18 @@ $legal_forms = Myclass::getMasterLegalForm();
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['PublisherAccount']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Pub_Internal_Code');
+
+            foreach ($_GET['PublisherAccount'] as $col => $value) {
+                if (!in_array($col, $ExceptList))
+                    $search_data .= "PublisherAccount[{$col}]={$value}&";
+            }
+
+            $search_data = rtrim($search_data, '&');
+        }
         $this->widget(
                 'application.components.MyTbButton', array(
             'label' => 'Create Publisher Group',
@@ -232,7 +244,7 @@ $legal_forms = Myclass::getMasterLegalForm();
                 'application.components.MyTbButton', array(
             'label' => 'Create Publisher',
             'icon' => 'fa fa-plus',
-            'url' => array('/site/publisheraccount/create'),
+            'url' => array("/site/publisheraccount/create{$search_data}"),
             'buttonType' => 'link',
             'context' => 'success',
             'htmlOptions' => array('class' => 'pull-right'),
@@ -253,7 +265,7 @@ $legal_forms = Myclass::getMasterLegalForm();
             'Pub_Corporate_Name',
             'Pub_Internal_Code',
             'Pub_Ipi',
-           // 'Pub_Ipi_Base_Number',
+            // 'Pub_Ipi_Base_Number',
             'Pub_Date',
 //            'Pub_Place',
             array(
@@ -269,8 +281,8 @@ $legal_forms = Myclass::getMasterLegalForm();
                 'htmlOptions' => array('style' => 'text-align:center', 'vAlign' => 'middle'),
                 'type' => 'raw',
                 'value' => function($data) {
-                    echo $data->Pub_Is_Producer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
-                },
+            echo $data->Pub_Is_Producer == 'Y' ? '<i class="fa fa-check text-success" title="Yes"></i>' : '<i class="fa fa-times text-red" title="No"></i>';
+        },
             ),
             /*
               'Pub_Country_Id',
@@ -313,7 +325,7 @@ $legal_forms = Myclass::getMasterLegalForm();
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

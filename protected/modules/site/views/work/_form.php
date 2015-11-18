@@ -237,12 +237,133 @@ $territories = Myclass::getMasterTerritory();
 
 <?php
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
+$new_author_post = Yii::app()->createAbsoluteUrl('/site/work/newauthor');
+
+
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
-        
+
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
      });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>
+
+<?php
+$active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
+$js = <<< EOD
+    $(document).ready(function(){
+        $('.year').datepicker({ dateFormat: 'yyyy' });
+
+        $('.nav-tabs a[href="#$active_Tab"]').tab('show');
+
+        $(".popup").on('click', function(){
+            _id = $(this).data('popup');
+            $("#"+_id).trigger('click');
+        });
+
+        $('body').on('click','#artisttable tr, #producertable tr', function(){
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+        });
+
+        if($('#producertable').length > 0){
+            var probaseTable;
+            probaseTable = $("#producertable").dataTable({
+                sDom: '<"search-box"r>ltip',
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bSort": true,
+                "bInfo": false,
+                "iDisplayLength": 100
+            });
+
+            $('#producertable_base_table_search').keyup(function(){
+                 probaseTable.fnFilter( $(this).val() );
+            });
+        }
+        if($('#artisttable').length > 0){
+            var artbaseTable;
+            artbaseTable = $("#artisttable").dataTable({
+                sDom: '<"search-box"r>ltip',
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bSort": true,
+                "bInfo": false,
+                "iDisplayLength": 100
+            });
+
+            $('#artisttable_base_table_search').keyup(function(){
+                 artbaseTable.fnFilter( $(this).val() );
+            });
+        }
+
+        $('.hide_tip').on('click', function() {
+            $(this).closest('li').find(':not(.hide_tip)').trigger('click');
+        });
+     });
+
+    function InsertNewAuthor(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_author_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#author-account-form')[0].reset();
+                        $('#AuthorAccount_Auth_Internal_Code').val(data.new_int_code);
+                        _art_table = $('#search_result tbody');
+                        _art_table.find('tr.empty-record').remove();
+//                        _rowHTML = '<tr data-urole="AU" data-uid="data.uid" data-name="data.name" data-intcode = "data.int_code"><td>data.first_name</td><td>data.last_name</td><td>data.int_code</td></tr>';
+//                        _art_table.append(_rowHTML);
+//        ///////
+//        alert('working');
+//                        tr = _art_table.find("td:contains('"+data.int_code+"')").parent();
+//                        tr.data('id', data.id);
+//                        tr.data('name', data.first_name + ' ' + data.last_name);
+//                        tr.trigger('click');
+//                        $("#set_artist_btn").trigger( "click" );
+//                        $("#new-artist-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+EOD;
+Yii::app()->clientScript->registerScript('_form', $js);
+?>
+
+
+
+<!---New Author Add Form -->
+<?php
+$this->beginWidget(
+        'booster.widgets.TbModal', array('id' => 'newauthorModal')
+);
+?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h4>New Author</h4>
+</div>
+<div class="modal-body">
+    <?php echo $this->renderPartial('_new_author', array('model' => $author_model)); ?>
+</div>
+
+<?php
+$this->widget(
+        'application.components.MyTbButton', array(
+    'label' => 'Close',
+    'url' => '#',
+    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-author-dismiss', 'class' => 'hide'),
+        )
+);
+
+$this->endWidget();
+?>
+<!---End -->

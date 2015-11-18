@@ -135,6 +135,10 @@ class PerformeraccountController extends Controller {
 //            $model->Perf_Language_Id = 1;
         }
 
+        if (isset($_GET['PerformerAccount'])) {
+            $model->attributes = $_GET['PerformerAccount'];
+        }
+
         $this->render('create', array(
             'model' => $model,
             'address_model' => $address_model,

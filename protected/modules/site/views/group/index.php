@@ -230,23 +230,39 @@ $legal_forms = Myclass::getMasterLegalForm();
             </div>
         </div>
         <?php
+        $search_data = '';
+        if (isset($_GET['Group']) && $searchModel->search()->getTotalItemCount() == 0) {
+            $search_data .= '?';
+            $ExceptList = array('Group_Internal_Code');
+
+            foreach ($_GET['Group'] as $col => $value) {
+                if (!in_array($col, $ExceptList))
+                    $search_data .= "Group[{$col}]={$value}&";
+            }
+
+            $search_data = rtrim($search_data, '&');
+        }
+
         if ($role == 'author') {
+            $search_data = (empty($search_data)) ? "?type=author" : $search_data . "&type=author";
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Create Author Group',
                 'icon' => 'fa fa-plus',
-                'url' => array('/site/group/create', 'type' => 'author'),
+                'url' => array("/site/group/create{$search_data}",),
                 'buttonType' => 'link',
                 'context' => 'success',
                 'htmlOptions' => array('class' => 'pull-right', 'style' => 'margin-left:10px;'),
                     )
             );
         } elseif ($role == 'performer') {
+            $search_data = (empty($search_data)) ? "?type=performer" : $search_data . "&type=performer";
+
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'Create Performer Group',
                 'icon' => 'fa fa-plus',
-                'url' => array('/site/group/create', 'type' => 'performer'),
+                'url' => array("/site/group/create{$search_data}"),
                 'buttonType' => 'link',
                 'context' => 'success',
                 'htmlOptions' => array('class' => 'pull-right'),
@@ -334,7 +350,7 @@ $legal_forms = Myclass::getMasterLegalForm();
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);
