@@ -19,9 +19,9 @@
  * @property AuthorAccount $authAcc
  */
 class AuthorDeathInheritance extends RActiveRecord {
-    
+
     public $after_save_enable = true;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -36,7 +36,7 @@ class AuthorDeathInheritance extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Auth_Acc_Id, Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Email, Auth_Death_Inhrt_Phone, Auth_Death_Inhrt_Address_1, Auth_Death_Inhrt_Address_2, Auth_Death_Inhrt_Address_3', 'required'),
+            array('Auth_Acc_Id, Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname', 'required'),
             array('Auth_Death_Inhrt_Email', 'email'),
             array('Auth_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Death_Inhrt_Firstname, Auth_Death_Inhrt_Surname, Auth_Death_Inhrt_Phone', 'length', 'max' => 50),
@@ -135,7 +135,7 @@ class AuthorDeathInheritance extends RActiveRecord {
             )
         ));
     }
-    
+
     protected function afterSave() {
         if($this->after_save_enable)
             AuthorAccount::afterTabsave('PerformerDeathInheritance', 'performerDeathInheritances');

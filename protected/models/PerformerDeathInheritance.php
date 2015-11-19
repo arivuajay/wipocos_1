@@ -31,7 +31,7 @@ class PerformerDeathInheritance extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Acc_Id, Perf_Death_Inhrt_Firstname, Perf_Death_Inhrt_Email, Perf_Death_Inhrt_Phone, Perf_Death_Inhrt_Surname, Perf_Death_Inhrt_Address_1, Perf_Death_Inhrt_Address_2, Perf_Death_Inhrt_Address_3', 'required'),
+            array('Perf_Acc_Id, Perf_Death_Inhrt_Firstname, Perf_Death_Inhrt_Surname', 'required'),
             array('Perf_Death_Inhrt_Email', 'email'),
             array('Perf_Acc_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Death_Inhrt_Surname', 'length', 'max' => 50),

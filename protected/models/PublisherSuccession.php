@@ -71,7 +71,7 @@ class PublisherSuccession extends RActiveRecord {
             'Pub_Suc_Id' => 'Suc',
             'Pub_Acc_Id' => 'Acc',
             'Pub_Suc_Date_Transfer' => 'Date of Transfer',
-            'Pub_Suc_Name' => 'Surname',
+            'Pub_Suc_Name' => 'Name',
             'Pub_Suc_Address_1' => 'Address 1',
             'Pub_Suc_Address_2' => 'Address 2',
             'Pub_Suc_Annotation' => 'Additional Annotations',
@@ -135,7 +135,7 @@ class PublisherSuccession extends RActiveRecord {
             PublisherAccount::afterTabsave('ProducerSuccession', 'producerSuccessions');
         return parent::afterSave();
     }
-    
+
     protected function afterFind() {
         if($this->Pub_Suc_Liquidation_Date == '0000-00-00')
             $this->Pub_Suc_Liquidation_Date = '';
