@@ -57,7 +57,7 @@ class AuthorAccount extends RActiveRecord {
     const PHOTO_SIZE = 1;
     const MIN_AGE = 20; //in years
     const MAX_AGE = 80; //in years
-    
+
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -144,7 +144,7 @@ class AuthorAccount extends RActiveRecord {
             'authorDeathInheritances' => array(self::HAS_ONE, 'AuthorDeathInheritance', 'Auth_Acc_Id'),
             'authorManageRights' => array(self::HAS_ONE, 'AuthorManageRights', 'Auth_Acc_Id'),
             'authorPaymentMethods' => array(self::HAS_ONE, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
-            'authorPseudonyms' => array(self::HAS_ONE, 'AuthorPseudonym', 'Auth_Acc_id'),
+            'authorPseudonyms' => array(self::HAS_MANY, 'AuthorPseudonym', 'Auth_Acc_id'),
             'authorUploads' => array(self::HAS_MANY, 'AuthorUpload', 'Auth_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
                 'foreignKey' => array('Group_Member_GUID' => 'Auth_GUID')
@@ -436,7 +436,7 @@ class AuthorAccount extends RActiveRecord {
                     $performer_upload_model->save(false);
                 }
             }
-            
+
             //Biography Uploads
             if (!empty($author_model->authorBiographies->authorBiographUploads) && isset($bio_id)) {
                 foreach ($author_model->authorBiographies->authorBiographUploads as $upload) {

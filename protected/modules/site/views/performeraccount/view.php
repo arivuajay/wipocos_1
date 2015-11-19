@@ -18,7 +18,7 @@ if ($export == false) {
                 'url' => array('update', 'id' => $model->Perf_Acc_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    
+//
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -38,7 +38,7 @@ if ($export == false) {
                 'url' => array('view', 'id' => $model->Perf_Acc_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    
+//
                     )
             );
             ?>
@@ -242,6 +242,37 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
+
+         <h4 class="box-title">Pseudonyms</h4>
+        <?php
+        $pseudonyms = PerformerPseudonym::model()->findAll('Perf_Acc_Id = :perf_acc_id', array(':perf_acc_id' => $model->Perf_Acc_Id));
+        if (!empty($pseudonyms)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Pseudo Type</th>
+                            <th>Pseudo Name</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
+                        </tr>
+                        <?php foreach ($pseudonyms as $key => $pseudonym) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $pseudonym->perfPseudoType->Pseudo_Code ?></td>
+                                <td><?php echo $pseudonym->Perf_Pseudo_Name ?></td>
+                                <td><?php echo $pseudonym->createdBy->name ?></td>
+                                <td><?php echo $pseudonym->updatedBy->name ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
     </div>
 
     <div class="user-view col-lg-6">
@@ -271,42 +302,6 @@ if ($export == false) {
                     array(
                         'name' => 'Updated Date',
                         'value' => $payment_model->Rowversion
-                    ),
-                ),
-            ));
-        } else {
-            echo 'No data created';
-        }
-        ?>
-
-        <h4>Pseudonyms</h4>
-        <?php
-        if (!empty($psedonym_model)) {
-            $this->widget('zii.widgets.CDetailView', array(
-                'data' => $psedonym_model,
-                'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                'attributes' => array(
-//        'Perf_Pseudo_Type_Id',
-                    array(
-                        'name' => 'Perf_Pseudo_Type_Id',
-                        'value' => isset($psedonym_model->perfPseudoType->Pseudo_Code) ? $psedonym_model->perfPseudoType->Pseudo_Code : 'Not Set'
-                    ),
-                    'Perf_Pseudo_Name',
-                    array(
-                        'name' => 'Created_By',
-                        'value' => isset($psedonym_model->createdBy->name) ? $psedonym_model->createdBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Created_Date',
-                        'value' => $psedonym_model->Created_Date
-                    ),
-                    array(
-                        'name' => 'Updated_By',
-                        'value' => isset($psedonym_model->updatedBy->name) ? $psedonym_model->updatedBy->name : ''
-                    ),
-                    array(
-                        'name' => 'Updated Date',
-                        'value' => $psedonym_model->Rowversion
                     ),
                 ),
             ));

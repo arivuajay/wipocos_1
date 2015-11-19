@@ -56,7 +56,7 @@ class PerformerAccount extends RActiveRecord {
     public $oldRecord;
 
     public $internal_increament = true;
-    
+
     const PHOTO_SIZE = 1;
     const MIN_AGE = 20; //in years
     const MAX_AGE = 80; //in years
@@ -77,7 +77,7 @@ class PerformerAccount extends RActiveRecord {
     public function getFullName() {
         return $this->Perf_First_Name . " " . $this->Perf_Sur_Name;
     }
-    
+
     /**
      * @return string the associated database table name
      */
@@ -148,7 +148,7 @@ class PerformerAccount extends RActiveRecord {
             'performerDeathInheritances' => array(self::HAS_ONE, 'PerformerDeathInheritance', 'Perf_Acc_Id'),
 //            'performerManageRights' => array(self::HAS_ONE, 'PerformerManageRights', 'Perf_Acc_Id'),
             'performerPaymentMethods' => array(self::HAS_ONE, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
-            'performerPseudonyms' => array(self::HAS_ONE, 'PerformerPseudonym', 'Perf_Acc_id'),
+            'performerPseudonyms' => array(self::HAS_MANY, 'PerformerPseudonym', 'Perf_Acc_id'),
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
             'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Perf_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
@@ -440,7 +440,7 @@ class PerformerAccount extends RActiveRecord {
                     $author_upload_model->save(false);
                 }
             }
-            
+
             //Biography Uploads
             if (!empty($performer_model->performerBiographies->performerBiographUploads) && isset($bio_id)) {
                 foreach ($performer_model->performerBiographies->performerBiographUploads as $upload) {
@@ -480,7 +480,7 @@ class PerformerAccount extends RActiveRecord {
         $this->oldRecord = clone $this;
         return parent::afterFind();
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(

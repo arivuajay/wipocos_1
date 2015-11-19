@@ -168,7 +168,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'type' => 'raw',
                     'value' => function($data) {
                         if (!empty($data->authorPseudonyms))
-                            echo $data->authorPseudonyms->Auth_Pseudo_Name;
+                            echo implode(",", CHtml::listData($data->authorPseudonyms, 'Auth_Pseudo_Id', 'Auth_Pseudo_Name'));
                     },
                 ),
                 array(
@@ -293,7 +293,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'type' => 'raw',
                 'value' => function($data) {
                     if (!empty($data->authorPseudonyms))
-                        echo $data->authorPseudonyms->Auth_Pseudo_Name;
+                        echo implode(",", CHtml::listData($data->authorPseudonyms, 'Auth_Pseudo_Id', 'Auth_Pseudo_Name'));
                 },
             ),
 //            'Auth_Identity_Number',

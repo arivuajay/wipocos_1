@@ -164,7 +164,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'name' => 'Pseudonym',
                     'value' => function($data) {
                         if (!empty($data->performerPseudonyms))
-                            echo $data->performerPseudonyms->Perf_Pseudo_Name;
+                            echo implode(",", CHtml::listData($data->performerPseudonyms, 'Perf_Pseudo_Id', 'Perf_Pseudo_Name'));
                     },
                 ),
                 array(
@@ -321,7 +321,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 'name' => 'Pseudonym',
                 'value' => function($data) {
                     if (!empty($data->performerPseudonyms))
-                        echo $data->performerPseudonyms->Perf_Pseudo_Name;
+                        echo implode(",", CHtml::listData($data->performerPseudonyms, 'Perf_Pseudo_Id', 'Perf_Pseudo_Name'));
                 },
             ),
             array(

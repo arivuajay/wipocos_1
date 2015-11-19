@@ -276,7 +276,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="box-footer hide">
+                    <div class="box-footer">
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <?php echo CHtml::submitButton('Save', array('class' => 'btn btn-primary', 'id' => 'right_ajax_submit', 'disabled' => true)) ?>

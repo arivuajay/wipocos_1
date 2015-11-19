@@ -365,6 +365,7 @@ Yii::app()->clientScript->registerScript('_form', $js);
 
 <!---New Author Add Form -->
 <?php
+if(!$model->isNewRecord){
 $this->beginWidget(
         'booster.widgets.TbModal', array('id' => 'newauthorModal')
 );
@@ -392,6 +393,7 @@ $this->endWidget();
 
 <!---New Publisher Add Form -->
 <?php
+
 $this->beginWidget(
         'booster.widgets.TbModal', array('id' => 'newpublisherModal')
 );
@@ -414,8 +416,6 @@ $this->widget(
 );
 
 $this->endWidget();
+}
 ?>
 <!---End -->
-<script>
-
-</script>

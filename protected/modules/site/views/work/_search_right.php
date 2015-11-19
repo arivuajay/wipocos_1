@@ -61,32 +61,37 @@
     </div>
     <div class="pull-right">
         <?php
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'New Author',
-            'context' => 'success',
-            'htmlOptions' => array(
+        if ($_REQUEST['is_auth'] == '1') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Author',
+                'context' => 'success',
+                'htmlOptions' => array(
 //                'class' => 'hide',
-                'id' => 'newauthorbutton',
-                'data-toggle' => 'modal',
-                'data-target' => '#newauthorModal',
-                'onclick' => '{$("#author-dismiss").trigger("click");}'
-            ),
-                )
-        );
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'New Publisher',
-            'context' => 'success',
-            'htmlOptions' => array(
+                    'id' => 'newauthorbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newauthorModal',
+                    'onclick' => '{$("#author-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
+        if ($_REQUEST['is_publ'] == '1') {
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Publisher',
+                'context' => 'success',
+                'htmlOptions' => array(
 //                'class' => 'hide',
-                'id' => 'newpublisherbutton',
-                'data-toggle' => 'modal',
-                'data-target' => '#newpublisherModal',
-                'onclick' => '{$("#publisher-dismiss").trigger("click");}'
-            ),
-                )
-        );
+                    'id' => 'newpublisherbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newpublisherModal',
+                    'onclick' => '{$("#publisher-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
         ?>
     </div>
 </div>
