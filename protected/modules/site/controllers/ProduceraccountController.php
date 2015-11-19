@@ -44,7 +44,7 @@ class ProduceraccountController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete', 'psedonymdelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -144,7 +144,7 @@ class ProduceraccountController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1) {
+    public function actionUpdate($id, $tab = 1, $edit = null) {
         $model = $this->loadModel($id);
         $address_exists = ProducerAccountAddress::model()->findByAttributes(array('Pro_Acc_Id' => $id));
         $address_model = empty($address_exists) ? new ProducerAccountAddress : $address_exists;
@@ -152,8 +152,7 @@ class ProduceraccountController extends Controller {
         $payment_exists = ProducerPaymentMethod::model()->findByAttributes(array('Pro_Acc_Id' => $id));
         $payment_model = empty($payment_exists) ? new ProducerPaymentMethod : $payment_exists;
 
-        $psedonym_exists = ProducerPseudonym::model()->findByAttributes(array('Pro_Acc_Id' => $id));
-        $psedonym_model = empty($psedonym_exists) ? new ProducerPseudonym : $psedonym_exists;
+        $psedonym_model = $edit == NULL ? new ProducerPseudonym : ProducerPseudonym::model()->findByAttributes(array('Pro_Pseudo_Id' => $edit));
 
         $succession_exists = ProducerSuccession::model()->findByAttributes(array('Pro_Acc_Id' => $id));
         $succession_model = empty($succession_exists) ? new ProducerSuccession : $succession_exists;
@@ -429,6 +428,26 @@ class ProduceraccountController extends Controller {
         if (isset($_POST['group_id']) && isset($_POST['guid'])) {
             PublisherGroupMembers::model()->deleteAllByAttributes(array('Pub_Group_Member_GUID' => $_POST['guid'], 'Pub_Group_Id' => $_POST['group_id']));
             Yii::app()->end();
+        }
+    }
+
+     public function actionPsedonymdelete($id) {
+        try {
+            $model = ProducerPseudonym::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Producer Pseudo Name {$model->Pro_Pseudo_Name} successfully.", "Producer");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Producer Pseudo Name {$model->Pro_Pseudo_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/produceraccount/update', 'id' => $model->Pro_Acc_Id, 'tab' => 5));
         }
     }
 

@@ -44,3 +44,43 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+<?php
+$psedonyms = PublisherPseudonym::model()->findAll('Pub_Acc_Id = :pub_acc_id', array(':pub_acc_id' => $publisher_model->Pub_Acc_Id));
+if (!empty($psedonyms)) {
+    ?>
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">Pseudo Name</h4>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped table-bordered">
+                <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th><?php echo $model->getAttributeLabel('Pub_Pseudo_Type_Id') ?></th>
+                        <th><?php echo $model->getAttributeLabel('Pub_Pseudo_Name') ?></th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach ($psedonyms as $key => $psedonym) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $psedonym->pubPseudoType->Pseudo_Code ?></td>
+                            <td><?php echo $psedonym->Pub_Pseudo_Name ?></td>
+                            <td><?php echo $psedonym->createdBy->name ?></td>
+                            <td><?php echo $psedonym->updatedBy->name ?></td>
+                            <td>
+                                <?php
+                                echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/publisheraccount/update', 'id' => $publisher_model->Pub_Acc_Id, 'tab' => 5, 'edit' => $psedonym->Pub_Pseudo_Id), array('title' => 'Edit'));
+                                echo "&nbsp;&nbsp;";
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/publisheraccount/psedonymdelete','id'=> $psedonym->Pub_Pseudo_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody></table>
+        </div>
+    </div>
+    <?php
+}?>

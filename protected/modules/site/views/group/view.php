@@ -29,7 +29,7 @@ $this->breadcrumbs = array(
                 'url' => array('update', 'id' => $model->Group_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    
+//
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -49,7 +49,7 @@ $this->breadcrumbs = array(
                 'url' => array('view', 'id' => $model->Group_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    
+//
                     )
             );
         }
@@ -179,6 +179,37 @@ $this->breadcrumbs = array(
                     ),
                 ),
             ));
+        } else {
+            echo 'No data created';
+        }
+        ?>
+
+         <h4 class="box-title">Pseudonyms</h4>
+        <?php
+        $pseudonyms = GroupPseudonym::model()->findAll('Group_Id = :group_acc_id', array(':group_acc_id' => $model->Group_Id));
+        if (!empty($pseudonyms)) {
+            ?>
+            <div class="box-body no-padding">
+                <table class="table table-striped table-bordered">
+                    <tbody><tr>
+                            <th>#</th>
+                            <th>Group Pseudo Type </th>
+                            <th>Group Pseudo Name </th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
+                        </tr>
+                        <?php foreach ($pseudonyms as $key => $pseudonym) { ?>
+                            <tr>
+                                <td><?php echo $key + 1 ?>.</td>
+                                <td><?php echo $pseudonym->groupPseudoType->Pseudo_Code ?></td>
+                                <td><?php echo $pseudonym->Group_Pseudo_Name ?></td>
+                                <td><?php echo $pseudonym->createdBy->name ?></td>
+                                <td><?php echo $pseudonym->updatedBy->name ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody></table>
+            </div>
+            <?php
         } else {
             echo 'No data created';
         }

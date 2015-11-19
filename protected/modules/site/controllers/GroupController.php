@@ -44,7 +44,7 @@ class GroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete','psedonymdelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -132,7 +132,7 @@ class GroupController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1) {
+    public function actionUpdate($id, $tab = 1,$edit = null) {
         $model = $this->loadModel($id);
 
         $payment_exists = GroupPaymentMethod::model()->findByAttributes(array('Group_Id' => $id));
@@ -150,8 +150,7 @@ class GroupController extends Controller {
             $managed_model = $managed_exists;
         }
 
-        $psedonym_exists = GroupPseudonym::model()->findByAttributes(array('Group_Id' => $id));
-        $psedonym_model = empty($psedonym_exists) ? new GroupPseudonym : $psedonym_exists;
+        $psedonym_model = $edit == NULL ? new GroupPseudonym : GroupPseudonym::model()->findByAttributes(array('Group_Pseudo_Id' => $edit));
 
         $biograph_exists = GroupBiography::model()->findByAttributes(array('Group_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new GroupBiography : $biograph_exists;
@@ -400,6 +399,26 @@ class GroupController extends Controller {
         if (isset($_POST['group_id']) && isset($_POST['guid'])) {
             GroupMembers::model()->deleteAllByAttributes(array('Group_Member_GUID' => $_POST['guid'], 'Group_Id' => $_POST['group_id']));
             Yii::app()->end();
+        }
+    }
+
+     public function actionPsedonymdelete($id) {
+        try {
+            $model = GroupPseudonym::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Group Pseudo Name {$model->Group_Pseudo_Name} successfully.", "Group");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Group Pseudo Name {$model->Group_Pseudo_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/group/update', 'id' => $model->Group_Id, 'tab' => 5));
         }
     }
 }

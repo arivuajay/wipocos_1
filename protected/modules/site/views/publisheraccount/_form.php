@@ -300,7 +300,7 @@ $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('#PublisherAccount_Pub_Gender').find("br").remove();
-        
+
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
 
         $("#PublisherManageRights_Pub_Mnge_Entry_Date").on("change", function(){
