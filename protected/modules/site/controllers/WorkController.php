@@ -36,7 +36,7 @@ class WorkController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'holderremove', 'insertright',
-                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'biofiledelete', 'newauthor'),
+                    'searchright', 'print', 'pdf', 'subtitledelete', 'download', 'filedelete', 'biofiledelete', 'newauthor', 'newpublisher'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -157,10 +157,11 @@ class WorkController extends Controller {
         $biograph_upload_model = new WorkBiographUploads;
         $focus = 'publisher_contactform';
         $author_model = new AuthorAccount;
+        $publisher_model = new PublisherAccount;
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
-            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model, $author_model));
+            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model, $author_model, $publisher_model));
 
         if (isset($_POST['Work'])) {
             $model->attributes = $_POST['Work'];
@@ -313,7 +314,7 @@ class WorkController extends Controller {
         }
 
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model', 'author_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model', 'author_model', 'publisher_model'));
     }
 
     /**
@@ -499,7 +500,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'  || $_POST['ajax'] === 'author-account-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'  || $_POST['ajax'] === 'author-account-form'  || $_POST['ajax'] === 'publisher-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -691,11 +692,31 @@ class WorkController extends Controller {
         echo json_encode($ret);
     }
 
-    protected function performAjaxAuthorValidation($model) {
-        if (isset($_POST['ajax']) && ($_POST['ajax'] === 'author-account-form')) {
-            echo CActiveForm::validate($model);
-            Yii::app()->end();
-        }
-    }
+    public function actionNewpublisher() {
+        $ret = array();
+        if (isset($_POST['PublisherAccount'])) {
+            $model = new PublisherAccount;
+            $model->attributes = $_POST['PublisherAccount'];
 
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Publisher {$model->Pub_Corporate_Name} successfully.", "music");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Pub_Acc_Id,
+                        'corporate_name' => $model->Pub_Corporate_Name,
+                        'ipi_base_number' => $model->Pub_Ipi_Base_Number,
+                        'int_code' => $model->Pub_Internal_Code,
+                        'uid' => $model->Pub_GUID,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PUBLISHER_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
+    }
 }
