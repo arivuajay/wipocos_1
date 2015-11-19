@@ -84,23 +84,6 @@
     <div id="search_right_result">
         <?php // $this->renderPartial('_search_right', compact('authusers', 'publusers')); ?>
     </div>
-    <div id="add_new_auth_publ">
-        <?php
-        $this->widget(
-                'application.components.MyTbButton', array(
-            'label' => 'New Author',
-            'context' => 'success',
-            'htmlOptions' => array(
-//                'class' => 'hide',
-                'id' => 'newauthorbutton',
-                'data-toggle' => 'modal',
-                'data-target' => '#newauthorModal',
-//                            'onclick' => '{$("#artist-dismiss").trigger("click");}'
-            ),
-                )
-        );
-        ?>
-    </div>
 
     <a name="role-foundation">&nbsp;</a>
     <div class="col-lg-12">
