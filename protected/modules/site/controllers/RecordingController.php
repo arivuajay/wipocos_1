@@ -2,12 +2,11 @@
 
 class RecordingController extends Controller {
     /**
-     * 
+     *
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     /**/
-
 
     /**
      * @return array action filters
@@ -32,8 +31,8 @@ class RecordingController extends Controller {
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'subtitledelete', 'searchright',
-                    'insertright', 'linkdelete', 'getrecordingdetails'),
-                'expression'=> 'UserIdentity::checkAccess()',
+                    'insertright', 'linkdelete', 'getrecordingdetails', 'newperformer', 'newproducer'),
+                'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -89,7 +88,7 @@ class RecordingController extends Controller {
             }
         }
 
-        if(isset($_GET['Recording'])){
+        if (isset($_GET['Recording'])) {
             $model->attributes = $_GET['Recording'];
         }
         $this->render('create', array(
@@ -114,8 +113,11 @@ class RecordingController extends Controller {
 
         $link_model = $edit_link == NULL ? new RecordingLink : RecordingLink::model()->findByAttributes(array('Rcd_Link_Id' => $edit_link));
 
+        $performer_model = new PerformerAccount;
+        $producer_model = new ProducerAccount;
+
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model, $link_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model, $link_model,$performer_model,$producer_model));
 
         if (isset($_POST['Recording'])) {
             $model->attributes = $_POST['Recording'];
@@ -147,8 +149,7 @@ class RecordingController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 
-                'link_model','right_holder_exists'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 'link_model', 'right_holder_exists','performer_model','producer_model'));
     }
 
     /**
@@ -228,7 +229,7 @@ class RecordingController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'recording-subtitle-form' || $_POST['ajax'] === 'recording-publication-form' || $_POST['ajax'] === 'recording-rightholder-form' || $_POST['ajax'] === 'recording-link-form'
+                $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'recording-subtitle-form' || $_POST['ajax'] === 'recording-publication-form' || $_POST['ajax'] === 'recording-rightholder-form' || $_POST['ajax'] === 'recording-link-form'  || $_POST['ajax'] === 'performer-account-form'  || $_POST['ajax'] === 'producer-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -305,20 +306,20 @@ class RecordingController extends Controller {
         if (isset($_POST['RecordingRightholder']) && !empty($_POST['RecordingRightholder'])) {
             $end = end($_POST['RecordingRightholder']);
             $rcd_id = $end['Rcd_Id'];
-            
+
             $created_by = $updated_by = '';
             $created_date = date('Y-m-d H:i:s');
             $updated_by = "0000-00-00 00:00:00";
             $holders = RecordingRightholder::model()->findAllByAttributes(array('Rcd_Id' => $rcd_id));
-            if(empty($holders)){
+            if (empty($holders)) {
                 $created_by = Yii::app()->user->id;
-            }else{
+            } else {
                 $created_by = $holders[0]->Created_By;
                 $created_date = $holders[0]->Created_Date;
                 $updated_by = Yii::app()->user->id;
                 $updated_date = date('Y-m-d H:i:s');
             }
-            
+
             RecordingRightholder::model()->deleteAllByAttributes(array('Rcd_Id' => $rcd_id));
             $valid = true;
             foreach ($_POST['RecordingRightholder'] as $values) {
@@ -336,5 +337,62 @@ class RecordingController extends Controller {
                 Yii::app()->user->setFlash('success', 'RightHolder Saved Successfully!!!');
             $this->redirect(array('/site/recording/update', 'id' => $model->Rcd_Id, 'tab' => 4));
         }
+    }
+
+    public function actionNewperformer() {
+        $ret = array();
+        if (isset($_POST['PerformerAccount'])) {
+            $model = new PerformerAccount;
+            $model->attributes = $_POST['PerformerAccount'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Performer {$model->Perf_First_Name} {$model->Perf_Sur_Name} successfully.", "music");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Perf_Acc_Id,
+                        'first_name' => $model->Perf_First_Name,
+                        'last_name' => $model->Perf_Sur_Name,
+                        'name' => trim($model->Perf_First_Name." ".$model->Perf_Sur_Name),
+                        'int_code' => $model->Perf_Internal_Code,
+                        'uid' => $model->Perf_GUID,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
+    }
+
+    public function actionNewproducer() {
+        $ret = array();
+        if (isset($_POST['ProducerAccount'])) {
+            $model = new ProducerAccount;
+            $model->attributes = $_POST['ProducerAccount'];
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    Myclass::addAuditTrail("Created Producer {$model->Pro_Corporate_Name} successfully.", "music");
+                    $ret = array(
+                        'sts' => 'success',
+                        'id' => $model->Pro_Acc_Id,
+                        'corporate_name' => $model->Pro_Corporate_Name,
+                        'ipi_base_number' => $model->Pro_Ipi_Base_Number,
+                        'int_code' => $model->Pro_Internal_Code,
+                        'uid' => $model->Pro_GUID,
+                        'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PRODUCER_CODE))->Fullcode
+                    );
+                }
+            } else {
+                $ret = array(
+                    'sts' => 'fail',
+                );
+            }
+        }
+        echo json_encode($ret);
     }
 }

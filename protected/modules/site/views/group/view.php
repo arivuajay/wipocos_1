@@ -184,7 +184,7 @@ $this->breadcrumbs = array(
         }
         ?>
 
-         <h4 class="box-title">Pseudonyms</h4>
+         <h4 class="box-title">Cross-references</h4>
         <?php
         $pseudonyms = GroupPseudonym::model()->findAll('Group_Id = :group_acc_id', array(':group_acc_id' => $model->Group_Id));
         if (!empty($pseudonyms)) {

@@ -23,7 +23,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <?php echo $form->error($model, 'Pub_Corporate_Name'); ?>
         </div>
 
-        <div class="form-group">
+        <div class="form-group hide">
             <?php echo $form->labelEx($model, 'Pub_Ipi_Base_Number', array('class' => '')); ?>
             <?php echo $form->textField($model, 'Pub_Ipi_Base_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
             <?php echo $form->error($model, 'Pub_Ipi_Base_Number'); ?>

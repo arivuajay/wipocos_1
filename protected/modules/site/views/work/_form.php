@@ -343,11 +343,11 @@ $js = <<< EOD
                     if(data.sts == 'success'){
                         $('#publisher-account-form')[0].reset();
                         $('#PublisherAccount_Pub_Internal_Code').val(data.new_int_code);
-                        _auth_table = $('#search_result tbody');
-                        _auth_table.find('tr.empty-record').remove();
+                        _publ_table = $('#search_result tbody');
+                        _publ_table.find('tr.empty-record').remove();
                         _rowHTML = '<tr data-urole="PU" data-uid="'+data.uid+'" data-name="'+data.corporate_name+'" data-intcode="'+data.int_code+'"><td>'+data.corporate_name+'</td><td>'+data.ipi_base_number+'</td><td>'+data.int_code+'</td></tr>';
-                        _auth_table.append(_rowHTML);
-                        _auth_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
+                        _publ_table.append(_rowHTML);
+                        _publ_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
                         $("#new-publisher-dismiss").trigger( "click" );
                     }
                 },

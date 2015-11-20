@@ -45,13 +45,13 @@ $regions = Myclass::getMasterRegion();
             <?php echo $form->checkBox($model, 'Perf_Is_Author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
             <?php echo $form->error($model, 'Perf_Is_Author'); ?>
         </div>
-        
+
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Perf_Gender', array('class' => '')); ?><br />
-            <?php echo $form->radioButtonList($model, 'Perf_Gender', array('M' => 'Male', 'F' => 'Female'), array('class' => 'form-control')); ?>
+            <?php echo $form->radioButtonList($model, 'Perf_Gender', array('M' => 'Male', 'F' => 'Female'), array('class' => 'form-control','separator'=>'&nbsp;')); ?>
             <?php echo $form->error($model, 'Perf_Gender'); ?>
         </div>
-        
+
         <div class="form-group hide">
             <?php echo $form->labelEx($model, 'Perf_DOB', array('class' => '')); ?>
             <?php echo $form->textField($model, 'Perf_DOB', array('class' => 'form-control date', 'value' => (isset($model->Perf_DOB) && $model->Perf_DOB != '0000-00-00') ? date('Y-m-d', strtotime($model->Perf_DOB)) : '')); ?>
@@ -100,7 +100,7 @@ $regions = Myclass::getMasterRegion();
 <div class="col-lg-5 hide">
     <div class="box-body">
 
-        
+
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Perf_Ipi', array('class' => '')); ?>
             <?php echo $form->textField($model, 'Perf_Ipi', array('class' => 'form-control')); ?>
@@ -165,4 +165,3 @@ $regions = Myclass::getMasterRegion();
     </div>
 </div>
 <?php $this->endWidget(); ?>
-                    

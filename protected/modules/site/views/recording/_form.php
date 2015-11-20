@@ -29,7 +29,7 @@ $labels = Myclass::getMasterLabel();
         $other_tab_validation = $rgt_tab_validation = true;
         if (!$model->isNewRecord) {
             $other_tab_validation = !empty($right_holder_exists);
-        }else{
+        } else {
             $other_tab_validation = $rgt_tab_validation = false;
         }
         ?>
@@ -138,7 +138,7 @@ $labels = Myclass::getMasterLabel();
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <?php echo $form->error($model, 'duration_hours'); ?>
                                 </div>
@@ -202,25 +202,140 @@ $labels = Myclass::getMasterLabel();
                     }
                     ?>
                 </div>
-<!--                <div class="tab-pane" id="tab_5">
-                    <?php
+                <!--                <div class="tab-pane" id="tab_5">
+                <?php
 //                    if ($other_tab_validation) {
 //                        $this->renderPartial('_link_form', array('model' => $link_model, 'recording_model' => $model));
 //                    }
-                    ?>
-                </div>-->
+                ?>
+                                </div>-->
             </div>
         </div>
     </div>
 </div>
 <?php
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
+$new_performer_post = Yii::app()->createAbsoluteUrl('/site/recording/newperformer');
+$new_producer_post = Yii::app()->createAbsoluteUrl('/site/recording/newproducer');
+
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
-        
+
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
      });
+
+    function InsertNewPerformer(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_performer_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#performer-account-form')[0].reset();
+                        $('#PerformerAccount_Perf_Internal_Code').val(data.new_int_code);
+                        _perf_table = $('#search_result tbody');
+                        _perf_table.find('tr.empty-record').remove();
+                        _rowHTML = '<tr data-urole="PE" data-uid="'+data.uid+'" data-name="'+data.name+'" data-intcode="'+data.int_code+'"><td>'+data.first_name+'</td><td>'+data.last_name+'</td><td>'+data.int_code+'</td></tr>';
+                        _perf_table.append(_rowHTML);
+                        _perf_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
+                        $("#new-performer-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+
+    function InsertNewProducer(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_producer_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#producer-account-form')[0].reset();
+                        $('#ProducerAccount_Pro_Internal_Code').val(data.new_int_code);
+                        _prod_table = $('#search_result tbody');
+                        _prod_table.find('tr.empty-record').remove();
+                        _rowHTML = '<tr data-urole="PR" data-uid="'+data.uid+'" data-name="'+data.corporate_name+'" data-intcode="'+data.int_code+'"><td>'+data.corporate_name+'</td><td>'+data.ipi_base_number+'</td><td>'+data.int_code+'</td></tr>';
+                        _prod_table.append(_rowHTML);
+                        _prod_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
+                        $("#new-producer-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>
+
+
+
+<!---New Performer Add Form -->
+<?php
+if (!$model->isNewRecord) {
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newperformerModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Performer</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('_new_performer', array('model' => $performer_model)); ?>
+    </div>
+
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-performer-dismiss', 'class' => 'hide'),
+            )
+    );
+
+    $this->endWidget();
+    ?>
+    <!---End -->
+
+    <!---New Producer Add Form -->
+    <?php
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newproducerModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Producer</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('_new_producer', array('model' => $producer_model)); ?>
+    </div>
+
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-producer-dismiss', 'class' => 'hide'),
+            )
+    );
+
+    $this->endWidget();
+}
+?>
+<!---End -->

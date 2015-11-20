@@ -7,7 +7,7 @@ $form = $this->beginWidget('CActiveForm', array(
         'afterValidate' => 'js:InsertNewAuthor'
     ),
     'enableAjaxValidation' => true,
-    ));
+        ));
 ?>
 <div class="col-lg-12">
     <div class="box-body">
@@ -28,6 +28,12 @@ $form = $this->beginWidget('CActiveForm', array(
 
             <?php echo $form->textField($model, 'Auth_Sur_Name', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
             <?php echo $form->error($model, 'Auth_Sur_Name'); ?>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'Auth_Gender', array('class' => '')); ?><br />
+            <?php echo $form->radioButtonList($model, 'Auth_Gender', array('M' => 'Male', 'F' => 'Female'), array('class' => 'form-control','separator'=>'&nbsp;')); ?>
+            <?php echo $form->error($model, 'Auth_Gender'); ?>
         </div>
     </div>
 </div>

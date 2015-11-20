@@ -43,7 +43,7 @@ class PublishergroupController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete'),
+                'actions' => array('index', 'view', 'create', 'update', 'admin', 'delete', 'download', 'biofiledelete', 'memberdelete','psedonymdelete'),
                 'expression' => 'UserIdentity::checkAccess()',
                 'users' => array('@'),
             ),
@@ -134,7 +134,7 @@ class PublishergroupController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id, $tab = 1) {
+    public function actionUpdate($id, $tab = 1,$edit = null) {
         $model = $this->loadModel($id);
 
         $payment_exists = PublisherGroupCopyrightPayment::model()->findByAttributes(array('Pub_Group_Id' => $id));
@@ -162,8 +162,7 @@ class PublishergroupController extends Controller {
         }
 
 
-        $psedonym_exists = PublisherGroupPseudonym::model()->findByAttributes(array('Pub_Group_Id' => $id));
-        $psedonym_model = empty($psedonym_exists) ? new PublisherGroupPseudonym : $psedonym_exists;
+        $psedonym_model = $edit == NULL ? new PublisherGroupPseudonym : PublisherGroupPseudonym::model()->findByAttributes(array('Pub_Group_Pseudo_Id' => $edit));
 
         $biograph_exists = PublisherGroupBiography::model()->findByAttributes(array('Pub_Group_Id' => $id));
         $biograph_model = empty($biograph_exists) ? new PublisherGroupBiography : $biograph_exists;
@@ -487,4 +486,23 @@ class PublishergroupController extends Controller {
         }
     }
 
+    public function actionPsedonymdelete($id) {
+        try {
+            $model = PublisherGroupPseudonym::model()->findByPk($id);
+            $model->delete();
+            Myclass::addAuditTrail("Deleted Publisher Group Pseudo Name {$model->Pub_Group_Pseudo_Name} successfully.", "Publisher Group");
+        } catch (CDbException $e) {
+            if ($e->errorInfo[1] == 1451) {
+                throw new CHttpException(400, Yii::t('err', 'Relation Restriction Error.'));
+            } else {
+                throw $e;
+            }
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            Yii::app()->user->setFlash('success', "Deleted Publisher Group Pseudo Name {$model->Pub_Group_Pseudo_Name} successfully.");
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/publishergroup/update', 'id' => $model->Pub_Group_Id, 'tab' => 5));
+        }
+    }
 }

@@ -41,7 +41,7 @@ class PublisherGroup extends RActiveRecord {
     public $is_pub_producer;
 
     const PHOTO_SIZE = 1;
-    
+
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -106,7 +106,7 @@ class PublisherGroup extends RActiveRecord {
             'publisherGroupCopyrightPayments' => array(self::HAS_ONE, 'PublisherGroupCopyrightPayment', 'Pub_Group_Id'),
             'publisherGroupManageRights' => array(self::HAS_ONE, 'PublisherGroupManageRights', 'Pub_Group_Id'),
             'publisherGroupMembers' => array(self::HAS_MANY, 'PublisherGroupMembers', 'Pub_Group_Id'),
-            'publisherGroupPseudonyms' => array(self::HAS_ONE, 'PublisherGroupPseudonym', 'Pub_Group_Id'),
+            'publisherGroupPseudonyms' => array(self::HAS_MANY, 'PublisherGroupPseudonym', 'Pub_Group_Id'),
             'publisherGroupRelatedPayments' => array(self::HAS_ONE, 'PublisherGroupRelatedPayment', 'Pub_Group_Id'),
             'publisherGroupRepresentatives' => array(self::HAS_ONE, 'PublisherGroupRepresentative', 'Pub_Group_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -260,7 +260,7 @@ class PublisherGroup extends RActiveRecord {
         }
         return $status;
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(
