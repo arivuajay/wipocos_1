@@ -61,7 +61,7 @@ class SoundCarrierSubtitle extends RActiveRecord {
         return array(
             'soundCarSubtitleLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Sound_Car_Subtitle_Language_Id'),
             'soundCar' => array(self::BELONGS_TO, 'SoundCarrier', 'Sound_Car_Id'),
-            'soundCarSubtitleType' => array(self::BELONGS_TO, 'MasterType', 'Sound_Car_Subtitle_Type_Id'),
+            'soundCarSubtitleType' => array(self::BELONGS_TO, 'MasterSubtitleType', 'Sound_Car_Subtitle_Type_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
