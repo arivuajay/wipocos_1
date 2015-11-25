@@ -20,7 +20,7 @@
                 </div>
             </div>
         <?php } ?>
-        
+
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Sound_Car_Fix_GUID', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
@@ -38,7 +38,7 @@
         <div class="form-group">
             <?php echo CHtml::label('Internal Code', '', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
-                <?php 
+                <?php
                 $int_code = $isrc = '';
                 if (!$model->isNewRecord) {
                     if($model->Sound_Car_Fix_Work_Type == 'W'){
@@ -87,7 +87,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Sound_Car_Fix_Date', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->textField($model, 'Sound_Car_Fix_Date', array('class' => 'form-control date')); ?>
+                <?php echo $form->textField($model, 'Sound_Car_Fix_Date', array('class' => 'form-control date-fixation')); ?>
                 <?php echo $form->error($model, 'Sound_Car_Fix_Date'); ?>
             </div>
         </div>
@@ -179,8 +179,9 @@ $js = <<< EOD
         $('#SoundCarrierFixations_Sound_Car_Fix_GUID').on('change', function(){
             load_code($(this).val());
         });
+        $('.date-fixation').datepicker({ format: 'yyyy-mm-dd',endDate: '0d' });
     });
-        
+
     function load_code(guid){
         $.ajax({
             type: 'POST',
@@ -199,4 +200,4 @@ $js = <<< EOD
     }
 EOD;
 Yii::app()->clientScript->registerScript('_fix_form', $js);
-?>                 
+?>
