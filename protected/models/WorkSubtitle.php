@@ -18,7 +18,7 @@
  * @property Work $work
  */
 class WorkSubtitle extends RActiveRecord {
-    
+
     public function init() {
         parent::init();
         if($this->isNewRecord){
@@ -59,7 +59,7 @@ class WorkSubtitle extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workSubtitleLanguage' => array(self::BELONGS_TO, 'MasterLanguage', 'Work_Subtitle_Language_Id'),
-            'workSubtitleType' => array(self::BELONGS_TO, 'MasterType', 'Work_Subtitle_Type_Id'),
+            'workSubtitleType' => array(self::BELONGS_TO, 'MasterSubtitleType', 'Work_Subtitle_Type_Id'),
             'work' => array(self::BELONGS_TO, 'Work', 'Work_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),

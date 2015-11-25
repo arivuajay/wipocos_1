@@ -77,7 +77,7 @@ if (!empty($sub_titles)) {
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleType->Subtitle_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
                             <td><?php echo $sub_title->createdBy->name ?></td>
                             <td><?php echo $sub_title->updatedBy->name ?></td>

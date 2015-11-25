@@ -286,18 +286,21 @@ class RecordingController extends Controller {
             $criteria->compare('Perf_Internal_Code', $search_txt, true, 'OR');
             $criteria->compare('Perf_Ipi', $search_txt, true, 'OR');
             $criteria->compare('Perf_Ipi_Base_Number', $search_txt, true, 'OR');
+            $criteria->compare('performerPseudonyms.Perf_Pseudo_Name', $search_txt, true, 'OR');
 
             $procriteria->compare('Pro_Corporate_Name', $search_txt, true, 'OR');
             $procriteria->compare('Pro_Internal_Code', $search_txt, true, 'OR');
             $procriteria->compare('Pro_Ipi', $search_txt, true, 'OR');
             $procriteria->compare('Pro_Ipi_Base_Number', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi_Base_Number', $search_txt, true, 'OR');
+            $procriteria->compare('producerPseudonyms.Pro_Pseudo_Name', $search_txt, true, 'OR');
         }
 
         if ($_REQUEST['is_perf'] == '1') {
-            $perfusers = PerformerAccount::model()->with('performerRelatedRights')->isStatusActive()->findAll($criteria);
+            $perfusers = PerformerAccount::model()->with(array('performerRelatedRights','performerPseudonyms'))->isStatusActive()->findAll($criteria);
         }
         if ($_REQUEST['is_prod'] == '1') {
-            $produsers = ProducerAccount::model()->with('producerRelatedRights')->isStatusActive()->findAll($procriteria);
+            $produsers = ProducerAccount::model()->with(array('producerRelatedRights','producerPseudonyms'))->isStatusActive()->findAll($procriteria);
         }
         $this->renderPartial('_search_right', compact('perfusers', 'produsers'));
     }

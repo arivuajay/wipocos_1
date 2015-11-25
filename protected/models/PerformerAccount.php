@@ -101,7 +101,7 @@ class PerformerAccount extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Perf_Sur_Name, Perf_First_Name, Perf_Internal_Code, Perf_Birth_Country_Id', 'required'),
+            array('Perf_Sur_Name, Perf_Internal_Code, Perf_Birth_Country_Id', 'required'),
             array('Perf_Ipi, Perf_Ipi_Base_Number, Perf_Ipn_Number, Perf_Place_Of_Birth_Id, Perf_Birth_Country_Id, Perf_Nationality_Id, Perf_Language_Id, Perf_Marital_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Sur_Name', 'length', 'max' => 50),
             array('Perf_First_Name, Perf_Internal_Code, Perf_Identity_Number, Perf_Spouse_Name', 'length', 'max' => 255),
@@ -148,7 +148,7 @@ class PerformerAccount extends RActiveRecord {
             'performerDeathInheritances' => array(self::HAS_ONE, 'PerformerDeathInheritance', 'Perf_Acc_Id'),
 //            'performerManageRights' => array(self::HAS_ONE, 'PerformerManageRights', 'Perf_Acc_Id'),
             'performerPaymentMethods' => array(self::HAS_ONE, 'PerformerPaymentMethod', 'Perf_Acc_Id'),
-            'performerPseudonyms' => array(self::HAS_MANY, 'PerformerPseudonym', 'Perf_Acc_id'),
+            'performerPseudonyms' => array(self::HAS_MANY, 'PerformerPseudonym', 'Perf_Acc_Id'),
             'performerRelatedRights' => array(self::HAS_ONE, 'PerformerRelatedRights', 'Perf_Acc_Id'),
             'performerUploads' => array(self::HAS_MANY, 'PerformerUpload', 'Perf_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',

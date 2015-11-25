@@ -128,13 +128,13 @@
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Pub_Mnge_Managed_Rights_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Pub_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($model, 'Pub_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control','multiple'=>'multiple')); ?>
                             <?php echo $form->error($model, 'Pub_Mnge_Managed_Rights_Id'); ?>
                         </div>
 
                         <div class="form-group">
                             <?php echo $form->labelEx($model, 'Pub_Mnge_Territories_Id', array('class' => '')); ?>
-                            <?php echo $form->dropDownList($model, 'Pub_Mnge_Territories_Id', $territories, array('class' => 'form-control')); ?>
+                            <?php echo $form->dropDownList($model, 'Pub_Mnge_Territories_Id', $territories, array('class' => 'form-control','multiple'=>'multiple')); ?>
                             <?php echo $form->error($model, 'Pub_Mnge_Territories_Id'); ?>
                         </div>
                     </div>

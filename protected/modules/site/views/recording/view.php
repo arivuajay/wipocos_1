@@ -19,7 +19,7 @@ $this->breadcrumbs = array(
                 'url' => array('update', 'id' => $model->Rcd_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    
+//
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -39,7 +39,7 @@ $this->breadcrumbs = array(
                 'url' => array('view', 'id' => $model->Rcd_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    
+//
                     )
             );
             ?>
@@ -97,6 +97,7 @@ $this->breadcrumbs = array(
                 'Rcd_File',
                 'Rcd_Isrc_Code',
                 'Rcd_Iswc_Number',
+                'Rcd_Auth_Publ',
                 array(
                     'name' => 'Created_By',
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''

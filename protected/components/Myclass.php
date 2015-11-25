@@ -446,6 +446,7 @@ class Myclass extends CController {
             return $types[$key];
         return $types;
     }
+
     public static function getMasterSubType($is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)
             $types = CHtml::listData(MasterSubtitleType::model()->isActive()->findAll(array('order' => 'Subtitle_Name')), 'Master_Subtitle_Id', 'Subtitle_Name');
@@ -455,8 +456,6 @@ class Myclass extends CController {
             return $types[$key];
         return $types;
     }
-
-
 
     public static function getMasterFactor($is_active = TRUE, $key = NULL) {
         if ($is_active && $key == NULL)

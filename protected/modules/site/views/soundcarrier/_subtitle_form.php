@@ -79,7 +79,7 @@ if (!empty($sub_titles)) {
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $sub_title->Sound_Car_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->soundCarSubtitleType->Subtitle_Name ?></td>
+                            <td><?php echo $sub_title->soundCarSubtitleType->Type_Name ?></td>
                             <td><?php echo $sub_title->soundCarSubtitleLanguage->Lang_Name ?></td>
                             <td><?php echo $sub_title->createdBy->name ?></td>
                             <td><?php echo $sub_title->Created_Date ?></td>

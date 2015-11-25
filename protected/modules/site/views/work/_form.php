@@ -14,6 +14,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
 $languages = Myclass::getMasterLanguage();
 $types = Myclass::getMasterType();
+$subTypes = Myclass::getMasterSubType();
 $factors = Myclass::getMasterFactor();
 $instruments = Myclass::getMasterInstrument();
 $territories = Myclass::getMasterTerritory();
@@ -113,6 +114,14 @@ $territories = Myclass::getMasterTerritory();
                                     <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Work_Unknown'); ?>
                                 </div>
+                                <?php
+                                if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
+                                    <div class="form-group">
+                                        <?php echo $form->labelEx($model, 'Work_Perf_Prod', array('class' => '')); ?><br />
+                                        <?php echo $form->textField($model, 'Work_Perf_Prod', array('class' => 'form-control')); ?>
+                                        <?php echo $form->error($model, 'Work_Perf_Prod'); ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
@@ -219,7 +228,7 @@ $territories = Myclass::getMasterTerritory();
                 <div class="tab-pane" id="tab_2">
                     <?php
                     if ($other_tab_validation) {
-                        $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'work_model' => $model, 'languages' => $languages, 'types' => $types));
+                        $this->renderPartial('_subtitle_form', array('model' => $sub_title_model, 'work_model' => $model, 'languages' => $languages, 'types' => $subTypes));
                     }
                     ?>
                 </div>
@@ -365,57 +374,56 @@ Yii::app()->clientScript->registerScript('_form', $js);
 
 <!---New Author Add Form -->
 <?php
-if(!$model->isNewRecord){
-$this->beginWidget(
-        'booster.widgets.TbModal', array('id' => 'newauthorModal')
-);
-?>
-<div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h4>New Author</h4>
-</div>
-<div class="modal-body">
-    <?php echo $this->renderPartial('_new_author', array('model' => $author_model)); ?>
-</div>
+if (!$model->isNewRecord) {
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newauthorModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Author</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('_new_author', array('model' => $author_model)); ?>
+    </div>
 
-<?php
-$this->widget(
-        'application.components.MyTbButton', array(
-    'label' => 'Close',
-    'url' => '#',
-    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-author-dismiss', 'class' => 'hide'),
-        )
-);
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-author-dismiss', 'class' => 'hide'),
+            )
+    );
 
-$this->endWidget();
-?>
-<!---End -->
+    $this->endWidget();
+    ?>
+    <!---End -->
 
-<!---New Publisher Add Form -->
-<?php
+    <!---New Publisher Add Form -->
+    <?php
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newpublisherModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Publisher</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('_new_publisher', array('model' => $publisher_model)); ?>
+    </div>
 
-$this->beginWidget(
-        'booster.widgets.TbModal', array('id' => 'newpublisherModal')
-);
-?>
-<div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h4>New Publisher</h4>
-</div>
-<div class="modal-body">
-    <?php echo $this->renderPartial('_new_publisher', array('model' => $publisher_model)); ?>
-</div>
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-publisher-dismiss', 'class' => 'hide'),
+            )
+    );
 
-<?php
-$this->widget(
-        'application.components.MyTbButton', array(
-    'label' => 'Close',
-    'url' => '#',
-    'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-publisher-dismiss', 'class' => 'hide'),
-        )
-);
-
-$this->endWidget();
+    $this->endWidget();
 }
 ?>
 <!---End -->

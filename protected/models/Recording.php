@@ -21,6 +21,7 @@
  * @property string $Rcd_File
  * @property string $Rcd_Isrc_Code
  * @property string $Rcd_Iswc_Number
+ * @property string $Rcd_Auth_Publ
  *
  * The followings are the available model relations:
  * @property MasterRecordType $rcdRecordType
@@ -74,7 +75,7 @@ class Recording extends RActiveRecord {
         return array(
             array('Rcd_Title, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, duration_hours, duration_minutes, duration_seconds', 'required'),
             array('Rcd_Language_Id, Rcd_Type_Id, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Rcd_Title, Rcd_Reference, Rcd_File', 'length', 'max' => 255),
+            array('Rcd_Title, Rcd_Reference, Rcd_File,Rcd_Auth_Publ', 'length', 'max' => 255),
             array('Rcd_Internal_Code, Rcd_Isrc_Code, Rcd_Iswc_Number', 'length', 'max' => 100),
             array('Rcd_Record_Type_Id, Rcd_Label_Id', 'length', 'max' => 20),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
@@ -84,7 +85,7 @@ class Recording extends RActiveRecord {
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By, Rcd_GUID', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number,Rcd_Auth_Publ, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -146,6 +147,7 @@ class Recording extends RActiveRecord {
             'Rcd_File' => 'File',
             'Rcd_Isrc_Code' => 'ISRC Code',
             'Rcd_Iswc_Number' => 'ISWC Number',
+            'Rcd_Auth_Publ' => 'Author & Publisher',
             'Created_Date' => 'Created Date',
             'Rowversion' => 'Rowversion',
             'duration_hours' => 'Hours',
@@ -187,6 +189,7 @@ class Recording extends RActiveRecord {
         $criteria->compare('Rcd_File', $this->Rcd_File, true);
         $criteria->compare('Rcd_Isrc_Code', $this->Rcd_Isrc_Code, true);
         $criteria->compare('Rcd_Iswc_Number', $this->Rcd_Iswc_Number, true);
+        $criteria->compare('Rcd_Auth_Publ', $this->Rcd_Auth_Publ, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

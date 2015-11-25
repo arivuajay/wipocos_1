@@ -577,18 +577,20 @@ class WorkController extends Controller {
             $criteria->compare('Auth_Internal_Code', $search_txt, true, 'OR');
             $criteria->compare('Auth_Ipi', $search_txt, true, 'OR');
             $criteria->compare('Auth_Ipi_Base_Number', $search_txt, true, 'OR');
+            $criteria->compare('authorPseudonyms.Auth_Pseudo_Name', $search_txt, true, 'OR');
 
             $pubcriteria->compare('Pub_Corporate_Name', $search_txt, true, 'OR');
             $pubcriteria->compare('Pub_Internal_Code', $search_txt, true, 'OR');
             $pubcriteria->compare('Pub_Ipi', $search_txt, true, 'OR');
             $pubcriteria->compare('Pub_Ipi_Base_Number', $search_txt, true, 'OR');
+            $pubcriteria->compare('publisherPseudonyms.Pub_Pseudo_Name', $search_txt, true, 'OR');
         }
 
         if ($_REQUEST['is_auth'] == '1') {
-            $authusers = AuthorAccount::model()->with('authorManageRights')->isStatusActive()->findAll($criteria);
+            $authusers = AuthorAccount::model()->with(array('authorManageRights','authorPseudonyms'))->isStatusActive()->findAll($criteria);
         }
         if ($_REQUEST['is_publ'] == '1') {
-            $publusers = PublisherAccount::model()->with('publisherManageRights')->isStatusActive()->findAll($pubcriteria);
+            $publusers = PublisherAccount::model()->with(array('publisherPseudonyms','publisherManageRights'))->isStatusActive()->findAll($pubcriteria);
         }
         $this->renderPartial('_search_right', compact('authusers', 'publusers'));
     }

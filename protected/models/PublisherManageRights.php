@@ -35,10 +35,10 @@
 class PublisherManageRights extends RActiveRecord {
 
     public $not_available;
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Pub_Mnge_Type_Rght_Id = DEFAULT_PUBLISHER_RIGHT_HOLDER_ID;
             $this->Pub_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Pub_Mnge_Territories_Id = DEFAULT_TERRITORY_ID;
@@ -48,6 +48,7 @@ class PublisherManageRights extends RActiveRecord {
             $this->Pub_Mnge_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -63,11 +64,11 @@ class PublisherManageRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Entry_Date, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Entry_Date_2, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id', 'required'),
-            array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Pub_Mnge_Managed_Rights_Id, Pub_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Pub_Acc_Id, Pub_Mnge_Society_Id, Pub_Mnge_Internal_Position_Id, Pub_Mnge_Region_Id, Pub_Mnge_Profession_Id, Pub_Mnge_Avl_Work_Cat_Id, Pub_Mnge_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Mnge_File', 'length', 'max' => 255),
             array('Pub_Mnge_Duration', 'length', 'max' => 100),
-            array('Pub_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Pub_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Mnge_Exit_Date', 'compare', 'compareAttribute' => 'Pub_Mnge_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Mnge_Exit_Date_2', 'compare', 'compareAttribute' => 'Pub_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Pub_Mnge_Exit_Date, Pub_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -84,11 +85,11 @@ class PublisherManageRights extends RActiveRecord {
         return array(
             'pubAcc' => array(self::BELONGS_TO, 'PublisherAccount', 'Pub_Acc_Id'),
             'pubMngeInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Pub_Mnge_Internal_Position_Id'),
-            'pubMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pub_Mnge_Managed_Rights_Id'),
+//            'pubMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pub_Mnge_Managed_Rights_Id'),
             'pubMngeProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Pub_Mnge_Profession_Id'),
             'pubMngeRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Pub_Mnge_Region_Id'),
             'pubMngeSociety' => array(self::BELONGS_TO, 'Society', 'Pub_Mnge_Society_Id'),
-            'pubMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Mnge_Territories_Id'),
+//            'pubMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Mnge_Territories_Id'),
             'pubMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pub_Mnge_Type_Rght_Id'),
             'pubMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pub_Mnge_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -183,7 +184,8 @@ class PublisherManageRights extends RActiveRecord {
 
     protected function afterSave() {
         $model = PublisherAccount::model()->findByPk($this->Pub_Acc_Id);
-        if(!empty($model)){
+
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Pub_Non_Member = $this->not_available;
@@ -191,9 +193,23 @@ class PublisherManageRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
+    protected function beforeSave() {
+        if (!empty($this->Pub_Mnge_Managed_Rights_Id) && is_array($this->Pub_Mnge_Managed_Rights_Id))
+            $this->Pub_Mnge_Managed_Rights_Id = CJSON::encode($this->Pub_Mnge_Managed_Rights_Id);
+
+        if (!empty($this->Pub_Mnge_Territories_Id) && is_array($this->Pub_Mnge_Territories_Id))
+            $this->Pub_Mnge_Territories_Id = CJSON::encode($this->Pub_Mnge_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
     protected function afterFind() {
         $this->not_available = $this->pubAcc->Pub_Non_Member;
+        $this->Pub_Mnge_Managed_Rights_Id = CJSON::decode($this->Pub_Mnge_Managed_Rights_Id);
+        $this->Pub_Mnge_Territories_Id = CJSON::decode($this->Pub_Mnge_Territories_Id);
+
         return parent::afterFind();
     }
+
 }

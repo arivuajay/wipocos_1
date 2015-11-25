@@ -144,7 +144,7 @@ class AuthorAccount extends RActiveRecord {
             'authorDeathInheritances' => array(self::HAS_ONE, 'AuthorDeathInheritance', 'Auth_Acc_Id'),
             'authorManageRights' => array(self::HAS_ONE, 'AuthorManageRights', 'Auth_Acc_Id'),
             'authorPaymentMethods' => array(self::HAS_ONE, 'AuthorPaymentMethod', 'Auth_Acc_Id'),
-            'authorPseudonyms' => array(self::HAS_MANY, 'AuthorPseudonym', 'Auth_Acc_id'),
+            'authorPseudonyms' => array(self::HAS_MANY, 'AuthorPseudonym', 'Auth_Acc_Id'),
             'authorUploads' => array(self::HAS_MANY, 'AuthorUpload', 'Auth_Acc_id'),
             'groupMembers' => array(self::HAS_MANY, 'GroupMembers', 'Group_Member_Internal_Code',
                 'foreignKey' => array('Group_Member_GUID' => 'Auth_GUID')

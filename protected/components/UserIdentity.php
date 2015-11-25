@@ -66,6 +66,7 @@ class UserIdentity extends CUserIdentity {
         $this->setState('id', $user->id);
         $this->setState('role', $user->role);
         $this->setState('rolename', $user->roleMdl->Description);
+        $this->setState('society_code', $user->soc->Society_Code);
         return;
     }
 
@@ -79,7 +80,7 @@ class UserIdentity extends CUserIdentity {
             $action = Yii::app()->controller->action->id;
 
         $user = User::model()->find('id = :U', array(':U' => $id));
-        
+
         ##### Hardcode for groups controller ####
         if (in_array($controller, array('group', 'publishergroup'))) {
             if ($group_role != '') {
@@ -93,7 +94,7 @@ class UserIdentity extends CUserIdentity {
             }
         }
         ## end ##
-        
+
         $screen = MasterScreen::model()->find("Screen_code = :controller", array(':controller' => $controller));
         if (!empty($user) && !empty($screen)) {
             $check_priority = array(
@@ -138,7 +139,7 @@ class UserIdentity extends CUserIdentity {
         }
         return $return;
     }
-    
+
     public static function checkPrivilages($rank/*, $id = NULL, $controller = NULL, $action = NULL, $group_role = NULL*/) {
         $return = false;
         if(isset(Yii::app()->user->id)){

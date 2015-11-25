@@ -33,12 +33,12 @@
  * @property MasterWorksCategory $authMngeAvlWorkCat
  */
 class AuthorManageRights extends RActiveRecord {
-    
+
     public $not_available;
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Auth_Mnge_Type_Rght_Id = DEFAULT_AUTHOR_RIGHT_HOLDER_ID;
             $this->Auth_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Auth_Mnge_Territories_Id = DEFAULT_TERRITORY_ID;
@@ -64,11 +64,11 @@ class AuthorManageRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Entry_Date, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Entry_Date_2, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id', 'required'),
-            array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Auth_Mnge_Managed_Rights_Id, Auth_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Auth_Acc_Id, Auth_Mnge_Society_Id, Auth_Mnge_Internal_Position_Id, Auth_Mnge_Region_Id, Auth_Mnge_Profession_Id, Auth_Mnge_Avl_Work_Cat_Id, Auth_Mnge_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Auth_Mnge_File', 'length', 'max' => 255),
             array('Auth_Mnge_Duration', 'length', 'max' => 100),
-            array('Auth_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Auth_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Auth_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Auth_Mnge_Exit_Date', 'compare', 'compareAttribute' => 'Auth_Mnge_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Auth_Mnge_Exit_Date_2', 'compare', 'compareAttribute' => 'Auth_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Auth_Mnge_Exit_Date, Auth_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -86,10 +86,10 @@ class AuthorManageRights extends RActiveRecord {
             'authMngeSociety' => array(self::BELONGS_TO, 'Society', 'Auth_Mnge_Society_Id'),
             'authAcc' => array(self::BELONGS_TO, 'AuthorAccount', 'Auth_Acc_Id'),
             'authMngeInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Auth_Mnge_Internal_Position_Id'),
-            'authMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Auth_Mnge_Managed_Rights_Id'),
+//            'authMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Auth_Mnge_Managed_Rights_Id'),
             'authMngeProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Auth_Mnge_Profession_Id'),
             'authMngeRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Auth_Mnge_Region_Id'),
-            'authMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Auth_Mnge_Territories_Id'),
+//            'authMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Auth_Mnge_Territories_Id'),
             'authMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Auth_Mnge_Type_Rght_Id'),
             'authMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Auth_Mnge_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -193,7 +193,7 @@ class AuthorManageRights extends RActiveRecord {
 
     protected function afterSave() {
         $model = AuthorAccount::model()->findByPk($this->Auth_Acc_Id);
-        if(!empty($model)){
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Auth_Non_Member = $this->not_available;
@@ -201,9 +201,23 @@ class AuthorManageRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
+    protected function beforeSave() {
+        if (!empty($this->Auth_Mnge_Managed_Rights_Id) && is_array($this->Auth_Mnge_Managed_Rights_Id))
+            $this->Auth_Mnge_Managed_Rights_Id = CJSON::encode($this->Auth_Mnge_Managed_Rights_Id);
+
+        if (!empty($this->Auth_Mnge_Territories_Id) && is_array($this->Auth_Mnge_Territories_Id))
+            $this->Auth_Mnge_Territories_Id = CJSON::encode($this->Auth_Mnge_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
     protected function afterFind() {
         $this->not_available = $this->authAcc->Auth_Non_Member;
+        $this->Auth_Mnge_Managed_Rights_Id = CJSON::decode($this->Auth_Mnge_Managed_Rights_Id);
+        $this->Auth_Mnge_Territories_Id = CJSON::decode($this->Auth_Mnge_Territories_Id);
+
         return parent::afterFind();
     }
+
 }

@@ -18,6 +18,7 @@
  * @property string $Work_Creation
  * @property integer $Work_Opus_Number
  * @property string $Work_Unknown
+ * @property string $Work_Perf_Prod
  * @property string $Active
  * @property string $Created_Date
  * @property string $Rowversion
@@ -74,7 +75,7 @@ class Work extends RActiveRecord {
             array('Work_Org_Title, Work_Internal_Code, Work_Iswc, Work_Wic_Code', 'length', 'max' => 100),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Work_Instrumentation', 'length', 'max' => 500),
+            array('Work_Instrumentation,Work_Perf_Prod', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code, Work_Org_Title, Work_GUID', 'unique'),
             array('Work_Unknown, Active', 'length', 'max' => 1),
@@ -82,7 +83,7 @@ class Work extends RActiveRecord {
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Work_GUID', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown,Work_Perf_Prod, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -138,6 +139,7 @@ class Work extends RActiveRecord {
             'duration_seconds' => 'Seconds',
             'matchingdetails' => 'Matching Details',
             'Work_Unknown' => 'Unknown',
+            'Work_Perf_Prod' => 'Performer & Producer',
         );
     }
 
@@ -175,6 +177,7 @@ class Work extends RActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
+        $criteria->compare('Work_Perf_Prod', $this->Work_Perf_Prod, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -308,7 +311,7 @@ class Work extends RActiveRecord {
         }
         return $column;
     }
-    
+
     protected function afterFind() {
         $this->setDuration();
         return parent::afterFind();

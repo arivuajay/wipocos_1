@@ -17,7 +17,7 @@ if ($export == false) {
                 'url' => array('update', 'id' => $model->Work_Id),
                 'buttonType' => 'link',
                 'context' => 'primary',
-//                    
+//
                     )
             );
             echo "&nbsp;&nbsp;";
@@ -37,7 +37,7 @@ if ($export == false) {
                 'url' => array('view', 'id' => $model->Work_Id, 'export' => 'PDF'),
                 'buttonType' => 'link',
                 'context' => 'warning',
-//                    
+//
                     )
             );
             ?>
@@ -312,6 +312,32 @@ if ($export == false) {
             echo 'No data created';
         }
         ?>
+
+        <h4 class="box-title">Instrumentation</h4>
+         <?php
+        if (!empty($model->Work_Instrumentation)) {
+            $instrumentation = array();
+            $items = MasterInstrument::model()->findAllByAttributes(array('Master_Inst_Id'=>CJSON::decode($model->Work_Instrumentation)));
+            ?>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                    </tr>
+                    <?php foreach ($items as $key => $item) { ?>
+                        <tr>
+                            <td><?php echo $key + 1 ?>.</td>
+                            <td><?php echo $item->Instrument_Name ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php
+        } else {
+            echo 'No data created';
+        }
+        ?>
     </div>
 
     <div class="user-view col-lg-12">
@@ -338,7 +364,7 @@ if ($export == false) {
                         <tr>
                             <td><?php echo $key + 1 ?>.</td>
                             <td><?php echo $sub_title->Work_Subtitle_Name ?></td>
-                            <td><?php echo $sub_title->workSubtitleType->Type_Name ?></td>
+                            <td><?php echo $sub_title->workSubtitleType->Subtitle_Name ?></td>
                             <td><?php echo $sub_title->workSubtitleLanguage->Lang_Name ?></td>
                             <td><?php echo $sub_title->createdBy->name ?></td>
                             <td><?php echo $sub_title->Created_Date ?></td>
@@ -413,7 +439,7 @@ if ($export == false) {
         }
         ?>
     </div>
-    
+
     <div class="user-view col-lg-12">
                 <h4 class="box-title">Sub-Publishing Contract Files</h4>
         <?php

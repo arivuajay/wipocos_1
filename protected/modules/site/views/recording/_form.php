@@ -97,6 +97,13 @@ $labels = Myclass::getMasterLabel();
                                     <?php echo $form->dropDownList($model, 'Rcd_Product_Country_Id', $countries, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Rcd_Product_Country_Id'); ?>
                                 </div>
+                                <?php if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
+                                    <div class="form-group">
+                                        <?php echo $form->labelEx($model, 'Rcd_Auth_Publ', array('class' => '')); ?>
+                                        <?php echo $form->textField($model, 'Rcd_Auth_Publ', array('class' => 'form-control')); ?>
+                                        <?php echo $form->error($model, 'Rcd_Auth_Publ'); ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
