@@ -17,114 +17,113 @@
     $managed_rights = CHtml::listData(MasterManagedRights::model()->isActive()->findAll(), 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name');
     $internal_positions = CHtml::listData(MasterInternalPosition::model()->isActive()->findAll(), 'Master_Int_Post_Id', 'Int_Post_Name');
     ?>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-5">
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Society_Id', array('class' => '')); ?>
+                        <?php $societies = CHtml::listData(Society::model()->with('socOrg')->isActive()->findAll(), 'Society_Id', 'socOrg.Org_Abbrevation'); ?>
+                        <?php echo $form->dropDownList($model, 'Auth_Rel_Society_Id', $societies, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Society_Id'); ?>
+                    </div>
 
-    <div class="col-lg-5">
-        <div class="box-body">
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Entry_Date', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Auth_Rel_Entry_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Entry_Date) ? $model->Auth_Rel_Entry_Date : date('Y-m-d'))); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Entry_Date'); ?>
+
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Exit_Date', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Auth_Rel_Exit_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Exit_Date) ? $model->Auth_Rel_Exit_Date : date('Y-m-d'))); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Exit_Date'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Internal_Position_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Auth_Rel_Internal_Position_Id', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Internal_Position_Id'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Entry_Date_2', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Auth_Rel_Entry_Date_2', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Entry_Date_2) ? $model->Auth_Rel_Entry_Date_2 : date('Y-m-d'))); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Entry_Date_2'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Exit_Date_2', array('class' => '')); ?>
+                        <?php echo $form->textField($model, 'Auth_Rel_Exit_Date_2', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Exit_Date_2) ? $model->Auth_Rel_Exit_Date_2 : date('Y-m-d'))); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Exit_Date_2'); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->labelEx($model, 'Auth_Rel_Region_Id', array('class' => '')); ?>
+                        <?php echo $form->dropDownList($model, 'Auth_Rel_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
+                        <?php echo $form->error($model, 'Auth_Rel_Region_Id'); ?>
+                    </div>
 
 
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5">
+                    <div class="box-body">
 
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Society_Id', array('class' => '')); ?>
-                <?php $societies = CHtml::listData(Society::model()->with('socOrg')->isActive()->findAll(), 'Society_Id', 'socOrg.Org_Abbrevation'); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Society_Id', $societies, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Society_Id'); ?>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Profession_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Auth_Rel_Profession_Id', $professions, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Profession_Id'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_File', array('class' => '')); ?>
+                            <?php echo $form->textField($model, 'Auth_Rel_File', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_File'); ?>
+                        </div>
+
+                        <?php if (!$model->isNewRecord) { ?>
+                            <!--                <div class="form-group">
+                            <?php echo CHtml::link('View File', $model->getFilePath(), array('target' => '_blank')) ?>
+                                            </div>-->
+                        <?php } ?>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Duration', array('class' => '')); ?>
+                            <?php echo $form->textField($model, 'Auth_Rel_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Duration'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Avl_Work_Cat_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Auth_Rel_Avl_Work_Cat_Id', $work_categories, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Avl_Work_Cat_Id'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Type_Rght_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Auth_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Type_Rght_Id'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Managed_Rights_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Auth_Rel_Managed_Rights_Id', $managed_rights, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Managed_Rights_Id'); ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($model, 'Auth_Rel_Territories_Id', array('class' => '')); ?>
+                            <?php echo $form->dropDownList($model, 'Auth_Rel_Territories_Id', $territories, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($model, 'Auth_Rel_Territories_Id'); ?>
+                        </div>
+
+
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Entry_Date', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_Entry_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Entry_Date) ? $model->Auth_Rel_Entry_Date : date('Y-m-d'))); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Entry_Date'); ?>
-
-                <?php echo $form->labelEx($model, 'Auth_Rel_Exit_Date', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_Exit_Date', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Exit_Date) ? $model->Auth_Rel_Exit_Date : date('Y-m-d'))); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Exit_Date'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Internal_Position_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Internal_Position_Id', $internal_positions, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Internal_Position_Id'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Entry_Date_2', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_Entry_Date_2', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Entry_Date_2) ? $model->Auth_Rel_Entry_Date_2 : date('Y-m-d'))); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Entry_Date_2'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Exit_Date_2', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_Exit_Date_2', array('class' => 'form-control date', 'value' => isset($model->Auth_Rel_Exit_Date_2) ? $model->Auth_Rel_Exit_Date_2 : date('Y-m-d'))); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Exit_Date_2'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Region_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Region_Id'); ?>
-            </div>
-
-
         </div>
     </div>
-    <div class="col-lg-1"></div>
-    <div class="col-lg-5">
-        <div class="box-body">
 
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Profession_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Profession_Id', $professions, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Profession_Id'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_File', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_File', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                <?php echo $form->error($model, 'Auth_Rel_File'); ?>
-            </div>
-
-            <?php if (!$model->isNewRecord) { ?>
-                <!--                <div class="form-group">
-                <?php echo CHtml::link('View File', $model->getFilePath(), array('target' => '_blank')) ?>
-                                </div>-->
-            <?php } ?>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Duration', array('class' => '')); ?>
-                <?php echo $form->textField($model, 'Auth_Rel_Duration', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Duration'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Avl_Work_Cat_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Avl_Work_Cat_Id', $work_categories, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Avl_Work_Cat_Id'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Type_Rght_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Type_Rght_Id', $right_types, array('class' => 'form-control')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Type_Rght_Id'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Managed_Rights_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Managed_Rights_Id', $managed_rights, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Managed_Rights_Id'); ?>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'Auth_Rel_Territories_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Auth_Rel_Territories_Id', $territories, array('class' => 'form-control', 'prompt' => '')); ?>
-                <?php echo $form->error($model, 'Auth_Rel_Territories_Id'); ?>
-            </div>
-
-
-        </div>
-    </div>
-
-
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
             <div class="col-lg-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>

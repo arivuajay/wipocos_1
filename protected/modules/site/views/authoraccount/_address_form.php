@@ -18,11 +18,12 @@
     ?>
     <div class="box-body">
         <div class="row">
+            <div class="col-lg-12">
             <div class="col-lg-6">
 
                 <div class="form-group">
-                    <?php // echo $form->labelEx($model, 'Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
-                    <?php echo CHtml::label($model->getAttributeLabel('Auth_Home_Address_1').' *', 'AuthorAccountAddress_Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php // echo $form->labelEx($model, 'Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?>
+                    <?php echo CHtml::label($model->getAttributeLabel('Auth_Home_Address_1').' *', 'AuthorAccountAddress_Auth_Home_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Auth_Home_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Auth_Home_Address_1'); ?>
@@ -55,7 +56,7 @@
 
                 <div class="form-group">
                     <?php // echo $form->labelEx($model, 'Auth_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
-                    <?php echo CHtml::label($model->getAttributeLabel('Auth_Mailing_Address_1'), 'AuthorAccountAddress_Auth_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Auth_Mailing_Address_1'), 'AuthorAccountAddress_Auth_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Auth_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Auth_Mailing_Address_1'); ?>
@@ -84,7 +85,7 @@
                         <div class="clearfix">&nbsp;</div>
                     </div>
                 </div>
-                
+
 <!--                <div class="form-group">
                     <?php echo $form->labelEx($model, 'Auth_Author_Account_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
@@ -210,12 +211,11 @@
                 </div>-->
 
             </div>
+            </div>
         </div>
     </div>
 
-
-
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
             <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
@@ -236,11 +236,11 @@ $js = <<< EOD
         $('#AuthorAccountAddress_Auth_Unknown_Address').on('ifUnchecked', function(event){
             $('.addr-input').attr("readonly", false);
         });
-    
+
         if(unknown == 'Y'){
             $('.addr-input').attr("readonly", true);
         }
-    
+
         if(unknown == 'N'){
             $('.addr-input').attr("readonly", false);
         }

@@ -8,39 +8,37 @@ $this->breadcrumbs = array(
 );
 if ($export == false) {
     ?>
-    <div class="user-view col-lg-12">
-        <p>
-            <?php
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'Update',
-                'url' => array('update', 'id' => $model->Auth_Acc_Id),
-                'buttonType' => 'link',
-                'context' => 'primary',
-                    )
-            );
-            echo "&nbsp;&nbsp;";
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'Delete',
-                'url' => array('delete', 'id' => $model->Auth_Acc_Id),
-                'buttonType' => 'link',
-                'context' => 'danger',
-                'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
-                    )
-            );
-            echo "&nbsp;&nbsp;";
-            $this->widget(
-                    'application.components.MyTbButton', array(
-                'label' => 'Download',
-                'url' => array('view', 'id' => $model->Auth_Acc_Id, 'export' => 'PDF'),
-                'buttonType' => 'link',
-                'context' => 'warning',
+    <div class="user-view col-lg-12 text-right">
+        <?php
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Update',
+            'url' => array('update', 'id' => $model->Auth_Acc_Id),
+            'buttonType' => 'link',
+            'context' => 'primary',
+                )
+        );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Delete',
+            'url' => array('delete', 'id' => $model->Auth_Acc_Id),
+            'buttonType' => 'link',
+            'context' => 'danger',
+            'htmlOptions' => array('confirm' => 'Are you sure you want to delete this item?'),
+                )
+        );
+        echo "&nbsp;&nbsp;";
+        $this->widget(
+                'application.components.MyTbButton', array(
+            'label' => 'Download',
+            'url' => array('view', 'id' => $model->Auth_Acc_Id, 'export' => 'PDF'),
+            'buttonType' => 'link',
+            'context' => 'warning',
 //
-                    )
-            );
-            ?>
-        </p>
+                )
+        );
+        ?>
     </div>
 <?php } ?>
 
@@ -349,9 +347,9 @@ if ($export == false) {
         <h4>Managed Rights</h4>
         <?php
         if (!empty($managed_model)) {
-            $mged_rights = $territories  = array();
-            $mged_rights = MasterManagedRights::model()->findAllByAttributes(array('Master_Mgd_Rights_Id'=>$managed_model->Auth_Mnge_Managed_Rights_Id));
-            $territories = MasterTerritories::model()->findAllByAttributes(array('Master_Territory_Id'=>$managed_model->Auth_Mnge_Territories_Id));
+            $mged_rights = $territories = array();
+            $mged_rights = MasterManagedRights::model()->findAllByAttributes(array('Master_Mgd_Rights_Id' => $managed_model->Auth_Mnge_Managed_Rights_Id));
+            $territories = MasterTerritories::model()->findAllByAttributes(array('Master_Territory_Id' => $managed_model->Auth_Mnge_Territories_Id));
 
             $this->widget('zii.widgets.CDetailView', array(
                 'data' => $managed_model,
@@ -387,11 +385,11 @@ if ($export == false) {
                     ),
                     array(
                         'name' => 'Auth_Mnge_Managed_Rights_Id',
-                        'value' => $mged_rights ? implode(",",CHtml::listData($mged_rights,'Master_Mgd_Rights_Id','Mgd_Rights_Name')) : 'Not Set'
+                        'value' => $mged_rights ? implode(",", CHtml::listData($mged_rights, 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'Auth_Mnge_Territories_Id',
-                        'value' => $territories ? implode(",",CHtml::listData($territories,'Master_Territory_Id','Territory_Name')) : 'Not Set'
+                        'value' => $territories ? implode(",", CHtml::listData($territories, 'Master_Territory_Id', 'Territory_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'not_available',
@@ -557,4 +555,4 @@ if ($export == false) {
 
     </div>
 </div>
-    <!--->
+<!--->

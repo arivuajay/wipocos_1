@@ -1,5 +1,4 @@
 
-
 <div class="box box-primary">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -14,36 +13,39 @@
     ?>
 
     <div class="box-body">
-
-        <?php if (!$model->isNewRecord) { ?>
-            <div class="col-lg-12 col-md-12">
-                <div class="row mb10">
-                    <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New upload', array("/site/authoraccount/update/id/{$author_model->Auth_Acc_Id}/tab/8"), array('class' => 'btn btn-success pull-right')) ?>
-                    <!--<a href="/wipocos1/branches/dev/site/authoraccount/create" class="btn btn-success pull-right">Create Author</a>-->    
+        <div class="row">
+            <?php if (!$model->isNewRecord) { ?>
+                <div class="col-lg-12 col-md-12">
+                    <div class="row mb10">
+                        <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New upload', array("/site/authoraccount/update/id/{$author_model->Auth_Acc_Id}/tab/8"), array('class' => 'btn btn-success pull-right')) ?>
+                        <!--<a href="/wipocos1/branches/dev/site/authoraccount/create" class="btn btn-success pull-right">Create Author</a>-->
+                    </div>
                 </div>
-            </div>
-        <?php } ?>
+            <?php } ?>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Auth_Upl_Doc_Name', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->textField($model, 'Auth_Upl_Doc_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
+                        <?php echo $form->error($model, 'Auth_Upl_Doc_Name'); ?>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Upl_Doc_Name', array('class' => 'col-sm-2 control-label')); ?>
-            <div class="col-sm-5">
-                <?php echo $form->textField($model, 'Auth_Upl_Doc_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-                <?php echo $form->error($model, 'Auth_Upl_Doc_Name'); ?>
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'Auth_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-5">
+                        <?php echo $form->fileField($model, 'Auth_Upl_File', array()); ?>
+                        <?php echo $form->error($model, 'Auth_Upl_File'); ?>
+                    </div>
+                </div>
+
             </div>
         </div>
-
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer text-right">
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'Auth_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
-            <div class="col-sm-5">
-                <?php echo $form->fileField($model, 'Auth_Upl_File', array()); ?>
-                <?php echo $form->error($model, 'Auth_Upl_File'); ?>
-            </div>
-        </div>
-
-    </div><!-- /.box-body -->
-    <div class="box-footer">
-        <div class="form-group">
-            <div class="col-sm-0 col-sm-offset-2">
+            <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
