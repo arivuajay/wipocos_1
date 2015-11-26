@@ -197,6 +197,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box-body">
+                <div class="text-left share_validate"><div id="valid_broadcasting_share" class="hide"></div><div id="valid_mechanical_share" class="hide"></div></div>
                 <div class="text-left total_share hide">Broadcasting Share : <span id="equal_total">100 %</span> </div>
                 <div class="text-left total_share hide">Mechanical Share : <span id="blank_total">100 %</span></div>
                 <div class="text-left total_share hide show_pub_hint">Publisher Share : <span id="pub_total">100 %</span></div>
@@ -526,11 +527,26 @@ $js = <<< EOD
             _mech_share += parseFloat($(this).data('share'));
         });
         $(".total_share").removeClass('hide');
-        _equal_color = _broad_share != 100 ? '#D9534F' : '#698801';
+        _broad_share_valid = (_broad_share != 100) ? false : true;
+        _equal_color = _broad_share_valid ? '#698801' : '#D9534F';
         $("#equal_total").html(_broad_share.toFixed(2)+' %').css({ 'color': _equal_color});
 
-        _blank_color = _mech_share != 100 ? '#D9534F' : '#698801';
+        if(_broad_share_valid){
+            $("#valid_broadcasting_share").addClass("hide").html("");
+        }else{
+            $("#valid_broadcasting_share").removeClass("hide").html("<b style='color: #D9534F'>Broadcasting share not equal 100%</b>");
+        }
+
+        _mech_share_valid = (_mech_share != 100) ? false : true;
+        _blank_color = _mech_share_valid ? '#698801' : '#D9534F';
         $("#blank_total").html(_mech_share.toFixed(2)+' %').css({ 'color': _blank_color});
+
+        if(_mech_share_valid){
+            $("#valid_mechanical_share").addClass("hide").html("");
+        }else{
+            $("#valid_mechanical_share").removeClass("hide").html("<b style='color: #D9534F'>Mechanical share not equal 100%</b>");
+        }
+
         _val = _broad_share + _mech_share;
         ////// End //////////////
 
