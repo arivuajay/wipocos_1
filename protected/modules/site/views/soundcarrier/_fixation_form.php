@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group hide">
             <?php echo CHtml::label('Internal Code', '', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
                 <?php
@@ -62,6 +62,14 @@
             </div>
         </div>
         <hr />
+
+         <div class="form-group">
+            <?php echo $form->labelEx($model, 'Sound_Car_Fix_Internal_Code', array('class' => 'col-sm-3 control-label')); ?>
+            <div class="col-sm-5">
+                <?php echo $form->textField($model, 'Sound_Car_Fix_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'readonly' => true)); ?>
+                <?php echo $form->error($model, 'Sound_Car_Fix_Internal_Code'); ?>
+            </div>
+        </div>
 
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Sound_Car_Fix_Duration', array('class' => 'col-sm-3 control-label', 'label' => 'Duration (H : m : s)')); ?>
@@ -132,6 +140,7 @@ if (!empty($fixations)) {
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo $model->getAttributeLabel('Sound_Car_Fix_GUID') ?></th>
+                        <th><?php echo $model->getAttributeLabel('Sound_Car_Fix_Internal_Code') ?></th>
                         <th><?php echo $model->getAttributeLabel('Sound_Car_Fix_Duration') ?></th>
                         <th><?php echo $model->getAttributeLabel('Sound_Car_Fix_Date') ?></th>
                         <th><?php echo $model->getAttributeLabel('Sound_Car_Fix_Studio') ?></th>
@@ -152,6 +161,7 @@ if (!empty($fixations)) {
                                 }
                                 ?>
                             </td>
+                            <td><?php echo $fixation->Sound_Car_Fix_Internal_Code ?></td>
                             <td><?php echo $fixation->Sound_Car_Fix_Duration ?></td>
                             <td><?php echo $fixation->Sound_Car_Fix_Date ?></td>
                             <td><?php echo $fixation->soundCarFixStudio->Studio_Name ?></td>

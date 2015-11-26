@@ -22,14 +22,14 @@
                                 <?php
                                 $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
                                 $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
-                                
+
                                 $is_perf = $_REQUEST['is_perf'] == 1;
                                 $is_prod = $_REQUEST['is_prod'] == 1;
                                 if(!$view_performer)
                                     $is_prod = true;
                                 if(!$view_producer)
                                     $is_perf = true;
-                                
+
                                 if ($view_performer) {
                                     echo CHtml::label('Performer', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
@@ -272,9 +272,9 @@ $js = <<< EOD
 
             $('#RecordingRightholder_Rcd_Right_Equal_Share').val(_brshare);
             $('#RecordingRightholder_Rcd_Right_Blank_Share').val(_mcshare);
-        
+
             $("#search_result tr").removeClass('highlight');
-        
+
             _tr = $(this).closest('tr');
             _urole = _tr.data('urole');
             _role = _tr.find('.rcd').data('rcd');
@@ -284,7 +284,7 @@ $js = <<< EOD
                 _role !== null ? $('.user-role-dropdown select.producer-role').val(_role) : '';
             }
         });
-        
+
         $('body').on('click','#search_result tr,#linked-holders tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
             _uid = $(this).data('uid');
@@ -293,7 +293,7 @@ $js = <<< EOD
 
             $('#RecordingRightholder_Rcd_Member_GUID').val(_uid);
             $('#RecordingRightholder_Rcd_Member_Internal_Code').val(_intcode);
-        
+
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
@@ -303,7 +303,7 @@ $js = <<< EOD
                 $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             }
         });
-        
+
         $('body').on('click','.row-delete', function(){
             $(this).closest('tr').remove();
             rowCount++;
@@ -313,11 +313,11 @@ $js = <<< EOD
             $('#RecordingRightholder_Rcd_Member_GUID').val("");
             return false;
         });
-        
+
         $('#is_perf, #is_prod').on('ifChecked', function(event){
             $("#chkbox_err").addClass("hide");
         });
-        
+
         $('#search_button').on("click", function(){
             if($("#is_perf").is(':checked') == false && $("#is_prod").is(':checked') == false){
                 $("#chkbox_err").removeClass("hide");
@@ -340,11 +340,11 @@ $js = <<< EOD
                 dataType:'html'
             });
         });
-        
+
         $(".roles_dd").on("change", function(){
             getPoint($(this).val());
         });
-        
+
     });
     function InsertRightHolder(form, data, hasError) {
         if (hasError == false) {
@@ -352,7 +352,7 @@ $js = <<< EOD
             $('.loader').show();
             var form_data = form.serializeArray();
             $('#norecord_tr').remove();
-        
+
             _uid = $(".highlight").data('uid');
             _intcode = $(".highlight").data('intcode');
             _role = $(".highlight").data('urole');
@@ -367,13 +367,13 @@ $js = <<< EOD
             }else{
                 var tr = '<tr data-uid="'+_uid+'" data-urole="'+_role+'" data-urole-id="'+_role+'" data-name="'+_name+'" >';
             }
-        
+
             $.each(form_data, function (key, value) {
                 if(value['name'] != "base_table_search"){
                     var name = value['name'];
                     name = name.replace("[","[" + rowCount + "][");
                     //set hidden form values
-                    
+
                     if(value['name'] == "RecordingRightholder[Rcd_Right_Role]"){
                         tr += '<td class="hide"><input class="rcd" data-rcd = "' + value['value'] + '" type="hidden" name="' + name + '" value="' + value['value'] + '"/></td>';
                     }else{
@@ -387,7 +387,7 @@ $js = <<< EOD
                     if (value['name'] == "RecordingRightholder[Rcd_Right_Equal_Share]" || value['name'] == "RecordingRightholder[Rcd_Right_Blank_Share]") {
                         td_content = parseFloat(value['value']).toFixed(2);
                     }else if(value['name'] == "RecordingRightholder[Rcd_Right_Role]"){
-                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
+                        td_content = $('select[name="' + value['name'] + '"]:not(.hide) option:selected').text();
                     }else if(value['name'] == "RecordingRightholder[Rcd_Id]"){
                         td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
                     }else if(value['name'] == "RecordingRightholder[Rcd_Member_Internal_Code]"){
@@ -401,12 +401,12 @@ $js = <<< EOD
             });
             _mcshare = $("#RecordingRightholder_Rcd_Right_Blank_Share").val();
             _brshare = $("#RecordingRightholder_Rcd_Right_Equal_Share").val();
-        
+
             tr += '<td>';
             tr += '<a href="#role-foundation" data-mcshare="'+_mcshare+'" data-brshare="'+_brshare+'" class="holder-edit"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;';
             tr += '<a class="row-delete" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>';
             tr += '</td>';
-        
+
             if(chk_tr.length == 1){
                 chk_tr.html(tr);
             }else{
@@ -414,7 +414,7 @@ $js = <<< EOD
                 $('#linked-holders tbody').append(tr);
             }
             rowCount++;
-        
+
             $('#recording-rightholder-form')[0].reset();
             $('.loader').hide();
             $("#right_insert").removeAttr("disabled");
@@ -425,7 +425,7 @@ $js = <<< EOD
         }
         return false;
     }
-        
+
     function checkShare(){
         _tr = $("#linked-holders tbody tr");
         var perf_inst = prod_inst = 0;
@@ -438,7 +438,7 @@ $js = <<< EOD
         });
         $("#right_ajax_submit").attr("disabled", !(perf_inst == 1 && prod_inst == 1));
     }
-        
+
     function getPoint(_id){
         $.ajax({
             type: 'POST',
@@ -454,7 +454,7 @@ $js = <<< EOD
             },
         });
     }
-        
+
 EOD;
 Yii::app()->clientScript->registerScript('_right_form', $js);
 ?>

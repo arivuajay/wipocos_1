@@ -97,7 +97,8 @@ $this->breadcrumbs = array(
                 'Rcd_File',
                 'Rcd_Isrc_Code',
                 'Rcd_Iswc_Number',
-                'Rcd_Auth_Publ',
+                'Rcd_Author',
+                'Rcd_Publisher',
                 array(
                     'name' => 'Created_By',
                     'value' => isset($model->createdBy->name) ? $model->createdBy->name : ''

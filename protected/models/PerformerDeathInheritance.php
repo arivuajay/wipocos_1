@@ -66,7 +66,7 @@ class PerformerDeathInheritance extends RActiveRecord {
             'Perf_Death_Inhrt_Firstname' => 'Firstname',
             'Perf_Death_Inhrt_Email' => 'Email',
             'Perf_Death_Inhrt_Phone' => 'Phone',
-            'Perf_Death_Inhrt_Surname' => 'Last Name',
+            'Perf_Death_Inhrt_Surname' => 'Sur Name',
             'Perf_Acc_Id' => 'Auth Acc',
             'Perf_Death_Inhrt_Address_1' => 'Address 1',
             'Perf_Death_Inhrt_Address_2' => 'Address 2',

@@ -18,23 +18,24 @@ class InternalcodeGenerate extends RActiveRecord {
     const PRODUCER_CODE = 'PR';
     const AUTHOR_PERFORMER_CODE = 'AP';
     const PUBLISHER_PRODUCER_CODE = 'EP';
-    
+
     const AUTHOR_GROUP_CODE = 'GA';
     const PERFORMER_GROUP_CODE = 'GP';
     const PUBLISHER_GROUP_CODE = 'GE';
     const PRODUCER_GROUP_CODE = 'GR';
-    
+
     const GROUP_CODE = 'G'; //NOT USED
-    
+
     const SOCIETY_CODE = 'O';
 
     const WORK_CODE = 'W';
     const RECORDING_CODE = 'R';
     const RECORDING_PUBLISHING_CODE = 'RP';
     const SOUND_CARRIER_CODE = 'S';
+    const SOUND_CARRIER_FIXATION_CODE = 'FX';
     const SOUND_CARRIER_PUBLISHING_CODE = 'SP';
     const RECORDING_SESSION_CODE = 'RS';
-    
+
     const TARIF_MASTER_CODE = 'TMS';
     const CUSTOMER_USER_CODE = 'CUS';
     const INSPECTOR_CODE = 'IS';
@@ -44,12 +45,12 @@ class InternalcodeGenerate extends RActiveRecord {
     const DIST_SUBCLASS_CODE = 'DSCL';
     const DIST_DATES_CODE = 'DDI';
     const DIST_UTILIZATION_PERIOD_CODE = 'DUPD';
-    
+
     const DIST_LOGSHEET_LIST_SEQ_CODE = 'LS';
 
 
     public $fullcode;
-    
+
     public $virtualinternalcode;
 
     public function getVirtualinternalcode() {
@@ -180,7 +181,7 @@ class InternalcodeGenerate extends RActiveRecord {
     public function codeIncreament($type) {
         InternalcodeGenerate::model()->updateCounters(array('Gen_Inter_Code' => 1),array( 'condition' => "Gen_User_Type = '{$type}'"));
     }
-    
+
     protected function afterFind() {
         $this->Gen_Inter_Code = $this->getVirtualinternalcode();
         return parent::afterFind();
@@ -190,7 +191,7 @@ class InternalcodeGenerate extends RActiveRecord {
         $this->Gen_Inter_Code = intval($this->Gen_Inter_Code);
         return parent::beforeSave();
     }
-    
+
     public function getUsertype($user_type = NULL) {
         $user_types = array(
             self::SOCIETY_CODE => 'Society',
@@ -220,10 +221,10 @@ class InternalcodeGenerate extends RActiveRecord {
             self::DIST_UTILIZATION_PERIOD_CODE => 'Utilization Periods',
             self::DIST_LOGSHEET_LIST_SEQ_CODE => 'Logsheet List Sequence',
         );
-        
+
         if($user_type == NULL && isset($this->Gen_User_Type))
             $user_type = $this->Gen_User_Type;
-        
+
         if($user_type != NULL)
             return $user_types[$user_type];
         return $user_types;

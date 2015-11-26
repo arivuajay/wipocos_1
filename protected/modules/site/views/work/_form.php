@@ -117,9 +117,14 @@ $territories = Myclass::getMasterTerritory();
                                 <?php
                                 if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
                                     <div class="form-group">
-                                        <?php echo $form->labelEx($model, 'Work_Perf_Prod', array('class' => '')); ?><br />
-                                        <?php echo $form->textField($model, 'Work_Perf_Prod', array('class' => 'form-control')); ?>
-                                        <?php echo $form->error($model, 'Work_Perf_Prod'); ?>
+                                        <?php echo $form->labelEx($model, 'Work_Performer', array('class' => '')); ?><br />
+                                        <?php echo $form->textField($model, 'Work_Performer', array('class' => 'form-control')); ?>
+                                        <?php echo $form->error($model, 'Work_Performer'); ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <?php echo $form->labelEx($model, 'Work_Producer', array('class' => '')); ?><br />
+                                        <?php echo $form->textField($model, 'Work_Producer', array('class' => 'form-control')); ?>
+                                        <?php echo $form->error($model, 'Work_Producer'); ?>
                                     </div>
                                 <?php } ?>
                             </div>

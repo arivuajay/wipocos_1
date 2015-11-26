@@ -7,6 +7,7 @@
  * @property integer $Sound_Car_Fix_Id
  * @property integer $Sound_Car_Id
  * @property string $Sound_Car_Fix_GUID
+ * @property string $Sound_Car_Fix_Internal_Code
  * @property string $Sound_Car_Fix_Duration
  * @property string $Sound_Car_Fix_Date
  * @property integer $Sound_Car_Fix_Studio
@@ -28,6 +29,7 @@ class SoundCarrierFixations extends RActiveRecord {
             $this->duration_minutes = 0;
             $this->duration_seconds = 0;
             $this->Sound_Car_Fix_Country_Id = DEFAULT_COUNTRY_ID;
+            $this->Sound_Car_Fix_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::SOUND_CARRIER_FIXATION_CODE))->Fullcode;
 //            $this->Sound_Car_Fix_Studio = DEFAULT_COUNTRY_ID;
         }
     }
@@ -46,8 +48,9 @@ class SoundCarrierFixations extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('Sound_Car_Id, Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'required'),
+            array('Sound_Car_Id,Sound_Car_Fix_Internal_Code, Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'required'),
             array('Sound_Car_Id, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'numerical', 'integerOnly' => true),
+            array('Sound_Car_Fix_Internal_Code', 'length', 'max' => 100),
             array('Sound_Car_Fix_GUID', 'length', 'max' => 40),
             array('duration_hours', 'durationValidate'),
             array('Sound_Car_Fix_GUID', 'checkUnique'),
@@ -56,7 +59,7 @@ class SoundCarrierFixations extends RActiveRecord {
             array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Sound_Car_Fix_Work_Type, Sound_Car_Fix_ISRC', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Sound_Car_Fix_Id, Sound_Car_Id, Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'safe', 'on' => 'search'),
+            array('Sound_Car_Fix_Id, Sound_Car_Id, Sound_Car_Fix_Internal_Code,Sound_Car_Fix_GUID, Sound_Car_Fix_Duration, Sound_Car_Fix_Date, Sound_Car_Fix_Studio, Sound_Car_Fix_Country_Id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -70,7 +73,7 @@ class SoundCarrierFixations extends RActiveRecord {
         $checkExists = array();
         if ($this->isNewRecord) {
             $checkExists = self::model()->findByAttributes(array('Sound_Car_Id' => $this->Sound_Car_Id, 'Sound_Car_Fix_GUID' => $this->Sound_Car_Fix_GUID));
-        }else{
+        } else {
             $checkExists = self::model()->find("Sound_Car_Fix_Id != :id And Sound_Car_Id = :sound_car_id And Sound_Car_Fix_GUID = :guid", array(':id' => $this->Sound_Car_Fix_Id, ':sound_car_id' => $this->Sound_Car_Id, ':guid' => $this->Sound_Car_Fix_GUID));
         }
         if (!empty($checkExists))
@@ -101,6 +104,7 @@ class SoundCarrierFixations extends RActiveRecord {
         return array(
             'Sound_Car_Fix_Id' => 'Sound Car Fix',
             'Sound_Car_Id' => 'Sound Car',
+            'Sound_Car_Fix_Internal_Code' => 'Internal Code',
             'Sound_Car_Fix_GUID' => 'Title',
             'Sound_Car_Fix_Duration' => 'Duration',
             'Sound_Car_Fix_Date' => 'Date of Fixation',
@@ -134,6 +138,7 @@ class SoundCarrierFixations extends RActiveRecord {
 
         $criteria->compare('Sound_Car_Fix_Id', $this->Sound_Car_Fix_Id);
         $criteria->compare('Sound_Car_Id', $this->Sound_Car_Id);
+        $criteria->compare('Sound_Car_Fix_Internal_Code', $this->Sound_Car_Fix_Internal_Code, true);
         $criteria->compare('Sound_Car_Fix_GUID', $this->Sound_Car_Fix_GUID, true);
         $criteria->compare('Sound_Car_Fix_Duration', $this->Sound_Car_Fix_Duration, true);
         $criteria->compare('Sound_Car_Fix_Date', $this->Sound_Car_Fix_Date, true);
@@ -181,6 +186,13 @@ class SoundCarrierFixations extends RActiveRecord {
     protected function afterFind() {
         $this->setDuration();
         return parent::afterFind();
+    }
+
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::SOUND_CARRIER_FIXATION_CODE);
+        }
+        return parent::afterSave();
     }
 
 }

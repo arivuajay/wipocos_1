@@ -22,7 +22,7 @@ class WorkSubtitle extends RActiveRecord {
     public function init() {
         parent::init();
         if($this->isNewRecord){
-            $this->Work_Subtitle_Type_Id = DEFAULT_TYPE_ID;
+//            $this->Work_Subtitle_Type_Id = DEFAULT_TYPE_ID;
             $this->Work_Subtitle_Language_Id = DEFAULT_LANGUAGE_ID;
         }
     }

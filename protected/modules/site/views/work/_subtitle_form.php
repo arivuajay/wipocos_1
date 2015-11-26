@@ -30,7 +30,7 @@
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Work_Subtitle_Type_Id', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
-                <?php echo $form->dropDownList($model, 'Work_Subtitle_Type_Id', $types, array('class' => 'form-control')); ?>
+                <?php echo $form->dropDownList($model, 'Work_Subtitle_Type_Id', $types, array('class' => 'form-control','prompt'=>'')); ?>
                 <?php echo $form->error($model, 'Work_Subtitle_Type_Id'); ?>
             </div>
         </div>

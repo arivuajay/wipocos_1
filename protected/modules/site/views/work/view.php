@@ -80,6 +80,8 @@ if ($export == false) {
                 'Work_Duration',
                 'Work_Creation',
                 'Work_Opus_Number',
+                'Work_Performer',
+                'Work_Producer',
 //                array(
 //                    'name' => 'Work_Unknown',
 //                    'type' => 'raw',

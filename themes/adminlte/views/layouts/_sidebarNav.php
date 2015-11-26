@@ -29,7 +29,9 @@
         $_controller = Yii::app()->controller->id;
         $_action = Yii::app()->controller->action->id;
         $groupCheck = Myclass::checkGroupactions($_controller, $_action);
-        
+        $rss_visible = (in_array(Yii::app()->user->getState('society_code'), array('PERFORMER','PRIME','COPYRIGHT')));
+
+
         $work_com_active = array(
             'contractexpiry' => false,
             'work' => false
@@ -40,9 +42,9 @@
             else
                 $work_com_active['work'] = true;
         }
-        
+
 //        var_dump(UserIdentity::checkAccess($_id, 'contractexpiry', 'view'));
-        
+
         $this->widget('application.components.MyMenu', array(
             'activateParents' => true,
             'encodeLabel' => false,
@@ -119,7 +121,7 @@
                         array('label' => '<i class="fa fa-sliders"></i> <span>Works</span>', 'url' => array('/site/work/index'), 'visible' => UserIdentity::checkAccess($_id, 'work', 'view'), 'active' => $work_com_active['work']),
                         array('label' => '<i class="fa fa-volume-up"></i> <span>Recordings</span>', 'url' => array('/site/recording/index'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-headphones"></i> <span>Sound Carriers</span>', 'url' => array('/site/soundcarrier/index'), 'visible' => '1'),
-                        array('label' => '<i class="fa fa-file-audio-o"></i> <span>Recording Session Sheets</span>', 'url' => array('/site/recordingsession/index'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-file-audio-o"></i> <span>Recording Session Sheets</span>', 'url' => array('/site/recordingsession/index'), 'visible' => $rss_visible),
                         array('label' => '<i class="fa fa-warning"></i> <span>Contract Expiry</span>', 'url' => array('/site/work/contractexpiry'), 'visible' => UserIdentity::checkAccess($_id, 'contractexpiry', 'view'), 'active' => $work_com_active['contractexpiry']),
                     ),
                 ),

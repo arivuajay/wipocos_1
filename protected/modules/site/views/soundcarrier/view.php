@@ -294,6 +294,7 @@ $this->breadcrumbs = array(
                 <tbody><tr>
                         <th style="width: 10px">#</th>
                         <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_GUID') ?></th>
+                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Internal_Code') ?></th>
                         <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Duration') ?></th>
     <!--                        <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Date') ?></th>
                         <th><?php echo SoundCarrierFixations::model()->getAttributeLabel('Sound_Car_Fix_Studio') ?></th>
@@ -316,6 +317,7 @@ $this->breadcrumbs = array(
                                 }
                                 ?>
                             </td>
+                            <td><?php echo $fixation->Sound_Car_Fix_Internal_Code ?></td>
                             <td><?php echo $fixation->Sound_Car_Fix_Duration ?></td>
         <!--                            <td><?php echo $fixation->Sound_Car_Fix_Date ?></td>
                             <td><?php echo $fixation->soundCarFixStudio->Studio_Name ?></td>

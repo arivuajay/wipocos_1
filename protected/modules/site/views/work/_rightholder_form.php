@@ -329,7 +329,7 @@ $js = <<< EOD
             console.log(_urole);
             console.log(_role);
             console.log($('.user-role-dropdown select.publisher-role').val());
-            $('.user-role-dropdown select.publisher-role').filter(':visible:first').val(2);
+            $('.user-role-dropdown select.publisher-role:not(.hide)').val(2);
             if(_urole == 'AU'){
                 _role !== null ? $('.user-role-dropdown select.author-role').val(_role) : '';
             }else if(_urole == 'PU'){
@@ -415,7 +415,7 @@ $js = <<< EOD
             _name = $('.highlight').data('name');
             _intcode = $('.highlight').data('intcode');
 
-            selectedRole = $('select[name="WorkRightholder[Work_Right_Role]"] option:selected').filter(':visible:first').val();
+            selectedRole = $('select[name="WorkRightholder[Work_Right_Role]"]:not(.hide) option:selected').val();
             if($("#main_pub").val() == 0){
                 _stopContinue = mainPublishervalidate(selectedRole);
                 if(_stopContinue)
@@ -467,7 +467,7 @@ $js = <<< EOD
                     ) {
                         td_content = $('select[name="' + value['name'] + '"] option:selected').text();
                     }else if(value['name'] == "WorkRightholder[Work_Right_Role]"){
-                        td_content = $('select[name="' + value['name'] + '"] option:selected').filter(':visible:first').text();
+                        td_content = $('select[name="' + value['name'] + '"]:not(.hide) option:selected').text();
                     }else if(value['name'] == "WorkRightholder[Work_Id]"){
                         td_content = chk_tr.length == 1 ? $("#linked-holders").find("[data-uid='" + _uid + "']").data('name') : _name;
                     }else if(value['name'] == "WorkRightholder[Work_Member_Internal_Code]"){

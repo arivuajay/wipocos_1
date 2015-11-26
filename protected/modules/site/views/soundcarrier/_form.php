@@ -57,7 +57,9 @@ if (!$model->isNewRecord) {
                 <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Basic Data</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($doc_tab_validation) echo 'data-toggle="tab"'; ?>>Documentation</a></li>
                 <li><a id="a_tab_7" href="#tab_7" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Works</a></li>
+                <?php if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME','COPYRIGHT'))) { ?>
                 <li><a id="a_tab_8" href="#tab_8" <?php if ($rgt_tab_validation) echo 'data-toggle="tab"'; ?>>Recordings</a></li>
+                <?php } ?>
                 <li><a id="a_tab_6" href="#tab_6" <?php if ($fix_tab_validation) echo 'data-toggle="tab"'; ?>>Fixations</a></li>
                 <li>
                     <a data-original-title="This tab is Non-Mandatory" data-toggle="tooltip" class="hide_tip">Publication *</a>
@@ -305,7 +307,7 @@ $this->beginWidget(
                     ?>
                 </tbody>
             </table>
-        </div>    
+        </div>
     </div>
 </div>
 
@@ -334,7 +336,7 @@ $this->beginWidget(
         'label' => 'Set Main Artist',
         'url' => '#',
         'htmlOptions' => array(
-            'onclick' => '{    
+            'onclick' => '{
                     _row = $("#artisttable").find(".highlight");
                     if(_row.length == 0){
                         $("#art-modelerror").html("Select Alteast one Artist");
@@ -447,7 +449,7 @@ $this->beginWidget(
                     ?>
                 </tbody>
             </table>
-        </div>    
+        </div>
     </div>
 </div>
 
@@ -555,18 +557,18 @@ $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
     $(document).ready(function(){
         $('.year').datepicker({ dateFormat: 'yyyy' });
-        
+
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
-        
+
         $(".popup").on('click', function(){
             _id = $(this).data('popup');
             $("#"+_id).trigger('click');
         });
-        
+
         $('body').on('click','#artisttable tr, #producertable tr', function(){
             $(this).addClass('highlight').siblings().removeClass('highlight');
         });
-        
+
         if($('#producertable').length > 0){
             var probaseTable;
             probaseTable = $("#producertable").dataTable({
@@ -597,12 +599,12 @@ $js = <<< EOD
                  artbaseTable.fnFilter( $(this).val() );
             });
         }
-        
+
         $('.hide_tip').on('click', function() {
             $(this).closest('li').find(':not(.hide_tip)').trigger('click');
         });
      });
-        
+
     function InsertNewPerformer(form, data, hasError) {
         if (hasError == false) {
             var form_data = form.serializeArray();
@@ -619,7 +621,7 @@ $js = <<< EOD
                         _art_table.dataTable().fnAddData([
                             data.first_name,
                             data.last_name,
-                            data.int_code 
+                            data.int_code
                         ]);
                         tr = _art_table.find("td:contains('"+data.int_code+"')").parent();
                         tr.data('id', data.id);
@@ -635,7 +637,7 @@ $js = <<< EOD
             return false;
         }
     }
-        
+
     function InsertNewProducer(form, data, hasError) {
         if (hasError == false) {
             var form_data = form.serializeArray();
@@ -652,7 +654,7 @@ $js = <<< EOD
                         _pro_table = $('#producertable');
                         _pro_table.dataTable().fnAddData([
                             data.name,
-                            data.int_code 
+                            data.int_code
                         ]);
                         tr = _pro_table.find("td:contains('"+data.int_code+"')").parent();
                         tr.data('id', data.id);
@@ -668,8 +670,8 @@ $js = <<< EOD
             return false;
         }
     }
-        
-        
+
+
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>
