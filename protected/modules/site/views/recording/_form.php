@@ -97,7 +97,7 @@ $labels = Myclass::getMasterLabel();
                                     <?php echo $form->dropDownList($model, 'Rcd_Product_Country_Id', $countries, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Rcd_Product_Country_Id'); ?>
                                 </div>
-                                <?php if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
+                                <?php // if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
                                     <div class="form-group">
                                         <?php echo $form->labelEx($model, 'Rcd_Author', array('class' => '')); ?>
                                         <?php echo $form->textField($model, 'Rcd_Author', array('class' => 'form-control')); ?>
@@ -108,7 +108,7 @@ $labels = Myclass::getMasterLabel();
                                         <?php echo $form->textField($model, 'Rcd_Publisher', array('class' => 'form-control')); ?>
                                         <?php echo $form->error($model, 'Rcd_Publisher'); ?>
                                     </div>
-                                <?php } ?>
+                                <?php // } ?>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>

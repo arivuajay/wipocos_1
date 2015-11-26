@@ -114,8 +114,7 @@ $territories = Myclass::getMasterTerritory();
                                     <?php echo $form->checkBox($model, 'Work_Unknown', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                     <?php echo $form->error($model, 'Work_Unknown'); ?>
                                 </div>
-                                <?php
-                                if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
+                                <?php // if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
                                     <div class="form-group">
                                         <?php echo $form->labelEx($model, 'Work_Performer', array('class' => '')); ?><br />
                                         <?php echo $form->textField($model, 'Work_Performer', array('class' => 'form-control')); ?>
@@ -126,7 +125,7 @@ $territories = Myclass::getMasterTerritory();
                                         <?php echo $form->textField($model, 'Work_Producer', array('class' => 'form-control')); ?>
                                         <?php echo $form->error($model, 'Work_Producer'); ?>
                                     </div>
-                                <?php } ?>
+                                <?php // } ?>
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
