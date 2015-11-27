@@ -20,10 +20,9 @@
     <div class="box-body">
         <div class="row">
             <div class="col-lg-6">
-
                 <div class="form-group">
                     <?php // echo $form->labelEx($model, 'Pub_Head_Address_1', array('class' => 'col-sm-4 control-label')); ?>
-                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Head_Address_1').' *', 'PublisherAccountAddress_Pub_Head_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Head_Address_1').' *', 'PublisherAccountAddress_Pub_Head_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Pub_Head_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
                         <?php echo $form->error($model, 'Pub_Head_Address_1'); ?>
@@ -56,7 +55,7 @@
 
 
                 <div class="form-group">
-                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Mailing_Address_1'), 'PublisherAccountAddress_Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Mailing_Address_1'), 'PublisherAccountAddress_Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <?php // echo $form->labelEx($model, 'Pub_Mailing_Address_1', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->textArea($model, 'Pub_Mailing_Address_1', array('class' => 'form-control addr-input', 'rows' => '5')); ?>
@@ -85,13 +84,13 @@
                 <?php echo $form->textField($model, 'Pub_Publisher_Account_1', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Publisher_Account_1'); ?>
                             </div>
-                
+
                             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Publisher_Account_2', array('class' => 'col-sm-4 control-label')); ?>
                 <?php echo $form->textField($model, 'Pub_Publisher_Account_2', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Publisher_Account_2'); ?>
                             </div>
-                
+
                             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Publisher_Account_3', array('class' => 'col-sm-4 control-label')); ?>
                 <?php echo $form->textField($model, 'Pub_Publisher_Account_3', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
@@ -182,7 +181,7 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Addr_Country_Id').' *', 'PublisherAccountAddress_Pub_Addr_Country_Id', array('class' => 'col-sm-4 control-label')); ?> 
+                    <?php echo CHtml::label($model->getAttributeLabel('Pub_Addr_Country_Id').' *', 'PublisherAccountAddress_Pub_Addr_Country_Id', array('class' => 'col-sm-4 control-label')); ?>
                     <?php // echo $form->labelEx($model, 'Pub_Addr_Country_Id', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-8">
                         <?php echo $form->dropDownList($model, 'Pub_Addr_Country_Id', $countries, array('class' => 'form-control addr-input', 'prompt' => '')); ?>
@@ -195,13 +194,13 @@
                 <?php echo $form->textField($model, 'Pub_Producer_Account_1', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Producer_Account_1'); ?>
                             </div>
-                
+
                             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Producer_Account_2', array('class' => 'col-sm-4 control-label')); ?>
                 <?php echo $form->textField($model, 'Pub_Producer_Account_2', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->error($model, 'Pub_Producer_Account_2'); ?>
                             </div>
-                
+
                             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Pub_Producer_Account_3', array('class' => 'col-sm-4 control-label')); ?>
                 <?php echo $form->textField($model, 'Pub_Producer_Account_3', array('class' => 'form-control addr-input', 'size' => 60, 'maxlength' => 255)); ?>
@@ -211,9 +210,7 @@
         </div>
     </div>
 
-
-
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
             <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
@@ -234,11 +231,11 @@ $js = <<< EOD
         $('#PublisherAccountAddress_Pub_Unknown_Address').on('ifUnchecked', function(event){
             $('.addr-input').attr("readonly", false);
         });
-    
+
         if(unknown == 'Y'){
             $('.addr-input').attr("readonly", true);
         }
-    
+
         if(unknown == 'N'){
             $('.addr-input').attr("readonly", false);
         }

@@ -9,7 +9,7 @@ $this->breadcrumbs = array(
 );
 if ($export == false) {
     ?>
-    <div class="user-view col-lg-12">
+    <div class="user-view col-lg-12 text-right">
         <p>
             <?php
             $this->widget(

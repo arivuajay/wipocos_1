@@ -115,16 +115,16 @@ $territories = Myclass::getMasterTerritory();
                                     <?php echo $form->error($model, 'Work_Unknown'); ?>
                                 </div>
                                 <?php // if (!in_array(Yii::app()->user->getState('society_code'), array('PRIME'))) { ?>
-                                    <div class="form-group">
-                                        <?php echo $form->labelEx($model, 'Work_Performer', array('class' => '')); ?><br />
-                                        <?php echo $form->textField($model, 'Work_Performer', array('class' => 'form-control')); ?>
-                                        <?php echo $form->error($model, 'Work_Performer'); ?>
-                                    </div>
-                                    <div class="form-group">
-                                        <?php echo $form->labelEx($model, 'Work_Producer', array('class' => '')); ?><br />
-                                        <?php echo $form->textField($model, 'Work_Producer', array('class' => 'form-control')); ?>
-                                        <?php echo $form->error($model, 'Work_Producer'); ?>
-                                    </div>
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Work_Performer', array('class' => '')); ?><br />
+                                    <?php echo $form->textField($model, 'Work_Performer', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Work_Performer'); ?>
+                                </div>
+                                <div class="form-group">
+                                    <?php echo $form->labelEx($model, 'Work_Producer', array('class' => '')); ?><br />
+                                    <?php echo $form->textField($model, 'Work_Producer', array('class' => 'form-control')); ?>
+                                    <?php echo $form->error($model, 'Work_Producer'); ?>
+                                </div>
                                 <?php // } ?>
                             </div>
                         </div>
@@ -139,10 +139,27 @@ $territories = Myclass::getMasterTerritory();
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Work_Instrumentation', array('class' => '')); ?>
-                                    <?php
-                                    $selected = $model->getInstrumentselected();
-                                    ?>
-                                    <?php echo $form->dropDownList($model, 'Work_Instrumentation', $instruments, array('class' => 'form-control', 'multiple' => true, 'prompt' => '', 'options' => $selected)); ?>
+                                    <div class="row">
+                                        <?php
+                                        $selected_options = $model->getInstrumentselected();
+                                        if ($selected_options && is_array($selected_options)) {
+                                            $selected_keys = array_flip(array_keys($selected_options));
+                                            $remain_instruments = array_diff_key($instruments, $selected_keys);
+                                            $selected_instruments = array_intersect_key($instruments, $selected_keys);
+                                        } else {
+                                            $remain_instruments = $instruments;
+                                            $selected_instruments = array();
+                                        }
+
+                                        echo '<div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Work_Instrumentation_Source', array(), $remain_instruments, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-from', 'size' => 7));
+                                        echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-select" class="btn btn-default btn-sm">>></button><br />';
+                                        echo '<br /><button type="button" id="btn-remove-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Work_Instrumentation_Destination', array(), $selected_instruments, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-to', 'size' => 7));
+                                        echo $form->dropDownList($model, 'Work_Instrumentation', $instruments, array('class' => 'hide', 'multiple' => true, 'options' => $selected_options, 'size' => 7));
+                                        echo '</div>';
+                                        ?>
+                                    </div>
                                     <?php echo $form->error($model, 'Work_Instrumentation'); ?>
                                 </div>
 
@@ -314,6 +331,23 @@ $js = <<< EOD
 
         $('.hide_tip').on('click', function() {
             $(this).closest('li').find(':not(.hide_tip)').trigger('click');
+        });
+
+        $('#btn-add-select').click(function(){
+            $('#select-from option:selected').each( function() {
+                $('#select-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#Work_Work_Instrumentation option[value="'+$(this).val()+'"]').attr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-remove-select').click(function(){
+            $('#select-to option:selected').each( function() {
+                $('#select-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#Work_Work_Instrumentation option[value="'+$(this).val()+'"]').removeAttr('selected','selected');
+                $(this).remove();
+            });
+            return false;
         });
      });
 

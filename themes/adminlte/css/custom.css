@@ -97,3 +97,6 @@ table.selectable tbody tr.highlight td { background-color: #f56954; cursor: poin
 .datepicker{
     z-index: 1100 !important;
 }
+.mt30{
+    margin-top: 30px;
+}

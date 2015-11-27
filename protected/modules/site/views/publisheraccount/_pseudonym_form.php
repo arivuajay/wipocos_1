@@ -16,7 +16,6 @@
     echo $form->hiddenField($model, 'Pub_Acc_Id', array('value' => $publisher_model->Pub_Acc_Id));
     ?>
     <div class="box-body">
-
         <div class="form-group">
             <?php echo $form->labelEx($model, 'Pub_Pseudo_Name', array('class' => 'col-sm-3 control-label')); ?>
             <div class="col-sm-5">
@@ -35,9 +34,9 @@
 
 
     </div><!-- /.box-body -->
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
-            <div class="col-sm-0 col-sm-offset-2">
+            <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
@@ -74,7 +73,7 @@ if (!empty($psedonyms)) {
                                 <?php
                                 echo MyHtml::link('<i class="fa fa-pencil"></i>', array('/site/publisheraccount/update', 'id' => $publisher_model->Pub_Acc_Id, 'tab' => 5, 'edit' => $psedonym->Pub_Pseudo_Id), array('title' => 'Edit'));
                                 echo "&nbsp;&nbsp;";
-                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/publisheraccount/psedonymdelete','id'=> $psedonym->Pub_Pseudo_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
+                                echo MyHtml::link('<i class="fa fa-trash"></i>', array('/site/publisheraccount/psedonymdelete', 'id' => $psedonym->Pub_Pseudo_Id), array('title' => 'Delete', 'onclick' => 'return confirm("Are you sure to delete ?")'));
                                 ?>
                             </td>
                         </tr>

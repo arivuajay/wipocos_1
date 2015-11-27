@@ -85,9 +85,9 @@
         </div>
 
     </div><!-- /.box-body -->
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
-            <div class="col-sm-0 col-sm-offset-2">
+            <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>

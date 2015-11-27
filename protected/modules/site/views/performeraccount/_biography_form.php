@@ -65,7 +65,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'id' => 'newgroupbutton',
                         'data-toggle' => 'modal',
                         'data-target' => '#groupModal',
-                        'onclick' => '{$("#group-dismiss").trigger("click");}'
+                        'onclick' => '{$("#group-dismiss").trigger("click");}',
+                        'class' => 'pull-right'
                     ),
                         )
                 );
@@ -80,7 +81,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <?php echo $form->error($model, 'Perf_Biogrph_Annotation'); ?>
             </div>
         </div>
-        
+
         <div class="form-group">
             <?php echo $form->labelEx($biograph_upload_model, 'Perf_Biogrph_Upl_File', array('class' => 'col-sm-2 control-label')); ?>
             <div class="col-sm-5">
@@ -97,8 +98,8 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             var fileSize = e.files[0].size;
                             if(fileSize>1024 * 1024 * {$max_size}){
                                alert('Exceeds file upload limit {$max_size}MB');
-                               $('.MultiFile-remove').last().click(); 
-                             }                      
+                               $('.MultiFile-remove').last().click();
+                             }
                              return true;
                         }"
                     )
@@ -115,11 +116,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <?php echo $form->error($biograph_upload_model, 'Perf_Biogrph_Upl_Description'); ?>
             </div>
         </div>
-        
+
     </div><!-- /.box-body -->
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
-            <div class="col-sm-0 col-sm-offset-2">
+            <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('id' => 'member-submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
@@ -186,7 +187,7 @@ $this->beginWidget(
 </div>
 <div class="modal-body">
     <div class="form-group">
-        <label for="base_table_search" class="control-label required">Search</label>                    
+        <label for="base_table_search" class="control-label required">Search</label>
         <div>
             <input type="text" id="base_table_search" class="form-control">
         </div>
@@ -245,7 +246,7 @@ $this->beginWidget(
                                 insert += \'<td>\'+tr.data("intcode")+\'</td>\';
                                 insert += \'<td><a href="javascript:void(0)" class="row-delete"><i class="glyphicon glyphicon-trash"></i></a></td>\';
                                 insert += \'</tr>\';
-                                
+
                                 $("#usergroup tbody").append(insert);
                             }
                         });
@@ -283,12 +284,12 @@ $js = <<< EOD
         $('#group_id').on('ifUnchecked', function(event){
             $('.group_ids').iCheck('uncheck');
         });
-        
+
         $('#member-submit').click(function(ev) {
             $("#base_table_search").val('').trigger("keyup");
             return true;
         });
-        
+
         $('body').on('click','.row-delete', function(){
             if(confirm('Are you sure you want to delete this record?')){
                 tr = $(this).closest('tr');

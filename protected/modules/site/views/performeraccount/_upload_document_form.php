@@ -19,7 +19,7 @@
             <div class="col-lg-12 col-md-12">
                 <div class="row mb10">
                     <?php echo CHtml::link('<i class="fa fa-plus"></i>&nbsp;&nbsp;New upload', array("/site/performeraccount/update/id/{$performer_model->Perf_Acc_Id}/tab/8"), array('class' => 'btn btn-success pull-right')) ?>
-                    <!--<a href="/wipocos1/branches/dev/site/performeraccount/create" class="btn btn-success pull-right">Create Author</a>-->    
+                    <!--<a href="/wipocos1/branches/dev/site/performeraccount/create" class="btn btn-success pull-right">Create Author</a>-->
                 </div>
             </div>
         <?php } ?>
@@ -41,9 +41,9 @@
         </div>
 
     </div><!-- /.box-body -->
-    <div class="box-footer">
+    <div class="box-footer text-right">
         <div class="form-group">
-            <div class="col-sm-0 col-sm-offset-2">
+            <div class="col-sm-12">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Update', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
             </div>
         </div>
