@@ -72,7 +72,7 @@ class AuthorDeathInheritance extends RActiveRecord {
             'Auth_Death_Inhrt_Firstname' => 'Firstname',
             'Auth_Death_Inhrt_Email' => 'Email',
             'Auth_Death_Inhrt_Phone' => 'Phone',
-            'Auth_Death_Inhrt_Surname' => 'Sur Name',
+            'Auth_Death_Inhrt_Surname' => 'Surname',
             'Auth_Acc_Id' => 'Auth Acc',
             'Auth_Death_Inhrt_Address_1' => 'Address 1',
             'Auth_Death_Inhrt_Address_2' => 'Address 2',
