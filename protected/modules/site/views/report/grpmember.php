@@ -2,7 +2,7 @@
 /* @var $this PurchaseorderController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'PO Report';
+$this->title = 'Group Member Report';
 $this->breadcrumbs = array(
     'PO Report',
 );
