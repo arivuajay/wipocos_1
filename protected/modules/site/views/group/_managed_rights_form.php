@@ -136,10 +136,10 @@
                         $selected_manages = array();
                     }
                     echo '<div class="col-sm-5">';
-                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id', array(), $remain_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-from', 'size' => 7));
+                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id_Source', array(), $remain_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-from', 'size' => 7));
                     echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-grp-mgd-mgmd-select" class="btn btn-default btn-sm">>></button><br />';
                     echo '<br /><button type="button" id="btn-remove-grp-mgd-mgmd-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
-                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id', array(), $selected_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-to', 'size' => 7));
+                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id_Destination', array(), $selected_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-to', 'size' => 7));
 
                     echo $form->dropDownList($model, 'Group_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'hide', 'multiple' => 'multiple'));
                     echo '</div>';

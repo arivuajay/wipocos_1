@@ -123,12 +123,52 @@
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Rel_Managed_Rights_Id', array('class' => '')); ?>
-                                    <?php echo $form->dropDownList($model, 'Pro_Rel_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
+                                    <div class="row">
+                                        <?php
+                                        if ($model->Pro_Rel_Managed_Rights_Id && is_array($model->Pro_Rel_Managed_Rights_Id)) {
+                                            $selected_keys = array_flip($model->Pro_Rel_Managed_Rights_Id);
+                                            $remain_manages = @array_diff_key($managed_rights, $selected_keys);
+                                            $selected_manages = @array_intersect_key($managed_rights, $selected_keys);
+                                        } else {
+                                            $remain_manages = $managed_rights;
+                                            $selected_manages = array();
+                                        }
+                                        echo '<div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Pro_Rel_Managed_Rights_Id_Source', array(), $remain_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-pro-rel-mgmd-from', 'size' => 7));
+                                        echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-pro-rel-mgmd-select" class="btn btn-default btn-sm">>></button><br />';
+                                        echo '<br /><button type="button" id="btn-remove-pro-rel-mgmd-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Pro_Rel_Managed_Rights_Id_Destination', array(), $selected_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-pro-rel-mgmd-to', 'size' => 7));
+
+                                        echo $form->dropDownList($model, 'Pro_Rel_Managed_Rights_Id', $managed_rights, array('class' => 'hide', 'multiple' => 'multiple'));
+                                        echo '</div>';
+                                        ?>
+                                    </div>
+                                    <?php // echo $form->dropDownList($model, 'Pro_Rel_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pro_Rel_Managed_Rights_Id'); ?>
                                 </div>
 
                                 <div class="form-group">
                                     <?php echo $form->labelEx($model, 'Pro_Rel_Territories_Id', array('class' => '')); ?>
+                                    <div class="row">
+                                        <?php
+                                        if ($model->Pro_Rel_Territories_Id && is_array($model->Pro_Rel_Territories_Id)) {
+                                            $selected_terr_keys = @array_flip($model->Pro_Rel_Territories_Id);
+                                            $remain_terr = @array_diff_key($territories, $selected_terr_keys);
+                                            $selected_terr = @array_intersect_key($territories, $selected_terr_keys);
+                                        } else {
+                                            $remain_terr = $territories;
+                                            $selected_terr = array();
+                                        }
+                                        echo '<div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Pro_Rel_Territories_Source', array(), $remain_terr, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-pro-rel-terr-from', 'size' => 7));
+                                        echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-pro-rel-terr-select" class="btn btn-default btn-sm">>></button><br />';
+                                        echo '<br /><button type="button" id="btn-remove-pro-rel-terr-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
+                                        echo CHtml::dropDownList('Pro_Rel_Territories_Destination', array(), $selected_terr, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-pro-rel-terr-to', 'size' => 7));
+
+                                        echo $form->dropDownList($model, 'Pro_Rel_Territories_Id', $territories, array('class' => 'hide', 'multiple' => 'multiple'));
+                                        echo '</div>';
+                                        ?>
+                                    </div>
                                     <?php echo $form->dropDownList($model, 'Pro_Rel_Territories_Id', $territories, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pro_Rel_Territories_Id'); ?>
                                 </div>
@@ -153,3 +193,44 @@
     <?php $this->endWidget(); ?>
 
 </div>
+
+
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('#btn-add-pro-rel-mgmd-select').click(function(){
+            $('#select-pro-rel-mgmd-from option:selected').each( function() {
+                $('#select-pro-rel-mgmd-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#ProducerRelatedRights_Pro_Rel_Managed_Rights_Id option[value="'+$(this).val()+'"]').attr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-remove-pro-rel-mgmd-select').click(function(){
+            $('#select-pro-rel-mgmd-to option:selected').each( function() {
+                $('#select-pro-rel-mgmd-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#ProducerRelatedRights_Pro_Rel_Managed_Rights_Id option[value="'+$(this).val()+'"]').removeAttr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-add-pro-rel-terr-select').click(function(){
+            $('#select-pro-rel-terr-from option:selected').each( function() {
+                $('#select-pro-rel-terr-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#ProducerRelatedRights_Pro_Rel_Territories_Id option[value="'+$(this).val()+'"]').attr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-remove-pro-rel-terr-select').click(function(){
+            $('#select-pro-rel-terr-to option:selected').each( function() {
+                $('#select-pro-rel-terr-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#ProducerRelatedRights_Pro_Rel_Territories_Id option[value="'+$(this).val()+'"]').removeAttr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('_mged_rights_form', $js);
+?>

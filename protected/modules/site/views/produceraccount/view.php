@@ -309,6 +309,10 @@ if ($export == false) {
         <h4>Related Rights</h4>
         <?php
         if (!empty($related_model)) {
+            $mged_rights = $territories = array();
+            $mged_rights = MasterManagedRights::model()->findAllByAttributes(array('Master_Mgd_Rights_Id' => $related_model->Pro_Rel_Managed_Rights_Id));
+            $territories = MasterTerritories::model()->findAllByAttributes(array('Master_Territory_Id' => $related_model->Pro_Rel_Territories_Id));
+
             $this->widget('zii.widgets.CDetailView', array(
                 'data' => $related_model,
                 'htmlOptions' => array('class' => 'table table-striped table-bordered'),
@@ -343,11 +347,11 @@ if ($export == false) {
 //        ),
                     array(
                         'name' => 'Pro_Rel_Managed_Rights_Id',
-                        'value' => isset($related_model->proRelManagedRights->Mgd_Rights_Name) ? $related_model->proRelManagedRights->Mgd_Rights_Name : 'Not Set'
+                        'value' => $mged_rights ? implode(",", CHtml::listData($mged_rights, 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'Pro_Rel_Territories_Id',
-                        'value' => isset($related_model->proRelTerritories->Territory_Name) ? $related_model->proRelTerritories->Territory_Name : 'Not Set'
+                        'value' => $territories ? implode(",", CHtml::listData($territories, 'Master_Territory_Id', 'Territory_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'not_available',

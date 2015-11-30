@@ -36,10 +36,10 @@
 class ProducerRelatedRights extends RActiveRecord {
 
     public $not_available;
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Pro_Rel_Type_Rght_Id = DEFAULT_PRODUCER_RIGHT_HOLDER_ID;
             $this->Pro_Rel_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Pro_Rel_Territories_Id = DEFAULT_TERRITORY_ID;
@@ -49,6 +49,7 @@ class ProducerRelatedRights extends RActiveRecord {
             $this->Pro_Rel_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -64,12 +65,12 @@ class ProducerRelatedRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Entry_Date, Pro_Rel_Internal_Position_Id, Pro_Rel_Entry_Date_2, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id', 'required'),
-            array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Internal_Position_Id, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Internal_Position_Id, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pro_Rel_File', 'length', 'max' => 255),
             array('Pro_Rel_Duration', 'length', 'max' => 100),
             array('Pro_Rel_Exit_Date, Pro_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
-            array('Pro_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Pro_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Pro_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Pro_Rel_Exit_Date', 'compare', 'compareAttribute' => 'Pro_Rel_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Pro_Rel_Exit_Date_2', 'compare', 'compareAttribute' => 'Pro_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pro_Rel_Rgt_Id, Pro_Acc_Id, Pro_Rel_Society_Id, Pro_Rel_Entry_Date, Pro_Rel_Exit_Date, Pro_Rel_Internal_Position_Id, Pro_Rel_Entry_Date_2, Pro_Rel_Exit_Date_2, Pro_Rel_Region_Id, Pro_Rel_Profession_Id, Pro_Rel_File, Pro_Rel_Duration, Pro_Rel_Avl_Work_Cat_Id, Pro_Rel_Type_Rght_Id, Pro_Rel_Managed_Rights_Id, Pro_Rel_Territories_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -85,10 +86,10 @@ class ProducerRelatedRights extends RActiveRecord {
         return array(
             'proAcc' => array(self::BELONGS_TO, 'ProducerAccount', 'Pro_Acc_Id'),
             'proRelInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Pro_Rel_Internal_Position_Id'),
-            'proRelManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pro_Rel_Managed_Rights_Id'),
+//            'proRelManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pro_Rel_Managed_Rights_Id'),
             'proRelProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Pro_Rel_Profession_Id'),
             'proRelRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Pro_Rel_Region_Id'),
-            'proRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pro_Rel_Territories_Id'),
+//            'proRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pro_Rel_Territories_Id'),
             'proRelTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pro_Rel_Type_Rght_Id'),
             'proRelAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pro_Rel_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -187,7 +188,7 @@ class ProducerRelatedRights extends RActiveRecord {
 
     protected function afterSave() {
         $model = ProducerAccount::model()->findByPk($this->Pro_Acc_Id);
-        if(!empty($model)){
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Pro_Non_Member = $this->not_available;
@@ -195,9 +196,23 @@ class ProducerRelatedRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
+    protected function beforeSave() {
+        if (!empty($this->Pro_Rel_Managed_Rights_Id) && is_array($this->Pro_Rel_Managed_Rights_Id))
+            $this->Pro_Rel_Managed_Rights_Id = CJSON::encode($this->Pro_Rel_Managed_Rights_Id);
+
+        if (!empty($this->Pro_Rel_Territories_Id) && is_array($this->Pro_Rel_Territories_Id))
+            $this->Pro_Rel_Territories_Id = CJSON::encode($this->Pro_Rel_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
     protected function afterFind() {
         $this->not_available = $this->proAcc->Pro_Non_Member;
+        $this->Pro_Rel_Managed_Rights_Id = CJSON::decode($this->Pro_Rel_Managed_Rights_Id);
+        $this->Pro_Rel_Territories_Id = CJSON::decode($this->Pro_Rel_Territories_Id);
+
         return parent::afterFind();
     }
+
 }
