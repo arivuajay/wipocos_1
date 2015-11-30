@@ -32,12 +32,13 @@
  * @property MasterWorksCategory $perfRelAvlWorkCat
  */
 class PerformerRelatedRights extends RActiveRecord {
+
 //    const FILE_SIZE = 10;
     public $not_available;
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Perf_Rel_Type_Rght_Id = DEFAULT_PERFORMER_RIGHT_HOLDER_ID;
             $this->Perf_Rel_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Perf_Rel_Territories_Id = DEFAULT_TERRITORY_ID;
@@ -47,6 +48,7 @@ class PerformerRelatedRights extends RActiveRecord {
             $this->Perf_Rel_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -62,11 +64,11 @@ class PerformerRelatedRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Entry_Date, Perf_Rel_Internal_Position_Id, Perf_Rel_Entry_Date_2, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id', 'required'),
-            array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Internal_Position_Id, Perf_Rel_Region_Id, Perf_Rel_Profession_Id, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Type_Rght_Id, Perf_Rel_Managed_Rights_Id, Perf_Rel_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Perf_Acc_Id, Perf_Rel_Society_Id, Perf_Rel_Internal_Position_Id, Perf_Rel_Region_Id, Perf_Rel_Profession_Id, Perf_Rel_Avl_Work_Cat_Id, Perf_Rel_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Perf_Rel_File', 'length', 'max' => 255),
             array('Perf_Rel_Duration', 'length', 'max' => 100),
-            array('Perf_Rel_Exit_Date', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Perf_Rel_Exit_Date_2', 'compare', 'compareAttribute'=>'Perf_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Perf_Rel_Exit_Date', 'compare', 'compareAttribute' => 'Perf_Rel_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Perf_Rel_Exit_Date_2', 'compare', 'compareAttribute' => 'Perf_Rel_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Perf_Rel_Exit_Date, Perf_Rel_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
 //            array('Perf_Rel_File', 'file', 'allowEmpty' => true, 'maxSize'=>1024 * 1024 * self::FILE_SIZE, 'tooLarge'=>'File should be smaller than '.self::FILE_SIZE.'MB'),
             // The following rule is used by search().
@@ -84,10 +86,10 @@ class PerformerRelatedRights extends RActiveRecord {
         return array(
             'perfAcc' => array(self::BELONGS_TO, 'PerformerAccount', 'Perf_Acc_Id'),
             'perfRelInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Perf_Rel_Internal_Position_Id'),
-            'perfRelManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Perf_Rel_Managed_Rights_Id'),
+//            'perfRelManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Perf_Rel_Managed_Rights_Id'),
             'perfRelProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Perf_Rel_Profession_Id'),
             'perfRelRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Perf_Rel_Region_Id'),
-            'perfRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Perf_Rel_Territories_Id'),
+//            'perfRelTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Perf_Rel_Territories_Id'),
             'perfRelTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Perf_Rel_Type_Rght_Id'),
             'perfRelAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Perf_Rel_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -187,10 +189,10 @@ class PerformerRelatedRights extends RActiveRecord {
             )
         );
     }
-    
+
     protected function afterSave() {
         $model = PerformerAccount::model()->findByPk($this->Perf_Acc_Id);
-        if(!empty($model)){
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Perf_Non_Member = $this->not_available;
@@ -198,9 +200,24 @@ class PerformerRelatedRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
     protected function afterFind() {
         $this->not_available = $this->perfAcc->Perf_Non_Member;
+
+        $this->Perf_Rel_Managed_Rights_Id = CJSON::decode($this->Perf_Rel_Managed_Rights_Id);
+        $this->Perf_Rel_Territories_Id = CJSON::decode($this->Perf_Rel_Territories_Id);
+
         return parent::afterFind();
     }
+
+    protected function beforeSave() {
+        if (!empty($this->Perf_Rel_Managed_Rights_Id) && is_array($this->Perf_Rel_Managed_Rights_Id))
+            $this->Perf_Rel_Managed_Rights_Id = CJSON::encode($this->Perf_Rel_Managed_Rights_Id);
+
+        if (!empty($this->Perf_Rel_Territories_Id) && is_array($this->Perf_Rel_Territories_Id))
+            $this->Perf_Rel_Territories_Id = CJSON::encode($this->Perf_Rel_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
 }

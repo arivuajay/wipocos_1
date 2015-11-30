@@ -184,7 +184,7 @@ $this->breadcrumbs = array(
         }
         ?>
 
-         <h4 class="box-title">Cross-references</h4>
+        <h4 class="box-title">Cross-references</h4>
         <?php
         $pseudonyms = GroupPseudonym::model()->findAll('Group_Id = :group_acc_id', array(':group_acc_id' => $model->Group_Id));
         if (!empty($pseudonyms)) {
@@ -298,6 +298,10 @@ $this->breadcrumbs = array(
         <h4>Managed Rights</h4>
         <?php
         if (!empty($managed_model)) {
+            $mged_rights = $territories = array();
+            $mged_rights = MasterManagedRights::model()->findAllByAttributes(array('Master_Mgd_Rights_Id' => $managed_model->Group_Mnge_Managed_Rights_Id));
+            $territories = MasterTerritories::model()->findAllByAttributes(array('Master_Territory_Id' => $managed_model->Group_Mnge_Territories_Id));
+
             $this->widget('zii.widgets.CDetailView', array(
                 'data' => $managed_model,
                 'htmlOptions' => array('class' => 'table table-striped table-bordered'),
@@ -332,11 +336,11 @@ $this->breadcrumbs = array(
                     ),
                     array(
                         'name' => 'Group_Mnge_Managed_Rights_Id',
-                        'value' => isset($managed_model->groupMngeManagedRights->Mgd_Rights_Name) ? $managed_model->groupMngeManagedRights->Mgd_Rights_Name : 'Not Set'
+                        'value' => $mged_rights ? implode(",", CHtml::listData($mged_rights, 'Master_Mgd_Rights_Id', 'Mgd_Rights_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'Group_Mnge_Territories_Id',
-                        'value' => isset($managed_model->groupMngeTerritories->Territory_Name) ? $managed_model->groupMngeTerritories->Territory_Name : 'Not Set'
+                        'value' => $territories ? implode(",", CHtml::listData($territories, 'Master_Territory_Id', 'Territory_Name')) : 'Not Set'
                     ),
                     array(
                         'name' => 'not_available',

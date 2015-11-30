@@ -48,13 +48,10 @@ class PerformerAccount extends RActiveRecord {
     public $record_search;
     public $search_status;
     public $is_performer;
-
     public $before_save_enable = true;
     public $after_save_enable = true;
     public $after_delete_disable = true;
-
     public $oldRecord;
-
     public $internal_increament = true;
 
     const PHOTO_SIZE = 1;
@@ -69,8 +66,7 @@ class PerformerAccount extends RActiveRecord {
             $this->Perf_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Perf_GUID = Myclass::guid(false);
 
-            $this->Perf_Internal_Code =  InternalcodeGenerate::model()->find("Gen_User_Type = :type",
-                    array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode;
+            $this->Perf_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode;
         }
     }
 
@@ -115,7 +111,7 @@ class PerformerAccount extends RActiveRecord {
                 'message' => 'Only Alphabets are allowed ',
             ),
             array('Perf_First_Name', 'UniqueAttributesValidator', 'with' => 'Perf_Sur_Name', "message" => "This User Name already Exists"),
-            array('Perf_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Perf_Photo', 'file', 'types' => 'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
 //            array('Perf_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MIN_AGE.' years')), 'operator' => '<', 'message' => '{attribute} must be lesser than "{compareValue}". Age must be minimum '.self::MIN_AGE.' years'),
 //            array('Perf_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
             // The following rule is used by search().
@@ -244,7 +240,7 @@ class PerformerAccount extends RActiveRecord {
         }
 
         //Restrict to show only performer
-        if(!UserIdentity::checkAccess(null, 'authoraccount', 'view')){
+        if (!UserIdentity::checkAccess(null, 'authoraccount', 'view')) {
             $criteria->compare('Perf_Is_Author', 'N', true);
         }
         //End
@@ -293,7 +289,7 @@ class PerformerAccount extends RActiveRecord {
         }
 
         //Restrict to show only performers
-        if(!UserIdentity::checkAccess(null, 'authoraccount', 'view')){
+        if (!UserIdentity::checkAccess(null, 'authoraccount', 'view')) {
             $criteria->compare('Perf_Is_Author', 'N', true);
         }
         //End
@@ -311,8 +307,8 @@ class PerformerAccount extends RActiveRecord {
             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_PERFORMER_CODE));
             if ($this->isNewRecord) {
                 $this->Perf_Internal_Code = $gen_int_code->Fullcode;
-            }else{
-                if($this->oldRecord->Perf_Is_Author == 'N'){
+            } else {
+                if ($this->oldRecord->Perf_Is_Author == 'N') {
                     $this->Perf_Internal_Code = $gen_int_code->Fullcode;
                 }
             }
@@ -322,7 +318,7 @@ class PerformerAccount extends RActiveRecord {
 
     protected function afterSave() {
         if ($this->isNewRecord) {
-            if($this->internal_increament){
+            if ($this->internal_increament) {
                 $type = $this->Perf_Is_Author == 'Y' ? InternalcodeGenerate::AUTHOR_PERFORMER_CODE : InternalcodeGenerate::PERFORMER_CODE;
                 InternalcodeGenerate::model()->codeIncreament($type);
             }
@@ -347,7 +343,7 @@ class PerformerAccount extends RActiveRecord {
                     }
                     break;
                 case 'Y':
-                    if($this->oldRecord->Perf_Is_Author == 'N')
+                    if ($this->oldRecord->Perf_Is_Author == 'N')
                         InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::AUTHOR_PERFORMER_CODE);
 
                     $this->convert($this->Perf_Acc_Id);
@@ -400,7 +396,7 @@ class PerformerAccount extends RActiveRecord {
         $author_model->Auth_Is_Performer = 'Y';
         $author_model->before_save_enable = false;
         $author_model->after_save_enable = false;
-        if($author_model->isNewRecord)
+        if ($author_model->isNewRecord)
             $author_model->internal_increament = false;
         $author_model->save(false);
         $auth_acc_id = $author_model->Auth_Acc_Id;
@@ -418,13 +414,16 @@ class PerformerAccount extends RActiveRecord {
                 if (!empty($performer_model->$k)) {
                     $auth_rel_model = new $v;
                     $auth_rel_model->Auth_Acc_Id = $auth_acc_id;
-                    foreach ($performer_model->$k->attributes as $key => $value) {
-                        $attr_name = str_replace('Perf_', 'Auth_', $key);
-                        !in_array($key, $ignore_list) ? $auth_rel_model->setAttribute($attr_name, $value) : '';
+                    if (!empty($performer_model->$k->attributes) && is_array($performer_model->$k->attributes)) {
+                        foreach ($performer_model->$k->attributes as $key => $value) {
+                            $attr_name = str_replace('Perf_', 'Auth_', $key);
+                            !in_array($key, $ignore_list) ? $auth_rel_model->setAttribute($attr_name, $value) : '';
+                        }
+                        $auth_rel_model->save(false);
+
+                        if ($k == 'performerBiographies')
+                            $bio_id = $auth_rel_model->Auth_Biogrph_Id;
                     }
-                    $auth_rel_model->save(false);
-                    if($k == 'performerBiographies')
-                        $bio_id = $auth_rel_model->Auth_Biogrph_Id;
                 }
             }
 
@@ -489,4 +488,5 @@ class PerformerAccount extends RActiveRecord {
             )
         );
     }
+
 }

@@ -13,11 +13,11 @@
     $societies = Myclass::getSociety();
     $professions = Myclass::getMasterProfession();
     $work_categories = Myclass::getMasterWorkCategory();
-    
+
     $occ = $group_model->Group_Is_Author == '1' ? MasterTypeRights::OCCUPATION_AUTHOR : MasterTypeRights::OCCUPATION_PERFORMER;
     $rank = $group_model->Group_Is_Author == '1' ? MasterTypeRights::AUTHOR_RANK : MasterTypeRights::PERFORMER_RANK;
     $domain = $group_model->Group_Is_Author == '1' ? MasterTypeRights::AUTHOR_DOMAIN : MasterTypeRights::PERFORMER_DOMAIN;
-    
+
     $right_types = Myclass::getMasterTypeRight($occ, $rank, $domain);
     $territories = Myclass::getMasterTerritory();
     $managed_rights = Myclass::getMasterManagedRight();
@@ -29,7 +29,7 @@
         <div class="box-body">
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Mnge_Society_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Group_Mnge_Society_Id', $societies, array('class' => 'form-control','disabled'=>'disabled')); ?>
+                <?php echo $form->dropDownList($model, 'Group_Mnge_Society_Id', $societies, array('class' => 'form-control', 'disabled' => 'disabled')); ?>
                 <?php echo $form->error($model, 'Group_Mnge_Society_Id'); ?>
             </div>
 
@@ -125,13 +125,53 @@
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Mnge_Managed_Rights_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Group_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
+                <div class="row">
+                    <?php
+                    if ($model->Group_Mnge_Managed_Rights_Id && is_array($model->Group_Mnge_Managed_Rights_Id)) {
+                        $selected_keys = array_flip($model->Group_Mnge_Managed_Rights_Id);
+                        $remain_manages = @array_diff_key($managed_rights, $selected_keys);
+                        $selected_manages = @array_intersect_key($managed_rights, $selected_keys);
+                    } else {
+                        $remain_manages = $managed_rights;
+                        $selected_manages = array();
+                    }
+                    echo '<div class="col-sm-5">';
+                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id', array(), $remain_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-from', 'size' => 7));
+                    echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-grp-mgd-mgmd-select" class="btn btn-default btn-sm">>></button><br />';
+                    echo '<br /><button type="button" id="btn-remove-grp-mgd-mgmd-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
+                    echo CHtml::dropDownList('Group_Mnge_Managed_Rights_Id', array(), $selected_manages, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-mgmd-to', 'size' => 7));
+
+                    echo $form->dropDownList($model, 'Group_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'hide', 'multiple' => 'multiple'));
+                    echo '</div>';
+                    ?>
+                </div>
+                <?php // echo $form->dropDownList($model, 'Group_Mnge_Managed_Rights_Id', $managed_rights, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Group_Mnge_Managed_Rights_Id'); ?>
             </div>
 
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'Group_Mnge_Territories_Id', array('class' => '')); ?>
-                <?php echo $form->dropDownList($model, 'Group_Mnge_Territories_Id', $territories, array('class' => 'form-control')); ?>
+                <div class="row">
+                    <?php
+                    if ($model->Group_Mnge_Territories_Id && is_array($model->Group_Mnge_Territories_Id)) {
+                        $selected_terr_keys = @array_flip($model->Group_Mnge_Territories_Id);
+                        $remain_terr = @array_diff_key($territories, $selected_terr_keys);
+                        $selected_terr = @array_intersect_key($territories, $selected_terr_keys);
+                    } else {
+                        $remain_terr = $territories;
+                        $selected_terr = array();
+                    }
+                    echo '<div class="col-sm-5">';
+                    echo CHtml::dropDownList('Group_Mnge_Territories_Source', array(), $remain_terr, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-terr-from', 'size' => 7));
+                    echo '</div><div class="col-sm-2 mt30"><button type="button" id="btn-add-grp-mgd-terr-select" class="btn btn-default btn-sm">>></button><br />';
+                    echo '<br /><button type="button" id="btn-remove-grp-mgd-terr-select" class="btn btn-default btn-sm"><<</button></div><div class="col-sm-5">';
+                    echo CHtml::dropDownList('Group_Mnge_Territories_Destination', array(), $selected_terr, array('class' => 'form-control', 'multiple' => true, 'id' => 'select-grp-mgd-terr-to', 'size' => 7));
+
+                    echo $form->dropDownList($model, 'Group_Mnge_Territories_Id', $territories, array('class' => 'hide', 'multiple' => 'multiple'));
+                    echo '</div>';
+                    ?>
+                </div>
+                <?php // echo $form->dropDownList($model, 'Group_Mnge_Territories_Id', $territories, array('class' => 'form-control')); ?>
                 <?php echo $form->error($model, 'Group_Mnge_Territories_Id'); ?>
             </div>
 
@@ -150,3 +190,43 @@
     <?php $this->endWidget(); ?>
 
 </div>
+
+<?php
+$js = <<< EOD
+    $(document).ready(function(){
+        $('#btn-add-grp-mgd-mgmd-select').click(function(){
+            $('#select-grp-mgd-mgmd-from option:selected').each( function() {
+                $('#select-grp-mgd-mgmd-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#GroupManageRights_Group_Mnge_Managed_Rights_Id option[value="'+$(this).val()+'"]').attr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-remove-grp-mgd-mgmd-select').click(function(){
+            $('#select-grp-mgd-mgmd-to option:selected').each( function() {
+                $('#select-grp-mgd-mgmd-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#GroupManageRights_Group_Mnge_Managed_Rights_Id option[value="'+$(this).val()+'"]').removeAttr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-add-grp-mgd-terr-select').click(function(){
+            $('#select-grp-mgd-terr-from option:selected').each( function() {
+                $('#select-grp-mgd-terr-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#GroupManageRights_Group_Mnge_Territories_Id option[value="'+$(this).val()+'"]').attr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+        $('#btn-remove-grp-mgd-terr-select').click(function(){
+            $('#select-grp-mgd-terr-to option:selected').each( function() {
+                $('#select-grp-mgd-terr-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $('#GroupManageRights_Group_Mnge_Territories_Id option[value="'+$(this).val()+'"]').removeAttr('selected','selected');
+                $(this).remove();
+            });
+            return false;
+        });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('_mged_rights_form', $js);
+?>

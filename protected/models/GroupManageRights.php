@@ -35,10 +35,10 @@
 class GroupManageRights extends RActiveRecord {
 
     public $not_available;
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Group_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Group_Mnge_Territories_Id = DEFAULT_TERRITORY_ID;
             $this->Group_Mnge_Region_Id = DEFAULT_REGION_ID;
@@ -47,6 +47,7 @@ class GroupManageRights extends RActiveRecord {
             $this->Group_Mnge_Managed_Rights_Id = DEFAULT_MANAGED_RIGHTS_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -62,11 +63,11 @@ class GroupManageRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Entry_Date, Group_Mnge_Internal_Position_Id, Group_Mnge_Entry_Date_2, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id', 'required'),
-            array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Internal_Position_Id, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Group_Mnge_Managed_Rights_Id, Group_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Group_Id, Group_Mnge_Society_Id, Group_Mnge_Internal_Position_Id, Group_Mnge_Region_Id, Group_Mnge_Profession_Id, Group_Mnge_Avl_Work_Cat_Id, Group_Mnge_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Group_Mnge_File', 'length', 'max' => 255),
             array('Group_Mnge_Duration', 'length', 'max' => 100),
-            array('Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Group_Mnge_Exit_Date', 'compare', 'compareAttribute' => 'Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute' => 'Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             array('Group_Mnge_Exit_Date, Group_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -83,11 +84,11 @@ class GroupManageRights extends RActiveRecord {
         return array(
             'group' => array(self::BELONGS_TO, 'Group', 'Group_Id'),
             'groupMngeInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Group_Mnge_Internal_Position_Id'),
-            'groupMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Group_Mnge_Managed_Rights_Id'),
+//            'groupMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Group_Mnge_Managed_Rights_Id'),
             'groupMngeProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Group_Mnge_Profession_Id'),
             'groupMngeRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Group_Mnge_Region_Id'),
             'groupMngeSociety' => array(self::BELONGS_TO, 'Society', 'Group_Mnge_Society_Id'),
-            'groupMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Group_Mnge_Territories_Id'),
+//            'groupMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Group_Mnge_Territories_Id'),
             'groupMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Group_Mnge_Type_Rght_Id'),
             'groupMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Group_Mnge_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -182,7 +183,7 @@ class GroupManageRights extends RActiveRecord {
 
     protected function afterSave() {
         $model = Group::model()->findByPk($this->Group_Id);
-        if(!empty($model)){
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Group_Non_Member = $this->not_available;
@@ -190,9 +191,24 @@ class GroupManageRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
     protected function afterFind() {
         $this->not_available = $this->group->Group_Non_Member;
+
+        $this->Group_Mnge_Managed_Rights_Id = CJSON::decode($this->Group_Mnge_Managed_Rights_Id);
+        $this->Group_Mnge_Territories_Id = CJSON::decode($this->Group_Mnge_Territories_Id);
+
         return parent::afterFind();
     }
+
+    protected function beforeSave() {
+        if (!empty($this->Group_Mnge_Managed_Rights_Id) && is_array($this->Group_Mnge_Managed_Rights_Id))
+            $this->Group_Mnge_Managed_Rights_Id = CJSON::encode($this->Group_Mnge_Managed_Rights_Id);
+
+        if (!empty($this->Group_Mnge_Territories_Id) && is_array($this->Group_Mnge_Territories_Id))
+            $this->Group_Mnge_Territories_Id = CJSON::encode($this->Group_Mnge_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
 }
