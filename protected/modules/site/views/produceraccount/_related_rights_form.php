@@ -169,7 +169,7 @@
                                         echo '</div>';
                                         ?>
                                     </div>
-                                    <?php echo $form->dropDownList($model, 'Pro_Rel_Territories_Id', $territories, array('class' => 'form-control')); ?>
+                                    <?php // echo $form->dropDownList($model, 'Pro_Rel_Territories_Id', $territories, array('class' => 'form-control')); ?>
                                     <?php echo $form->error($model, 'Pro_Rel_Territories_Id'); ?>
                                 </div>
                             </div>

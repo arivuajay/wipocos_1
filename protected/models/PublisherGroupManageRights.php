@@ -37,12 +37,11 @@
 class PublisherGroupManageRights extends RActiveRecord {
 
     public $not_available;
-    
     public $is_pub_producer;
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Pub_Group_Mnge_Society_Id = DEFAULT_SOCIETY_ID;
             $this->Pub_Group_Mnge_Territories_Id = DEFAULT_TERRITORY_ID;
             $this->Pub_Group_Mnge_Region_Id = DEFAULT_REGION_ID;
@@ -67,12 +66,12 @@ class PublisherGroupManageRights extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Entry_Date, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Entry_Date_2, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Pub_Group_Mnge_Managed_Rights_Id, Pub_Group_Mnge_Territories_Id', 'required'),
-            array('Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Region_Id, Pub_Group_Mnge_Profession_Id, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Pub_Group_Mnge_Managed_Rights_Id, Pub_Group_Mnge_Territories_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Region_Id, Pub_Group_Mnge_Profession_Id, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Pub_Group_Mnge_File', 'length', 'max' => 255),
             array('Pub_Group_Mnge_Duration', 'length', 'max' => 100),
             array('Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Exit_Date_2, Created_Date, Rowversion, Created_By, Updated_By, not_available', 'safe'),
-            array('Pub_Group_Mnge_Exit_Date', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
-            array('Pub_Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute'=>'Pub_Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator'=>'>', 'message'=>'{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Group_Mnge_Exit_Date', 'compare', 'compareAttribute' => 'Pub_Group_Mnge_Entry_Date', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
+            array('Pub_Group_Mnge_Exit_Date_2', 'compare', 'compareAttribute' => 'Pub_Group_Mnge_Entry_Date_2', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Pub_Group_Mnge_Rgt_Id, Pub_Group_Id, Pub_Group_Mnge_Society_Id, Pub_Group_Mnge_Entry_Date, Pub_Group_Mnge_Exit_Date, Pub_Group_Mnge_Internal_Position_Id, Pub_Group_Mnge_Entry_Date_2, Pub_Group_Mnge_Exit_Date_2, Pub_Group_Mnge_Region_Id, Pub_Group_Mnge_Profession_Id, Pub_Group_Mnge_File, Pub_Group_Mnge_Duration, Pub_Group_Mnge_Avl_Work_Cat_Id, Pub_Group_Mnge_Type_Rght_Id, Pub_Group_Mnge_Managed_Rights_Id, Pub_Group_Mnge_Territories_Id, Created_Date, Rowversion', 'safe', 'on' => 'search'),
@@ -88,11 +87,11 @@ class PublisherGroupManageRights extends RActiveRecord {
         return array(
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
             'pubGroupMngeInternalPosition' => array(self::BELONGS_TO, 'MasterInternalPosition', 'Pub_Group_Mnge_Internal_Position_Id'),
-            'pubGroupMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pub_Group_Mnge_Managed_Rights_Id'),
+//            'pubGroupMngeManagedRights' => array(self::BELONGS_TO, 'MasterManagedRights', 'Pub_Group_Mnge_Managed_Rights_Id'),
             'pubGroupMngeProfession' => array(self::BELONGS_TO, 'MasterProfession', 'Pub_Group_Mnge_Profession_Id'),
             'pubGroupMngeRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Pub_Group_Mnge_Region_Id'),
             'pubGroupMngeSociety' => array(self::BELONGS_TO, 'Society', 'Pub_Group_Mnge_Society_Id'),
-            'pubGroupMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Group_Mnge_Territories_Id'),
+//            'pubGroupMngeTerritories' => array(self::BELONGS_TO, 'MasterTerritories', 'Pub_Group_Mnge_Territories_Id'),
             'pubGroupMngeTypeRght' => array(self::BELONGS_TO, 'MasterTypeRights', 'Pub_Group_Mnge_Type_Rght_Id'),
             'pubGroupMngeAvlWorkCat' => array(self::BELONGS_TO, 'MasterWorksCategory', 'Pub_Group_Mnge_Avl_Work_Cat_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -145,7 +144,7 @@ class PublisherGroupManageRights extends RActiveRecord {
                 'Pub_Group_Mnge_Territories_Id' => 'Territories',
                 'Created_Date' => 'Created Date',
                 'Rowversion' => 'Rowversion',
-            'not_available' => 'Not Available',
+                'not_available' => 'Not Available',
             );
         } elseif (isset($this->is_pub_producer) && $this->is_pub_producer == 'PR') {
             $label = array(
@@ -167,7 +166,7 @@ class PublisherGroupManageRights extends RActiveRecord {
                 'Pub_Group_Mnge_Territories_Id' => 'Territories',
                 'Created_Date' => 'Created Date',
                 'Rowversion' => 'Rowversion',
-            'not_available' => 'Not Available',
+                'not_available' => 'Not Available',
             );
         }
         return $label;
@@ -237,7 +236,7 @@ class PublisherGroupManageRights extends RActiveRecord {
 
     protected function afterSave() {
         $model = PublisherGroup::model()->findByPk($this->Pub_Group_Id);
-        if(!empty($model)){
+        if (!empty($model)) {
 //            $model->before_save_enable = false;
 //            $model->after_save_enable = false;
             $model->Pub_Group_Non_Member = $this->not_available;
@@ -245,9 +244,23 @@ class PublisherGroupManageRights extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
+    protected function beforeSave() {
+        if (!empty($this->Pub_Group_Mnge_Managed_Rights_Id) && is_array($this->Pub_Group_Mnge_Managed_Rights_Id))
+            $this->Pub_Group_Mnge_Managed_Rights_Id = CJSON::encode($this->Pub_Group_Mnge_Managed_Rights_Id);
+
+        if (!empty($this->Pub_Group_Mnge_Territories_Id) && is_array($this->Pub_Group_Mnge_Territories_Id))
+            $this->Pub_Group_Mnge_Territories_Id = CJSON::encode($this->Pub_Group_Mnge_Territories_Id);
+
+        return parent::beforeSave();
+    }
+
     protected function afterFind() {
         $this->not_available = $this->pubGroup->Pub_Group_Non_Member;
+        $this->Pub_Group_Mnge_Managed_Rights_Id = CJSON::decode($this->Pub_Group_Mnge_Managed_Rights_Id);
+        $this->Pub_Group_Mnge_Territories_Id = CJSON::decode($this->Pub_Group_Mnge_Territories_Id);
+
         return parent::afterFind();
     }
+
 }
