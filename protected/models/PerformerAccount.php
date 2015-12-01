@@ -489,4 +489,17 @@ class PerformerAccount extends RActiveRecord {
         );
     }
 
+    public function getPerformerRHRow() {
+        if ($this->Perf_GUID) {
+            $row = "<tr data-urole='PE' data-uid='{$this->Perf_GUID}' data-name='{$this->fullname}' data-intcode = '{$this->Perf_Internal_Code}'>";
+            $row .= "<td>{$this->Perf_First_Name}</td>";
+            $row .= "<td>{$this->Perf_Sur_Name}</td>";
+            $row .= "<td>{$this->Perf_Internal_Code}</td>";
+            $row .= "</tr>";
+
+            return $row;
+        }
+        return false;
+    }
+
 }

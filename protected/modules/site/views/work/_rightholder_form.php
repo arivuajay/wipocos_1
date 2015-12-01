@@ -22,6 +22,8 @@
                                 <?php
                                 $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
                                 $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
+                                $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
+                                $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
 
                                 $is_auth = $_REQUEST['is_auth'] == 1;
                                 $is_publ = $_REQUEST['is_publ'] == 1;
@@ -40,6 +42,18 @@
                                     echo CHtml::label('Publisher', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
                                     echo CHtml::checkBox('is_publ', $is_publ, array('class' => 'form-control', 'id' => 'is_publ'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_performer) {
+                                    echo CHtml::label('Performer', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_perf', $is_publ, array('class' => 'form-control', 'id' => 'is_perf'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_producer) {
+                                    echo CHtml::label('Producer', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_prod', $is_publ, array('class' => 'form-control', 'id' => 'is_prod'));
                                     echo '&nbsp;&nbsp;';
                                 }
                                 ?>
@@ -97,9 +111,14 @@
                                 <?php
                                 $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->PubException()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->ProException()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+
                                 echo $form->dropDownList($model, 'Work_Right_Role', array(), array('class' => 'form-control default-role'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
                                 echo $form->dropDownList($model, 'Work_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Work_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
+                                echo $form->dropDownList($model, 'Work_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
                                 <?php echo $form->error($model, 'Work_Right_Role'); ?>
                             </div>
@@ -228,6 +247,7 @@
                                 <?php
                                 if ($work_model->workRightholders) {
                                     foreach ($work_model->workRightholders as $key => $member) {
+                                        $editable = true;
                                         if ($member->workAuthor) {
                                             $name = $member->workAuthor->fullname;
                                             $url = array('/site/authoraccount/view', 'id' => $member->workAuthor->Auth_Acc_Id);
@@ -238,6 +258,18 @@
                                             $url = array('/site/publisheraccount/view', 'id' => $member->workPublisher->Pub_Acc_Id);
                                             $role = MasterTypeRights::OCCUPATION_PUBLISHER;
                                             $internal_code = $member->workPublisher->Pub_Internal_Code;
+                                        } elseif ($member->workPerformer) {
+                                            $name = $member->workPerformer->fullname;
+                                            $url = array('/site/performeraccount/view', 'id' => $member->workPerformer->Perf_Acc_Id);
+                                            $role = 'PE';
+                                            $internal_code = $member->workPerformer->Perf_Internal_Code;
+                                            $editable = false;
+                                        } elseif ($member->workProducer) {
+                                            $name = $member->workProducer->Pro_Corporate_Name;
+                                            $url = array('/site/produceraccount/view', 'id' => $member->workProducer->Pro_Acc_Id);
+                                            $role = 'PR';
+                                            $internal_code = $member->workProducer->Pro_Internal_Code;
+                                            $editable = false;
                                         }
                                         ?>
                                         <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Work_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
@@ -249,7 +281,10 @@
                                             <td><span class="badge share_value mech_share_value" data-share="<?php echo $member->Work_Right_Mech_Share; ?>"><?php echo $member->Work_Right_Mech_Share; ?>%</span></td>
                                             <td><?php echo $member->Work_Right_Mech_Special != '' ? $member->getSpecialStatus($member->Work_Right_Mech_Special) : ''; ?></td>
                                             <td>
-                                                <?php echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)); ?>&nbsp;&nbsp;
+                                                <?php
+                                                if ($editable)
+                                                    echo CHtml::link('<i class="glyphicon glyphicon-pencil"></i>', '#role-foundation', array('class' => 'holder-edit', 'data-brshare' => $member->Work_Right_Broad_Share, 'data-brspl' => $member->Work_Right_Broad_Special, 'data-mcshare' => $member->Work_Right_Mech_Share, 'data-mcspl' => $member->Work_Right_Mech_Special)) . "&nbsp;&nbsp;";
+                                                ?>
                                                 <?php echo CHtml::link('<i class="glyphicon glyphicon-trash"></i>', 'javascript:void(0)', array('class' => "row-delete")); ?>
                                             </td>
                                             <td class="hide">
@@ -358,10 +393,23 @@ $js = <<< EOD
             if(_urole == 'AU'){
                 $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide');
 //                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide').val('$def_auth_role');
+                $('#WorkRightholder_Work_Right_Broad_Share,#WorkRightholder_Work_Right_Mech_Share').removeAttr('readonly');
             }else if(_urole == 'PU'){
                 $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide');
 //                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide').val('$def_perf_role');
+                $('#WorkRightholder_Work_Right_Broad_Share,#WorkRightholder_Work_Right_Mech_Share').removeAttr('readonly');
+            }else if(_urole == 'PE'){
+                $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
+                $('.user-role-dropdown select.performer-role option:eq(1)').attr('selected','selected');
+                $('#WorkRightholder_Work_Right_Broad_Share,#WorkRightholder_Work_Right_Mech_Share').val(0).attr('readonly','readonly');
+            }else if(_urole == 'PR'){
+                $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
+                $('.user-role-dropdown select.producer-role option:eq(1)').attr('selected','selected');
+                $('#WorkRightholder_Work_Right_Broad_Share,#WorkRightholder_Work_Right_Mech_Share').val(0).attr('readonly','readonly');
+            }else{
+                $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             }
+
             _workrole =  $(this).find('.rightrole').data('wrkrole');
             if(_workrole == $mainPublisher){
                 $("#main_pub").val(1);
@@ -383,12 +431,12 @@ $js = <<< EOD
             return false;
         });
 
-        $('#is_auth, #is_publ').on('ifChecked', function(event){
+        $('#is_auth, #is_publ,#is_perf, #is_prod').on('ifChecked', function(event){
             $("#chkbox_err").addClass("hide");
         });
 
         $('#search_button').on("click", function(){
-            if($("#is_auth").is(':checked') == false && $("#is_publ").is(':checked') == false){
+            if($("#is_auth").is(':checked') == false && $("#is_publ").is(':checked') == false && $("#is_perf").is(':checked') == false && $("#is_prod").is(':checked') == false){
                 $("#chkbox_err").removeClass("hide");
                 return false;
             }

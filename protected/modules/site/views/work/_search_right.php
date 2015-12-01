@@ -25,29 +25,25 @@
                         </thead>
                         <tbody>
                             <?php
-                            if (!empty($authusers) || !empty($publusers)) {
+                            if (!empty($authusers) || !empty($publusers) || !empty($perfusers) || !empty($produsers)) {
                                 if ($authusers) {
-                                    foreach ($authusers as $key => $user) {
-                                        ?>
-                                        <tr data-urole="AU" data-uid="<?php echo $user->Auth_GUID ?>" data-name="<?php echo $user->fullname; ?>" data-intcode = "<?php echo $user->Auth_Internal_Code ?>">
-                                            <td><?php echo $user->Auth_First_Name ?></td>
-                                            <td><?php echo $user->Auth_Sur_Name ?></td>
-                                            <td><?php echo $user->Auth_Internal_Code ?></td>
-                                        </tr>
-                                        <?php
-                                    }
+                                    foreach ($authusers as $key => $user)
+                                        echo $user->authorRHRow;
                                 }
 
                                 if ($publusers) {
-                                    foreach ($publusers as $key => $user) {
-                                        ?>
-                                        <tr data-urole="PU" data-uid="<?php echo $user->Pub_GUID ?>" data-name="<?php echo $user->Pub_Corporate_Name; ?>" data-intcode = "<?php echo $user->Pub_Internal_Code ?>">
-                                            <td><?php echo $user->Pub_Corporate_Name ?></td>
-                                            <td><?php echo $user->Pub_Ipi_Base_Number ?></td>
-                                            <td><?php echo $user->Pub_Internal_Code ?></td>
-                                        </tr>
-                                        <?php
-                                    }
+                                    foreach ($publusers as $key => $user)
+                                        echo $user->publisherRHRow;
+                                }
+
+                                if ($perfusers) {
+                                    foreach ($perfusers as $key => $user)
+                                        echo $user->performerRHRow;
+                                }
+
+                                if ($produsers) {
+                                    foreach ($produsers as $key => $user)
+                                        echo $user->producerRHRow;
                                 }
                             } else {
                                 echo '<tr class="empty-record"><td colspan="3" class="errorMessage text-center">No Users Found</td></tr>';

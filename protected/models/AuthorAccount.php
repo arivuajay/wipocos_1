@@ -111,7 +111,7 @@ class AuthorAccount extends RActiveRecord {
                 'message' => 'Only Alphabets are allowed ',
             ),
             array('Auth_First_Name', 'UniqueAttributesValidator', 'with' => 'Auth_Sur_Name', "message" => "This User Name already Exists"),
-            array('Auth_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Auth_Photo', 'file', 'types' => 'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
 //            array('Auth_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MIN_AGE.' years')), 'operator' => '<', 'message' => '{attribute} must be lesser than "{compareValue}". Age must be minimum '.self::MIN_AGE.' years'),
 //            array('Auth_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
             // The following rule is used by search().
@@ -240,7 +240,7 @@ class AuthorAccount extends RActiveRecord {
         }
 
         //Restrict to show only authors
-        if(!UserIdentity::checkAccess(null, 'performeraccount', 'view')){
+        if (!UserIdentity::checkAccess(null, 'performeraccount', 'view')) {
             $criteria->compare('Auth_Is_Performer', 'N', true);
         }
         //End
@@ -288,7 +288,7 @@ class AuthorAccount extends RActiveRecord {
         }
 
         //Restrict to show only authors
-        if(!UserIdentity::checkAccess(null, 'performeraccount', 'view')){
+        if (!UserIdentity::checkAccess(null, 'performeraccount', 'view')) {
             $criteria->compare('Auth_Is_Performer', 'N', true);
         }
         //End
@@ -419,7 +419,7 @@ class AuthorAccount extends RActiveRecord {
                         !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
                     }
                     $perf_rel_model->save(false);
-                    if($k == 'authorBiographies')
+                    if ($k == 'authorBiographies')
                         $bio_id = $perf_rel_model->Perf_Biogrph_Id;
                 }
             }
@@ -484,4 +484,18 @@ class AuthorAccount extends RActiveRecord {
             )
         );
     }
+
+    public function getAuthorRHRow() {
+        if ($this->Auth_GUID) {
+            $row  = "<tr data-urole='AU' data-uid='{$this->Auth_GUID}' data-name='{$this->fullname}' data-intcode = '{$this->Auth_Internal_Code}'>";
+            $row .= "<td>{$this->Auth_First_Name}</td>";
+            $row .= "<td>{$this->Auth_Sur_Name}</td>";
+            $row .= "<td>{$this->Auth_Internal_Code}</td>";
+            $row .= "</tr>";
+
+            return $row;
+        }
+        return false;
+    }
+
 }

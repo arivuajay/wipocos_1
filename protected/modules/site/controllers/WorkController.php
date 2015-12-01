@@ -500,7 +500,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form'  || $_POST['ajax'] === 'author-account-form'  || $_POST['ajax'] === 'publisher-account-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form' || $_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'publisher-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -570,6 +570,9 @@ class WorkController extends Controller {
     public function actionSearchright() {
         $criteria = new CDbCriteria();
         $pubcriteria = new CDbCriteria();
+        $percriteria = new CDbCriteria();
+        $procriteria = new CDbCriteria();
+
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
             $criteria->compare('Auth_Sur_Name', $search_txt, true, 'OR');
@@ -584,15 +587,37 @@ class WorkController extends Controller {
             $pubcriteria->compare('Pub_Ipi', $search_txt, true, 'OR');
             $pubcriteria->compare('Pub_Ipi_Base_Number', $search_txt, true, 'OR');
             $pubcriteria->compare('publisherPseudonyms.Pub_Pseudo_Name', $search_txt, true, 'OR');
+
+            $percriteria->compare('Perf_Sur_Name', $search_txt, true, 'OR');
+            $percriteria->compare('Perf_First_Name', $search_txt, true, 'OR');
+            $percriteria->compare('Perf_Internal_Code', $search_txt, true, 'OR');
+            $percriteria->compare('Perf_Ipi', $search_txt, true, 'OR');
+            $percriteria->compare('Perf_Ipi_Base_Number', $search_txt, true, 'OR');
+            $percriteria->compare('performerPseudonyms.Perf_Pseudo_Name', $search_txt, true, 'OR');
+
+            $procriteria->compare('Pro_Corporate_Name', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Internal_Code', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi_Base_Number', $search_txt, true, 'OR');
+            $procriteria->compare('Pro_Ipi_Base_Number', $search_txt, true, 'OR');
+            $procriteria->compare('producerPseudonyms.Pro_Pseudo_Name', $search_txt, true, 'OR');
+        }
+
+
+        if ($_REQUEST['is_perf'] == '1') {
+            $perfusers = PerformerAccount::model()->with(array('performerRelatedRights', 'performerPseudonyms'))->isStatusActive()->findAll($percriteria);
+        }
+        if ($_REQUEST['is_prod'] == '1') {
+            $produsers = ProducerAccount::model()->with(array('producerRelatedRights', 'producerPseudonyms'))->isStatusActive()->findAll($procriteria);
         }
 
         if ($_REQUEST['is_auth'] == '1') {
-            $authusers = AuthorAccount::model()->with(array('authorManageRights','authorPseudonyms'))->isStatusActive()->findAll($criteria);
+            $authusers = AuthorAccount::model()->with(array('authorManageRights', 'authorPseudonyms'))->isStatusActive()->findAll($criteria);
         }
         if ($_REQUEST['is_publ'] == '1') {
-            $publusers = PublisherAccount::model()->with(array('publisherPseudonyms','publisherManageRights'))->isStatusActive()->findAll($pubcriteria);
+            $publusers = PublisherAccount::model()->with(array('publisherPseudonyms', 'publisherManageRights'))->isStatusActive()->findAll($pubcriteria);
         }
-        $this->renderPartial('_search_right', compact('authusers', 'publusers'));
+        $this->renderPartial('_search_right', compact('authusers', 'publusers','perfusers','produsers'));
     }
 
     public function actionSubtitledelete($id) {
@@ -679,7 +704,7 @@ class WorkController extends Controller {
                         'id' => $model->Auth_Acc_Id,
                         'first_name' => $model->Auth_First_Name,
                         'last_name' => $model->Auth_Sur_Name,
-                        'name' => trim($model->Auth_First_Name." ".$model->Auth_Sur_Name),
+                        'name' => trim($model->Auth_First_Name . " " . $model->Auth_Sur_Name),
                         'int_code' => $model->Auth_Internal_Code,
                         'uid' => $model->Auth_GUID,
                         'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::AUTHOR_CODE))->Fullcode
@@ -721,4 +746,5 @@ class WorkController extends Controller {
         }
         echo json_encode($ret);
     }
+
 }
