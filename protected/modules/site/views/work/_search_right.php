@@ -88,6 +88,38 @@
                     )
             );
         }
+        if ($_REQUEST['is_perf'] == '1') {
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Performer',
+                'context' => 'success',
+                'htmlOptions' => array(
+//                'class' => 'hide',
+                    'id' => 'newperformerbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newperformerModal',
+                    'onclick' => '{$("#performer-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
+        if ($_REQUEST['is_prod'] == '1') {
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Producer',
+                'context' => 'success',
+                'htmlOptions' => array(
+//                'class' => 'hide',
+                    'id' => 'newproducerbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newproducerModal',
+                    'onclick' => '{$("#producer-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
         ?>
     </div>
 </div>

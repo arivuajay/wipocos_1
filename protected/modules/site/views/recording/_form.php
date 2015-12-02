@@ -227,6 +227,8 @@ $labels = Myclass::getMasterLabel();
 </div>
 <?php
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
+$new_author_post = Yii::app()->createAbsoluteUrl('/site/work/newauthor');
+$new_publisher_post = Yii::app()->createAbsoluteUrl('/site/work/newpublisher');
 $new_performer_post = Yii::app()->createAbsoluteUrl('/site/recording/newperformer');
 $new_producer_post = Yii::app()->createAbsoluteUrl('/site/recording/newproducer');
 
@@ -290,15 +292,114 @@ $js = <<< EOD
             return false;
         }
     }
+
+        function InsertNewAuthor(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_author_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#author-account-form')[0].reset();
+                        $('#AuthorAccount_Auth_Internal_Code').val(data.new_int_code);
+                        _auth_table = $('#search_result tbody');
+                        _auth_table.find('tr.empty-record').remove();
+                        _rowHTML = '<tr data-urole="AU" data-uid="'+data.uid+'" data-name="'+data.name+'" data-intcode="'+data.int_code+'"><td>'+data.first_name+'</td><td>'+data.last_name+'</td><td>'+data.int_code+'</td></tr>';
+                        _auth_table.append(_rowHTML);
+                        _auth_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
+                        $("#new-author-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
+
+    function InsertNewPublisher(form, data, hasError) {
+        if (hasError == false) {
+            var form_data = form.serializeArray();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '$new_publisher_post',
+                data:form_data,
+                success:function(data){
+                    if(data.sts == 'success'){
+                        $('#publisher-account-form')[0].reset();
+                        $('#PublisherAccount_Pub_Internal_Code').val(data.new_int_code);
+                        _publ_table = $('#search_result tbody');
+                        _publ_table.find('tr.empty-record').remove();
+                        _rowHTML = '<tr data-urole="PU" data-uid="'+data.uid+'" data-name="'+data.corporate_name+'" data-intcode="'+data.int_code+'"><td>'+data.corporate_name+'</td><td>'+data.ipi_base_number+'</td><td>'+data.int_code+'</td></tr>';
+                        _publ_table.append(_rowHTML);
+                        _publ_table.find("tr[data-uid='"+data.uid+"']").trigger('click');
+                        $("#new-publisher-dismiss").trigger( "click" );
+                    }
+                },
+                error: function(data) {
+                },
+            });
+            return false;
+        }
+    }
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);
-?>
 
-
-
-<!---New Performer Add Form -->
-<?php
 if (!$model->isNewRecord) {
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newauthorModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Author</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('/work/_new_author', array('model' => $author_model)); ?>
+    </div>
+
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-author-dismiss', 'class' => 'hide'),
+            )
+    );
+
+    $this->endWidget();
+    ?>
+    <!---End -->
+
+    <!---New Publisher Add Form -->
+    <?php
+    $this->beginWidget(
+            'booster.widgets.TbModal', array('id' => 'newpublisherModal')
+    );
+    ?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h4>New Publisher</h4>
+    </div>
+    <div class="modal-body">
+        <?php echo $this->renderPartial('/work/_new_publisher', array('model' => $publisher_model)); ?>
+    </div>
+
+    <?php
+    $this->widget(
+            'application.components.MyTbButton', array(
+        'label' => 'Close',
+        'url' => '#',
+        'htmlOptions' => array('data-dismiss' => 'modal', 'id' => 'new-publisher-dismiss', 'class' => 'hide'),
+            )
+    );
+
+    $this->endWidget();
+//    <!---New Performer Add Form -->
     $this->beginWidget(
             'booster.widgets.TbModal', array('id' => 'newperformerModal')
     );

@@ -57,7 +57,7 @@
                                     echo '&nbsp;&nbsp;';
                                 }
                                 ?>
-                                <div id="chkbox_err" class="errorMessage hide">Select Author or Publisher</div>
+                                <div id="chkbox_err" class="errorMessage hide">Select Author or Publisher or Performer or Producer</div>
                             </div>
                             <div class="form-group">
                                 <?php echo CHtml::label('Search', '', array('class' => 'control-label')); ?>
@@ -459,6 +459,24 @@ $js = <<< EOD
     });
     function InsertRightHolder(form, data, hasError) {
         if (hasError == false) {
+        var _prev_broad_share = _prev_mech_share = 0.00;
+        $("#linked-holders input[id$='Work_Right_Broad_Share']").each(function(){
+            _prev_broad_share = parseFloat(_prev_broad_share) + parseFloat($(this).val());
+        });
+        $("#linked-holders input[id$='Work_Right_Mech_Share']").each(function(){
+            _prev_mech_share = parseFloat(_prev_mech_share) + parseFloat($(this).val());
+        });
+        _current_broad_share = parseFloat(_prev_broad_share) + parseFloat($("#work-rightholder-form input#WorkRightholder_Work_Right_Broad_Share").val());
+        _current_mech_share = parseFloat(_prev_mech_share) + parseFloat($("#work-rightholder-form input#WorkRightholder_Work_Right_Mech_Share").val());
+
+        if(_current_broad_share.toFixed(2) > 100.00){
+            alert("Your Broadcasting Shares exceeds 100%. you should reduce existing Linked Rightholders shares");
+            return false;
+        }
+        if(_current_mech_share.toFixed(2) > 100.00){
+            alert("Your Mechanical Shares exceeds 100%. you should reduce existing Linked Rightholders shares");
+            return false;
+        }
             _uid = $(".highlight").data('uid');
             _role = $(".highlight").data('urole');
             _name = $('.highlight').data('name');

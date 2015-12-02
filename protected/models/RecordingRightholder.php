@@ -63,6 +63,8 @@ class RecordingRightholder extends CActiveRecord {
             'rcdRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Rcd_Right_Role'),
             'recordingPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Perf_GUID')),
             'recordingProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Rcd_Member_GUID','foreignKey' => array('Rcd_Member_GUID'=>'Pro_GUID')),
+            'recordingAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Rcd_Member_GUID', 'foreignKey' => array('Rcd_Member_GUID' => 'Auth_GUID'), 'order'=>'Auth_First_Name ASC'),
+            'recordingPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Rcd_Member_GUID', 'foreignKey' => array('Rcd_Member_GUID' => 'Pub_GUID')),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );

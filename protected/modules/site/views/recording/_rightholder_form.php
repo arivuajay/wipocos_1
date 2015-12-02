@@ -20,14 +20,16 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <?php
+                                $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
+                                $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
                                 $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
                                 $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
 
                                 $is_perf = $_REQUEST['is_perf'] == 1;
                                 $is_prod = $_REQUEST['is_prod'] == 1;
-                                if(!$view_performer)
+                                if (!$view_performer)
                                     $is_prod = true;
-                                if(!$view_producer)
+                                if (!$view_producer)
                                     $is_perf = true;
 
                                 if ($view_performer) {
@@ -40,6 +42,18 @@
                                     echo CHtml::label('Producer', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
                                     echo CHtml::checkBox('is_prod', $is_prod, array('class' => 'form-control', 'id' => 'is_prod'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_author) {
+                                    echo CHtml::label('Author', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_auth', $is_auth, array('class' => 'form-control', 'id' => 'is_auth'));
+                                    echo '&nbsp;&nbsp;';
+                                }
+                                if ($view_publisher) {
+                                    echo CHtml::label('Publisher', '', array('class' => 'control-label'));
+                                    echo '&nbsp;';
+                                    echo CHtml::checkBox('is_publ', $is_publ, array('class' => 'form-control', 'id' => 'is_publ'));
                                     echo '&nbsp;&nbsp;';
                                 }
                                 ?>
@@ -90,9 +104,13 @@
                             <?php echo $form->labelEx($model, 'Rcd_Right_Role', array('class' => 'col-lg-2 control-label')); ?>
                             <div class="col-lg-8 user-role-dropdown">
                                 <?php
+                                $authRole = CHtml::listData(MasterTypeRights::model()->isActive()->AuthException()->isAuthor()->findAll(), 'Master_Type_Rights_Id', 'rolename');
+                                $pubRole = CHtml::listData(MasterTypeRights::model()->isActive()->PubException()->isPublisher()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $perfRole = CHtml::listData(MasterTypeRights::model()->isActive()->PerfException()->isPerformer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 $proRole = CHtml::listData(MasterTypeRights::model()->isActive()->ProException()->isProducer()->findAll(), 'Master_Type_Rights_Id', 'rolename');
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', array(), array('class' => 'form-control default-role'));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $authRole, array('class' => 'form-control hide author-role', 'disabled' => 'disabled'));
+                                echo $form->dropDownList($model, 'Rcd_Right_Role', $pubRole, array('class' => 'form-control hide publisher-role', 'disabled' => 'disabled'));
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', $perfRole, array('class' => 'form-control hide performer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 echo $form->dropDownList($model, 'Rcd_Right_Role', $proRole, array('class' => 'form-control hide producer-role roles_dd', 'disabled' => 'disabled', 'prompt' => ''));
                                 ?>
@@ -204,6 +222,16 @@
                                             $url = array('/site/produceraccount/view', 'id' => $member->recordingProducer->Pro_Acc_Id);
                                             $role = 'PR';
                                             $internal_code = $member->recordingProducer->Pro_Internal_Code;
+                                        } elseif ($member->recordingAuthor) {
+                                            $name = $member->recordingAuthor->fullname;
+                                            $url = array('/site/authoraccount/view', 'id' => $member->recordingAuthor->Auth_Acc_Id);
+                                            $role = MasterTypeRights::OCCUPATION_AUTHOR;
+                                            $internal_code = $member->recordingAuthor->Auth_Internal_Code;
+                                        } elseif ($member->recordingPublisher) {
+                                            $name = $member->recordingPublisher->Pub_Corporate_Name;
+                                            $url = array('/site/publisheraccount/view', 'id' => $member->recordingPublisher->Pub_Acc_Id);
+                                            $role = MasterTypeRights::OCCUPATION_PUBLISHER;
+                                            $internal_code = $member->recordingPublisher->Pub_Internal_Code;
                                         }
                                         ?>
                                         <tr data-urole="<?php echo $role; ?>" data-uid="<?php echo $member->Rcd_Member_GUID ?>" data-name="<?php echo $name ?>" data-intcode = "<?php echo $internal_code ?>">
@@ -297,8 +325,16 @@ $js = <<< EOD
             $('.user-role-dropdown select').attr('disabled','disabled').addClass('hide');
             if(_urole == 'PE'){
                 $('.user-role-dropdown select.performer-role').removeAttr('disabled').removeClass('hide');
+                $('#RecordingRightholder_Rcd_Right_Equal_Share,#RecordingRightholder_Rcd_Right_Blank_Share').removeAttr('readonly');
             }else if(_urole == 'PR'){
                 $('.user-role-dropdown select.producer-role').removeAttr('disabled').removeClass('hide');
+                $('#RecordingRightholder_Rcd_Right_Equal_Share,#RecordingRightholder_Rcd_Right_Blank_Share').removeAttr('readonly');
+            }else if(_urole == 'AU'){
+                $('.user-role-dropdown select.author-role').removeAttr('disabled').removeClass('hide');
+                $('#RecordingRightholder_Rcd_Right_Equal_Share,#RecordingRightholder_Rcd_Right_Blank_Share').val(0).attr('readonly','readonly');
+            }else if(_urole == 'PU'){
+                $('.user-role-dropdown select.publisher-role').removeAttr('disabled').removeClass('hide');
+                $('#RecordingRightholder_Rcd_Right_Equal_Share,#RecordingRightholder_Rcd_Right_Blank_Share').val(0).attr('readonly','readonly');
             }else{
                 $('.user-role-dropdown select.default-role').removeAttr('disabled').removeClass('hide');
             }
@@ -314,12 +350,12 @@ $js = <<< EOD
             return false;
         });
 
-        $('#is_perf, #is_prod').on('ifChecked', function(event){
+        $('#is_auth, #is_publ,#is_perf, #is_prod').on('ifChecked', function(event){
             $("#chkbox_err").addClass("hide");
         });
 
         $('#search_button').on("click", function(){
-            if($("#is_perf").is(':checked') == false && $("#is_prod").is(':checked') == false){
+            if($("#is_auth").is(':checked') == false && $("#is_publ").is(':checked') == false && $("#is_perf").is(':checked') == false && $("#is_prod").is(':checked') == false){
                 $("#chkbox_err").removeClass("hide");
                 return false;
             }

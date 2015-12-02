@@ -25,29 +25,25 @@
                         </thead>
                         <tbody>
                             <?php
-                            if (!empty($perfusers) || !empty($produsers)) {
+                            if (!empty($authusers) || !empty($publusers) || !empty($perfusers) || !empty($produsers)) {
+                                if ($authusers) {
+                                    foreach ($authusers as $key => $user)
+                                        echo $user->authorRHRow;
+                                }
+
+                                if ($publusers) {
+                                    foreach ($publusers as $key => $user)
+                                        echo $user->publisherRHRow;
+                                }
+
                                 if ($perfusers) {
-                                    foreach ($perfusers as $key => $user) {
-                                        ?>
-                                        <tr data-urole="PE" data-uid="<?php echo $user->Perf_GUID ?>" data-name="<?php echo $user->fullname; ?>" data-intcode = "<?php echo $user->Perf_Internal_Code ?>">
-                                            <td><?php echo $user->Perf_First_Name ?></td>
-                                            <td><?php echo $user->Perf_Sur_Name ?></td>
-                                            <td><?php echo $user->Perf_Internal_Code ?></td>
-                                        </tr>
-                                        <?php
-                                    }
+                                    foreach ($perfusers as $key => $user)
+                                        echo $user->performerRHRow;
                                 }
 
                                 if ($produsers) {
-                                    foreach ($produsers as $key => $user) {
-                                        ?>
-                                        <tr data-urole="PR" data-uid="<?php echo $user->Pro_GUID ?>" data-name="<?php echo $user->Pro_Corporate_Name; ?>" data-intcode = "<?php echo $user->Pro_Internal_Code ?>">
-                                            <td><?php echo $user->Pro_Corporate_Name ?></td>
-                                            <td><?php echo $user->Pro_Ipi_Base_Number ?></td>
-                                            <td><?php echo $user->Pro_Internal_Code ?></td>
-                                        </tr>
-                                        <?php
-                                    }
+                                    foreach ($produsers as $key => $user)
+                                        echo $user->producerRHRow;
                                 }
                             } else {
                                 echo '<tr class="empty-record"><td colspan="3" class="errorMessage text-center">No Users Found</td></tr>';
@@ -63,6 +59,7 @@
     <div class="pull-right">
         <?php
         if ($_REQUEST['is_perf'] == '1') {
+            echo "&nbsp;&nbsp;";
             $this->widget(
                     'application.components.MyTbButton', array(
                 'label' => 'New Performer',
@@ -89,6 +86,37 @@
                     'data-toggle' => 'modal',
                     'data-target' => '#newproducerModal',
                     'onclick' => '{$("#producer-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
+        if ($_REQUEST['is_auth'] == '1') {
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Author',
+                'context' => 'success',
+                'htmlOptions' => array(
+//                'class' => 'hide',
+                    'id' => 'newauthorbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newauthorModal',
+                    'onclick' => '{$("#author-dismiss").trigger("click");}'
+                ),
+                    )
+            );
+        }
+        if ($_REQUEST['is_publ'] == '1') {
+            echo "&nbsp;&nbsp;";
+            $this->widget(
+                    'application.components.MyTbButton', array(
+                'label' => 'New Publisher',
+                'context' => 'success',
+                'htmlOptions' => array(
+//                'class' => 'hide',
+                    'id' => 'newpublisherbutton',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#newpublisherModal',
+                    'onclick' => '{$("#publisher-dismiss").trigger("click");}'
                 ),
                     )
             );

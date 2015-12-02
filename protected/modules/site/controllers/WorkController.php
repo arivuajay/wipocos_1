@@ -158,10 +158,12 @@ class WorkController extends Controller {
         $focus = 'publisher_contactform';
         $author_model = new AuthorAccount;
         $publisher_model = new PublisherAccount;
+        $performer_model = new PerformerAccount();
+        $producer_model = new ProducerAccount();
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation(array($model, $sub_title_model, $biograph_model, $document_model, $publishing_model,
-            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model, $author_model, $publisher_model));
+            $sub_publishing_model, $right_holder_model, $publishing_upload_model, $sub_publishing_upload_model, $author_model, $publisher_model,$performer_model,$producer_model));
 
         if (isset($_POST['Work'])) {
             $model->attributes = $_POST['Work'];
@@ -314,7 +316,7 @@ class WorkController extends Controller {
         }
 
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model', 'author_model', 'publisher_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'biograph_model', 'document_model', 'publishing_model', 'sub_publishing_model', 'right_holder_model', 'right_holder_exists', 'publish_validate', 'sub_publish_validate', 'sub_publisher', 'main_publisher', 'publishing_upload_model', 'sub_publishing_upload_model', 'focus', 'biograph_upload_model', 'author_model', 'publisher_model','performer_model','producer_model'));
     }
 
     /**
@@ -500,7 +502,7 @@ class WorkController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form' || $_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'publisher-account-form'
+                $_POST['ajax'] === 'work-form' || $_POST['ajax'] === 'work-subtitle-form' || $_POST['ajax'] === 'work-biography-form' || $_POST['ajax'] === 'work-documentation-form' || $_POST['ajax'] === 'work-publishing-form' || $_POST['ajax'] === 'work-sub-publishing-form' || $_POST['ajax'] === 'publishing-upload-form' || $_POST['ajax'] === 'sub-publishing-upload-form' || $_POST['ajax'] === 'work-rightholder-form' || $_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'publisher-account-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -617,7 +619,7 @@ class WorkController extends Controller {
         if ($_REQUEST['is_publ'] == '1') {
             $publusers = PublisherAccount::model()->with(array('publisherPseudonyms', 'publisherManageRights'))->isStatusActive()->findAll($pubcriteria);
         }
-        $this->renderPartial('_search_right', compact('authusers', 'publusers','perfusers','produsers'));
+        $this->renderPartial('_search_right', compact('authusers', 'publusers', 'perfusers', 'produsers'));
     }
 
     public function actionSubtitledelete($id) {

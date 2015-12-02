@@ -113,11 +113,13 @@ class RecordingController extends Controller {
 
         $link_model = $edit_link == NULL ? new RecordingLink : RecordingLink::model()->findByAttributes(array('Rcd_Link_Id' => $edit_link));
 
+        $author_model = new AuthorAccount;
+        $publisher_model = new PublisherAccount;
         $performer_model = new PerformerAccount;
         $producer_model = new ProducerAccount;
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model, $link_model,$performer_model,$producer_model));
+        $this->performAjaxValidation(array($model, $sub_title_model, $publication_model, $right_holder_model, $link_model, $author_model, $publisher_model, $performer_model, $producer_model));
 
         if (isset($_POST['Recording'])) {
             $model->attributes = $_POST['Recording'];
@@ -149,7 +151,7 @@ class RecordingController extends Controller {
             }
         }
 
-        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 'link_model', 'right_holder_exists','performer_model','producer_model'));
+        $this->render('update', compact('model', 'sub_title_model', 'tab', 'publication_model', 'right_holder_model', 'link_model', 'right_holder_exists', 'author_model', 'publisher_model', 'performer_model', 'producer_model'));
     }
 
     /**
@@ -229,7 +231,7 @@ class RecordingController extends Controller {
      */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && (
-                $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'recording-subtitle-form' || $_POST['ajax'] === 'recording-publication-form' || $_POST['ajax'] === 'recording-rightholder-form' || $_POST['ajax'] === 'recording-link-form'  || $_POST['ajax'] === 'performer-account-form'  || $_POST['ajax'] === 'producer-account-form'
+                $_POST['ajax'] === 'recording-form' || $_POST['ajax'] === 'recording-subtitle-form' || $_POST['ajax'] === 'recording-publication-form' || $_POST['ajax'] === 'recording-rightholder-form' || $_POST['ajax'] === 'recording-link-form' || $_POST['ajax'] === 'author-account-form' || $_POST['ajax'] === 'publisher-account-form' || $_POST['ajax'] === 'performer-account-form' || $_POST['ajax'] === 'producer-account-form'
                 )) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -279,8 +281,24 @@ class RecordingController extends Controller {
     public function actionSearchright() {
         $criteria = new CDbCriteria();
         $procriteria = new CDbCriteria();
+        $autcriteria = new CDbCriteria();
+        $pubcriteria = new CDbCriteria();
+
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
+            $autcriteria->compare('Auth_Sur_Name', $search_txt, true, 'OR');
+            $autcriteria->compare('Auth_First_Name', $search_txt, true, 'OR');
+            $autcriteria->compare('Auth_Internal_Code', $search_txt, true, 'OR');
+            $autcriteria->compare('Auth_Ipi', $search_txt, true, 'OR');
+            $autcriteria->compare('Auth_Ipi_Base_Number', $search_txt, true, 'OR');
+            $autcriteria->compare('authorPseudonyms.Auth_Pseudo_Name', $search_txt, true, 'OR');
+
+            $pubcriteria->compare('Pub_Corporate_Name', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Internal_Code', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Ipi', $search_txt, true, 'OR');
+            $pubcriteria->compare('Pub_Ipi_Base_Number', $search_txt, true, 'OR');
+            $pubcriteria->compare('publisherPseudonyms.Pub_Pseudo_Name', $search_txt, true, 'OR');
+
             $criteria->compare('Perf_Sur_Name', $search_txt, true, 'OR');
             $criteria->compare('Perf_First_Name', $search_txt, true, 'OR');
             $criteria->compare('Perf_Internal_Code', $search_txt, true, 'OR');
@@ -297,12 +315,19 @@ class RecordingController extends Controller {
         }
 
         if ($_REQUEST['is_perf'] == '1') {
-            $perfusers = PerformerAccount::model()->with(array('performerRelatedRights','performerPseudonyms'))->isStatusActive()->findAll($criteria);
+            $perfusers = PerformerAccount::model()->with(array('performerRelatedRights', 'performerPseudonyms'))->isStatusActive()->findAll($criteria);
         }
         if ($_REQUEST['is_prod'] == '1') {
-            $produsers = ProducerAccount::model()->with(array('producerRelatedRights','producerPseudonyms'))->isStatusActive()->findAll($procriteria);
+            $produsers = ProducerAccount::model()->with(array('producerRelatedRights', 'producerPseudonyms'))->isStatusActive()->findAll($procriteria);
         }
-        $this->renderPartial('_search_right', compact('perfusers', 'produsers'));
+        if ($_REQUEST['is_auth'] == '1') {
+            $authusers = AuthorAccount::model()->with(array('authorManageRights', 'authorPseudonyms'))->isStatusActive()->findAll($autcriteria);
+        }
+        if ($_REQUEST['is_publ'] == '1') {
+            $publusers = PublisherAccount::model()->with(array('publisherPseudonyms', 'publisherManageRights'))->isStatusActive()->findAll($pubcriteria);
+        }
+
+        $this->renderPartial('_search_right', compact('authusers', 'publusers','perfusers', 'produsers'));
     }
 
     public function actionInsertright() {
@@ -356,7 +381,7 @@ class RecordingController extends Controller {
                         'id' => $model->Perf_Acc_Id,
                         'first_name' => $model->Perf_First_Name,
                         'last_name' => $model->Perf_Sur_Name,
-                        'name' => trim($model->Perf_First_Name." ".$model->Perf_Sur_Name),
+                        'name' => trim($model->Perf_First_Name . " " . $model->Perf_Sur_Name),
                         'int_code' => $model->Perf_Internal_Code,
                         'uid' => $model->Perf_GUID,
                         'new_int_code' => InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::PERFORMER_CODE))->Fullcode
@@ -398,4 +423,5 @@ class RecordingController extends Controller {
         }
         echo json_encode($ret);
     }
+
 }
