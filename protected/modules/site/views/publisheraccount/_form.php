@@ -80,19 +80,19 @@ $legal_forms = Myclass::getMasterLegalForm();
                                             <?php echo $form->textField($model, 'Pub_Internal_Code', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => true)); ?>
                                             <?php echo $form->error($model, 'Pub_Internal_Code'); ?>
                                         </div>
+                                        <?php if (UserIdentity::checkAccess(null, 'produceraccount', 'view') || in_array(Yii::app()->user->society_code, array('COPYRIGHT', 'PERFORMER'))) { ?>
+                                            <div class="form-group" style="pointer-events: none">
+                                                <?php echo $form->labelEx($model, 'is_publisher', array('class' => '')); ?><br />
+                                                <?php echo $form->checkBox($model, 'is_publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
+                                                <?php echo $form->error($model, 'is_publisher'); ?>
+                                            </div>
 
-                                        <div class="form-group" style="pointer-events: none">
-                                            <?php echo $form->labelEx($model, 'is_publisher', array('class' => '')); ?><br />
-                                            <?php echo $form->checkBox($model, 'is_publisher', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>
-                                            <?php echo $form->error($model, 'is_publisher'); ?>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <?php echo $form->labelEx($model, 'Pub_Is_Producer', array('class' => '')); ?><br />
-                                            <?php echo $form->checkBox($model, 'Pub_Is_Producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
-                                            <?php echo $form->error($model, 'Pub_Is_Producer'); ?>
-                                        </div>
-
+                                            <div class="form-group">
+                                                <?php echo $form->labelEx($model, 'Pub_Is_Producer', array('class' => '')); ?><br />
+                                                <?php echo $form->checkBox($model, 'Pub_Is_Producer', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                                <?php echo $form->error($model, 'Pub_Is_Producer'); ?>
+                                            </div>
+                                        <?php } ?>
                                         <div class="form-group">
                                             <?php echo $form->labelEx($model, 'Pub_Corporate_Name', array('class' => '')); ?>
                                             <?php echo $form->textField($model, 'Pub_Corporate_Name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>

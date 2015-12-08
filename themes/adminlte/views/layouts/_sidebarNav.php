@@ -149,6 +149,14 @@
 //                        array('label' => '<i class="fa fa-bar-chart"></i> <span>Classes & Available Periods</span>', 'url' => array('/site/distributionlogsheet/availperiods'), 'visible' => '1'),
                     ),
                 ),
+                array('label' => '<i class="fa fa-pie-chart"></i> <span>Reports</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                    'itemOptions' => array('class' => 'treeview'),
+                    'submenuOptions' => array('class' => 'treeview-menu'),
+                    'visible' => '1',
+                    'items' => array(
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Right Holder by Work</span>', 'url' => array('/site/report/rhbywrk'), 'visible' => '1'),
+                    ),
+                ),
             ),
             'htmlOptions' => array('class' => 'sidebar-menu')
         ));

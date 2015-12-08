@@ -41,6 +41,7 @@ class Work extends RActiveRecord {
     public $duration_minutes;
     public $duration_seconds;
     public $matchingdetails;
+    public $right_holder;
 
     public function init() {
         parent::init();
@@ -76,15 +77,15 @@ class Work extends RActiveRecord {
             array('Work_Org_Title, Work_Internal_Code, Work_Iswc, Work_Wic_Code', 'length', 'max' => 100),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
-            array('Work_Instrumentation,Work_Performer,Work_Producer', 'length', 'max' => 500),
+            array('Work_Instrumentation,Work_Performer,Work_Producer,right_holder', 'length', 'max' => 500),
             array('Work_Creation', 'numerical', 'min' => (date('Y') - 100), 'max' => (date('Y'))),
             array('Work_Internal_Code, Work_Org_Title, Work_GUID', 'unique'),
             array('Work_Unknown, Active', 'length', 'max' => 1),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Work_GUID', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, matchingdetails, Created_By, Updated_By, Work_GUID,right_holder', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown,Work_Performer,Work_Producer, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Work_Id, Work_Org_Title, Work_Language_Id, Work_Internal_Code, Work_Iswc, Work_Wic_Code, Work_Type_Id, Work_Factor_Id, Work_Instrumentation, Work_Duration, Work_Creation, Work_Opus_Number, Work_Unknown,Work_Performer,Work_Producer, Active, Created_Date, Rowversion,right_holder', 'safe', 'on' => 'search'),
         );
     }
 
@@ -141,7 +142,10 @@ class Work extends RActiveRecord {
             'matchingdetails' => 'Matching Details',
             'Work_Unknown' => 'Unknown',
             'Work_Performer' => 'Performer',
-            'Work_Producer' => 'Producer'
+            'Work_Producer' => 'Producer',
+            'subtitle_values' => 'Subtitle',
+            'duration_values' => 'Duration',
+            'right_holder' => 'Right Holder',
         );
     }
 
@@ -157,7 +161,7 @@ class Work extends RActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search($size = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -181,14 +185,27 @@ class Work extends RActiveRecord {
         $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
         $criteria->compare('Work_Performer', $this->Work_Performer, true);
         $criteria->compare('Work_Producer', $this->Work_Producer, true);
+        if ($this->right_holder) {
+            $criteria->with = array('workRightholders.workAuthor','workRightholders.workPerformer','workRightholders.workPublisher','workRightholders.workProducer');
+            $criteria->together = true;
+            $criteria->compare('workAuthor.Auth_First_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workAuthor.Auth_Sur_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workPerformer.Perf_First_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workPerformer.Perf_Sur_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workPublisher.Pub_Corporate_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workProducer.Pro_Corporate_Name', $this->right_holder, true,'OR');
+        }
 
-
-        return new CActiveDataProvider($this, array(
+        $ADataProv = array(
             'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => PAGE_SIZE,
-            )
-        ));
+        );
+
+        if ($size === false)
+            $ADataProv['pagination'] = false;
+        else
+            $ADataProv['pagination'] = array('pageSize' => PAGE_SIZE);
+
+        return new CActiveDataProvider($this, $ADataProv);
     }
 
     /**
@@ -265,7 +282,7 @@ class Work extends RActiveRecord {
             $name = $subtitle->Work_Subtitle_Name;
             $column .= $key == 0 ? "Subtitle - $name" : " , {$name}";
         }
-        if($work->workSubtitles)
+        if ($work->workSubtitles)
             $column .= "<br />";
         $time = explode(':', $work->Work_Duration);
         $column .= "Duration - $time[0]' $time[1]'' <br />";
@@ -320,4 +337,26 @@ class Work extends RActiveRecord {
         $this->setDuration();
         return parent::afterFind();
     }
+
+    protected function getSubtitle_values() {
+        return implode(",", CHtml::listData($this->workSubtitles, 'Work_Subtitle_Id', 'Work_Subtitle_Name'));
+    }
+
+    protected function getDuration_values() {
+        $time = explode(':', $this->Work_Duration);
+        return "$time[0]' $time[1]''";
+    }
+
 }
+
+//SELECT COUNT(*) FROM `wipo_work` `t` WHERE
+//    (Work_Org_Title LIKE :ycp10) AND
+//    (Work_Language_Id = :ycp11) AND
+//    (Work_Internal_Code LIKE :ycp12) AND
+//    (Work_Iswc LIKE :ycp13) AND
+//    (Work_Wic_Code LIKE :ycp14) AND
+//    (Work_Factor_Id = :ycp15) AND
+//    (Work_Instrumentation LIKE :ycp16) AND
+//    (Work_Creation LIKE :ycp17) AND
+//    (Work_Opus_Number = :ycp18) AND
+//    (Work_Unknown LIKE :ycp19)

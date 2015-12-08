@@ -414,13 +414,15 @@ class AuthorAccount extends RActiveRecord {
                 if (!empty($author_model->$k)) {
                     $perf_rel_model = new $v;
                     $perf_rel_model->Perf_Acc_Id = $perf_acc_id;
-                    foreach ($author_model->$k->attributes as $key => $value) {
-                        $attr_name = str_replace('Auth_', 'Perf_', $key);
-                        !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
+                    if (!empty($author_model->$k->attributes) && is_array($author_model->$k->attributes)) {
+                        foreach ($author_model->$k->attributes as $key => $value) {
+                            $attr_name = str_replace('Auth_', 'Perf_', $key);
+                            !in_array($key, $ignore_list) ? $perf_rel_model->setAttribute($attr_name, $value) : '';
+                        }
+                        $perf_rel_model->save(false);
+                        if ($k == 'authorBiographies')
+                            $bio_id = $perf_rel_model->Perf_Biogrph_Id;
                     }
-                    $perf_rel_model->save(false);
-                    if ($k == 'authorBiographies')
-                        $bio_id = $perf_rel_model->Perf_Biogrph_Id;
                 }
             }
 
@@ -487,7 +489,7 @@ class AuthorAccount extends RActiveRecord {
 
     public function getAuthorRHRow() {
         if ($this->Auth_GUID) {
-            $row  = "<tr data-urole='AU' data-uid='{$this->Auth_GUID}' data-name='{$this->fullname}' data-intcode = '{$this->Auth_Internal_Code}'>";
+            $row = "<tr data-urole='AU' data-uid='{$this->Auth_GUID}' data-name='{$this->fullname}' data-intcode = '{$this->Auth_Internal_Code}'>";
             $row .= "<td>{$this->Auth_First_Name}</td>";
             $row .= "<td>{$this->Auth_Sur_Name}</td>";
             $row .= "<td>{$this->Auth_Internal_Code}</td>";

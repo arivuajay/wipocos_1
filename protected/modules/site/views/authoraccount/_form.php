@@ -84,7 +84,7 @@ $regions = Myclass::getMasterRegion();
                                         <?php echo $form->error($model, 'Auth_Internal_Code'); ?>
                                     </div>
 
-                                    <?php if (UserIdentity::checkAccess(null, 'performeraccount', 'view')) { ?>
+                                    <?php if (UserIdentity::checkAccess(null, 'performeraccount', 'view')  || in_array(Yii::app()->user->society_code,array('COPYRIGHT','PERFORMER')) ) { ?>
                                         <div class="form-group" style="pointer-events: none">
                                             <?php echo $form->labelEx($model, 'is_author', array('class' => '')); ?><br />
                                             <?php echo $form->checkBox($model, 'is_author', array('class' => 'form-control', 'value' => 'Y', 'uncheckValue' => 'N', 'checked' => true, 'disabled' => false)); ?>

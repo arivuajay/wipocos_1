@@ -20,8 +20,8 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <?php
-                                $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
-                                $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
+                                $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view') || in_array(Yii::app()->user->society_code,array('COPYRIGHT','PERFORMER'));
+                                $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view') || in_array(Yii::app()->user->society_code,array('COPYRIGHT','PERFORMER'));
                                 $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
                                 $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
 
@@ -31,6 +31,12 @@
                                     $is_prod = true;
                                 if (!$view_producer)
                                     $is_perf = true;
+                                
+                                if (!$view_author)
+                                    $is_publ = true;
+                                if (!$view_publisher)
+                                    $is_auth = true;
+
 
                                 if ($view_performer) {
                                     echo CHtml::label('Performer', '', array('class' => 'control-label'));

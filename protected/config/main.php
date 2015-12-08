@@ -79,8 +79,8 @@ return array(
                         'format' => 'A4', // format A4, A5, ...
                         'default_font_size' => 0, // Sets the default document font size in points (pt)
                         'default_font' => '', // Sets the default font-family for the new document.
-                        'mgl' => 15, // margin_left. Sets the page margins for the new document.
-                        'mgr' => 15, // margin_right
+                        'mgl' => 10, // margin_left. Sets the page margins for the new document.
+                        'mgr' => 10, // margin_right
                         'mgt' => 16, // margin_top
                         'mgb' => 16, // margin_bottom
                         'mgh' => 9, // margin_header

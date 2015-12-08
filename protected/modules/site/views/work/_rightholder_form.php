@@ -22,15 +22,21 @@
                                 <?php
                                 $view_author = UserIdentity::checkAccess(null, 'authoraccount', 'view');
                                 $view_publisher = UserIdentity::checkAccess(null, 'publisheraccount', 'view');
-                                $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view');
-                                $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view');
+                                $view_performer = UserIdentity::checkAccess(null, 'performeraccount', 'view') || in_array(Yii::app()->user->society_code,array('COPYRIGHT','PERFORMER'));
+                                $view_producer = UserIdentity::checkAccess(null, 'produceraccount', 'view') || in_array(Yii::app()->user->society_code,array('COPYRIGHT','PERFORMER'));
 
                                 $is_auth = $_REQUEST['is_auth'] == 1;
                                 $is_publ = $_REQUEST['is_publ'] == 1;
+
                                 if (!$view_author)
                                     $is_publ = true;
                                 if (!$view_publisher)
                                     $is_auth = true;
+
+                                if (!$view_performer)
+                                    $is_prod = true;
+                                if (!$view_producer)
+                                    $is_perf = true;
 
                                 if ($view_author) {
                                     echo CHtml::label('Author', '', array('class' => 'control-label'));
@@ -47,13 +53,13 @@
                                 if ($view_performer) {
                                     echo CHtml::label('Performer', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
-                                    echo CHtml::checkBox('is_perf', $is_publ, array('class' => 'form-control', 'id' => 'is_perf'));
+                                    echo CHtml::checkBox('is_perf', $is_perf, array('class' => 'form-control', 'id' => 'is_perf'));
                                     echo '&nbsp;&nbsp;';
                                 }
                                 if ($view_producer) {
                                     echo CHtml::label('Producer', '', array('class' => 'control-label'));
                                     echo '&nbsp;';
-                                    echo CHtml::checkBox('is_prod', $is_publ, array('class' => 'form-control', 'id' => 'is_prod'));
+                                    echo CHtml::checkBox('is_prod', $is_prod, array('class' => 'form-control', 'id' => 'is_prod'));
                                     echo '&nbsp;&nbsp;';
                                 }
                                 ?>
