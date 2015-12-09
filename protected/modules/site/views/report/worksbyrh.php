@@ -4,7 +4,7 @@
 
 $this->title = 'Works';
 $this->breadcrumbs = array(
-    'Works',
+    'Report',
 );
 $cs = Yii::app()->getClientScript();
 $themeUrl = $this->themeUrl;
@@ -140,13 +140,13 @@ if (!$export) {
             <?php
             $report_column = array('Work_Org_Title',array('name' => 'Work_Internal_Code','htmlOptions' => array('width'=>150,'class' => 'text-center')), 'subtitle_values', 'duration_values',array('name' => 'workType.Type_Name','header'=>'Type','htmlOptions' => array('class' => 'text-center')),array('name' => 'Work_Creation','htmlOptions' => array('class' => 'text-center')));
 
-            $export_btn = $this->renderExportGridButton('work-base-grid', '<i class="fa fa-file-excel-o"></i> CSV', array('class' => 'btn btn-xs btn-danger'))."&nbsp;&nbsp;";
+//            $export_btn = $this->renderExportGridButton('work-base-grid', '<i class="fa fa-file-excel-o"></i> CSV', array('class' => 'btn btn-xs btn-danger'))."&nbsp;&nbsp;";
             $export_btn .= CHtml::link('<i class="fa fa-file-pdf-o"></i> PDF', Yii::app()->request->requestUri . '&export=print',array('class' => 'btn btn-xs btn-danger','target'=>'_blank'));
 
             if (!$export)
                 $template = "<div class='panel panel-primary'><div class='panel-heading'><div class='row'><div class='col-sm-6'><h3 class='panel-title'><i class='glyphicon glyphicon-search'></i> Search Results</h3></div><div class='col-sm-6 text-right'>{$export_btn} &nbsp; {summary}</div></div></div>\n<div class='panel-body'>{items}\n{pager}</div></div>";
             else
-                $template = "<h3>Works: {$keywords}</h3>{items}";
+                $template = "{items}";
 
             $this->widget('booster.widgets.TbExtendedGridView', array(
                 'id' => 'work-base-grid',
@@ -154,7 +154,7 @@ if (!$export) {
                 'itemsCssClass' => 'print-table',
                 'summaryCssClass' => 'inline',
                 'enableSorting' => false,
-                'dataProvider' => $searchModel->search(false),
+                'dataProvider' => $searchModel->report(),
                 'responsiveTable' => true,
                 'template' => $template,
                 'columns' => $report_column

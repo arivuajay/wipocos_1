@@ -40,6 +40,7 @@ class Recording extends RActiveRecord {
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
+    public $right_holder;
 
     public function init() {
         parent::init();
@@ -76,17 +77,17 @@ class Recording extends RActiveRecord {
         return array(
             array('Rcd_Title, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, duration_hours, duration_minutes, duration_seconds', 'required'),
             array('Rcd_Language_Id, Rcd_Type_Id, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
-            array('Rcd_Title, Rcd_Reference, Rcd_File,Rcd_Author,Rcd_Publisher', 'length', 'max' => 255),
+            array('Rcd_Title, Rcd_Reference, Rcd_File,Rcd_Author,Rcd_Publisher,right_holder', 'length', 'max' => 255),
             array('Rcd_Internal_Code, Rcd_Isrc_Code, Rcd_Iswc_Number', 'length', 'max' => 100),
             array('Rcd_Record_Type_Id, Rcd_Label_Id', 'length', 'max' => 20),
             array('duration_minutes, duration_seconds', 'numerical', 'min' => 0, 'max' => 59),
             array('duration_hours', 'numerical', 'min' => 0),
             array('Rcd_Internal_Code, Rcd_GUID, Rcd_Title', 'unique'),
             array('duration_hours', 'durationValidate'),
-            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By, Rcd_GUID', 'safe'),
+            array('Created_Date, Rowversion, duration_hours, duration_minutes, duration_seconds, Created_By, Updated_By, Rcd_GUID,right_holder', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number,Rcd_Author,Rcd_Publisher, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Rcd_Id, Rcd_Title, Rcd_Language_Id, Rcd_Internal_Code, Rcd_Type_Id, Rcd_Date, Rcd_Duration, Rcd_Record_Country_id, Rcd_Product_Country_Id, Rcd_Doc_Status_Id, Rcd_Record_Type_Id, Rcd_Label_Id, Rcd_Reference, Rcd_File, Rcd_Isrc_Code, Rcd_Iswc_Number,Rcd_Author,Rcd_Publisher, Created_Date, Rowversion,right_holder', 'safe', 'on' => 'search'),
         );
     }
 
@@ -113,13 +114,13 @@ class Recording extends RActiveRecord {
             'recordingPublications' => array(self::HAS_ONE, 'RecordingPublication', 'Rcd_Id'),
             'recordingRightholders' => array(self::HAS_MANY, 'RecordingRightholder', 'Rcd_Id'),
             'totalRightholdersEqShare' => array(self::STAT, 'RecordingRightholder', 'Rcd_Id',
-                        'select' =>'SUM(Rcd_Right_Equal_Share)',
-                        'group' => 'Rcd_Id',
-                ),
+                'select' => 'SUM(Rcd_Right_Equal_Share)',
+                'group' => 'Rcd_Id',
+            ),
             'totalRightholdersBkShare' => array(self::STAT, 'RecordingRightholder', 'Rcd_Id',
-                        'select' =>'SUM(Rcd_Right_Blank_Share)',
-                        'group' => 'Rcd_Id',
-                ),
+                'select' => 'SUM(Rcd_Right_Blank_Share)',
+                'group' => 'Rcd_Id',
+            ),
             'recordingSubtitles' => array(self::HAS_MANY, 'RecordingSubtitle', 'Rcd_Id'),
             'recordingLinks' => array(self::HAS_MANY, 'RecordingLink', 'Rcd_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
@@ -170,7 +171,7 @@ class Recording extends RActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search($size = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -199,6 +200,45 @@ class Recording extends RActiveRecord {
             'pagination' => array(
                 'pageSize' => PAGE_SIZE,
             )
+        ));
+    }
+
+    public function report() {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('Rcd_Id', $this->Rcd_Id);
+        $criteria->compare('Rcd_Title', $this->Rcd_Title, true);
+        $criteria->compare('Rcd_Language_Id', $this->Rcd_Language_Id);
+        $criteria->compare('Rcd_Internal_Code', $this->Rcd_Internal_Code, true);
+        $criteria->compare('Rcd_Type_Id', $this->Rcd_Type_Id);
+        $criteria->compare('Rcd_Date', $this->Rcd_Date, true);
+        $criteria->compare('Rcd_Duration', $this->Rcd_Duration, true);
+        $criteria->compare('Rcd_Record_Country_id', $this->Rcd_Record_Country_id);
+        $criteria->compare('Rcd_Product_Country_Id', $this->Rcd_Product_Country_Id);
+        $criteria->compare('Rcd_Doc_Status_Id', $this->Rcd_Doc_Status_Id);
+        $criteria->compare('Rcd_Record_Type_Id', $this->Rcd_Record_Type_Id, true);
+        $criteria->compare('Rcd_Label_Id', $this->Rcd_Label_Id, true);
+        $criteria->compare('Rcd_Reference', $this->Rcd_Reference, true);
+        $criteria->compare('Rcd_File', $this->Rcd_File, true);
+        $criteria->compare('Rcd_Isrc_Code', $this->Rcd_Isrc_Code, true);
+        $criteria->compare('Rcd_Iswc_Number', $this->Rcd_Iswc_Number, true);
+        $criteria->compare('Rcd_Author', $this->Rcd_Author, true);
+        $criteria->compare('Rcd_Publisher', $this->Rcd_Publisher, true);
+
+        if ($this->right_holder) {
+            $criteria->with = array('recordingRightholders.recordingAuthor', 'recordingRightholders.recordingPerformer', 'recordingRightholders.recordingPublisher', 'recordingRightholders.recordingProducer');
+            $criteria->together = true;
+            $criteria->compare('recordingAuthor.Auth_First_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('recordingAuthor.Auth_Sur_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('recordingPerformer.Perf_First_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('recordingPerformer.Perf_Sur_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('recordingPublisher.Pub_Corporate_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('recordingProducer.Pro_Corporate_Name', $this->right_holder, true, 'OR');
+        }
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => false
         ));
     }
 
@@ -300,4 +340,14 @@ class Recording extends RActiveRecord {
         $this->setDuration();
         return parent::afterFind();
     }
+
+    protected function getSubtitle_values() {
+        return implode(",", CHtml::listData($this->recordingSubtitles, 'Rcd_Subtitle_Id', 'Rcd_Subtitle_Name'));
+    }
+
+    protected function getDuration_values() {
+        $time = explode(':', $this->Rcd_Duration);
+        return "$time[0]' $time[1]''";
+    }
+
 }

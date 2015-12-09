@@ -25,7 +25,8 @@ class ReportController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('grpmember', 'report', 'wkrecrh', 'wrkrecrh', 'rhbywrk', 'worksbyrh'),
+                'actions' => array('grpmember', 'report', 'wkrecrh', 'wrkrecrh', 'rhbywrk',
+                    'worksbyrh', 'recsbyrh', 'grpmemlist','memberlist'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -34,34 +35,10 @@ class ReportController extends Controller {
         );
     }
 
-    public function actionGrpmember() {
-        $this->render('grpmember');
-    }
-
-    public function actionWrkrecrh() {
-        $this->render('wrkrecrh');
-    }
-
-    public function actionRhbywrk() {
-        $this->render('rhbywrk');
-    }
-
-    public function actionReport($xml) {
-        $reportico = Yii::app()->getModule('reportico');
-        $engine = $reportico->getReporticoEngine();
-        $reportico->engine->allow_debug = true;
-        $reportico->engine->initial_execute_mode = "PREPARE";
-        $reportico->engine->initial_report = "$xml.xml";
-        $reportico->engine->access_mode = "ONEREPORT";
-        $reportico->engine->initial_project = "WIPOCOS";
-        $reportico->engine->clear_reportico_session = true;
-        $reportico->engine->output_template_parameters["show_hide_prepare_page_style"] = "hide";
-        $reportico->engine->output_template_parameters["show_hide_prepare_section_boxes"] = "hide";
-        $reportico->generate();
-    }
-
     public function actionWorksbyrh() {
         $search = $export = false;
+        $title = 'List of Works';
+
         $model = new Work();
         $searchModel = new Work('search');
         $searchModel->unsetAttributes();  // clear any default values
@@ -69,69 +46,178 @@ class ReportController extends Controller {
         if (isset($_GET['Work'])) {
             $search = true;
             $searchModel->attributes = $_GET['Work'];
-            $keywords = '';
-//            $keywords = $this->searchKeyWords($searchModel);
         }
 
-        if ($this->isExportRequest()) {
-            $this->exportCSV(array('Works: '.$keywords), null, false);
-            $this->exportCSV($searchModel->search(), array('Work_Org_Title', 'Work_Internal_Code', 'subtitle_values', 'duration_values', 'workType.Type_Name', 'Work_Creation'));
+//        if ($this->isExportRequest()) {
+//            $this->exportCSV($this->formatHeader('csv', $title), null, false);
+//            $this->exportCSV($searchModel->report(), array('Work_Org_Title', 'Work_Internal_Code', 'subtitle_values', 'duration_values', 'workType.Type_Name', 'Work_Creation'));
+//        }
+
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('worksbyrh', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+        $this->render('worksbyrh', compact('searchModel', 'search', 'model'));
+    }
+
+    public function actionRecsbyrh() {
+        $search = $export = false;
+        $title = 'List of Recordings';
+
+        $model = new Recording();
+        $searchModel = new Recording('search');
+        $searchModel->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['Recording'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['Recording'];
         }
 
         if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
             $export = true;
-            $mPDF1 = Yii::app()->ePdf->mpdf();
-            $mPDF1->WriteHTML($this->renderPartial('worksbyrh', compact('searchModel', 'search', 'model', 'export','keywords'), true, true));
-            $mPDF1->Output("Report_" . time() . ".pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
+            $render = $this->renderPartial('recsbyrh', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
         }
-        $this->render('worksbyrh', compact('searchModel', 'search', 'model','keywords'));
+        $this->render('recsbyrh', compact('searchModel', 'search', 'model'));
     }
 
-    protected function searchKeyWords($model) {
-        $keys = array_filter($model->attributes);
+    public function actionGrpmemlist() {
+        $search = $export = false;
+        $title = 'List of Groups';
 
-        if ($keys) {
-            foreach ($keys as $k => $val)
-                $words[] = $model->getAttributeLabel($k) . " is '$val'";
-        } else {
-            $words[] = 'ALL';
-        }
-        return implode($words,' AND ');
-    }
+        $model = new Group();
+        $searchModel = new Group('search');
+        $searchModel->unsetAttributes();  // clear any default values
 
-    public function actionWkrecrh() {
-        if (isset($_REQUEST['sid']) && isset($_REQUEST['st'])) {
-            $GUID = $_REQUEST['sid'];
-            if ($_REQUEST['st'] == 'W') {
-                $workModel = new Work();
-                $workDataProvider = new CActiveDataProvider('Work', array(
-                    'criteria' => array(
-                        'with' => 'workRightholders',
-                        'together' => true,
-                        'condition' => 'workRightholders.Work_Member_GUID=:GUID',
-                        'params' => array(':GUID' => $GUID),
-                    ),
-                    'pagination' => array(
-                        'pageSize' => PAGE_SIZE,
-                    ),
-                ));
-            } elseif ($_REQUEST['st'] == 'R') {
-                $recordModel = new Recording();
-                $recordDataProvider = new CActiveDataProvider('Recording', array(
-                    'criteria' => array(
-                        'with' => 'recordingRightholders',
-                        'together' => true,
-                        'condition' => 'recordingRightholders.Rcd_Member_GUID=:GUID',
-                        'params' => array(':GUID' => $GUID),
-                    ),
-                    'pagination' => array(
-                        'pageSize' => PAGE_SIZE,
-                    ),
-                ));
-            }
+        if (isset($_GET['Group'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['Group'];
         }
 
-        $this->render('wkrecrh', compact('workModel', 'workDataProvider', 'recordModel', 'recordDataProvider'));
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('grpmemlist', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+        $this->render('grpmemlist', compact('searchModel', 'search', 'model'));
     }
 
+    public function actionMemberlist() {
+        $search = $export = false;
+        $title = 'List of Membership expiry list';
+
+        $model = new AuthorAccount();
+        $searchModel = new AuthorAccount('search');
+        $searchModel->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['AuthorAccount'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['AuthorAccount'];
+        }
+
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('grpmemlist', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+        $this->render('memberlist', compact('searchModel', 'search', 'model'));
+    }
+
+
+    protected function mPDFRender($header, $render) {
+        $mPDF1 = Yii::app()->ePdf->mpdf();
+        $mPDF1->SetHtmlHeader($this->formatHeader('pdf', $header));
+        $mPDF1->WriteHTML($render);
+        $mPDF1->setFooter('{PAGENO}');
+
+        $mPDF1->Output("Report_" . time() . ".pdf", EYiiPdf::OUTPUT_TO_BROWSER);
+    }
+
+    protected function formatHeader($format, $title) {
+        $soc = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
+        $society_name = $soc->Society_Code;
+        $society_image = CHtml::image(Yii::app()->baseUrl . "/" . UPLOAD_DIR . $soc->Society_Logo_File, '', array('width' => 75));
+        $captured_on = date('Y-m-d H:i:s');
+
+        if ($format == 'csv') {
+            $result = array("Society: " . $society_name, '', $title, '', 'Caputerd: ' . $captured_on);
+        } else if ($format == 'pdf') {
+            $result = "<table width='100%' style='border-bottom: 1px solid #000000;vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;'><tr><td width='33%'>{$society_image}<span style='vertical-align: middle;'>{$society_name}</span></td><td width='33%' align='center' style='font-weight: bold;font-size: 14pt;'>{$title}</td><td width='33%' style='text-align: right;'>Capture:{$captured_on}</td></tr></table>";
+        }
+
+        return $result;
+    }
+
+//    protected function searchKeyWords($model) {
+//        $keys = array_filter($model->attributes);
+//
+//        if ($keys) {
+//            foreach ($keys as $k => $val)
+//                $words[] = $model->getAttributeLabel($k) . " is '$val'";
+//        } else {
+//            $words[] = 'ALL';
+//        }
+//        return implode($words, ' AND ');
+//    }
+
+//        public function actionGrpmember() {
+//        $this->render('grpmember');
+//    }
+//
+//    public function actionWrkrecrh() {
+//        $this->render('wrkrecrh');
+//    }
+//
+//    public function actionRhbywrk() {
+//        $this->render('rhbywrk');
+//    }
+//
+//    public function actionReport($xml) {
+//        $reportico = Yii::app()->getModule('reportico');
+//        $engine = $reportico->getReporticoEngine();
+//        $reportico->engine->allow_debug = true;
+//        $reportico->engine->initial_execute_mode = "PREPARE";
+//        $reportico->engine->initial_report = "$xml.xml";
+//        $reportico->engine->access_mode = "ONEREPORT";
+//        $reportico->engine->initial_project = "WIPOCOS";
+//        $reportico->engine->clear_reportico_session = true;
+//        $reportico->engine->output_template_parameters["show_hide_prepare_page_style"] = "hide";
+//        $reportico->engine->output_template_parameters["show_hide_prepare_section_boxes"] = "hide";
+//        $reportico->generate();
+//    }
+//    public function actionWkrecrh() {
+//        if (isset($_REQUEST['sid']) && isset($_REQUEST['st'])) {
+//            $GUID = $_REQUEST['sid'];
+//            if ($_REQUEST['st'] == 'W') {
+//                $workModel = new Work();
+//                $workDataProvider = new CActiveDataProvider('Work', array(
+//                    'criteria' => array(
+//                        'with' => 'workRightholders',
+//                        'together' => true,
+//                        'condition' => 'workRightholders.Work_Member_GUID=:GUID',
+//                        'params' => array(':GUID' => $GUID),
+//                    ),
+//                    'pagination' => array(
+//                        'pageSize' => PAGE_SIZE,
+//                    ),
+//                ));
+//            } elseif ($_REQUEST['st'] == 'R') {
+//                $recordModel = new Recording();
+//                $recordDataProvider = new CActiveDataProvider('Recording', array(
+//                    'criteria' => array(
+//                        'with' => 'recordingRightholders',
+//                        'together' => true,
+//                        'condition' => 'recordingRightholders.Rcd_Member_GUID=:GUID',
+//                        'params' => array(':GUID' => $GUID),
+//                    ),
+//                    'pagination' => array(
+//                        'pageSize' => PAGE_SIZE,
+//                    ),
+//                ));
+//            }
+//        }
+//
+//        $this->render('wkrecrh', compact('workModel', 'workDataProvider', 'recordModel', 'recordDataProvider'));
+//    }
 }

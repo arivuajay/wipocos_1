@@ -53,6 +53,7 @@ class AuthorAccount extends RActiveRecord {
     public $after_delete_disable = true;
     public $oldRecord;
     public $internal_increament = true;
+    public $report_search_by = true;
 
     const PHOTO_SIZE = 1;
     const MIN_AGE = 20; //in years
@@ -116,7 +117,8 @@ class AuthorAccount extends RActiveRecord {
 //            array('Auth_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member, Created_By, Updated_By,report_search_by', 'safe', 'on' => 'search'),
+            array('report_search_by', 'required', 'on' => 'safe'),
             array('Created_By, Updated_By', 'safe'),
         );
     }
@@ -185,6 +187,7 @@ class AuthorAccount extends RActiveRecord {
             'Auth_Is_Performer' => 'Performer',
             'is_author' => 'Author',
             'Auth_Photo' => 'Profile Picture',
+            'report_search_by' => 'Seacrh By',
         );
     }
 
@@ -251,6 +254,77 @@ class AuthorAccount extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public function memberReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        if (in_array('A', $this->report_search_by)) {
+            $criteria = new CDbCriteria;
+            $criteria->compare('Auth_Sur_Name', $this->Auth_Sur_Name, true);
+            $criteria->compare('Auth_First_Name', $this->Auth_Sur_Name, true,'OR');
+            $criteria->compare('Auth_Internal_Code', $this->Auth_Internal_Code, true);
+
+            $prov1 = new CActiveDataProvider($this, array(
+                'criteria' => $criteria,
+                'pagination' => false
+            ));
+        }
+        if (in_array('P', $this->report_search_by)) {
+            $criteria2 = new CDbCriteria;
+            $criteria2->compare('Perf_Sur_Name', $this->Auth_Sur_Name, true);
+            $criteria2->compare('Perf_First_Name', $this->Auth_Sur_Name, true,'OR');
+            $criteria2->compare('Perf_Internal_Code', $this->Auth_Internal_Code, true);
+
+            $prov2 = new CActiveDataProvider('PerformerAccount', array(
+                'criteria' => $criteria2,
+                'pagination' => false
+            ));
+        }
+        if (in_array('PU', $this->report_search_by)) {
+            $criteria3 = new CDbCriteria;
+            $criteria3->compare('Pub_Corporate_Name', $this->Auth_Sur_Name, true);
+            $criteria3->compare('Pub_Internal_Code', $this->Auth_Internal_Code, true);
+
+            $prov3 = new CActiveDataProvider('PublisherAccount', array(
+                'criteria' => $criteria3,
+                'pagination' => false
+            ));
+        }
+        if (in_array('PR', $this->report_search_by)) {
+            $criteria4 = new CDbCriteria;
+            $criteria4->compare('Pro_Corporate_Name', $this->Auth_Sur_Name, true);
+            $criteria4->compare('Pro_Internal_Code', $this->Auth_Internal_Code, true);
+
+            $prov4 = new CActiveDataProvider('ProducerAccount', array(
+                'criteria' => $criteria4,
+                'pagination' => false
+            ));
+        }
+
+        $records = array();
+        for ($i = 0; $i < $prov1->totalItemCount; $i++) {
+            $data = $prov1->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov2->totalItemCount; $i++) {
+            $data = $prov2->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov3->totalItemCount; $i++) {
+            $data = $prov3->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov4->totalItemCount; $i++) {
+            $data = $prov4->data[$i];
+            array_push($records, $data);
+        }
+
+        return new CArrayDataProvider($records, array(
+            'keyField' => false,
+            'pagination' => false
+                )
+        );
     }
 
     /**
@@ -498,6 +572,26 @@ class AuthorAccount extends RActiveRecord {
             return $row;
         }
         return false;
+    }
+
+    public function getReportInternalCode() {
+        return $this->Auth_Internal_Code;
+    }
+
+    public function getReportFullName() {
+        return $this->fullName;
+    }
+
+    public function getReportStartmandt() {
+        return $this->authorManageRights->Auth_Mnge_Entry_Date;
+    }
+
+    public function getReportEndmandt() {
+        return $this->authorManageRights->Auth_Mnge_Exit_Date;
+    }
+
+    public function getReportMembertype() {
+        return 'Author';
     }
 
 }

@@ -37,6 +37,7 @@
  * @property PublisherGroupRepresentative[] $publisherGroupRepresentatives
  */
 class PublisherGroup extends RActiveRecord {
+
     public $search_status;
     public $is_pub_producer;
 
@@ -44,13 +45,14 @@ class PublisherGroup extends RActiveRecord {
 
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Pub_Group_GUID = Myclass::guid(false);
             $this->Pub_Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Pub_Group_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Pub_Group_Legal_Form_Id = DEFAULT_LEGAL_FORM_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -66,6 +68,7 @@ class PublisherGroup extends RActiveRecord {
 //            'isStatusActive' => array('condition' => "publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is not Null And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != '0000-00-00' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= DATE(NOW())")
         );
     }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -79,7 +82,7 @@ class PublisherGroup extends RActiveRecord {
             array('Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Active', 'length', 'max' => 1),
             array('Pub_Group_Internal_Code', 'length', 'max' => 50),
             array('Pub_Group_Name, Pub_Group_Internal_Code', 'unique'),
-            array('Pub_Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Pub_Group_Photo', 'file', 'types' => 'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             array('Rowversion, Pub_Group_Non_Member, Pub_Group_GUID, Pub_Group_Photo, Created_By, Updated_By', 'safe'),
 //            array(
 //                'Pub_Group_Name',
@@ -88,7 +91,7 @@ class PublisherGroup extends RActiveRecord {
 //            ),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Pub_Group_Id, Pub_Group_Name, Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Pub_Group_Internal_Code, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Date, Pub_Group_Place, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Pub_Group_Id, Pub_Group_Name, Pub_Group_Is_Publisher, Pub_Group_Is_Producer, Pub_Group_Internal_Code, Pub_Group_IPI_Name_Number, Pub_Group_IPN_Base_Number, Pub_Group_IPD_Number, Pub_Group_Date, Pub_Group_Place, Pub_Group_Country_Id, Pub_Group_Legal_Form_Id, Pub_Group_Language_Id, Active, Created_Date, Rowversion,search_status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -139,6 +142,10 @@ class PublisherGroup extends RActiveRecord {
             'is_pub_producer' => 'Publisher/Producer',
             'Pub_Group_Non_Member' => 'Non Member',
             'Pub_Group_Photo' => 'Profile Picture',
+            'reportGroupName' => 'Group Name',
+            'reportGroupCode' => 'Internal Code',
+            'reportGroupDate' => 'Date of Foundation',
+            'group_member_values' => 'Member List',
         );
     }
 
@@ -178,29 +185,59 @@ class PublisherGroup extends RActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         $now = new CDbExpression("DATE(NOW())");
-        if($this->search_status == 'A'){
-            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= '.$now.' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00" OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is null');
+        if ($this->search_status == 'A') {
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= ' . $now . ' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00" OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is null');
             $criteria->compare('Pub_Group_Non_Member', 'N', true);
-        }elseif($this->search_status == 'I'){
+        } elseif ($this->search_status == 'I') {
             $criteria->compare('Pub_Group_Non_Member', 'Y', true);
-        }elseif($this->search_status == 'E'){
-            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < '.$now.' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+        } elseif ($this->search_status == 'E') {
+            $criteria->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < ' . $now . ' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
             $criteria->compare('Pub_Group_Non_Member', 'N', true);
         }
 
-        if($this->is_pub_producer == 'publisher'){
+        if ($this->is_pub_producer == 'publisher') {
             $criteria->compare('Pub_Group_Is_Publisher', '1', true);
-        }elseif($this->is_pub_producer == 'producer'){
+        } elseif ($this->is_pub_producer == 'producer') {
             $criteria->compare('Pub_Group_Is_Producer', '1', true);
         }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => false
-//            'pagination' => array(
-//                'pageSize' => PAGE_SIZE,
-//            )
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
         ));
+    }
+
+    public function getReportGroupName() {
+        return $this->Pub_Group_Name;
+    }
+
+    public function getReportGroupCode() {
+        return $this->Pub_Group_Internal_Code;
+    }
+
+    public function getReportGroupDate() {
+        return $this->Pub_Group_Date;
+    }
+
+    protected function getGroup_member_values() {
+        $user_ids = CHtml::listData($this->publisherGroupMembers, 'Group_Member_Id', 'Group_Member_GUID');
+        $result = 'Nil';
+
+        if ($this->publisherGroupMembers) {
+            $result = '<table class="table table-condensed"><thead><tr><th>Member</th><th>Internal Code</th></tr></thead><tbody>';
+            foreach ($this->publisherGroupMembers as $member) {
+                if ($member->groupPublishers) {
+                    $result .= "<tr><td>{$member->groupPublishers->Pub_Corporate_Name}</td><td>{$member->groupPublishers->Pub_Internal_Code}</td></tr>";
+                } elseif ($member->groupProducers) {
+                    $result .= "<tr><td>{$member->groupProducers->Pro_Corporate_Name}</td><td>{$member->groupProducers->Pro_Internal_Code}</td></tr>";
+                }
+            }
+            $result .= '</tbody></table>';
+        }
+
+        return $result;
     }
 
     /**
@@ -215,9 +252,9 @@ class PublisherGroup extends RActiveRecord {
 
     public function dataProvider() {
         $criteria = new CDbCriteria;
-        if($this->is_pub_producer == 'publisher'){
+        if ($this->is_pub_producer == 'publisher') {
             $criteria->compare('Pub_Group_Is_Publisher', '1', true);
-        }elseif($this->is_pub_producer == 'producer'){
+        } elseif ($this->is_pub_producer == 'producer') {
             $criteria->compare('Pub_Group_Is_Producer', '1', true);
         }
 
@@ -231,7 +268,7 @@ class PublisherGroup extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $type = $this->Pub_Group_Is_Producer == '1' ? InternalcodeGenerate::PRODUCER_GROUP_CODE : InternalcodeGenerate::PUBLISHER_GROUP_CODE;
             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
             $this->Pub_Group_Internal_Code = $gen_int_code->Fullcode;
@@ -240,7 +277,7 @@ class PublisherGroup extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $type = $this->Pub_Group_Is_Producer == '1' ? InternalcodeGenerate::PRODUCER_GROUP_CODE : InternalcodeGenerate::PUBLISHER_GROUP_CODE;
             InternalcodeGenerate::model()->codeIncreament($type);
         }
@@ -248,12 +285,12 @@ class PublisherGroup extends RActiveRecord {
     }
 
     public function getStatus() {
-        if($this->Pub_Group_Non_Member == 'Y'){
+        if ($this->Pub_Group_Non_Member == 'Y') {
             $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
-        }else{
+        } else {
             $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00'){
-                if(strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+            if ($this->publisherGroupManageRights && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '' && $this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date != '0000-00-00') {
+                if (strtotime($this->publisherGroupManageRights->Pub_Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))) {
                     $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
                 }
             }
@@ -269,4 +306,5 @@ class PublisherGroup extends RActiveRecord {
             )
         );
     }
+
 }

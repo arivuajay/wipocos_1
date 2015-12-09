@@ -33,18 +33,19 @@ class Group extends RActiveRecord {
 
     public $search_status;
     public $is_auth_performer;
-    
+
     const PHOTO_SIZE = 1;
-    
+
     public function init() {
         parent::init();
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Group_GUID = Myclass::guid(false);
             $this->Group_Country_Id = DEFAULT_COUNTRY_ID;
             $this->Group_Language_Id = DEFAULT_LANGUAGE_ID;
             $this->Group_Legal_Form_Id = DEFAULT_LEGAL_FORM_ID;
         }
     }
+
     /**
      * @return string the associated database table name
      */
@@ -74,11 +75,11 @@ class Group extends RActiveRecord {
             array('Group_Is_Author, Group_Is_Performer, Active', 'length', 'max' => 1),
             array('Group_Internal_Code', 'length', 'max' => 50),
             array('Group_Internal_Code', 'unique'),
-            array('Group_Photo', 'file', 'types'=>'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
+            array('Group_Photo', 'file', 'types' => 'jpg,png,jpeg', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * self::PHOTO_SIZE, 'tooLarge' => 'File should be smaller than ' . self::PHOTO_SIZE . 'MB'),
             array('Created_Date, Rowversion, Group_Non_Member, Group_GUID, Group_Photo, Created_By, Updated_By', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Group_Id, Group_Name, Group_Is_Author, Group_Is_Performer, Group_Internal_Code, Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Date, Group_Place, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Active, Created_Date, Rowversion', 'safe', 'on' => 'search'),
+            array('Group_Id, Group_Name, Group_Is_Author, Group_Is_Performer, Group_Internal_Code, Group_IPI_Name_Number, Group_IPN_Base_Number, Group_IPN_Number, Group_Date, Group_Place, Group_Country_Id, Group_Legal_Form_Id, Group_Language_Id, Active, Created_Date, Rowversion,search_status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -128,6 +129,10 @@ class Group extends RActiveRecord {
             'is_auth_performer' => 'Author/Performer',
             'Group_Non_Member' => 'Non Member',
             'Group_Photo' => 'Profile Picture',
+            'reportGroupName' => 'Group Name',
+            'reportGroupCode' => 'Internal Code',
+            'reportGroupDate' => 'Date of Foundation',
+            'group_member_values' => 'Member List',
         );
     }
 
@@ -148,6 +153,7 @@ class Group extends RActiveRecord {
 
         $criteria = new CDbCriteria;
         $criteria->with = array('groupManageRights');
+        $criteria->together = true;
 
         $criteria->compare('Group_Id', $this->Group_Id);
         $criteria->compare('Group_Name', $this->Group_Name, true);
@@ -167,29 +173,143 @@ class Group extends RActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
 
         $now = new CDbExpression("DATE(NOW())");
-        if($this->search_status == 'A'){
-            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00" OR groupManageRights.Group_Mnge_Exit_Date is null');
+        if ($this->search_status == 'A') {
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= ' . $now . ' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00" OR groupManageRights.Group_Mnge_Exit_Date is null');
             $criteria->compare('Group_Non_Member', 'N', true);
-        }elseif($this->search_status == 'I'){
+        } elseif ($this->search_status == 'I') {
             $criteria->compare('Group_Non_Member', 'Y', true);
-        }elseif($this->search_status == 'E'){
-            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < '.$now.' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+        } elseif ($this->search_status == 'E') {
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < ' . $now . ' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
             $criteria->compare('Group_Non_Member', 'N', true);
         }
-        
-        if($this->is_auth_performer == 'author'){
+
+        if ($this->is_auth_performer == 'author') {
             $criteria->compare('Group_Is_Author', '1', true);
-        }elseif($this->is_auth_performer == 'performer'){
+        } elseif ($this->is_auth_performer == 'performer') {
             $criteria->compare('Group_Is_Performer', '1', true);
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'pagination' => false
-//            'pagination' => array(
-//                'pageSize' => PAGE_SIZE,
-//            )
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
         ));
+    }
+
+    public function report() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->with = array('groupManageRights');
+        $criteria->together = true;
+
+        $criteria->compare('Group_Id', $this->Group_Id);
+        $criteria->compare('Group_Name', $this->Group_Name, true);
+        $criteria->compare('Group_Is_Author', $this->Group_Is_Author, true);
+        $criteria->compare('Group_Is_Performer', $this->Group_Is_Performer, true);
+        $criteria->compare('Group_Internal_Code', $this->Group_Internal_Code, true);
+        $criteria->compare('Group_IPI_Name_Number', $this->Group_IPI_Name_Number);
+        $criteria->compare('Group_IPN_Base_Number', $this->Group_IPN_Base_Number);
+        $criteria->compare('Group_IPN_Number', $this->Group_IPN_Number);
+        $criteria->compare('Group_Date', $this->Group_Date, true);
+        $criteria->compare('Group_Place', $this->Group_Place, true);
+        $criteria->compare('Group_Country_Id', $this->Group_Country_Id);
+        $criteria->compare('Group_Legal_Form_Id', $this->Group_Legal_Form_Id);
+        $criteria->compare('Group_Language_Id', $this->Group_Language_Id);
+        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
+
+        $now = new CDbExpression("DATE(NOW())");
+
+        if ($this->search_status == 'A') {
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date >= ' . $now . ' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00" OR groupManageRights.Group_Mnge_Exit_Date is null');
+            $criteria->compare('Group_Non_Member', 'N', true);
+        } elseif ($this->search_status == 'I') {
+            $criteria->compare('Group_Non_Member', 'Y', true);
+        } elseif ($this->search_status == 'E') {
+            $criteria->addCondition('groupManageRights.Group_Mnge_Exit_Date < ' . $now . ' And groupManageRights.Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria->compare('Group_Non_Member', 'N', true);
+        }
+
+        $prov1 = new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => false
+        ));
+
+        $criteria2 = new CDbCriteria;
+        $criteria2->with = array('publisherGroupManageRights');
+        $criteria2->together = true;
+
+        $criteria2->compare('Pub_Group_Name', $this->Group_Name, true);
+        $criteria2->compare('Pub_Group_Internal_Code', $this->Group_Internal_Code, true);
+        $criteria2->compare('Pub_Group_IPI_Name_Number', $this->Group_IPI_Name_Number);
+        $criteria2->compare('Pub_Group_IPN_Base_Number', $this->Group_IPN_Base_Number);
+        $criteria2->compare('Pub_Group_IPD_Number', $this->Group_IPN_Number);
+        $criteria2->compare('Pub_Group_Date', $this->Group_Date, true);
+        $criteria2->compare('Pub_Group_Place', $this->Group_Place, true);
+        $criteria2->compare('Pub_Group_Country_Id', $this->Group_Country_Id);
+        $criteria2->compare('Active', $this->Active, true);
+        $criteria2->compare('Created_Date', $this->Created_Date, true);
+        $criteria2->compare('Rowversion', $this->Rowversion, true);
+
+        $now = new CDbExpression("DATE(NOW())");
+
+        if ($this->search_status == 'A') {
+            $criteria2->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date >= ' . $now . ' OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date = "0000-00-00" OR publisherGroupManageRights.Pub_Group_Mnge_Exit_Date is null');
+            $criteria2->compare('Pub_Group_Non_Member', 'N', true);
+        } elseif ($this->search_status == 'I') {
+            $criteria2->compare('Pub_Group_Non_Member', 'Y', true);
+        } elseif ($this->search_status == 'E') {
+            $criteria2->addCondition('publisherGroupManageRights.Pub_Group_Mnge_Exit_Date < ' . $now . ' And publisherGroupManageRights.Pub_Group_Mnge_Exit_Date != "0000-00-00"');
+            $criteria2->compare('Pub_Group_Non_Member', 'N', true);
+        }
+
+        $prov2 = new CActiveDataProvider('PublisherGroup', array(
+            'criteria' => $criteria2,
+            'pagination' => false
+        ));
+
+        $records = array();
+        $records = array_merge($prov1->data, $prov2->data);
+
+        return new CArrayDataProvider($records, array(
+            'keyField' => false,
+            'pagination' => false
+                )
+        );
+    }
+
+    public function getReportGroupName() {
+        return $this->Group_Name;
+    }
+
+    public function getReportGroupCode() {
+        return $this->Group_Internal_Code;
+    }
+
+    public function getReportGroupDate() {
+        return $this->Group_Date;
+    }
+
+    protected function getGroup_member_values() {
+        $user_ids = CHtml::listData($this->groupMembers, 'Group_Member_Id', 'Group_Member_GUID');
+        $result = 'Nil';
+
+        if ($this->groupMembers) {
+            $result = '<table class="table table-condensed"><thead><tr><th>Member</th><th>Internal Code</th></tr></thead><tbody>';
+            foreach ($this->groupMembers as $member) {
+                if ($member->groupAuthors) {
+                    $result .= "<tr><td>{$member->groupAuthors->fullName}</td><td>{$member->groupAuthors->Auth_Internal_Code}</td></tr>";
+                } elseif ($member->groupPerformers) {
+                    $result .= "<tr><td>{$member->groupPerformers->fullName}</td><td>{$member->groupPerformers->Perf_Internal_Code}</td></tr>";
+                }
+            }
+            $result .= '</tbody></table>';
+        }
+
+        return $result;
     }
 
     /**
@@ -204,12 +324,12 @@ class Group extends RActiveRecord {
 
     public function dataProvider() {
         $criteria = new CDbCriteria;
-        if($this->is_auth_performer == 'author'){
+        if ($this->is_auth_performer == 'author') {
             $criteria->compare('Group_Is_Author', '1', true);
-        }elseif($this->is_auth_performer == 'performer'){
+        } elseif ($this->is_auth_performer == 'performer') {
             $criteria->compare('Group_Is_Performer', '1', true);
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => false
@@ -220,7 +340,7 @@ class Group extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $type = $this->Group_Is_Performer == '1' ? InternalcodeGenerate::PERFORMER_GROUP_CODE : InternalcodeGenerate::AUTHOR_GROUP_CODE;
             $gen_int_code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => $type));
             $this->Group_Internal_Code = $gen_int_code->Fullcode;
@@ -229,7 +349,7 @@ class Group extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $type = $this->Group_Is_Performer == '1' ? InternalcodeGenerate::PERFORMER_GROUP_CODE : InternalcodeGenerate::AUTHOR_GROUP_CODE;
             InternalcodeGenerate::model()->codeIncreament($type);
         }
@@ -237,19 +357,19 @@ class Group extends RActiveRecord {
     }
 
     public function getStatus() {
-        if($this->Group_Non_Member == 'Y'){
+        if ($this->Group_Non_Member == 'Y') {
             $status = '<i class="fa fa-circle text-red" title="Non-member"></i>';
-        }else{
+        } else {
             $status = '<i class="fa fa-circle text-green" title="Active"></i>';
-            if($this->groupManageRights && $this->groupManageRights->Group_Mnge_Exit_Date != '' && $this->groupManageRights->Group_Mnge_Exit_Date != '0000-00-00'){
-                if(strtotime($this->groupManageRights->Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))){
+            if ($this->groupManageRights && $this->groupManageRights->Group_Mnge_Exit_Date != '' && $this->groupManageRights->Group_Mnge_Exit_Date != '0000-00-00') {
+                if (strtotime($this->groupManageRights->Group_Mnge_Exit_Date) < strtotime(date('Y-m-d'))) {
                     $status = '<i class="fa fa-circle text-yellow" title="Expired"></i>';
                 }
             }
         }
         return $status;
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(
@@ -258,4 +378,5 @@ class Group extends RActiveRecord {
             )
         );
     }
+
 }

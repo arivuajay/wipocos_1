@@ -154,7 +154,10 @@
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'visible' => '1',
                     'items' => array(
-                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Right Holder by Work</span>', 'url' => array('/site/report/rhbywrk'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Works By Right Holder</span>', 'url' => array('/site/report/worksbyrh'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Recordings By Right Holder</span>', 'url' => array('/site/report/recsbyrh'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Group member list</span>', 'url' => array('/site/report/grpmemlist'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Membership expiry list</span>', 'url' => array('/site/report/memberlist'), 'visible' => '1'),
                     ),
                 ),
             ),

@@ -81,7 +81,7 @@ return array(
                         'default_font' => '', // Sets the default font-family for the new document.
                         'mgl' => 10, // margin_left. Sets the page margins for the new document.
                         'mgr' => 10, // margin_right
-                        'mgt' => 16, // margin_top
+                        'mgt' => 40, // margin_top
                         'mgb' => 16, // margin_bottom
                         'mgh' => 9, // margin_header
                         'mgf' => 9, // margin_footer

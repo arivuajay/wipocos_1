@@ -161,7 +161,7 @@ class Work extends RActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search($size = null) {
+    public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -185,27 +185,53 @@ class Work extends RActiveRecord {
         $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
         $criteria->compare('Work_Performer', $this->Work_Performer, true);
         $criteria->compare('Work_Producer', $this->Work_Producer, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => PAGE_SIZE,
+            )
+        ));
+    }
+
+    public function report() {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('Work_Id', $this->Work_Id);
+        $criteria->compare('Work_Org_Title', $this->Work_Org_Title, true);
+        $criteria->compare('Work_Language_Id', $this->Work_Language_Id);
+        $criteria->compare('Work_Internal_Code', $this->Work_Internal_Code, true);
+        $criteria->compare('Work_Iswc', $this->Work_Iswc, true);
+        $criteria->compare('Work_Wic_Code', $this->Work_Wic_Code, true);
+        $criteria->compare('Work_Type_Id', $this->Work_Type_Id);
+        $criteria->compare('Work_Factor_Id', $this->Work_Factor_Id);
+        $criteria->compare('Work_Instrumentation', $this->Work_Instrumentation, true);
+        $criteria->compare('Work_Duration', $this->Work_Duration, true);
+        $criteria->compare('Work_Creation', $this->Work_Creation, true);
+        $criteria->compare('Work_Opus_Number', $this->Work_Opus_Number);
+        $criteria->compare('Active', $this->Active, true);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
+
+        $criteria->compare('Work_Unknown', $this->Work_Unknown, true);
+        $criteria->compare('Work_Performer', $this->Work_Performer, true);
+        $criteria->compare('Work_Producer', $this->Work_Producer, true);
+
         if ($this->right_holder) {
-            $criteria->with = array('workRightholders.workAuthor','workRightholders.workPerformer','workRightholders.workPublisher','workRightholders.workProducer');
+            $criteria->with = array('workRightholders.workAuthor', 'workRightholders.workPerformer', 'workRightholders.workPublisher', 'workRightholders.workProducer');
             $criteria->together = true;
-            $criteria->compare('workAuthor.Auth_First_Name', $this->right_holder, true,'OR');
-            $criteria->compare('workAuthor.Auth_Sur_Name', $this->right_holder, true,'OR');
-            $criteria->compare('workPerformer.Perf_First_Name', $this->right_holder, true,'OR');
-            $criteria->compare('workPerformer.Perf_Sur_Name', $this->right_holder, true,'OR');
-            $criteria->compare('workPublisher.Pub_Corporate_Name', $this->right_holder, true,'OR');
-            $criteria->compare('workProducer.Pro_Corporate_Name', $this->right_holder, true,'OR');
+            $criteria->compare('workAuthor.Auth_First_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('workAuthor.Auth_Sur_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('workPerformer.Perf_First_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('workPerformer.Perf_Sur_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('workPublisher.Pub_Corporate_Name', $this->right_holder, true, 'OR');
+            $criteria->compare('workProducer.Pro_Corporate_Name', $this->right_holder, true, 'OR');
         }
 
-        $ADataProv = array(
+        return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-        );
-
-        if ($size === false)
-            $ADataProv['pagination'] = false;
-        else
-            $ADataProv['pagination'] = array('pageSize' => PAGE_SIZE);
-
-        return new CActiveDataProvider($this, $ADataProv);
+            'pagination' => false
+        ));
     }
 
     /**
@@ -348,15 +374,3 @@ class Work extends RActiveRecord {
     }
 
 }
-
-//SELECT COUNT(*) FROM `wipo_work` `t` WHERE
-//    (Work_Org_Title LIKE :ycp10) AND
-//    (Work_Language_Id = :ycp11) AND
-//    (Work_Internal_Code LIKE :ycp12) AND
-//    (Work_Iswc LIKE :ycp13) AND
-//    (Work_Wic_Code LIKE :ycp14) AND
-//    (Work_Factor_Id = :ycp15) AND
-//    (Work_Instrumentation LIKE :ycp16) AND
-//    (Work_Creation LIKE :ycp17) AND
-//    (Work_Opus_Number = :ycp18) AND
-//    (Work_Unknown LIKE :ycp19)

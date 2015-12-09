@@ -502,4 +502,24 @@ class PerformerAccount extends RActiveRecord {
         return false;
     }
 
+    public function getReportInternalCode() {
+        return $this->Perf_Internal_Code;
+    }
+
+    public function getReportFullName() {
+        return $this->fullName;
+    }
+
+    public function getReportStartmandt() {
+        return $this->performerRelatedRights->Perf_Rel_Entry_Date;
+    }
+
+    public function getReportEndmandt() {
+        return $this->performerRelatedRights->Perf_Rel_Exit_Date;
+    }
+
+    public function getReportMembertype() {
+        return 'Performer';
+    }
+
 }

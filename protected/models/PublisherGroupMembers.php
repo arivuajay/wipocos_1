@@ -46,6 +46,8 @@ class PublisherGroupMembers extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'groupPublishers' => array(self::BELONGS_TO, 'PublisherAccount', array('Pub_Group_Member_GUID'=>'Pub_GUID')),
+            'groupProducers' => array(self::BELONGS_TO, 'ProducerAccount', array('Pub_Group_Member_GUID'=>'Pro_GUID')),
             'pubGroup' => array(self::BELONGS_TO, 'PublisherGroup', 'Pub_Group_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
