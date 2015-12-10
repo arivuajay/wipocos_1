@@ -32,6 +32,7 @@ class DistributionLogsheetList extends RActiveRecord {
     public $duration_hours;
     public $duration_minutes;
     public $duration_seconds;
+    public $Log_List_Report_Filter;
 
     /**
      * @return string the associated database table name
@@ -81,7 +82,7 @@ class DistributionLogsheetList extends RActiveRecord {
             array('duration_hours, duration_minutes, duration_seconds, Log_List_Work_Amount, Log_List_Unit_Tariff', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient_Id, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Log_List_Id, Log_Id, Log_List_Record_GUID, Log_List_Duration, Log_List_Factor_Id, Log_List_Coefficient_Id, Log_List_Date, Log_List_Event, Log_List_Frequency, Log_List_Seq_Number, Created_Date, Rowversion, Created_By, Updated_By,Log_List_Report_Filter', 'safe', 'on' => 'search'),
         );
     }
 
@@ -144,6 +145,7 @@ class DistributionLogsheetList extends RActiveRecord {
             'duration_seconds' => 'Seconds',
             'Log_List_Unit_Tariff' => 'Unit Tariff',
             'Log_List_Work_Amount' => 'Work Amount',
+            'Log_List_Report_Filter' => 'Name',
         );
     }
 
@@ -184,6 +186,33 @@ class DistributionLogsheetList extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public function report() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->with = array('listWork', 'listRecording');
+        $criteria->compare('Log_List_Duration', $this->Log_List_Duration, true);
+        $criteria->compare('Log_List_Factor_Id', $this->Log_List_Factor_Id);
+        $criteria->compare('Log_List_Coefficient_Id', $this->Log_List_Coefficient_Id, true);
+        $criteria->compare('Log_List_Event', $this->Log_List_Event, true);
+        $criteria->compare('Log_List_Seq_Number', $this->Log_List_Seq_Number);
+        $criteria->compare('listWork.Work_Org_Title', $this->Log_List_Report_Filter, true);
+        $criteria->compare('listRecording.Rcd_Title', $this->Log_List_Report_Filter, true, 'OR');
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => false
+        ));
+    }
+
+    public function getReportTitle() {
+        return ($this->listWork->Work_Org_Title) ? $this->listWork->Work_Org_Title : $this->listRecording->Rcd_Title;
+    }
+
+    public function getReportIntCode() {
+        return ($this->listWork->Work_Internal_Code) ? $this->listWork->Work_Internal_Code : $this->listRecording->Rcd_Internal_Code;
     }
 
     /**

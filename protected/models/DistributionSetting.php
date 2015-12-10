@@ -20,6 +20,8 @@
  */
 class DistributionSetting extends RActiveRecord {
 
+    public $Right_Holder;
+
     public function init() {
         parent::init();
         if ($this->isNewRecord) {
@@ -48,7 +50,7 @@ class DistributionSetting extends RActiveRecord {
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Setting_Id, Setting_Internal_Code, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By', 'safe', 'on' => 'search'),
+            array('Setting_Id, Setting_Internal_Code, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By,Right_Holder', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,7 +61,7 @@ class DistributionSetting extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'distributionUtlizationPeriods' => array(self::HAS_MANY, 'DistributionUtlizationPeriod', 'Setting_Id'),
+            'distributionUtlizationPeriods' => array(self::HAS_ONE, 'DistributionUtlizationPeriod', 'Setting_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
         );
@@ -117,6 +119,62 @@ class DistributionSetting extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public function report() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->with = array('distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workAuthor', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPerformer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPublisher', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workProducer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingAuthor', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPerformer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPublisher', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingProducer');
+
+        $criteria->compare('Setting_Id', $this->Setting_Id);
+        $criteria->compare('Setting_Identifier', $this->Setting_Identifier);
+        $criteria->compare('Setting_Internal_Code', $this->Setting_Internal_Code, true);
+        $criteria->compare('Setting_Date', $this->Setting_Date, true);
+        $criteria->compare('Total_Distribute', $this->Total_Distribute, true);
+        $criteria->compare('Closing_Distribute', $this->Closing_Distribute);
+        $criteria->compare('Created_Date', $this->Created_Date, true);
+        $criteria->compare('Rowversion', $this->Rowversion, true);
+        $criteria->compare('Created_By', $this->Created_By);
+        $criteria->compare('Updated_By', $this->Updated_By);
+
+        $criteria->compare('workAuthor.Auth_First_Name', $this->Right_Holder, true);
+        $criteria->compare('workAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('workPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('workPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('workPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('workProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
+
+        $criteria->compare('recordingAuthor.Auth_First_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('recordingAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('recordingPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('recordingPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('recordingPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
+        $criteria->compare('recordingProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => false
+        ));
+    }
+
+    public function getReportTitle() {
+        $result = 'Nil';
+        foreach ($this->distributionUtlizationPeriods->distributionLogsheets as $sheet) {
+            foreach ($sheet->distributionLogsheetLists as $list) {
+                $result = '<table class="table table-condensed" id="linked-holders"><thead><tr><th>Original Title</th><th>Internal Code</th><th>Right Holder</th></tr></thead><tbody>';
+                if ($list->listWork) {
+//                    $right_holder = <table class="table table-condensed"><thead><tr><th>Member</th><th>Internal Code</th></tr></thead><tbody><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Test prakashte test</td><td>SOC-AP-0000305</td></tr><tr><td>James Dean</td><td>SOC-A-0001011</td></tr></tbody></table>;
+                    $result .= "<tr><td>{$list->listWork->Work_Org_Title}</td><td>{$list->listWork->Work_Internal_Code}</td><td>{$list->listWork->Work_Internal_Code}</td></tr>";
+                }
+                if ($list->listRecording) {
+                    $result .= "<tr><td>{$list->listRecording->Rcd_Title}</td><td>{$list->listRecording->Rcd_Internal_Code}</td><td>{$list->listRecording->Rcd_Internal_Code}</td></tr>";
+                }
+
+                $result .= '</tbody></table>';
+            }
+        }
+        return $result;
     }
 
     /**
@@ -179,7 +237,7 @@ class DistributionSetting extends RActiveRecord {
          * AmountToDistribute = 1000 – [(3+1.5+2)%] => 6.5/100 => 0.065 = 1000 – 65 => 935
          * Unit_Tarif = AmountToDistribute/TotDuration = 935/16 => 58.43
          * WorkAmount = (UnitTarif * Di *Ci)Wi [for each work] = 58.43 * 4 * 4 = 935
-         * 
+         *
          * Di can be replaced by Ti where Ti is the number of times a work is used or performed while entering the data from the play list (log sheets).
          * The use of Di or Ti will be determined while defining the distribution subclass under which the calculation of royalties will be made.
          * Ti = Frequency in Logsheet
@@ -200,10 +258,10 @@ class DistributionSetting extends RActiveRecord {
                     $Di = intval($time[0]) * 60 + intval($time[1]);
                 }
                 $Ci = ($list->logListFactor->Factor * $list->logListCoefficient->Coefficient);
-                
+
 //                $Wi = $measure_unit == 'F' ? 1 : $list->listWork->workFactor->Factor;
 //                $TotDurationArr[$list->Log_List_Id] = ($Di * $Ci) * $Wi;
-                
+
                 $TotDurationArr[$list->Log_List_Id] = ($Di * $Ci);
                 $sumToTDuration += ($Di * $Ci);
             }
@@ -225,7 +283,8 @@ class DistributionSetting extends RActiveRecord {
             $Costs = ($tot_statuary_percent / 100) * $AmountPaid;
             $AmountToDistribute = $AmountPaid - $Costs;
             if ($AmountToDistribute > 0 && $sumToTDuration > 0) {
-                $Unit_Tarif = number_format(($AmountToDistribute / $sumToTDuration), 2, '.', '');;
+                $Unit_Tarif = number_format(($AmountToDistribute / $sumToTDuration), 2, '.', '');
+                ;
             }
 
             foreach ($log->distributionLogsheetLists as $key => $list) {
@@ -235,7 +294,7 @@ class DistributionSetting extends RActiveRecord {
                 if ($ToTDuration > 0 && $Unit_Tarif > 0) {
                     $WorkAmount = ($Unit_Tarif * $ToTDuration);
                 }
-                
+
                 self::saveLogListMember($list, $WorkAmount, $measure_unit);
                 $list->Log_List_Unit_Tariff = $Unit_Tarif;
                 $list->Log_List_Work_Amount = $WorkAmount;

@@ -158,6 +158,8 @@
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Recordings By Right Holder</span>', 'url' => array('/site/report/recsbyrh'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Group member list</span>', 'url' => array('/site/report/grpmemlist'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Membership expiry list</span>', 'url' => array('/site/report/memberlist'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Logsheet List</span>', 'url' => array('/site/report/loglist'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Distribution list</span>', 'url' => array('/site/report/distbyrh'), 'visible' => '1'),
                     ),
                 ),
             ),

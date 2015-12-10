@@ -18,6 +18,7 @@
  * @property integer $Updated_By
  *
  * The followings are the available model relations:
+ * @property DistributionLogsheet[] $distributionLogsheets
  * @property DistributionSubclass $subclass
  * @property DistributionSetting $setting
  */
@@ -69,6 +70,7 @@ class DistributionUtlizationPeriod extends RActiveRecord {
             'setting' => array(self::BELONGS_TO, 'DistributionSetting', 'Setting_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
+            'distributionLogsheets' => array(self::HAS_MANY, 'DistributionLogsheet', 'Period_Id'),
         );
     }
 
@@ -154,10 +156,10 @@ class DistributionUtlizationPeriod extends RActiveRecord {
         }
         return parent::afterSave();
     }
-    
+
     public static function getYearlist() {
         $ranges =  range(date('Y', strtotime("-10 Years")), date('Y', strtotime("+10 Years")));
         return array_combine($ranges, $ranges);
     }
-    
+
 }

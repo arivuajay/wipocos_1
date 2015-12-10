@@ -65,7 +65,7 @@ class WorkRightholder extends CActiveRecord {
             'workRightRole' => array(self::BELONGS_TO, 'MasterTypeRights', 'Work_Right_Role'),
             'workRightBroadOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Broad_Org_id'),
             'workRightMechOrg' => array(self::BELONGS_TO, 'Organization', 'Work_Right_Mech_Org_Id'),
-            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Auth_GUID'), 'order'=>'Auth_First_Name ASC'),
+            'workAuthor' => array(self::BELONGS_TO, 'AuthorAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Auth_GUID'), 'order'=>'workAuthor.Auth_First_Name ASC'),
             'workPublisher' => array(self::BELONGS_TO, 'PublisherAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Pub_GUID')),
             'workPerformer' => array(self::BELONGS_TO, 'PerformerAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Perf_GUID')),
             'workProducer' => array(self::BELONGS_TO, 'ProducerAccount', 'Work_Member_GUID', 'foreignKey' => array('Work_Member_GUID' => 'Pro_GUID')),

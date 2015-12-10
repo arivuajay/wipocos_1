@@ -2,7 +2,7 @@
 /* @var $this WorkController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->title = 'Works';
+$this->title = $title;
 $this->breadcrumbs = array(
     'Report',
 );
@@ -33,7 +33,6 @@ if (!$export) {
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'search-form',
                             'method' => 'get',
-                            'action' => array('/site/report/worksbyrh'),
                             'htmlOptions' => array('role' => 'form')
                         ));
                         ?>
@@ -144,13 +143,13 @@ if (!$export) {
             $export_btn .= CHtml::link('<i class="fa fa-file-pdf-o"></i> PDF', Yii::app()->request->requestUri . '&export=print',array('class' => 'btn btn-xs btn-danger','target'=>'_blank'));
 
             if (!$export)
-                $template = "<div class='panel panel-primary'><div class='panel-heading'><div class='row'><div class='col-sm-6'><h3 class='panel-title'><i class='glyphicon glyphicon-search'></i> Search Results</h3></div><div class='col-sm-6 text-right'>{$export_btn} &nbsp; {summary}</div></div></div>\n<div class='panel-body'>{items}\n{pager}</div></div>";
+                $template = "<div class='panel'><div class='panel-heading'><div class='row'><div class='col-sm-6'>&nbsp;</div><div class='col-sm-6 text-right'>{$export_btn} &nbsp; {summary}</div><br />{$head_title}</div></div>\n<div class='panel-body'>{items}\n{pager}</div></div>";
             else
                 $template = "{items}";
 
             $this->widget('booster.widgets.TbExtendedGridView', array(
                 'id' => 'work-base-grid',
-                'type' => 'striped bordered',
+                'type' => 'bordered',
                 'itemsCssClass' => 'print-table',
                 'summaryCssClass' => 'inline',
                 'enableSorting' => false,

@@ -258,68 +258,68 @@ class AuthorAccount extends RActiveRecord {
 
     public function memberReport() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-
-        if (in_array('A', $this->report_search_by)) {
-            $criteria = new CDbCriteria;
-            $criteria->compare('Auth_Sur_Name', $this->Auth_Sur_Name, true);
-            $criteria->compare('Auth_First_Name', $this->Auth_Sur_Name, true,'OR');
-            $criteria->compare('Auth_Internal_Code', $this->Auth_Internal_Code, true);
-
-            $prov1 = new CActiveDataProvider($this, array(
-                'criteria' => $criteria,
-                'pagination' => false
-            ));
-        }
-        if (in_array('P', $this->report_search_by)) {
-            $criteria2 = new CDbCriteria;
-            $criteria2->compare('Perf_Sur_Name', $this->Auth_Sur_Name, true);
-            $criteria2->compare('Perf_First_Name', $this->Auth_Sur_Name, true,'OR');
-            $criteria2->compare('Perf_Internal_Code', $this->Auth_Internal_Code, true);
-
-            $prov2 = new CActiveDataProvider('PerformerAccount', array(
-                'criteria' => $criteria2,
-                'pagination' => false
-            ));
-        }
-        if (in_array('PU', $this->report_search_by)) {
-            $criteria3 = new CDbCriteria;
-            $criteria3->compare('Pub_Corporate_Name', $this->Auth_Sur_Name, true);
-            $criteria3->compare('Pub_Internal_Code', $this->Auth_Internal_Code, true);
-
-            $prov3 = new CActiveDataProvider('PublisherAccount', array(
-                'criteria' => $criteria3,
-                'pagination' => false
-            ));
-        }
-        if (in_array('PR', $this->report_search_by)) {
-            $criteria4 = new CDbCriteria;
-            $criteria4->compare('Pro_Corporate_Name', $this->Auth_Sur_Name, true);
-            $criteria4->compare('Pro_Internal_Code', $this->Auth_Internal_Code, true);
-
-            $prov4 = new CActiveDataProvider('ProducerAccount', array(
-                'criteria' => $criteria4,
-                'pagination' => false
-            ));
-        }
-
         $records = array();
-        for ($i = 0; $i < $prov1->totalItemCount; $i++) {
-            $data = $prov1->data[$i];
-            array_push($records, $data);
-        }
-        for ($i = 0; $i < $prov2->totalItemCount; $i++) {
-            $data = $prov2->data[$i];
-            array_push($records, $data);
-        }
-        for ($i = 0; $i < $prov3->totalItemCount; $i++) {
-            $data = $prov3->data[$i];
-            array_push($records, $data);
-        }
-        for ($i = 0; $i < $prov4->totalItemCount; $i++) {
-            $data = $prov4->data[$i];
-            array_push($records, $data);
-        }
+        if ($this->report_search_by) {
+            if (in_array('A', $this->report_search_by)) {
+                $criteria = new CDbCriteria;
+                $criteria->compare('Auth_Sur_Name', $this->Auth_Sur_Name, true);
+                $criteria->compare('Auth_First_Name', $this->Auth_Sur_Name, true, 'OR');
+                $criteria->compare('Auth_Internal_Code', $this->Auth_Internal_Code, true);
 
+                $prov1 = new CActiveDataProvider($this, array(
+                    'criteria' => $criteria,
+                    'pagination' => false
+                ));
+            }
+            if (in_array('P', $this->report_search_by)) {
+                $criteria2 = new CDbCriteria;
+                $criteria2->compare('Perf_Sur_Name', $this->Auth_Sur_Name, true);
+                $criteria2->compare('Perf_First_Name', $this->Auth_Sur_Name, true, 'OR');
+                $criteria2->compare('Perf_Internal_Code', $this->Auth_Internal_Code, true);
+
+                $prov2 = new CActiveDataProvider('PerformerAccount', array(
+                    'criteria' => $criteria2,
+                    'pagination' => false
+                ));
+            }
+            if (in_array('PU', $this->report_search_by)) {
+                $criteria3 = new CDbCriteria;
+                $criteria3->compare('Pub_Corporate_Name', $this->Auth_Sur_Name, true);
+                $criteria3->compare('Pub_Internal_Code', $this->Auth_Internal_Code, true);
+
+                $prov3 = new CActiveDataProvider('PublisherAccount', array(
+                    'criteria' => $criteria3,
+                    'pagination' => false
+                ));
+            }
+            if (in_array('PR', $this->report_search_by)) {
+                $criteria4 = new CDbCriteria;
+                $criteria4->compare('Pro_Corporate_Name', $this->Auth_Sur_Name, true);
+                $criteria4->compare('Pro_Internal_Code', $this->Auth_Internal_Code, true);
+
+                $prov4 = new CActiveDataProvider('ProducerAccount', array(
+                    'criteria' => $criteria4,
+                    'pagination' => false
+                ));
+            }
+
+            for ($i = 0; $i < $prov1->totalItemCount; $i++) {
+                $data = $prov1->data[$i];
+                array_push($records, $data);
+            }
+            for ($i = 0; $i < $prov2->totalItemCount; $i++) {
+                $data = $prov2->data[$i];
+                array_push($records, $data);
+            }
+            for ($i = 0; $i < $prov3->totalItemCount; $i++) {
+                $data = $prov3->data[$i];
+                array_push($records, $data);
+            }
+            for ($i = 0; $i < $prov4->totalItemCount; $i++) {
+                $data = $prov4->data[$i];
+                array_push($records, $data);
+            }
+        }
         return new CArrayDataProvider($records, array(
             'keyField' => false,
             'pagination' => false

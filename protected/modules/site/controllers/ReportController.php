@@ -26,7 +26,7 @@ class ReportController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('grpmember', 'report', 'wkrecrh', 'wrkrecrh', 'rhbywrk',
-                    'worksbyrh', 'recsbyrh', 'grpmemlist','memberlist'),
+                    'worksbyrh', 'recsbyrh', 'grpmemlist','memberlist','loglist','distbyrh'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -58,7 +58,9 @@ class ReportController extends Controller {
             $render = $this->renderPartial('worksbyrh', compact('searchModel', 'search', 'model', 'export'), true, true);
             $this->mPDFRender($title, $render);
         }
-        $this->render('worksbyrh', compact('searchModel', 'search', 'model'));
+
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('worksbyrh', compact('searchModel', 'search', 'model','head_title'));
     }
 
     public function actionRecsbyrh() {
@@ -79,7 +81,8 @@ class ReportController extends Controller {
             $render = $this->renderPartial('recsbyrh', compact('searchModel', 'search', 'model', 'export'), true, true);
             $this->mPDFRender($title, $render);
         }
-        $this->render('recsbyrh', compact('searchModel', 'search', 'model'));
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('recsbyrh', compact('searchModel', 'search', 'model','head_title'));
     }
 
     public function actionGrpmemlist() {
@@ -100,7 +103,8 @@ class ReportController extends Controller {
             $render = $this->renderPartial('grpmemlist', compact('searchModel', 'search', 'model', 'export'), true, true);
             $this->mPDFRender($title, $render);
         }
-        $this->render('grpmemlist', compact('searchModel', 'search', 'model'));
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('grpmemlist', compact('searchModel', 'search', 'model','head_title','title'));
     }
 
     public function actionMemberlist() {
@@ -118,10 +122,58 @@ class ReportController extends Controller {
 
         if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
             $export = true;
-            $render = $this->renderPartial('grpmemlist', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $render = $this->renderPartial('memberlist', compact('searchModel', 'search', 'model', 'export'), true, true);
             $this->mPDFRender($title, $render);
         }
-        $this->render('memberlist', compact('searchModel', 'search', 'model'));
+
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('memberlist', compact('searchModel', 'search', 'model','head_title'));
+    }
+
+    public function actionLoglist() {
+        $search = $export = false;
+        $title = 'Logsheet List';
+
+        $model = new DistributionLogsheetList();
+        $searchModel = new DistributionLogsheetList('search');
+        $searchModel->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['DistributionLogsheetList'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['DistributionLogsheetList'];
+        }
+
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('loglist', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('loglist', compact('searchModel', 'search', 'model','head_title','title'));
+    }
+
+    public function actionDistbyrh() {
+        $search = $export = false;
+        $title = 'Distribution list by Right Holder';
+
+        $model = new DistributionSetting();
+        $searchModel = new DistributionSetting('search');
+        $searchModel->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['DistributionSetting'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['DistributionSetting'];
+        }
+
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('distbyrh', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('distbyrh', compact('searchModel', 'search', 'model','head_title','title'));
     }
 
 
@@ -148,6 +200,8 @@ class ReportController extends Controller {
 
         return $result;
     }
+
+
 
 //    protected function searchKeyWords($model) {
 //        $keys = array_filter($model->attributes);
