@@ -21,6 +21,10 @@
 class DistributionSetting extends RActiveRecord {
 
     public $Right_Holder;
+    public $By_Work;
+    public $By_Class;
+    public $By_Period_From;
+    public $By_Period_To;
 
     public function init() {
         parent::init();
@@ -50,7 +54,7 @@ class DistributionSetting extends RActiveRecord {
             array('Created_Date, Rowversion', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Setting_Id, Setting_Internal_Code, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By,Right_Holder', 'safe', 'on' => 'search'),
+            array('Setting_Id, Setting_Internal_Code, Setting_Identifier, Setting_Date, Total_Distribute, Closing_Distribute, Created_Date, Rowversion, Created_By, Updated_By,Right_Holder,By_Work,By_Class,By_Period_From,By_Period_To', 'safe', 'on' => 'search'),
         );
     }
 
@@ -82,6 +86,9 @@ class DistributionSetting extends RActiveRecord {
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
+            'By_Work' => 'Work Title or Internal Code',
+            'By_Class' => 'Class',
+            'By_Period' => 'By Period',
         );
     }
 
@@ -125,7 +132,18 @@ class DistributionSetting extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workAuthor', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPerformer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPublisher', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workProducer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingAuthor', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPerformer', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPublisher', 'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingProducer');
+        $criteria->with = array(
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workAuthor',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPerformer',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workPublisher',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listWork.workRightholders.workProducer',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingAuthor',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPerformer',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingPublisher',
+            'distributionUtlizationPeriods.distributionLogsheets.distributionLogsheetLists.listRecording.recordingRightholders.recordingProducer',
+            'distributionUtlizationPeriods.subclass',
+            'distributionUtlizationPeriods.subclass.class'
+        );
 
         $criteria->compare('Setting_Id', $this->Setting_Id);
         $criteria->compare('Setting_Identifier', $this->Setting_Identifier);
@@ -137,38 +155,108 @@ class DistributionSetting extends RActiveRecord {
         $criteria->compare('Rowversion', $this->Rowversion, true);
         $criteria->compare('Created_By', $this->Created_By);
         $criteria->compare('Updated_By', $this->Updated_By);
+        if ($this->Right_Holder) {
+            $criteria->compare('workAuthor.Auth_First_Name', $this->Right_Holder, true);
+            $criteria->compare('workAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('workPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('workPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('workPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('workProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
 
-        $criteria->compare('workAuthor.Auth_First_Name', $this->Right_Holder, true);
-        $criteria->compare('workAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('workPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('workPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('workPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('workProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingAuthor.Auth_First_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
+            $criteria->compare('recordingProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
+        }
+        if ($this->By_Work) {
+            $criteria->compare('listWork.Work_Org_Title', $this->By_Work, true);
+            $criteria->compare('listWork.Work_Internal_Code', $this->By_Work, true, 'OR');
+            $criteria->compare('listRecording.Rcd_Title', $this->By_Work, true, 'OR');
+            $criteria->compare('listRecording.Rcd_Internal_Code', $this->By_Work, true, 'OR');
+        }
+        if ($this->By_Class) {
+            $criteria->compare('subclass.Subclass_Name', $this->By_Class, true);
+            $criteria->compare('class.Class_Name', $this->By_Class, true, 'OR');
+        }
+        if ($this->By_Period_From && $this->By_Period_To) {
+            $criteria->addCondition('distributionUtlizationPeriods.Period_From < :periodFrom OR distributionUtlizationPeriods.Period_To > :periodTo');
+            $criteria->params = array(':periodFrom' => $this->By_Period_From, ':periodTo' => $this->By_Period_To);
+        }
 
-        $criteria->compare('recordingAuthor.Auth_First_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('recordingAuthor.Auth_Sur_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('recordingPerformer.Perf_First_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('recordingPerformer.Perf_Sur_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('recordingPublisher.Pub_Corporate_Name', $this->Right_Holder, true, 'OR');
-        $criteria->compare('recordingProducer.Pro_Corporate_Name', $this->Right_Holder, true, 'OR');
-
+        Yii::app()->db->createCommand('SET SQL_BIG_SELECTS=1;')->query();
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => false
         ));
     }
 
-    public function getReportTitle() {
+    public function getReportLoglist() {
         $result = 'Nil';
         foreach ($this->distributionUtlizationPeriods->distributionLogsheets as $sheet) {
             foreach ($sheet->distributionLogsheetLists as $list) {
                 $result = '<table class="table table-condensed" id="linked-holders"><thead><tr><th>Original Title</th><th>Internal Code</th><th>Right Holder</th></tr></thead><tbody>';
                 if ($list->listWork) {
-//                    $right_holder = <table class="table table-condensed"><thead><tr><th>Member</th><th>Internal Code</th></tr></thead><tbody><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Nancy Gilson</td><td>SOC-P-0001001</td></tr><tr><td>Test prakashte test</td><td>SOC-AP-0000305</td></tr><tr><td>James Dean</td><td>SOC-A-0001011</td></tr></tbody></table>;
-                    $result .= "<tr><td>{$list->listWork->Work_Org_Title}</td><td>{$list->listWork->Work_Internal_Code}</td><td>{$list->listWork->Work_Internal_Code}</td></tr>";
+                    $rh = '';
+                    if ($list->listWork->workRightholders) {
+                        $rh .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
+                        foreach ($list->listWork->workRightholders as $key => $rightholder) {
+                            if ($rightholder->workAuthor) {
+                                $rh .= '<tr>';
+                                $rh .= "<td>{$rightholder->workAuthor->fullname}</td>";
+                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                                $rh .= '</tr>';
+                            }
+                            if ($rightholder->workPublisher) {
+                                $rh .= '<tr>';
+                                $rh .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                                $rh .= '</tr>';
+                            }
+                            if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID != $rightholder->workPublisher->Pub_GUID) {
+                                $rh .= '<tr>';
+                                $rh .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
+                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                                $rh .= '</tr>';
+                            }
+                        }
+                        $rh .= '</tbody></table>';
+                    }
+                    $result .= "<tr><td>{$list->listWork->Work_Org_Title}</td><td>{$list->listWork->Work_Internal_Code}</td><td>{$rh}</td></tr>";
                 }
                 if ($list->listRecording) {
-                    $result .= "<tr><td>{$list->listRecording->Rcd_Title}</td><td>{$list->listRecording->Rcd_Internal_Code}</td><td>{$list->listRecording->Rcd_Internal_Code}</td></tr>";
+                    if ($list->listRecording->recordingRightholders) {
+                        $rh = "";
+                        $rh .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
+                        foreach ($list->listRecording->recordingRightholders as $key => $rightholder) {
+                            if ($rightholder->recordingPerformer) {
+                                $rh .= '<tr>';
+                                $rh .= "<td>{$rightholder->recordingPerformer->fullname}</td>";
+                                $rh .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                                $rh .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                                $rh .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                                $rh .= '</tr>';
+                            }
+                            if ($rightholder->recordingProducer) {
+                                $rh .= '<tr>';
+                                $rh .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
+                                $rh .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                                $rh .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                                $rh .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                                $rh .= '</tr>';
+                            }
+                        }
+
+                        $rh .= '</tbody></table>';
+                    }
+                    $result .= "<tr><td>{$list->listRecording->Rcd_Title}</td><td>{$list->listRecording->Rcd_Internal_Code}</td><td>{$rh}</td></tr>";
                 }
 
                 $result .= '</tbody></table>';

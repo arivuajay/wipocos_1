@@ -68,6 +68,30 @@ if (!$export) {
                                 <?php echo $form->textField($searchModel, 'Right_Holder', array('class' => 'form-control')); ?>
                             </div>
                         </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($searchModel, 'By_Work', array('class' => ' control-label')); ?>
+                                <?php echo $form->textField($searchModel, 'By_Work', array('class' => 'form-control')); ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($searchModel, 'By_Class', array('class' => ' control-label')); ?>
+                                <?php echo $form->textField($searchModel, 'By_Class', array('class' => 'form-control')); ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <?php echo $form->labelEx($searchModel, 'By_Period', array('class' => ' control-label')); ?>
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5">
+                                    <?php echo $form->textField($searchModel, 'By_Period_From', array('class' => 'form-control date')); ?>
+                                </div>
+                                <div class="col-lg-2 col-md-2">-</div>
+                                <div class="col-lg-5 col-md-5">
+                                    <?php echo $form->textField($searchModel, 'By_Period_To', array('class' => 'form-control date')); ?>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-2 col-md-2">
                             <div class="form-group">
                                 <label>&nbsp;</label>
@@ -90,8 +114,8 @@ if (!$export) {
                 'Setting_Internal_Code',
                 'Setting_Date',
                 'Total_Distribute',
-                'Closing_Distribute',
-                array('header' => 'Title', 'name' => 'reportTitle','type'=>'raw'),
+                array('header' => 'Period Code', 'name' => 'distributionUtlizationPeriods.Period_Internal_Code'),
+                array('header' => 'Loglist Details', 'name' => 'reportLoglist', 'type' => 'raw'),
             );
 
 //            $export_btn = $this->renderExportGridButton('group-base-grid', '<i class="fa fa-file-excel-o"></i> CSV', array('class' => 'btn btn-xs btn-danger')) . "&nbsp;&nbsp;";

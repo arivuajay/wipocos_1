@@ -60,7 +60,7 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('worksbyrh', compact('searchModel', 'search', 'model','head_title'));
+        $this->render('worksbyrh', compact('searchModel', 'search', 'model','head_title','title'));
     }
 
     public function actionRecsbyrh() {
@@ -82,7 +82,7 @@ class ReportController extends Controller {
             $this->mPDFRender($title, $render);
         }
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('recsbyrh', compact('searchModel', 'search', 'model','head_title'));
+        $this->render('recsbyrh', compact('searchModel', 'search', 'model','head_title','title'));
     }
 
     public function actionGrpmemlist() {
@@ -127,7 +127,7 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('memberlist', compact('searchModel', 'search', 'model','head_title'));
+        $this->render('memberlist', compact('searchModel', 'search', 'model','head_title','title'));
     }
 
     public function actionLoglist() {
@@ -155,7 +155,7 @@ class ReportController extends Controller {
 
     public function actionDistbyrh() {
         $search = $export = false;
-        $title = 'Distribution list by Right Holder';
+        $title = 'Distribution list';
 
         $model = new DistributionSetting();
         $searchModel = new DistributionSetting('search');
@@ -200,6 +200,7 @@ class ReportController extends Controller {
 
         return $result;
     }
+
 
 
 
