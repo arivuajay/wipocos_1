@@ -137,7 +137,7 @@ if (!$export) {
     <div class="col-lg-12 col-md-12">
         <div class="row">
             <?php
-            $report_column = array('Work_Org_Title',array('name' => 'Work_Internal_Code','htmlOptions' => array('width'=>150,'class' => 'text-center')), 'subtitle_values', 'duration_values',array('name' => 'workType.Type_Name','header'=>'Type','htmlOptions' => array('class' => 'text-center')),array('name' => 'Work_Creation','htmlOptions' => array('class' => 'text-center')));
+            $report_column = array('Work_Org_Title',array('name' => 'Work_Internal_Code','htmlOptions' => array('width'=>150,'class' => 'text-center')), 'subtitle_values',array('header'=>'Right Holder','name' => 'rh_grid','type'=>'raw'), 'duration_values',array('name' => 'workType.Type_Name','header'=>'Type','htmlOptions' => array('class' => 'text-center')),array('name' => 'Work_Creation','htmlOptions' => array('class' => 'text-center')));
 
 //            $export_btn = $this->renderExportGridButton('work-base-grid', '<i class="fa fa-file-excel-o"></i> CSV', array('class' => 'btn btn-xs btn-danger'))."&nbsp;&nbsp;";
             $export_btn .= CHtml::link('<i class="fa fa-file-pdf-o"></i> PDF', Yii::app()->request->requestUri . '&export=print',array('class' => 'btn btn-xs btn-danger','target'=>'_blank'));

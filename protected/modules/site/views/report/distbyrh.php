@@ -82,14 +82,10 @@ if (!$export) {
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <?php echo $form->labelEx($searchModel, 'By_Period', array('class' => ' control-label')); ?>
-                            <div class="row">
-                                <div class="col-lg-5 col-md-5">
-                                    <?php echo $form->textField($searchModel, 'By_Period_From', array('class' => 'form-control date')); ?>
-                                </div>
-                                <div class="col-lg-2 col-md-2">-</div>
-                                <div class="col-lg-5 col-md-5">
-                                    <?php echo $form->textField($searchModel, 'By_Period_To', array('class' => 'form-control date')); ?>
-                                </div>
+                            <div class="input-group input-daterange">
+                                <?php echo $form->textField($searchModel, 'By_Period_From', array('class' => 'form-control')); ?>
+                                <span class="input-group-addon">to</span>
+                                <?php echo $form->textField($searchModel, 'By_Period_To', array('class' => 'form-control')); ?>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2">
@@ -152,4 +148,12 @@ EOD;
 
     $cs->registerScript('_report', $js);
 }
+$js = <<< EOD
+    $(document).ready(function () {
+        $('.input-daterange input').each(function() {
+            $(this).mask("9999-99-99").datepicker({ format: 'yyyy-mm-dd',clearBtn: true })
+        });
+    });
+EOD;
+$cs->registerScript('_report_2', $js);
 ?>

@@ -10,10 +10,12 @@ $cs = Yii::app()->getClientScript();
 $themeUrl = $this->themeUrl;
 
 if (!$export) {
+    $factors = Myclass::getMasterFactor();
+    $coeff = Myclass::getMasterCoefficient();
     ?>
     <div class="col-lg-12 col-md-12" id="advance-search-block">
         <div class="row mb10" id="advance-search-label">
-    <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
+            <?php echo CHtml::link('<i class="fa fa-angle-right"></i> Show Advance Search', 'javascript:void(0);', array('class' => 'pull-right')); ?>
         </div>
         <div class="row" id="advance-search-form">
             <div class="panel panel-primary">
@@ -32,35 +34,55 @@ if (!$export) {
                             'htmlOptions' => array('role' => 'form')
                         ));
                         ?>
-
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
-                                <?php echo $form->labelEx($searchModel, 'Log_List_Report_Filter', array('class' => ' control-label')); ?>
-                                <?php echo $form->textField($searchModel, 'Log_List_Report_Filter', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
-    <?php echo $form->error($searchModel, 'Log_List_Report_Filter'); ?>
+                                <?php echo $form->labelEx($searchModel, 'Log_List_Date', array('class' => '')); ?>
+                                <?php echo $form->textField($searchModel, 'Log_List_Date', array('class' => 'form-control date-filter', 'data-clearBtn' => true)); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Date'); ?>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
-                                <?php echo $form->labelEx($searchModel, 'Log_List_Event', array('class' => ' control-label')); ?>
-                                <?php echo $form->textField($searchModel, 'Log_List_Event', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-    <?php echo $form->error($searchModel, 'Log_List_Event'); ?>
+                                <?php echo $form->labelEx($searchModel, 'Log_List_Factor_Id', array('class' => '')); ?>
+                                <?php echo $form->dropDownList($searchModel, 'Log_List_Factor_Id', $factors, array('class' => 'form-control', 'prompt' => '')); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Factor_Id'); ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($searchModel, 'Log_List_Event', array('class' => '')); ?>
+                                <?php echo $form->textField($searchModel, 'Log_List_Event', array('class' => 'form-control')); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Event'); ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($searchModel, 'Log_List_Coefficient_Id', array('class' => '')); ?>
+                                <?php echo $form->dropDownList($searchModel, 'Log_List_Coefficient_Id', $coeff, array('class' => 'form-control', 'prompt' => '')); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Coefficient_Id'); ?>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
                                 <?php echo $form->labelEx($searchModel, 'Log_List_Seq_Number', array('class' => ' control-label')); ?>
                                 <?php echo $form->textField($searchModel, 'Log_List_Seq_Number', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
-    <?php echo $form->error($searchModel, 'Log_List_Seq_Number'); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Seq_Number'); ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <?php echo $form->labelEx($searchModel, 'Log_List_Report_Filter', array('class' => ' control-label')); ?>
+                                <?php echo $form->textField($searchModel, 'Log_List_Report_Filter', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                                <?php echo $form->error($searchModel, 'Log_List_Report_Filter'); ?>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 pull-right">
                             <div class="form-group">
                                 <label>&nbsp;</label>
-    <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
+                                <?php echo CHtml::submitButton('Search', array('class' => 'btn btn-primary form-control')); ?>
                             </div>
                         </div>
-    <?php $this->endWidget(); ?>
+                        <?php $this->endWidget(); ?>
                     </div>
                 </section>
 
@@ -72,7 +94,7 @@ if (!$export) {
     <div class="col-lg-12 col-md-12">
         <div class="row">
             <?php
-            $report_column = array('Log_List_Seq_Number', array('header' => 'Title', 'name' => 'reportTitle'), array('header' => 'Internal Code', 'name' => 'reportIntCode'), array('name' => 'Log_List_Date', 'htmlOptions' => array('class' => 'text-center')), array('name' => 'logListFactor.Factor', 'htmlOptions' => array('class' => 'text-center')));
+            $report_column = array(array('header' => 'Title', 'name' => 'reportTitle'), array('header' => 'Internal Code', 'name' => 'reportIntCode'), array('name' => 'Log_List_Date', 'htmlOptions' => array('class' => 'text-center')), array('name' => 'logListFactor.Factor', 'htmlOptions' => array('class' => 'text-center')), array('name' => 'logListCoefficient.Coefficient', 'htmlOptions' => array('class' => 'text-center')), 'Log_List_Seq_Number');
 
 //            $export_btn = $this->renderExportGridButton('group-base-grid', '<i class="fa fa-file-excel-o"></i> CSV', array('class' => 'btn btn-xs btn-danger')) . "&nbsp;&nbsp;";
             $export_btn .= CHtml::link('<i class="fa fa-file-pdf-o"></i> PDF', Yii::app()->request->requestUri . '&export=print', array('class' => 'btn btn-xs btn-danger', 'target' => '_blank'));
@@ -103,6 +125,9 @@ if (!$export) {
     $js = <<< EOD
     $(document).ready(function () {
         $("#advance-search-label a").trigger("click");
+        $(".date-filter").mask("9999-99-99").datepicker({ format: 'yyyy-mm-dd',clearBtn: true }).keypress(function(key) {
+            if(key.charCode < 48 || key.charCode > 57) return false;
+        });
     });
 EOD;
 

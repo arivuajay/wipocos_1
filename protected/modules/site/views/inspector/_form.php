@@ -114,7 +114,7 @@ $cs_pos_end = CClientScript::POS_END;
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('_form', $js);

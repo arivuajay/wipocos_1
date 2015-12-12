@@ -21,8 +21,8 @@ $this->breadcrumbs = array(
         <div class="col-sm-6 invoice-col">
             <p class="lead">User Details:</p>
             <address>
-                <strong><?php echo $model->tarfContUser->User_Cust_Name;?></strong><br>
-                <?php echo $model->tarfContUser->User_Cust_Name;?><br>
+                <strong><?php echo $model->tarfContUser->User_Cust_Code;?></strong><br>
+                <?php echo $model->tarfContUser->User_Cust_Code;?><br>
                 <?php echo $model->tarfContUser->User_Cust_Address;?><br>
                 Phone: <?php echo $model->tarfContUser->User_Cust_Telephone;?><br/>
                 Fax: <?php echo $model->tarfContUser->User_Cust_Fax;?><br/>
@@ -44,7 +44,7 @@ $this->breadcrumbs = array(
                 <table class="table">
                     <tr>
                         <th style="width:50%">City:</th>
-                        <td><?php echo $model->tarfContCity->City_Name;?></td>
+                        <td><?php echo $model->tarfContRegion->Region_Name;?></td>
                     </tr>
                     <tr>
                         <th>District:</th>

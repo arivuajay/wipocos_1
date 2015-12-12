@@ -4,7 +4,7 @@
 /* @var $cont_model TariffContracts */
 
 if(!empty($cont_model)){
-$this->title='Update Invoices: '. $cont_model->tarfContUser->User_Cust_Name;
+$this->title='Update Invoices: '. $cont_model->tarfContUser->User_Cust_Code;
 }else{
 $this->title='Update Invoices';
 }

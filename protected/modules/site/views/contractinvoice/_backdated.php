@@ -94,10 +94,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     </thead>
                                     <tbody>
                                         <?php $contract =  $cont_model;?>
-                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Code; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
                                             <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
                                             <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
-                                            <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>
+                                            <td><?php echo $contract->tarfContUser->User_Cust_Code ?></td>
                                             <td><?php echo $contract->tarfContTariff->Tarif_Description ?></td>
                                             <td><?php echo $contract->tarfContInsp->Insp_Name ?></td>
                                         </tr>
@@ -120,7 +120,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php 
                             $inv_to = $amount = '';
                             if ($update) {
-                                $inv_to = $contract->tarfContUser->User_Cust_Name;
+                                $inv_to = $contract->tarfContUser->User_Cust_Code;
                                 $amount = $contract->Tarf_Cont_Amt_Pay;
                                 $cont_end = $contract->Tarf_Cont_To;
                                 $repeat_type = $contract->getPayment();

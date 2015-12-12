@@ -27,8 +27,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'Tarf_Cont_City_Id'); ?>
-		<?php echo $form->textField($model,'Tarf_Cont_City_Id',array('class'=>'form-control')); ?>
+		<?php echo $form->label($model,'Tarf_Cont_Region_Id'); ?>
+		<?php echo $form->textField($model,'Tarf_Cont_Region_Id',array('class'=>'form-control')); ?>
 	</div>
 
 	<div class="row">

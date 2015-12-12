@@ -25,7 +25,7 @@
  * @property MasterRegion $inspRegion
  */
 class Inspector extends RActiveRecord {
-    
+
     const MIN_AGE = 20; //in years
     const MAX_AGE = 80; //in years
 
@@ -59,6 +59,8 @@ class Inspector extends RActiveRecord {
             array('Insp_GUID', 'length', 'max' => 40),
 //            array('Insp_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MIN_AGE.' years')), 'operator' => '<', 'message' => '{attribute} must be lesser than "{compareValue}". Age must be minimum '.self::MIN_AGE.' years'),
 //            array('Insp_DOB', 'compare', 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
+
+            array('Insp_DOB', 'compare', 'compareValue' => date("Y-m-d",  strtotime('-10 years',time())), 'operator' => '<'),
             array('Insp_Date', 'compare', 'compareValue' => date("Y-m-d"), 'operator' => '<'),
             array('Insp_Name, Insp_Occupation, Insp_Birth_Place', 'length', 'max' => 100),
             array('Insp_DOB, Insp_Date, Created_Date, Rowversion', 'safe'),
@@ -164,4 +166,10 @@ class Inspector extends RActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        if($this->isNewRecord){
+            InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::INSPECTOR_CODE);
+        }
+        return parent::afterSave();
+    }
 }

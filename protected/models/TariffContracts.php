@@ -7,7 +7,7 @@
  * @property integer $Tarf_Cont_Id
  * @property string $Tarf_Cont_GUID
  * @property string $Tarf_Cont_Internal_Code
- * @property integer $Tarf_Cont_City_Id
+ * @property integer $Tarf_Cont_Region_Id
  * @property string $Tarf_Cont_District
  * @property string $Tarf_Cont_Area
  * @property integer $Tarf_Cont_Tariff_Id
@@ -47,10 +47,9 @@ class TariffContracts extends RActiveRecord {
     const INVOICE_PAD = 7;
     const DEAFULT_PAY_FREQ = 4;
     const EXPIRY_WARNING_MONTH = 0;
-
     const RENEWAL_MIN_YEAR = 1;
     const RENEWAL_MAX_YEAR = 10;
-    
+
     public $email_subject;
     public $email_name;
     public $email_from;
@@ -61,7 +60,7 @@ class TariffContracts extends RActiveRecord {
         parent::init();
         if ($this->isNewRecord) {
             $this->Tarf_Cont_GUID = Myclass::guid(false);
-            $this->Tarf_Cont_City_Id = DEFAULT_REGION_ID;
+            $this->Tarf_Cont_Region_Id = DEFAULT_REGION_ID;
             $this->Tarf_Cont_Internal_Code = InternalcodeGenerate::model()->find("Gen_User_Type = :type", array(':type' => InternalcodeGenerate::TARIFF_CONTRACT_CODE))->Fullcode;
             $this->Tarf_Invoice = Myclass::getTarifInvoice();
             $this->Tarf_Cont_Pay_Id = self::DEAFULT_PAY_FREQ;
@@ -70,12 +69,12 @@ class TariffContracts extends RActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
-        $expiry_date = date('Y-m-d', strtotime("+".self::EXPIRY_WARNING_MONTH." months"));
+        $expiry_date = date('Y-m-d', strtotime("+" . self::EXPIRY_WARNING_MONTH . " months"));
         return array(
             'expiry' => array('condition' => "$alias.Tarf_Cont_To <= '{$expiry_date}'"),
         );
     }
-    
+
     /**
      * @return string the associated database table name
      */
@@ -91,7 +90,7 @@ class TariffContracts extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date', 'required'),
-            array('Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
+            array('Tarf_Cont_User_Id, Tarf_Cont_Region_Id, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Pay_Id, Tarf_Cont_Event_Id, Created_By, Updated_By', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_User_Id', 'required', 'message' => 'Please select User'),
             array('Tarf_Cont_User_Id', 'unique', 'message' => "This User has already been taken."),
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
@@ -100,14 +99,15 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_Renewal', 'length', 'max' => 1),
             array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion, Tarf_Recurring_Amount', 'numerical', 'integerOnly' => false),
 //            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MIN_YEAR, 'operator'=> '>=', 'message' => 'No. of Years must be greater than '.self::RENEWAL_MIN_YEAR),
-            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MAX_YEAR, 'operator'=>'<=', 'message' => 'No. of Years must be less than '.self::RENEWAL_MAX_YEAR),
+            array('Tarf_Cont_Renewal_Year', 'compare', 'compareValue' => self::RENEWAL_MAX_YEAR, 'operator' => '<=', 'message' => 'No. of Years must be less than ' . self::RENEWAL_MAX_YEAR),
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
-            array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>=', 'compareValue'=> 0),
+            array('Tarf_Cont_Sign_Date', 'compare', 'compareValue' => date("Y-m-d"), 'operator' => '<'),
+            array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>=', 'compareValue' => 0),
             array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count, Tarf_Cont_Renewal_Year, Tarf_Cont_Renewal, email_template, email_subject, email_from, email_name, email_params', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_City_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By, email_template, email_subject, email_from, email_name', 'safe', 'on' => 'search'),
+            array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_Region_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By, email_template, email_subject, email_from, email_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -123,12 +123,12 @@ class TariffContracts extends RActiveRecord {
             'tarfContEvent' => array(self::BELONGS_TO, 'MasterEventType', 'Tarf_Cont_Event_Id'),
             'tarfContInsp' => array(self::BELONGS_TO, 'Inspector', 'Tarf_Cont_Insp_Id'),
             'tarfContTariff' => array(self::BELONGS_TO, 'MasterTariff', 'Tarf_Cont_Tariff_Id'),
-            'tarfContCity' => array(self::BELONGS_TO, 'MasterCity', 'Tarf_Cont_City_Id'),
+            'tarfContRegion' => array(self::BELONGS_TO, 'MasterRegion', 'Tarf_Cont_Region_Id'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'Created_By'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'Updated_By'),
             'contractInvoices' => array(self::HAS_MANY, 'ContractInvoice', 'Tarf_Cont_Id'),
             'contractHistory' => array(self::HAS_MANY, 'TariffContractsHistory', 'Tarf_Cont_Id'),
-            'emailTemp' => array(self::HAS_ONE, 'EmailTemplate', array('Tarf_Cont_Id'=>'Tarf_Cont_Id')),
+            'emailTemp' => array(self::HAS_ONE, 'EmailTemplate', array('Tarf_Cont_Id' => 'Tarf_Cont_Id')),
         );
     }
 
@@ -141,7 +141,7 @@ class TariffContracts extends RActiveRecord {
             'Tarf_Cont_GUID' => 'Guid',
             'Tarf_Cont_Internal_Code' => 'Contract Number',
             'Tarf_Cont_User_Id' => 'User',
-            'Tarf_Cont_City_Id' => 'City',
+            'Tarf_Cont_Region_Id' => 'Region',
             'Tarf_Cont_District' => 'District',
             'Tarf_Cont_Area' => 'Area',
             'Tarf_Cont_Tariff_Id' => 'Tariff code',
@@ -188,7 +188,7 @@ class TariffContracts extends RActiveRecord {
         $criteria->compare('Tarf_Cont_Id', $this->Tarf_Cont_Id);
         $criteria->compare('Tarf_Cont_GUID', $this->Tarf_Cont_GUID, true);
         $criteria->compare('Tarf_Cont_Internal_Code', $this->Tarf_Cont_Internal_Code, true);
-        $criteria->compare('Tarf_Cont_City_Id', $this->Tarf_Cont_City_Id);
+        $criteria->compare('Tarf_Cont_Region_Id', $this->Tarf_Cont_Region_Id);
         $criteria->compare('Tarf_Cont_District', $this->Tarf_Cont_District, true);
         $criteria->compare('Tarf_Cont_Area', $this->Tarf_Cont_Area, true);
         $criteria->compare('Tarf_Cont_Tariff_Id', $this->Tarf_Cont_Tariff_Id);
@@ -245,6 +245,7 @@ class TariffContracts extends RActiveRecord {
             '6' => 'One of Payment',
         );
     }
+
     public function getPayment($key = NULL) {
         $payments = $this->getPaymentlist();
         if (isset($this->Tarf_Cont_Pay_Id))
@@ -255,33 +256,33 @@ class TariffContracts extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->Tarf_Invoice = Myclass::getTarifInvoice();
             $this->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From);
             $this->Tarf_Cont_Due_Count = ContractInvoice::getContractDuration($this->Tarf_Cont_Pay_Id, $this->Tarf_Cont_From, $this->Tarf_Cont_To);
             $this->Tarf_Cont_Balance = $this->Tarf_Cont_Amt_Pay;
         }
-        if($this->Tarf_Cont_Renewal == 'N'){
+        if ($this->Tarf_Cont_Renewal == 'N') {
             $this->Tarf_Cont_Renewal_Year = '';
         }
         return parent::beforeSave();
     }
 
     protected function afterSave() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             InternalcodeGenerate::model()->codeIncreament(InternalcodeGenerate::TARIFF_CONTRACT_CODE);
             $model = new EmailTemplate;
             $model->attributes = EmailTemplate::defaultTemplateContents();
             $model->setAttribute('Tarf_Cont_Id', $this->Tarf_Cont_Id);
             $model->setAttribute('Email_Temp_Name', "{$this->tarfContUser->User_Cust_Name}");
             /* Customized Email */
-            if($this->email_template != '')
+            if ($this->email_template != '')
                 $model->setAttribute('Email_Temp_Content', $this->email_template);
-            if($this->email_name != '')
+            if ($this->email_name != '')
                 $model->setAttribute('Email_Temp_Name', $this->email_name);
-            if($this->email_subject != '')
+            if ($this->email_subject != '')
                 $model->setAttribute('Email_Temp_Subject', $this->email_subject);
-            if($this->email_from != '')
+            if ($this->email_from != '')
                 $model->setAttribute('Email_Temp_From', $this->email_from);
             $model->save(false);
         }
@@ -289,20 +290,21 @@ class TariffContracts extends RActiveRecord {
     }
 
     protected function afterFind() {
-        if($this->Tarf_Cont_Event_Date == '0000-00-00')
+        if ($this->Tarf_Cont_Event_Date == '0000-00-00')
             $this->Tarf_Cont_Event_Date = '';
         return parent::afterFind();
     }
-    
+
     public function getRenewallist() {
-        $ranges =  range(1, 10);
+        $ranges = range(1, 10);
         return array_combine($ranges, $ranges);
     }
-    
+
     protected function afterDelete() {
         $model = EmailTemplate::model()->findByAttributes(array('Tarf_Cont_Id' => $this->Tarf_Cont_Id));
         $model->delete();
 
         return parent::afterDelete();
     }
+
 }

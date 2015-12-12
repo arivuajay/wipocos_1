@@ -110,7 +110,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
                 'value' => function ($data) {
-                    echo $data->tarfCont->tarfContUser->User_Cust_Name;
+                    echo $data->tarfCont->tarfContUser->User_Cust_Code;
                 }
             ),
             'Inv_Amount',
@@ -206,7 +206,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             array(
                 'name' => TariffContracts::model()->getAttributeLabel('Tarf_Cont_User_Id'),
                 'value' => function ($data) {
-                    echo $data->tarfCont->tarfContUser->User_Cust_Name;
+                    echo $data->tarfCont->tarfContUser->User_Cust_Code;
                 }
             ),
             'Inv_Amount',
@@ -255,7 +255,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

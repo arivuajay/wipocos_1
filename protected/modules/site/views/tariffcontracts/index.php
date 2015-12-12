@@ -35,7 +35,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         'action' => array('/site/tariffcontracts/index'),
                         'htmlOptions' => array('role' => 'form')
                     ));
-                    $cities = Myclass::getMasterCity();
+                    $regions = Myclass::getMasterRegion();
                     $tariffs = Myclass::getMasterTariff();
                     $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
                     $event_types = Myclass::getMasterEventtype();
@@ -51,9 +51,9 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     </div>
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
-                            <?php echo $form->labelEx($searchModel, 'Tarf_Cont_City_Id', array('class' => ' control-label')); ?>
-                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_City_Id', $cities, array('class' => 'form-control', 'prompt' => '')); ?>
-                            <?php echo $form->error($searchModel, 'Tarf_Cont_City_Id'); ?>
+                            <?php echo $form->labelEx($searchModel, 'Tarf_Cont_Region_Id', array('class' => ' control-label')); ?>
+                            <?php echo $form->dropDownList($searchModel, 'Tarf_Cont_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
+                            <?php echo $form->error($searchModel, 'Tarf_Cont_Region_Id'); ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4">
@@ -186,13 +186,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 array(
                     'name' => 'Tarf_Cont_User_Id',
                     'value' => function ($data) {
-                        echo $data->tarfContUser->User_Cust_Name;
+                        echo $data->tarfContUser->User_Cust_Code;
                     }
                 ),
 //                array(
-//                    'name' => 'Tarf_Cont_City_Id',
+//                    'name' => 'Tarf_Cont_Region_Id',
 //                    'value' => function ($data){
-//                        echo $data->tarfContCity->Region_Name;
+//                        echo $data->tarfContRegion->Region_Name;
 //                    }
 //                ),
 //                'Tarf_Cont_District',
@@ -288,13 +288,13 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
             array(
                 'name' => 'Tarf_Cont_User_Id',
                 'value' => function ($data) {
-                    echo $data->tarfContUser->User_Cust_Name;
+                    echo $data->tarfContUser->User_Cust_Code;
                 }
             ),
 //                array(
-//                    'name' => 'Tarf_Cont_City_Id',
+//                    'name' => 'Tarf_Cont_Region_Id',
 //                    'value' => function ($data){
-//                        echo $data->tarfContCity->Region_Name;
+//                        echo $data->tarfContRegion->Region_Name;
 //                    }
 //                ),
 //                'Tarf_Cont_District',
@@ -367,7 +367,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 <?php
 $js = <<< EOD
     $(document).ready(function(){
-        
+
     });
 EOD;
 Yii::app()->clientScript->registerScript('index', $js);

@@ -26,7 +26,7 @@ class ReportController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('grpmember', 'report', 'wkrecrh', 'wrkrecrh', 'rhbywrk',
-                    'worksbyrh', 'recsbyrh', 'grpmemlist','memberlist','loglist','distbyrh'),
+                    'worksbyrh', 'recsbyrh', 'grpmemlist', 'memberlist', 'loglist', 'distbyrh'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -60,7 +60,7 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('worksbyrh', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('worksbyrh', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     public function actionRecsbyrh() {
@@ -82,7 +82,7 @@ class ReportController extends Controller {
             $this->mPDFRender($title, $render);
         }
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('recsbyrh', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('recsbyrh', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     public function actionGrpmemlist() {
@@ -104,7 +104,7 @@ class ReportController extends Controller {
             $this->mPDFRender($title, $render);
         }
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('grpmemlist', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('grpmemlist', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     public function actionMemberlist() {
@@ -127,7 +127,7 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('memberlist', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('memberlist', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     public function actionLoglist() {
@@ -150,7 +150,7 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('loglist', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('loglist', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     public function actionDistbyrh() {
@@ -173,9 +173,8 @@ class ReportController extends Controller {
         }
 
         $head_title = $this->formatHeader('pdf', $title);
-        $this->render('distbyrh', compact('searchModel', 'search', 'model','head_title','title'));
+        $this->render('distbyrh', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
-
 
     protected function mPDFRender($header, $render) {
         $mPDF1 = Yii::app()->ePdf->mpdf();
@@ -183,7 +182,7 @@ class ReportController extends Controller {
         $mPDF1->WriteHTML($render);
         $mPDF1->setFooter('{PAGENO}');
 
-        $mPDF1->Output("Report_" . time() . ".pdf", EYiiPdf::OUTPUT_TO_BROWSER);
+        $mPDF1->Output("Report_" . time() . ".pdf", EYiiPdf::OUTPUT_TO_DOWNLOAD);
     }
 
     protected function formatHeader($format, $title) {
@@ -201,9 +200,6 @@ class ReportController extends Controller {
         return $result;
     }
 
-
-
-
 //    protected function searchKeyWords($model) {
 //        $keys = array_filter($model->attributes);
 //
@@ -215,7 +211,6 @@ class ReportController extends Controller {
 //        }
 //        return implode($words, ' AND ');
 //    }
-
 //        public function actionGrpmember() {
 //        $this->render('grpmember');
 //    }

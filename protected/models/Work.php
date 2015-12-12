@@ -373,4 +373,32 @@ class Work extends RActiveRecord {
         return "$time[0]' $time[1]''";
     }
 
+    protected function getRh_grid() {
+        $result = 'NIL';
+        $rh = Work::model()->findByPk($this->Work_Id)->workRightholders;
+        if ($rh) {
+            $res = '';
+            foreach ($rh as $key => $member) {
+                if ($member->workAuthor) {
+                    $name = $member->workAuthor->fullname;
+                    $internal_code = $member->workAuthor->Auth_Internal_Code;
+                } elseif ($member->workPublisher) {
+                    $name = $member->workPublisher->Pub_Corporate_Name;
+                    $internal_code = $member->workPublisher->Pub_Internal_Code;
+                } elseif ($member->workPerformer) {
+                    $name = $member->workPerformer->fullname;
+                    $internal_code = $member->workPerformer->Perf_Internal_Code;
+                } elseif ($member->workProducer) {
+                    $name = $member->workProducer->Pro_Corporate_Name;
+                    $internal_code = $member->workProducer->Pro_Internal_Code;
+                }
+
+                $res .= "<tr><td>{$name}</td><td>{$internal_code}</td></tr>";
+            }
+            $result = "<table border = '1' class='match_det_table'><thead><tr><th width='50%'>Name</th><th>Internal Code</th></tr></thead><tbody>{$res}</tbody></table>";
+        }
+
+        return $result;
+    }
+
 }

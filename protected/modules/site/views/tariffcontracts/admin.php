@@ -48,7 +48,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'Tarf_Cont_Id',
 		'Tarf_Cont_GUID',
 		'Tarf_Cont_Internal_Code',
-		'Tarf_Cont_City_Id',
+		'Tarf_Cont_Region_Id',
 		'Tarf_Cont_District',
 		'Tarf_Cont_Area',
 		/*

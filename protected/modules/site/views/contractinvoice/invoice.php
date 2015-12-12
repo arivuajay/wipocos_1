@@ -35,8 +35,8 @@ $this->breadcrumbs = array(
         <div class="col-sm-6 invoice-col" <?php echo $export ? 'style="padding: 0 15px;"' : '' ?>>
             <p class="lead">User Details:</p>
             <address>
-                <strong><?php echo $contract->tarfContUser->User_Cust_Name; ?></strong><br>
-                <?php echo $contract->tarfContUser->User_Cust_Name; ?><br>
+                <strong><?php echo $contract->tarfContUser->User_Cust_Code; ?></strong><br>
+                <?php echo $contract->tarfContUser->User_Cust_Code; ?><br>
                 <?php echo $contract->tarfContUser->User_Cust_Address; ?><br>
                 Phone: <?php echo $contract->tarfContUser->User_Cust_Telephone; ?><br/>
                 Fax: <?php echo $contract->tarfContUser->User_Cust_Fax; ?><br/>

@@ -2,7 +2,7 @@
 /* @var $this TariffcontractsController */
 /* @var $model TariffContracts */
 
-$this->title = 'View Contract: ' . $model->tarfContUser->User_Cust_Name;
+$this->title = 'View Contract: ' . $model->tarfContUser->User_Cust_Code;
 $this->breadcrumbs = array(
     'Contract' => array('index'),
     'View ' . 'TariffContracts',
@@ -58,11 +58,11 @@ $this->breadcrumbs = array(
 //            'Tarf_Invoice',
             array(
                 'name' => 'Tarf_Cont_User_Id',
-                'value' => $model->tarfContUser->User_Cust_Name
+                'value' => $model->tarfContUser->User_Cust_Code
             ),
             array(
-                'name' => 'Tarf_Cont_City_Id',
-                'value' => $model->tarfContCity->City_Name
+                'name' => 'Tarf_Cont_Region_Id',
+                'value' => $model->tarfContRegion->Region_Name
             ),
             'Tarf_Cont_District',
             'Tarf_Cont_Area',

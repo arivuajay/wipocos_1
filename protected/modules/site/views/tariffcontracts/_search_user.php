@@ -13,7 +13,7 @@
                         <thead>
                             <tr>
                                 <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
-                                <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Name'); ?></th>
+                                <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
                                 <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Address'); ?></th>
                                 <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Email'); ?></th>
                                 <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Telephone'); ?></th>
@@ -23,9 +23,9 @@
                             <?php
                             foreach ($users as $key => $user) {
                                 ?>
-                                <tr data-uid="<?php echo $user->User_Cust_GUID ?>" data-id="<?php echo $user->User_Cust_Id ?>" data-name="<?php echo $user->User_Cust_Name; ?>">
+                                <tr data-uid="<?php echo $user->User_Cust_GUID ?>" data-id="<?php echo $user->User_Cust_Id ?>" data-name="<?php echo $user->User_Cust_Code; ?>">
                                     <td><?php echo $user->User_Cust_Code ?></td>
-                                    <td><?php echo $user->User_Cust_Name ?></td>
+                                    <td><?php echo $user->User_Cust_Code ?></td>
                                     <td><?php echo $user->User_Cust_Address ?></td>
                                     <td><?php echo $user->User_Cust_Email ?></td>
                                     <td><?php echo $user->User_Cust_Telephone ?></td>

@@ -181,8 +181,7 @@ class DistributionSetting extends RActiveRecord {
             $criteria->compare('class.Class_Name', $this->By_Class, true, 'OR');
         }
         if ($this->By_Period_From && $this->By_Period_To) {
-            $criteria->addCondition('distributionUtlizationPeriods.Period_From < :periodFrom OR distributionUtlizationPeriods.Period_To > :periodTo');
-            $criteria->params = array(':periodFrom' => $this->By_Period_From, ':periodTo' => $this->By_Period_To);
+            $criteria->addCondition("(distributionUtlizationPeriods.Period_From <= '{$this->By_Period_From}' AND distributionUtlizationPeriods.Period_To > '{$this->By_Period_From}') OR (distributionUtlizationPeriods.Period_From <= '{$this->By_Period_To}' AND distributionUtlizationPeriods.Period_To > '{$this->By_Period_To}')");
         }
 
         Yii::app()->db->createCommand('SET SQL_BIG_SELECTS=1;')->query();
@@ -193,75 +192,23 @@ class DistributionSetting extends RActiveRecord {
     }
 
     public function getReportLoglist() {
-        $result = 'Nil';
+        $result = '';
         foreach ($this->distributionUtlizationPeriods->distributionLogsheets as $sheet) {
             foreach ($sheet->distributionLogsheetLists as $list) {
-                $result = '<table class="table table-condensed" id="linked-holders"><thead><tr><th>Original Title</th><th>Internal Code</th><th>Right Holder</th></tr></thead><tbody>';
+                $result .= '<table class="table table-condensed" id="linked-holders"><thead><tr><th>Original Title</th><th>Internal Code</th><th>Right Holder</th></tr></thead><tbody>';
                 if ($list->listWork) {
-                    $rh = '';
-                    if ($list->listWork->workRightholders) {
-                        $rh .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Performance/Broadcast</th><th>Mechanical</th></thead><tbody>";
-                        foreach ($list->listWork->workRightholders as $key => $rightholder) {
-                            if ($rightholder->workAuthor) {
-                                $rh .= '<tr>';
-                                $rh .= "<td>{$rightholder->workAuthor->fullname}</td>";
-                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
-                                $rh .= '</tr>';
-                            }
-                            if ($rightholder->workPublisher) {
-                                $rh .= '<tr>';
-                                $rh .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
-                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
-                                $rh .= '</tr>';
-                            }
-                            if ($rightholder->workPublisher && $main_publisher->Work_Member_GUID != $rightholder->workPublisher->Pub_GUID) {
-                                $rh .= '<tr>';
-                                $rh .= "<td>{$rightholder->workPublisher->Pub_Corporate_Name}</td>";
-                                $rh .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
-                                $rh .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
-                                $rh .= '</tr>';
-                            }
-                        }
-                        $rh .= '</tbody></table>';
-                    }
-                    $result .= "<tr><td>{$list->listWork->Work_Org_Title}</td><td>{$list->listWork->Work_Internal_Code}</td><td>{$rh}</td></tr>";
+                    $result .= "<tr><td>{$list->listWork->Work_Org_Title}</td><td>{$list->listWork->Work_Internal_Code}</td><td>{$list->listWork->rh_grid}</td></tr>";
                 }
                 if ($list->listRecording) {
-                    if ($list->listRecording->recordingRightholders) {
-                        $rh = "";
-                        $rh .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
-                        foreach ($list->listRecording->recordingRightholders as $key => $rightholder) {
-                            if ($rightholder->recordingPerformer) {
-                                $rh .= '<tr>';
-                                $rh .= "<td>{$rightholder->recordingPerformer->fullname}</td>";
-                                $rh .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
-                                $rh .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
-                                $rh .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
-                                $rh .= '</tr>';
-                            }
-                            if ($rightholder->recordingProducer) {
-                                $rh .= '<tr>';
-                                $rh .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
-                                $rh .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
-                                $rh .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
-                                $rh .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
-                                $rh .= '</tr>';
-                            }
-                        }
-
-                        $rh .= '</tbody></table>';
-                    }
-                    $result .= "<tr><td>{$list->listRecording->Rcd_Title}</td><td>{$list->listRecording->Rcd_Internal_Code}</td><td>{$rh}</td></tr>";
+                    $result .= "<tr><td>{$list->listRecording->Rcd_Title}</td><td>{$list->listRecording->Rcd_Internal_Code}</td><td>{$list->listRecording->rh_grid}</td></tr>";
                 }
 
                 $result .= '</tbody></table>';
             }
         }
+        if (empty($result))
+            $result = 'NIL';
+
         return $result;
     }
 

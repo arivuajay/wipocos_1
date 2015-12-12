@@ -350,4 +350,32 @@ class Recording extends RActiveRecord {
         return "$time[0]' $time[1]''";
     }
 
+    protected function getRh_grid() {
+        $result = 'NIL';
+        $rh = Recording::model()->findByPk($this->Rcd_Id)->recordingRightholders;
+        if ($rh) {
+            $res = '';
+            foreach ($rh as $key => $member) {
+                if ($member->recordingAuthor) {
+                    $name = $member->recordingAuthor->fullname;
+                    $internal_code = $member->recordingAuthor->Auth_Internal_Code;
+                } elseif ($member->recordingPublisher) {
+                    $name = $member->recordingPublisher->Pub_Corporate_Name;
+                    $internal_code = $member->recordingPublisher->Pub_Internal_Code;
+                } elseif ($member->recordingPerformer) {
+                    $name = $member->recordingPerformer->fullname;
+                    $internal_code = $member->recordingPerformer->Perf_Internal_Code;
+                } elseif ($member->recordingProducer) {
+                    $name = $member->recordingProducer->Pro_Corporate_Name;
+                    $internal_code = $member->recordingProducer->Pro_Internal_Code;
+                }
+
+                $res .= "<tr><td>{$name}</td><td>{$internal_code}</td></tr>";
+            }
+            $result = "<table border = '1' class='match_det_table'><thead><tr><th width='50%'>Name</th><th>Internal Code</th></tr></thead><tbody>{$res}</tbody></table>";
+        }
+
+        return $result;
+    }
+
 }

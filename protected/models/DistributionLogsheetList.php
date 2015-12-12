@@ -194,10 +194,12 @@ class DistributionLogsheetList extends RActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->with = array('listWork', 'listRecording');
         $criteria->compare('Log_List_Duration', $this->Log_List_Duration, true);
+        $criteria->compare('Log_List_Date', $this->Log_List_Date, true);
         $criteria->compare('Log_List_Factor_Id', $this->Log_List_Factor_Id);
         $criteria->compare('Log_List_Coefficient_Id', $this->Log_List_Coefficient_Id, true);
         $criteria->compare('Log_List_Event', $this->Log_List_Event, true);
         $criteria->compare('Log_List_Seq_Number', $this->Log_List_Seq_Number);
+        
         $criteria->compare('listWork.Work_Org_Title', $this->Log_List_Report_Filter, true);
         $criteria->compare('listRecording.Rcd_Title', $this->Log_List_Report_Filter, true, 'OR');
 

@@ -23,8 +23,8 @@ $contract = $model->tarfCont;
     <div class="col-sm-6 invoice-col" style="width: 45%;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;float: left;">
         <p class="lead" style="margin-bottom: 20px;font-size: 16px;font-weight: 300;line-height: 1.4;">User Details:</p>
         <address style="margin-bottom: 20px;font-style: normal;line-height: 1.42857143;">
-                <strong><?php echo $contract->tarfContUser->User_Cust_Name; ?></strong><br>
-                <?php echo $contract->tarfContUser->User_Cust_Name; ?><br>
+                <strong><?php echo $contract->tarfContUser->User_Cust_Code; ?></strong><br>
+                <?php echo $contract->tarfContUser->User_Cust_Code; ?><br>
                 <?php echo $contract->tarfContUser->User_Cust_Address; ?><br>
                 Phone: <?php echo $contract->tarfContUser->User_Cust_Telephone; ?><br/>
                 Fax: <?php echo $contract->tarfContUser->User_Cust_Fax; ?><br/>

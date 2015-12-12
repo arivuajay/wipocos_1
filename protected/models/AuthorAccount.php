@@ -54,6 +54,8 @@ class AuthorAccount extends RActiveRecord {
     public $oldRecord;
     public $internal_increament = true;
     public $report_search_by = true;
+    public $By_Period_From;
+    public $By_Period_To;
 
     const PHOTO_SIZE = 1;
     const MIN_AGE = 20; //in years
@@ -117,7 +119,7 @@ class AuthorAccount extends RActiveRecord {
 //            array('Auth_DOB', 'compare', 'allowEmpty' => true, 'compareValue' => date("Y-m-d", strtotime('-'.self::MAX_AGE.' years')), 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}". Age may be maximum '.self::MAX_AGE.' years'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member, Created_By, Updated_By,report_search_by', 'safe', 'on' => 'search'),
+            array('Auth_Acc_Id, Auth_Sur_Name, Auth_First_Name, Auth_Internal_Code, Auth_Ipi, Auth_Ipi_Base_Number, Auth_Ipn_Number, Auth_DOB, Auth_Place_Of_Birth_Id, Auth_Birth_Country_Id, Auth_Nationality_Id, Auth_Language_Id, Auth_Identity_Number, Auth_Marital_Status_Id, Auth_Spouse_Name, Auth_Gender, Active, Created_Date, Rowversion, expiry_date, hierarchy_level,record_search, Auth_Non_Member, Created_By, Updated_By,report_search_by,By_Period_From,By_Period_To', 'safe', 'on' => 'search'),
             array('report_search_by', 'required', 'on' => 'safe'),
             array('Created_By, Updated_By', 'safe'),
         );
@@ -188,6 +190,7 @@ class AuthorAccount extends RActiveRecord {
             'is_author' => 'Author',
             'Auth_Photo' => 'Profile Picture',
             'report_search_by' => 'Seacrh By',
+            'By_Period' => 'Date Range',
         );
     }
 

@@ -17,8 +17,8 @@
 	<?php echo CHtml::encode($data->Tarf_Cont_Internal_Code); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_City_Id')); ?>:</b>
-	<?php echo CHtml::encode($data->Tarf_Cont_City_Id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_Region_Id')); ?>:</b>
+	<?php echo CHtml::encode($data->Tarf_Cont_Region_Id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Tarf_Cont_District')); ?>:</b>

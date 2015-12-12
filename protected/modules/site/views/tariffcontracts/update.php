@@ -2,7 +2,7 @@
 /* @var $this TariffcontractsController */
 /* @var $model TariffContracts */
 
-$this->title='Update Contract: '. $model->tarfContUser->User_Cust_Name;
+$this->title='Update Contract: '. $model->tarfContUser->User_Cust_Code;
 $this->breadcrumbs=array(
 	'Contract'=>array('index'),
 	'Update Contract',

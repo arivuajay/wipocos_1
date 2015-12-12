@@ -22,7 +22,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <li><a id="a_tab_1" href="#tab_1" data-toggle="tab">Contract</a></li>
                 <li><a id="a_tab_2" href="#tab_2" <?php if ($other_tab_validation) echo 'data-toggle="tab"'; ?>>History</a></li>
             </ul>
-            <div class="tab-content">                    
+            <div class="tab-content">
                 <div class="tab-pane" id="tab_1">
                     <div class="box box-primary">
                         <?php
@@ -70,16 +70,16 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                     <thead>
                                                         <tr>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
-                                                            <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Name'); ?></th>
+                                                            <!--<th><?php // echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>-->
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Address'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Email'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Telephone'); ?></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr class="highlight" data-uid="<?php echo $model->tarfContUser->User_Cust_GUID ?>" data-id="<?php echo $model->tarfContUser->User_Cust_Id ?>" data-name="<?php echo $model->tarfContUser->User_Cust_Name; ?>">
+                                                        <tr class="highlight" data-uid="<?php echo $model->tarfContUser->User_Cust_GUID ?>" data-id="<?php echo $model->tarfContUser->User_Cust_Id ?>" data-name="<?php echo $model->tarfContUser->User_Cust_Code; ?>">
                                                             <td><?php echo $model->tarfContUser->User_Cust_Code ?></td>
-                                                            <td><?php echo $model->tarfContUser->User_Cust_Name ?></td>
+                                                            <!--<td><?php // echo $model->tarfContUser->User_Cust_Code ?></td>-->
                                                             <td><?php echo $model->tarfContUser->User_Cust_Address ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Email ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Telephone ?></td>
@@ -110,7 +110,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         ));
                         echo $form->hiddenField($model, 'Tarf_Cont_User_Id');
                         echo $form->hiddenField($model, 'Tarf_Recurring_Amount', array('class' => 'recurr_amt'));
-                        $cities = Myclass::getMasterCity();
+                        $regions = Myclass::getMasterRegion();
                         $tariffs = Myclass::getMasterTariff();
                         $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
                         $event_types = Myclass::getMasterEventtype();
@@ -145,10 +145,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     <div class="box-body">
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <?php echo $form->labelEx($model, 'Tarf_Cont_City_Id', array('class' => 'col-sm-2 control-label')); ?>
+                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Region_Id', array('class' => 'col-sm-2 control-label')); ?>
                                                 <div class="col-sm-5">
-                                                    <?php echo $form->dropDownList($model, 'Tarf_Cont_City_Id', $cities, array('class' => 'form-control', 'prompt' => '')); ?>
-                                                    <?php echo $form->error($model, 'Tarf_Cont_City_Id'); ?>
+                                                    <?php echo $form->dropDownList($model, 'Tarf_Cont_Region_Id', $regions, array('class' => 'form-control', 'prompt' => '')); ?>
+                                                    <?php echo $form->error($model, 'Tarf_Cont_Region_Id'); ?>
                                                 </div>
                                             </div>
 
@@ -372,16 +372,16 @@ $get_recurr = Yii::app()->createAbsoluteUrl("site/tariffcontracts/getrecurr");
 $mode = $model->isNewRecord ? 1 : 0;
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
-    var mode = $mode;        
+    var mode = $mode;
     $(document).ready(function(){
         $('.nav-tabs a[href="#$active_Tab"]').tab('show');
-        
-        $('.cont_dates').datepicker({ 
+
+        $('.cont_dates').datepicker({
             format: 'yyyy-mm-dd'
         }).on('changeDate', function(e){
             getRecurr();
         });
-        
+
         $('#search_button').on("click", function(){
             var data=$("#search-form").serialize();
             $.ajax({
@@ -404,7 +404,7 @@ $js = <<< EOD
             $('#TariffContracts_Tarf_Cont_User_Id').val($(this).data('id'));
             $('#TariffContracts_email_name').val($(this).data('name'));
         });
-        
+
         $('#TariffContracts_Tarf_Cont_Tariff_Id').on("click", function(){
             _that = $(this);
             $.ajax({
@@ -423,18 +423,18 @@ $js = <<< EOD
                 dataType:'html'
             });
         });
-        
+
         $('.recurr').on("change", function(){
             getRecurr();
         });
     });
-        
+
     function getRecurr(){
         amount = $('#TariffContracts_Tarf_Cont_Amt_Pay').val();
         from = $('#TariffContracts_Tarf_Cont_From').val();
         to = $('#TariffContracts_Tarf_Cont_To').val();
         payid = $('#TariffContracts_Tarf_Cont_Pay_Id').val();
-        
+
         if(amount != '' && from != '' && to != '' && payid != ''){
             $.ajax({
                 type: "POST",
@@ -453,17 +453,17 @@ $js = <<< EOD
             });
         }
     }
-        
+
     $('#TariffContracts_Tarf_Cont_Renewal').on('ifChecked', function(event){
         $('#TariffContracts_Tarf_Cont_Renewal_Year').attr('disabled', false);
         $('#TariffContracts_Tarf_Cont_Renewal_Year').val() == '' ? $('#TariffContracts_Tarf_Cont_Renewal_Year').val(1) : '';
     });
-        
+
     $('#TariffContracts_Tarf_Cont_Renewal').on('ifUnchecked', function(event){
         $('#TariffContracts_Tarf_Cont_Renewal_Year').attr('disabled', true);
         $('#TariffContracts_Tarf_Cont_Renewal_Year').val('');
     });
-   
+
 EOD;
 
 Yii::app()->clientScript->registerScript('_form', $js);

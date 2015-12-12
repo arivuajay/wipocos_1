@@ -93,10 +93,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     </thead>
                                     <tbody>
                                         <?php $contract =  $cont_model;?>
-                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Name; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Code; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
                                             <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
                                             <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
-                                            <td><?php echo $contract->tarfContUser->User_Cust_Name ?></td>
+                                            <td><?php echo $contract->tarfContUser->User_Cust_Code ?></td>
                                             <td><?php echo $contract->tarfContTariff->Tarif_Description ?></td>
                                             <td><?php echo $contract->tarfContInsp->Insp_Name ?></td>
                                         </tr>
@@ -116,10 +116,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                 <div class="box-body">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <?php 
+                            <?php
                             $inv_to = $amount = '';
                             if ($update) {
-                                $inv_to = $contract->tarfContUser->User_Cust_Name;
+                                $inv_to = $contract->tarfContUser->User_Cust_Code;
                                 $amount = $contract->Tarf_Cont_Amt_Pay;
                                 $cont_end = $contract->Tarf_Cont_To;
                                 $repeat_type = $contract->getPayment();
@@ -165,7 +165,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <?php // echo $form->error($new_model, 'Inv_Repeat_Id'); ?>
                         </div>
 
-                        
+
                         <div class="form-group">
                             <?php echo $form->labelEx($new_model, 'Inv_Next_Date', array('class' => '')); ?>
                             <?php echo $form->textField($new_model, 'Inv_Next_Date', array('class' => 'form-control date')); ?>
@@ -189,11 +189,11 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                     'order' => 'contractInvoices.Inv_Next_Date DESC'
                 )
             );
-            $this->renderPartial('invoices', array('model' => $cont_model)); 
+            $this->renderPartial('invoices', array('model' => $cont_model));
         }
         ?>
     </div>
-    
+
     <div class="col-lg-12 col-xs-12">
         <div class="form-group">
             <div class="col-lg-1">
@@ -211,7 +211,7 @@ $search_url = Yii::app()->createAbsoluteUrl("site/contractinvoice/searchcontract
 $invoice_url = Yii::app()->createAbsoluteUrl("site/contractinvoice/getinvoice");
 $js = <<< EOD
         $(document).ready(function(){
-            
+
             $('#search_button').on("click", function(){
                 var data=$("#search-form").serialize();
                 $.ajax({
@@ -254,7 +254,7 @@ $js = <<< EOD
                 });
             });
         });
-   
+
 EOD;
 
 Yii::app()->clientScript->registerScript('_form', $js);
