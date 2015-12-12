@@ -26,7 +26,7 @@ class ReportController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('grpmember', 'report', 'wkrecrh', 'wrkrecrh', 'rhbywrk',
-                    'worksbyrh', 'recsbyrh', 'grpmemlist', 'memberlist', 'loglist', 'distbyrh'),
+                    'worksbyrh', 'recsbyrh', 'grpmemlist', 'memberlist', 'loglist', 'distbyrh', 'pseudolist'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -174,6 +174,28 @@ class ReportController extends Controller {
 
         $head_title = $this->formatHeader('pdf', $title);
         $this->render('distbyrh', compact('searchModel', 'search', 'model', 'head_title', 'title'));
+    }
+
+    public function actionPseudolist() {
+        $search = $export = false;
+        $title = 'Pseudonyms list';
+
+        $model = new AuthorPseudonym();
+        $searchModel = new AuthorPseudonym('search');
+
+        if (isset($_GET['AuthorPseudonym'])) {
+            $search = true;
+            $searchModel->attributes = $_GET['AuthorPseudonym'];
+        }
+
+        if (isset($_REQUEST['export']) && $_REQUEST['export'] == 'print') {
+            $export = true;
+            $render = $this->renderPartial('pseudolist', compact('searchModel', 'search', 'model', 'export'), true, true);
+            $this->mPDFRender($title, $render);
+        }
+
+        $head_title = $this->formatHeader('pdf', $title);
+        $this->render('pseudolist', compact('searchModel', 'search', 'model', 'head_title', 'title'));
     }
 
     protected function mPDFRender($header, $render) {

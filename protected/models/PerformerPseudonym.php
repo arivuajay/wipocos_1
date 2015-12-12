@@ -128,4 +128,24 @@ class PerformerPseudonym extends RActiveRecord {
         parent::afterSave();
     }
 
+    public function getReportPseudoType() {
+        return $this->perfPseudoType->Pseudo_Code;
+    }
+
+    public function getReportPseudoName() {
+        return $this->Perf_Pseudo_Name;
+    }
+
+    public function getReportPseudoRole() {
+        return 'Performer';
+    }
+
+    public function getReportPseudoMemName() {
+        return $this->perfAcc->fullName;
+    }
+
+    public function getReportPseudoMemCode() {
+        return $this->perfAcc->Perf_Internal_Code;
+    }
+
 }

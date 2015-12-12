@@ -19,6 +19,7 @@
 class ProducerPseudonym extends RActiveRecord {
 
     public $after_save_enable = true;
+
     /**
      * @return string the associated database table name
      */
@@ -133,4 +134,25 @@ class ProducerPseudonym extends RActiveRecord {
         ProducerAccount::afterTabsave('PublisherPseudonym', 'publisherPseudonyms');
         return parent::afterSave();
     }
+
+    public function getReportPseudoType() {
+        return $this->proPseudoType->Pseudo_Code;
+    }
+
+    public function getReportPseudoName() {
+        return $this->Pro_Pseudo_Name;
+    }
+
+    public function getReportPseudoRole() {
+        return 'Producer';
+    }
+
+    public function getReportPseudoMemName() {
+        return $this->proAcc->Pro_Corporate_Name;
+    }
+
+    public function getReportPseudoMemCode() {
+        return $this->proAcc->Pro_Internal_Code;
+    }
+
 }

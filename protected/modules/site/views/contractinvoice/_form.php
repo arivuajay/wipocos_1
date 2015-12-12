@@ -93,7 +93,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                     </thead>
                                     <tbody>
                                         <?php $contract =  $cont_model;?>
-                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custname = "<?php echo $contract->tarfContUser->User_Cust_Code; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
+                                        <tr class="highlight" data-uid="<?php echo $contract->Tarf_Cont_GUID ?>" data-id="<?php echo $contract->Tarf_Cont_Id ?>" data-custcode = "<?php echo $contract->tarfContUser->User_Cust_Code; ?>" data-invoice = "<?php echo $contract->Tarf_Invoice; ?>" data-amount = "<?php echo $contract->Tarf_Cont_Amt_Pay; ?>" data-contract-end= "<?php echo $contract->Tarf_Cont_To; ?>" data-repeat= "<?php echo $contract->getPayment(); ?>">
                                             <td><?php echo $contract->Tarf_Cont_Internal_Code ?></td>
                                             <!--<td><?php echo $contract->Tarf_Invoice ?></td>-->
                                             <td><?php echo $contract->tarfContUser->User_Cust_Code ?></td>
@@ -239,7 +239,7 @@ $js = <<< EOD
                     url: '$invoice_url',
                     data:{id: _this.data('id')},
                     success:function(data){
-                        $('#invoice_to').val(_this.data('custname'));
+                        $('#invoice_to').val(_this.data('custcode'));
                         $('#contract_end').val(_this.data('contract-end'));
                         $('#repeat_type').val(_this.data('repeat'));
                         $('#inv_amount').val(_this.data('amount'));

@@ -19,6 +19,7 @@
 class AuthorPseudonym extends RActiveRecord {
 
     public $after_save_enable = true;
+
     /**
      * @return string the associated database table name
      */
@@ -106,6 +107,92 @@ class AuthorPseudonym extends RActiveRecord {
         ));
     }
 
+    public function report() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria2 = new CDbCriteria;
+        $criteria3 = new CDbCriteria;
+        $criteria4 = new CDbCriteria;
+        if ($this->Auth_Pseudo_Type_Id) {
+            $criteria->compare('Auth_Pseudo_Type_Id', $this->Auth_Pseudo_Type_Id);
+            $criteria2->compare('Perf_Pseudo_Type_Id', $this->Auth_Pseudo_Type_Id);
+            $criteria3->compare('Pub_Pseudo_Type_Id', $this->Auth_Pseudo_Type_Id);
+            $criteria4->compare('Pro_Pseudo_Type_Id', $this->Auth_Pseudo_Type_Id);
+        }
+        if ($this->Auth_Pseudo_Name) {
+            $criteria->compare('Auth_Pseudo_Name', $this->Auth_Pseudo_Name, true);
+            $criteria2->compare('Perf_Pseudo_Name', $this->Auth_Pseudo_Name, true);
+            $criteria3->compare('Pub_Pseudo_Name', $this->Auth_Pseudo_Name, true);
+            $criteria4->compare('Pro_Pseudo_Name', $this->Auth_Pseudo_Name, true);
+        }
+
+        $prov1 = new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => false
+        ));
+
+        $prov2 = new CActiveDataProvider('PerformerPseudonym', array(
+            'criteria' => $criteria2,
+            'pagination' => false
+        ));
+
+        $prov3 = new CActiveDataProvider('PublisherPseudonym', array(
+            'criteria' => $criteria3,
+            'pagination' => false
+        ));
+
+        $prov4 = new CActiveDataProvider('ProducerPseudonym', array(
+            'criteria' => $criteria4,
+            'pagination' => false
+        ));
+
+        $records = array();
+
+        for ($i = 0; $i < $prov1->totalItemCount; $i++) {
+            $data = $prov1->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov2->totalItemCount; $i++) {
+            $data = $prov2->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov3->totalItemCount; $i++) {
+            $data = $prov3->data[$i];
+            array_push($records, $data);
+        }
+        for ($i = 0; $i < $prov4->totalItemCount; $i++) {
+            $data = $prov4->data[$i];
+            array_push($records, $data);
+        }
+
+        return new CArrayDataProvider($records, array(
+            'keyField' => false,
+            'pagination' => false
+                )
+        );
+    }
+
+    public function getReportPseudoType() {
+        return $this->authPseudoType->Pseudo_Code;
+    }
+
+    public function getReportPseudoName() {
+        return $this->Auth_Pseudo_Name;
+    }
+
+    public function getReportPseudoRole() {
+        return 'Author';
+    }
+
+    public function getReportPseudoMemName() {
+        return $this->authAcc->fullName;
+    }
+
+    public function getReportPseudoMemCode() {
+        return $this->authAcc->Auth_Internal_Code;
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -123,9 +210,9 @@ class AuthorPseudonym extends RActiveRecord {
             )
         ));
     }
-    
+
     protected function afterSave() {
-        if($this->after_save_enable)
+        if ($this->after_save_enable)
             AuthorAccount::afterTabsave('PerformerPseudonym', 'performerPseudonyms');
         return parent::afterSave();
     }

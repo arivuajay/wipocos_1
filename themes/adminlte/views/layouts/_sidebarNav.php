@@ -160,6 +160,7 @@
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Membership expiry list</span>', 'url' => array('/site/report/memberlist'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Logsheet List</span>', 'url' => array('/site/report/loglist'), 'visible' => '1'),
                         array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Distribution list</span>', 'url' => array('/site/report/distbyrh'), 'visible' => '1'),
+                        array('label' => '<i class="fa fa-puzzle-piece"></i> <span>Pseudonyms list</span>', 'url' => array('/site/report/pseudolist'), 'visible' => '1'),
                     ),
                 ),
             ),

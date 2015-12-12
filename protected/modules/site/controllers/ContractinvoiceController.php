@@ -220,6 +220,7 @@ class ContractinvoiceController extends Controller {
         if (!empty($_REQUEST['searach_text'])) {
             $search_txt = $_REQUEST['searach_text'];
             $criteria->with = array('tarfContUser', 'tarfContInsp', 'tarfContTariff');
+            $criteria->compare('tarfContUser.User_Cust_Code', $search_txt, true, 'OR');
             $criteria->compare('tarfContUser.User_Cust_Name', $search_txt, true, 'OR');
             $criteria->compare('tarfContInsp.Insp_Name', $search_txt, true, 'OR');
             $criteria->compare('tarfContTariff.Tarif_Description', $search_txt, true, 'OR');
@@ -251,7 +252,7 @@ class ContractinvoiceController extends Controller {
             $mPDF1->WriteHTML($stylesheet, 1);
             $mPDF1->WriteHTML($this->renderPartial('_invoice_pdf', $compact, true));
             $mail_pdf = $mPDF1->Output("Invoice{$model->Inv_Invoice}.pdf", EYiiPdf::OUTPUT_TO_STRING);
-            
+
             Yii::import('application.extensions.phpmailer.JPhpMailer');
             $from = NOREPLYMAIL;
             $fromName = SITENAME;
