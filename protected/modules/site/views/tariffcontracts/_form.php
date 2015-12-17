@@ -7,7 +7,6 @@ $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
 
-
 $cs->registerScriptFile($themeUrl . '/js/datatables/jquery.dataTables.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $cs_pos_end);
 ?>
@@ -70,7 +69,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                     <thead>
                                                         <tr>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
-                                                            <!--<th><?php // echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>-->
+                                                            <!--<th><?php // echo CustomerUser::model()->getAttributeLabel('User_Cust_Code');       ?></th>-->
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Address'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Email'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Telephone'); ?></th>
@@ -79,7 +78,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                     <tbody>
                                                         <tr class="highlight" data-uid="<?php echo $model->tarfContUser->User_Cust_GUID ?>" data-id="<?php echo $model->tarfContUser->User_Cust_Id ?>" data-name="<?php echo $model->tarfContUser->User_Cust_Code; ?>">
                                                             <td><?php echo $model->tarfContUser->User_Cust_Code ?></td>
-                                                            <!--<td><?php // echo $model->tarfContUser->User_Cust_Code ?></td>-->
+                                                            <!--<td><?php // echo $model->tarfContUser->User_Cust_Code       ?></td>-->
                                                             <td><?php echo $model->tarfContUser->User_Cust_Address ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Email ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Telephone ?></td>
@@ -113,7 +112,6 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                         $regions = Myclass::getMasterRegion();
                         $tariffs = Myclass::getMasterTariff();
                         $inspectors = CHtml::listData(Inspector::model()->findAll(), 'Insp_Id', 'Insp_Name');
-                        $event_types = Myclass::getMasterEventtype();
                         $payments = TariffContracts::model()->getPayment();
                         $renewalas = TariffContracts::model()->getRenewallist();
                         ?>
@@ -273,34 +271,52 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="box-body">
-                                <div class="form-group foundation">
-                                    <div class="box-header">
-                                        <h3 class="box-title">Events</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Event_Id', array('class' => '')); ?>
-                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Event_Id', $event_types, array('class' => 'form-control', 'prompt' => '')); ?>
-                                                <?php echo $form->error($model, 'Tarf_Cont_Event_Id'); ?>
-                                            </div>
+                            <?php
+                            if ($evt_hist_model):
+                                if (!$contract_event_by_progress)
+                                    $event_types = CHtml::listData(MasterEventType::model()->restart()->findAll(array('order' => 'Evt_Type_Name')), 'Master_Evt_Type_Id', 'Evt_Type_Name');
+                                else
+                                    $event_types = CHtml::listData(MasterEventType::model()->progress()->findAll(array('order' => 'Evt_Type_Name')), 'Master_Evt_Type_Id', 'Evt_Type_Name');
+                                ?>
+                                <div class="box-body">
+                                    <div class="form-group foundation">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Events</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <?php echo $form->labelEx($evt_hist_model, 'Tarf_Cont_Event_Id', array('class' => '')); ?>
+                                                    <?php echo $form->dropDownList($evt_hist_model, 'Tarf_Cont_Event_Id', $event_types, array('class' => 'form-control', 'prompt' => '')); ?>
+                                                    <?php echo $form->error($evt_hist_model, 'Tarf_Cont_Event_Id'); ?>
+                                                </div>
 
-                                            <div class="form-group">
-                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Event_Date', array('class' => '')); ?>
-                                                <?php echo $form->textField($model, 'Tarf_Cont_Event_Date', array('class' => 'form-control date')); ?>
-                                                <?php echo $form->error($model, 'Tarf_Cont_Event_Date'); ?>
-                                            </div>
+                                                <div class="form-group hide">
+                                                    <?php echo $form->labelEx($evt_hist_model, 'Tarf_Cont_Event_Date', array('class' => '')); ?>
+                                                    <?php echo $form->textField($evt_hist_model, 'Tarf_Cont_Event_Date', array('class' => 'form-control date', 'value' => date('Y-m-d'))); ?>
+                                                    <?php echo $form->error($evt_hist_model, 'Tarf_Cont_Event_Date'); ?>
+                                                </div>
 
-                                            <div class="form-group">
-                                                <?php echo $form->labelEx($model, 'Tarf_Cont_Event_Comment', array('class' => '')); ?>
-                                                <?php echo $form->textArea($model, 'Tarf_Cont_Event_Comment', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
-                                                <?php echo $form->error($model, 'Tarf_Cont_Event_Comment'); ?>
+                                                <div class="form-group">
+                                                    <?php echo $form->labelEx($evt_hist_model, 'Tarf_Cont_Event_Comment', array('class' => '')); ?>
+                                                    <?php echo $form->textArea($evt_hist_model, 'Tarf_Cont_Event_Comment', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                                                    <?php echo $form->error($evt_hist_model, 'Tarf_Cont_Event_Comment'); ?>
+                                                </div>
+                                                <?php
+                                                $events_history = TariffContractsEventHistory::model()->findAllByAttributes(array('Tarf_Contract_Id' => $model->Tarf_Cont_Id));
+                                                if ($events_history) {
+                                                    echo '<table class="table table-condensed"><thead><tr><th>Date</th><th>Status</th><th>Status</th></tr></thead><tbody>';
+                                                    foreach ($events_history as $history) {
+                                                        echo "<tr><td>{$history->Tarf_Cont_Event_Date}</td><td>{$history->tarfContEvent->Evt_Type_Name}</td><td>{$history->Tarf_Cont_Event_Comment}</td></tr>";
+                                                    }
+                                                    echo "</tbody></table>";
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-lg-6">
                             <div class="box-body"><div class="form-group foundation">
@@ -324,20 +340,20 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                             <div class="form-group">
                                 <div class="col-lg-12">
                                     <div class="col-lg-3">
-                                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary')); ?>
+                                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id' => 'save_contract')); ?>
                                         <?php
-                                        if($model->isNewRecord){
+                                        if ($model->isNewRecord) {
                                             $this->widget(
-                                                'application.components.MyTbButton', array(
-                                                    'label' => 'Modify Default Email Template',
-                                                    'context' => 'default btn-sm',
-                                                    'htmlOptions' => array(
-                                                        'data-toggle' => 'modal',
-                                                        'data-target' => '#templateModal',
-                                                    ),
-                                                )
+                                                    'application.components.MyTbButton', array(
+                                                'label' => 'Modify Default Email Template',
+                                                'context' => 'default btn-sm',
+                                                'htmlOptions' => array(
+                                                    'data-toggle' => 'modal',
+                                                    'data-target' => '#templateModal',
+                                                ),
+                                                    )
                                             );
-                                            $this->renderPartial('_email_template', compact('model','form'));
+                                            $this->renderPartial('_email_template', compact('model', 'form'));
                                         }
                                         ?>
                                     </div>
@@ -466,5 +482,12 @@ $js = <<< EOD
 
 EOD;
 
+if (!$contract_event_by_progress) {
+    $js .= <<< EOD
+        $(function(){
+            $('input,select,textarea').not('#TariffContractsEventHistory_Tarf_Cont_Event_Id, #TariffContractsEventHistory_Tarf_Cont_Event_Date, #TariffContractsEventHistory_Tarf_Cont_Event_Comment,#save_contract').attr('disabled','disabled');
+        });
+EOD;
+}
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>

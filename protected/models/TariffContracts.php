@@ -41,6 +41,7 @@
  * @property ContractInvoice $contractInvoices
  * @property TariffContractsHistory $contractHistory
  * @property EmailTemplate $emailTemp
+ * @property TariffContractsEventHistory[] $tariffContractsEventHistories
  */
 class TariffContracts extends RActiveRecord {
 
@@ -96,15 +97,17 @@ class TariffContracts extends RActiveRecord {
             array('Tarf_Cont_GUID', 'length', 'max' => 40),
             array('Tarf_Cont_Internal_Code', 'length', 'max' => 50),
             array('Tarf_Cont_District, Tarf_Cont_Area', 'length', 'max' => 100),
-            array('Tarf_Cont_Renewal', 'length', 'max' => 1),
+            array('Tarf_Cont_Renewal,Tarf_Cont_Due_Partial', 'length', 'max' => 1),
             array('Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_Portion, Tarf_Recurring_Amount', 'numerical', 'integerOnly' => false),
 //            array('Tarf_Cont_Renewal_Year','compare','compareValue'=> self::RENEWAL_MIN_YEAR, 'operator'=> '>=', 'message' => 'No. of Years must be greater than '.self::RENEWAL_MIN_YEAR),
             array('Tarf_Cont_Renewal_Year', 'compare', 'compareValue' => self::RENEWAL_MAX_YEAR, 'operator' => '<=', 'message' => 'No. of Years must be less than ' . self::RENEWAL_MAX_YEAR),
 //            array('Tarf_Invoice', 'numerical', 'integerOnly' => true),
             array('Tarf_Cont_To', 'compare', 'compareAttribute' => 'Tarf_Cont_From', 'allowEmpty' => true, 'operator' => '>', 'message' => '{attribute} must be greater than "{compareValue}".'),
-            array('Tarf_Cont_Sign_Date', 'compare', 'compareValue' => date("Y-m-d"), 'operator' => '<'),
+            array('Tarf_Cont_Sign_Date', 'compare', 'compareValue' => date("Y-m-d"), 'operator' => '<='),
+            array('Tarf_Cont_Sign_Date', 'compare', 'compareAttribute' => 'Tarf_Cont_To', 'operator' => '<'),
+            array('Tarf_Cont_Event_Date', 'compare', 'compareAttribute' => 'Tarf_Cont_To', 'operator' => '<', 'message' => '{attribute} must be less than "{compareAttribute}".'),
             array('Tarf_Cont_Amt_Pay, Tarf_Recurring_Amount', 'compare', 'operator' => '>=', 'compareValue' => 0),
-            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count, Tarf_Cont_Renewal_Year, Tarf_Cont_Renewal, email_template, email_subject, email_from, email_name, email_params', 'safe'),
+            array('Tarf_Cont_Comment, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Tarf_Invoice, Tarf_Recurring_Amount, Tarf_Cont_Next_Inv_Date, Tarf_Cont_Due_Count, Tarf_Cont_Renewal_Year, Tarf_Cont_Renewal, email_template, email_subject, email_from, email_name, email_params,Tarf_Cont_Due_Partial', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('Tarf_Cont_Id, Tarf_Cont_GUID, Tarf_Cont_Internal_Code, Tarf_Cont_User_Id, Tarf_Cont_Region_Id, Tarf_Cont_District, Tarf_Cont_Area, Tarf_Cont_Tariff_Id, Tarf_Cont_Insp_Id, Tarf_Cont_Balance, Tarf_Cont_Amt_Pay, Tarf_Cont_From, Tarf_Cont_To, Tarf_Cont_Sign_Date, Tarf_Cont_Pay_Id, Tarf_Cont_Portion, Tarf_Cont_Comment, Tarf_Cont_Event_Id, Tarf_Cont_Event_Date, Tarf_Cont_Event_Comment, Created_Date, Rowversion, Created_By, Updated_By, email_template, email_subject, email_from, email_name', 'safe', 'on' => 'search'),
@@ -129,6 +132,7 @@ class TariffContracts extends RActiveRecord {
             'contractInvoices' => array(self::HAS_MANY, 'ContractInvoice', 'Tarf_Cont_Id'),
             'contractHistory' => array(self::HAS_MANY, 'TariffContractsHistory', 'Tarf_Cont_Id'),
             'emailTemp' => array(self::HAS_ONE, 'EmailTemplate', array('Tarf_Cont_Id' => 'Tarf_Cont_Id')),
+            'tariffContractsEventHistories' => array(self::HAS_MANY, 'TariffContractsEventHistory', 'Tarf_Contract_Id'),
         );
     }
 
@@ -165,6 +169,7 @@ class TariffContracts extends RActiveRecord {
             'Rowversion' => 'Rowversion',
             'Created_By' => 'Created By',
             'Updated_By' => 'Updated By',
+            'Tarf_Cont_Due_Partial' => 'Due Partial',
         );
     }
 
@@ -244,6 +249,23 @@ class TariffContracts extends RActiveRecord {
             '5' => 'Weekly',
             '6' => 'One of Payment',
         );
+    }
+
+    public static function getPaymentlistByDays($key = null) {
+        $list = array(
+            '1' => '365',
+            '2' => '182.5',
+            '3' => '91.25',
+            '4' => '30.416666',
+            '5' => '7.019230',
+            '6' => 'One of Payment',
+        );
+
+        if (!is_null($key)) {
+            return $list[$key];
+        } else {
+            return $list;
+        }
     }
 
     public function getPayment($key = NULL) {

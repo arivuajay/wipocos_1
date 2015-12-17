@@ -92,13 +92,13 @@ class TariffcontractsController extends Controller {
                 $this->redirect(array('/site/tariffcontracts/index'));
             }
         }
-        
+
         $contents = EmailTemplate::defaultTemplateContents();
-        $model->setAttribute('email_template', $contents['Email_Temp_Content']); 
-        $model->setAttribute('email_subject', $contents['Email_Temp_Subject']); 
-        $model->setAttribute('email_from', $contents['Email_Temp_From']); 
-        $model->setAttribute('email_params', $contents['Email_Temp_Params']); 
-//        $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name); 
+        $model->setAttribute('email_template', $contents['Email_Temp_Content']);
+        $model->setAttribute('email_subject', $contents['Email_Temp_Subject']);
+        $model->setAttribute('email_from', $contents['Email_Temp_From']);
+        $model->setAttribute('email_params', $contents['Email_Temp_Params']);
+//        $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name);
 
         $this->render('create', array(
             'model' => $model,
@@ -113,36 +113,67 @@ class TariffcontractsController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $email_model = EmailTemplate::model()->findByAttributes(array('Tarf_Cont_Id' => $model->Tarf_Cont_Id));
-        
-        if(!empty($email_model)){
-            $model->setAttribute('email_template', $email_model->Email_Temp_Content); 
-            $model->setAttribute('email_subject', $email_model->Email_Temp_Subject); 
-            $model->setAttribute('email_from', $email_model->Email_Temp_From); 
-            $model->setAttribute('email_name', $email_model->Email_Temp_Name); 
-        }else{
+        $evt_hist_model = new TariffContractsEventHistory();
+        $evt_history = false;
+        $curState = TariffContractsEventHistory::model()->currentState()->findByAttributes(array('Tarf_Contract_Id' => $id))->Tarf_Cont_Event_Id;
+
+        if (!$curState || $curState == 6) {
+            $contract_event_by_progress = true;
+        } else {
+            $contract_event_by_progress = false;
+        }
+
+        if (!empty($email_model)) {
+            $model->setAttribute('email_template', $email_model->Email_Temp_Content);
+            $model->setAttribute('email_subject', $email_model->Email_Temp_Subject);
+            $model->setAttribute('email_from', $email_model->Email_Temp_From);
+            $model->setAttribute('email_name', $email_model->Email_Temp_Name);
+        } else {
             $contents = EmailTemplate::defaultTemplateContents();
-            $model->setAttribute('email_template', $contents['Email_Temp_Content']); 
-            $model->setAttribute('email_subject', $contents['Email_Temp_Subject']); 
-            $model->setAttribute('email_from', $contents['Email_Temp_From']); 
-            $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name); 
+            $model->setAttribute('email_template', $contents['Email_Temp_Content']);
+            $model->setAttribute('email_subject', $contents['Email_Temp_Subject']);
+            $model->setAttribute('email_from', $contents['Email_Temp_From']);
+            $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name);
+        }
+
+        $validate_array = array($model, $email_model);
+        if (isset($_POST['TariffContractsEventHistory']['Tarf_Cont_Event_Id']) && !empty($_POST['TariffContractsEventHistory']['Tarf_Cont_Event_Id'])) {
+            array_push($validate_array, $evt_hist_model);
+            $evt_history = true;
         }
 
         // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation(array($model, $email_model));
-
+        $this->performAjaxValidation($validate_array);
+        $save = false;
         if (isset($_POST['TariffContracts'])) {
             $model->attributes = $_POST['TariffContracts'];
-            if ($model->save()) {
-                Myclass::addAuditTrail("Updated TariffContracts successfully.", "user");
-                Yii::app()->user->setFlash('success', 'TariffContracts Updated Successfully!!!');
-                $this->redirect(array('/site/tariffcontracts/index'));
+            if ($model->validate()) {
+                $model->save(false);
+                $save = true;
+            }
+        }
+        if (isset($_POST['TariffContractsEventHistory'])) {
+            $evt_hist_model->attributes = $_POST['TariffContractsEventHistory'];
+            $evt_hist_model->Tarf_Contract_Id = $id;
+
+            if ($evt_hist_model->validate()) {
+                if ($evt_hist_model->Tarf_Cont_Event_Id == 6) {
+                    $model->Tarf_Cont_Due_Partial = 1;
+                    $model->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($model->Tarf_Cont_Pay_Id, $model->Tarf_Cont_From,$evt_hist_model->Tarf_Cont_Event_Date);
+                    $model->save(false);
+                }
+                $evt_hist_model->save();
+                $save = true;
             }
         }
 
-        $this->render('update', array(
-            'model' => $model,
-            'email_model' => $email_model,
-        ));
+        if ($save) {
+            Myclass::addAuditTrail("Updated TariffContracts successfully.", "user");
+            Yii::app()->user->setFlash('success', 'TariffContracts Updated Successfully!!!');
+            $this->redirect(array('/site/tariffcontracts/index'));
+        }
+
+        $this->render('update', compact('model', 'email_model', 'evt_hist_model', 'contract_event_by_progress'));
     }
 
     /**
@@ -204,12 +235,12 @@ class TariffcontractsController extends Controller {
         $users = CustomerUser::model()->findAll($criteria);
         $this->renderPartial('_search_user', compact('users'));
     }
-    
+
     public function actionInvoice($id) {
         $model = $this->loadModel($id);
         $this->render('invoice', compact('model'));
     }
-    
+
     public function actionGettariff() {
         $model = MasterTariff::model()->findByPk($_POST['id']);
         $return = array(
@@ -218,12 +249,12 @@ class TariffcontractsController extends Controller {
         echo json_encode($return);
         Yii::app()->end();
     }
-    
+
     public function actionGetrecurr() {
-        if(isset($_POST)){
+        if (isset($_POST)) {
             $recurr = ContractInvoice::getContractDuration($_POST['payid'], $_POST['from'], $_POST['to'], false);
             $recurr_amt = 0;
-            if($recurr > 0 && $_POST['payid'] != 6){
+            if ($recurr > 0 && $_POST['payid'] != 6) {
                 $recurr_amt = round($_POST['amount'] / $recurr, 2);
             }
             $nxt_date = ContractInvoice::getNextdate($_POST['payid'], $_POST['from']);
@@ -234,7 +265,7 @@ class TariffcontractsController extends Controller {
         }
         Yii::app()->end();
     }
-    
+
     /**
      * Manages all models.
      */

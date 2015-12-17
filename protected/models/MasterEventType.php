@@ -24,6 +24,8 @@ class MasterEventType extends CActiveRecord {
         $alias = $this->getTableAlias(false, false);
         return array(
             'isActive' => array('condition' => "$alias.Active = '1'"),
+            'restart' => array('condition' => "$alias.Master_Evt_Type_Id = '6'"),
+            'progress' => array('condition' => "$alias.Master_Evt_Type_Id <> '6'"),
         );
     }
     /**
@@ -121,7 +123,7 @@ class MasterEventType extends CActiveRecord {
 
     protected function beforeValidate() {
         $relations = array('tariffContracts');
-        
+
         $validate = false;
         if(MASTER_EDIT_VALIDATION){
             foreach ($relations as $key => $relation) {

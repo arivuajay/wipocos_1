@@ -73,7 +73,7 @@ class ContractInvoice extends RActiveRecord {
         $cont_model = TariffContracts::model()->find("Tarf_Cont_Id = :cont_id", array('cont_id' => $this->Tarf_Cont_Id));
         $check_date = $cont_model->Tarf_Cont_Next_Inv_Date;
         $cont_end_date = $cont_model->Tarf_Cont_To;
-        
+
         if (strtotime($this->Inv_Next_Date) <= strtotime($check_date)) {
             $this->addError($attribute, "Date must be greater than {$check_date}");
         }
@@ -196,30 +196,46 @@ class ContractInvoice extends RActiveRecord {
         return $repeats;
     }
 
-    public static function getNextdate($key, $date) {
+    public static function getNextRestartdate($key, $date, $restart_date) {
+        $dateStr = strtotime($date);
+        $restartStr = strtotime($restart_date); //145 2121 200
+
+        do {
+            $dateStr = $nxtDueStr = strtotime($key, $dateStr);
+        } while ($nxtDueStr <= $restartStr);
+
+        return date('Y-m-d', $nxtDueStr);
+    }
+
+    public static function getNextdate($key, $date, $restart_date = null) {
         $repeats = TariffContracts::getPaymentlist();
         switch ($key) {
             case 1:
-                $nextDate = date('Y-m-d', strtotime('+1 year', strtotime($date)));
+                $strFormat = '+1 year';
                 break;
             case 2:
-                $nextDate = date('Y-m-d', strtotime('+6 months', strtotime($date)));
+                $strFormat = '+6 months';
                 break;
             case 3:
-                $nextDate = date('Y-m-d', strtotime('+3 months', strtotime($date)));
+                $strFormat = '+3 months';
                 break;
             case 4:
-                $nextDate = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $strFormat = '+1 month';
                 break;
             case 5:
-                $nextDate = date('Y-m-d', strtotime('+1 week', strtotime($date)));
+                $strFormat = '+1 week';
                 break;
             case 6:
-                $nextDate = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $strFormat = '+1 year';
                 break;
             default:
                 break;
         }
+        if (!is_null($restart_date)) {
+            return self::getNextRestartdate($strFormat, $date, $restart_date);
+        }
+
+        $nextDate = date('Y-m-d', strtotime($strFormat, strtotime($date)));
         return $nextDate;
     }
 
@@ -227,10 +243,26 @@ class ContractInvoice extends RActiveRecord {
         if ($this->isNewRecord) {
             $this->Inv_Invoice = Myclass::generateInvoiceno();
             $contract = TariffContracts::model()->findByPk($this->Tarf_Cont_Id);
-            if (!empty($contract))
-                $this->Inv_Amount = $contract->Tarf_Recurring_Amount;
-            else
+            if (!empty($contract)) {
+                if ($contract->Tarf_Cont_Due_Partial && $contract->Tarf_Cont_Pay_Id <> 6) {
+                    $last_history = $contract->tariffContractsEventHistories[0];
+                    if ($last_history->Tarf_Cont_Event_Id == 6) {
+                        $date1 = new DateTime($last_history->Tarf_Cont_Event_Date);
+                        $date2 = new DateTime($this->Inv_Date);
+                        $interval = $date1->diff($date2);
+                        $diff_days = $interval->days;
+                        $days_in_recur = $contract->getPaymentlistByDays($contract->Tarf_Cont_Pay_Id);
+                        $per_day_tarf_amt = $contract->Tarf_Recurring_Amount / $days_in_recur;
+                        $this->Inv_Amount = round($diff_days * $per_day_tarf_amt);
+//                        $contract->Tarf_Cont_Due_Partial = 0;
+//                        $contract->save(false);
+                    }
+                } else {
+                    $this->Inv_Amount = $contract->Tarf_Recurring_Amount;
+                }
+            } else {
                 $this->Inv_Amount = 0;
+            }
             $this->Inv_Repeat_Id = $this->tarfCont->Tarf_Cont_Pay_Id;
 //            $inv_model = self::model()->findAll("Tarf_Cont_Id = :cont_id Order by Inv_Next_Date DESC", array('cont_id' => $this->Tarf_Cont_Id));
 //            if (empty($inv_model) && $this->Inv_Created_Mode == 'C') {
@@ -248,7 +280,7 @@ class ContractInvoice extends RActiveRecord {
             $mail = new Sendmail;
             $mail->email_layout = 'db';
             $temp_id = $this->tarfCont->emailTemp->Email_Temp_Id;
-            
+
             $society_name = '';
             $soceity = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
             if (!empty($soceity))
