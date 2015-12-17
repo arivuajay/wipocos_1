@@ -69,7 +69,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                     <thead>
                                                         <tr>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Code'); ?></th>
-                                                            <!--<th><?php // echo CustomerUser::model()->getAttributeLabel('User_Cust_Code');       ?></th>-->
+                                                            <!--<th><?php // echo CustomerUser::model()->getAttributeLabel('User_Cust_Code');        ?></th>-->
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Address'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Email'); ?></th>
                                                             <th><?php echo CustomerUser::model()->getAttributeLabel('User_Cust_Telephone'); ?></th>
@@ -78,7 +78,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                                     <tbody>
                                                         <tr class="highlight" data-uid="<?php echo $model->tarfContUser->User_Cust_GUID ?>" data-id="<?php echo $model->tarfContUser->User_Cust_Id ?>" data-name="<?php echo $model->tarfContUser->User_Cust_Code; ?>">
                                                             <td><?php echo $model->tarfContUser->User_Cust_Code ?></td>
-                                                            <!--<td><?php // echo $model->tarfContUser->User_Cust_Code       ?></td>-->
+                                                            <!--<td><?php // echo $model->tarfContUser->User_Cust_Code        ?></td>-->
                                                             <td><?php echo $model->tarfContUser->User_Cust_Address ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Email ?></td>
                                                             <td><?php echo $model->tarfContUser->User_Cust_Telephone ?></td>
@@ -232,7 +232,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 
                                             <div class="form-group">
                                                 <?php echo $form->labelEx($model, 'Tarf_Cont_Pay_Id', array('class' => '')); ?>
-                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Pay_Id', $payments, array('class' => 'form-control recurr', 'disabled' => !$model->isNewRecord)); ?>
+                                                <?php echo $form->dropDownList($model, 'Tarf_Cont_Pay_Id', $payments, array('class' => 'form-control recurr')); ?>
                                                 <?php echo $form->error($model, 'Tarf_Cont_Pay_Id'); ?>
                                             </div>
 
@@ -327,7 +327,7 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
                                         <div class="col-lg-12">
                                             <div class="form-group">
                                                 <?php echo $form->labelEx($model, 'Tarf_Cont_Next_Inv_Date', array('class' => '')); ?>
-                                                <?php echo $form->textField($model, 'Tarf_Cont_Next_Inv_Date', array('class' => 'form-control', 'readonly' => !$model->isNewRecord)); ?>
+                                                <?php echo $form->textField($model, 'Tarf_Cont_Next_Inv_Date', array('class' => 'form-control','readonly'=>'readonly')); ?>
                                                 <?php echo $form->error($model, 'Tarf_Cont_Next_Inv_Date'); ?>
                                             </div>
 
@@ -385,6 +385,10 @@ $cs->registerScriptFile($themeUrl . '/js/datatables/dataTables.bootstrap.js', $c
 $search_url = Yii::app()->createAbsoluteUrl("site/tariffcontracts/searchuser");
 $get_tariff = Yii::app()->createAbsoluteUrl("site/tariffcontracts/gettariff");
 $get_recurr = Yii::app()->createAbsoluteUrl("site/tariffcontracts/getrecurr");
+if (!$model->isNewRecord) {
+    $check_date = date('Y-m-d');
+}
+
 $mode = $model->isNewRecord ? 1 : 0;
 $active_Tab = (is_null($tab)) ? "tab_1" : "tab_{$tab}";
 $js = <<< EOD
@@ -456,12 +460,12 @@ $js = <<< EOD
                 type: "POST",
                 dataType: 'json',
                 url: '$get_recurr',
-                data:{'amount': amount, 'from': from, 'to': to, 'payid': payid},
+                data:{'amount': amount, 'from': from, 'to': to, 'payid': payid,'changedate':'{$check_date}'},
                 success:function(data){
                     $('.recurr_amt').val(data.recurr_amt);
-                    if(mode == 1){
+                    //if(mode == 1){
                         $('#TariffContracts_Tarf_Cont_Next_Inv_Date').val(data.nxt_date);
-                    }
+                    //}
                 },
                 error: function(data) {
                     alert("Something went wrong. Try again");

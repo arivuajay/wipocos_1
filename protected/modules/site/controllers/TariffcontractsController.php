@@ -80,7 +80,7 @@ class TariffcontractsController extends Controller {
      */
     public function actionCreate() {
         $model = new TariffContracts;
-
+        $contract_event_by_progress = true;
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
@@ -100,9 +100,7 @@ class TariffcontractsController extends Controller {
         $model->setAttribute('email_params', $contents['Email_Temp_Params']);
 //        $model->setAttribute('email_name', $model->tarfContUser->User_Cust_Name);
 
-        $this->render('create', array(
-            'model' => $model,
-        ));
+        $this->render('create', compact('model', 'contract_event_by_progress'));
     }
 
     /**
@@ -159,7 +157,7 @@ class TariffcontractsController extends Controller {
             if ($evt_hist_model->validate()) {
                 if ($evt_hist_model->Tarf_Cont_Event_Id == 6) {
                     $model->Tarf_Cont_Due_Partial = 1;
-                    $model->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($model->Tarf_Cont_Pay_Id, $model->Tarf_Cont_From,$evt_hist_model->Tarf_Cont_Event_Date);
+                    $model->Tarf_Cont_Next_Inv_Date = ContractInvoice::getNextdate($model->Tarf_Cont_Pay_Id, $model->Tarf_Cont_From, $evt_hist_model->Tarf_Cont_Event_Date);
                     $model->save(false);
                 }
                 $evt_hist_model->save();
@@ -257,7 +255,7 @@ class TariffcontractsController extends Controller {
             if ($recurr > 0 && $_POST['payid'] != 6) {
                 $recurr_amt = round($_POST['amount'] / $recurr, 2);
             }
-            $nxt_date = ContractInvoice::getNextdate($_POST['payid'], $_POST['from']);
+            $nxt_date = ContractInvoice::getNextdate($_POST['payid'], $_POST['from'], $_POST['changedate']);
             echo json_encode(array(
                 'recurr_amt' => $recurr_amt,
                 'nxt_date' => $nxt_date,
