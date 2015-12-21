@@ -731,6 +731,88 @@ class Myclass extends CController {
         return $id;
     }
 
+    public static function addAuthor($firstname, $surname, $internal_code = '', $ipi_name = '', $ipi_base = '') {
+        if(!empty($internal_code))
+            $id = AuthorAccount::model()->findByAttributes(array('Auth_Internal_Code' => $internal_code))->Auth_GUID;
+        else
+            $id = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $firstname, 'Auth_Sur_Name' => $surname))->Auth_GUID;
+        
+        if (empty($id) && $firstname != '' && $surname != '') {
+            $model = new AuthorAccount;
+            $attr = array(
+                'Auth_Sur_Name' => $surname,
+                'Auth_First_Name' => $firstname,
+                'Auth_Ipi' => $ipi_name,
+                'Auth_Ipi_Base_Number' => $ipi_base,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Auth_GUID;
+        }
+        return $id;
+    }
+
+    public static function addPerformer($firstname, $surname, $internal_code = '', $ipi_name = '', $ipi_base = '') {
+        if(!empty($internal_code))
+            $id = PerformerAccount::model()->findByAttributes(array('Perf_Internal_Code' => $internal_code))->Perf_GUID;
+        else
+            $id = PerformerAccount::model()->findByAttributes(array('Perf_First_Name' => $firstname, 'Perf_Sur_Name' => $surname))->Perf_GUID;
+        
+        if (empty($id) && $firstname != '' && $surname != '') {
+            $model = new PerformerAccount;
+            $attr = array(
+                'Perf_Sur_Name' => $surname,
+                'Perf_First_Name' => $firstname,
+                'Perf_Ipi' => $ipi_name,
+                'Perf_Ipi_Base_Number' => $ipi_base,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Perf_GUID;
+        }
+        return $id;
+    }
+
+    public static function addPublisher($name, $internal_code = '', $ipi_name = '', $ipi_base = '') {
+        if(!empty($internal_code))
+            $id = PublisherAccount::model()->findByAttributes(array('Pub_Internal_Code' => $internal_code))->Pub_GUID;
+        else
+            $id = PublisherAccount::model()->findByAttributes(array('Pub_Corporate_Name' => $name))->Pub_GUID;
+        
+        if (empty($id) && $name != '') {
+            $model = new PublisherAccount;
+            $attr = array(
+                'Pub_Corporate_Name' => $name,
+                'Pub_Ipi' => $ipi_name,
+                'Pub_Ipi_Base_Number' => $ipi_base,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Pub_GUID;
+        }
+        return $id;
+    }
+
+    public static function addProducer($name, $internal_code = '', $ipi_name = '', $ipi_base = '') {
+        if(!empty($internal_code))
+            $id = ProducerAccount::model()->findByAttributes(array('Pro_Internal_Code' => $internal_code))->Pro_GUID;
+        else
+            $id = ProducerAccount::model()->findByAttributes(array('Pro_Corporate_Name' => $name))->Pro_GUID;
+        
+        if (empty($id) && $name != '') {
+            $model = new ProducerAccount;
+            $attr = array(
+                'Pro_Corporate_Name' => $name,
+                'Pro_Ipi' => $ipi_name,
+                'Pro_Ipi_Base_Number' => $ipi_base,
+            );
+            $model->attributes = $attr;
+            $model->save(false);
+            $id = $model->Pro_GUID;
+        }
+        return $id;
+    }
+
     public static function importErrorTexts() {
         return array(
             'Invalid format',

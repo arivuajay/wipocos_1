@@ -258,6 +258,7 @@ class SocietyController extends Controller {
         Yii::app()->wipoimport->setWorkSheet($objWorksheet);
         Yii::app()->wipoimport->setImportSociety($this->_import_society);
         Yii::app()->wipoimport->setImportCategory($this->_import_category);
+        Yii::app()->wipoimport->setHighestColumn($highestColumnIndex);
         
         unlink($file_path);
 

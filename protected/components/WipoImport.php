@@ -11,6 +11,7 @@ class WipoImport extends CApplicationComponent {
     private $_stage_tables;
     private $_imported_table;
     private $_import_period;
+    private $_highestColumn;
 
     public function setWorkSheet($worksheet) {
         $this->_import_worksheet = $worksheet;
@@ -28,6 +29,10 @@ class WipoImport extends CApplicationComponent {
         $this->_import_period = $id;
     }
 
+    public function setHighestColumn($id) {
+        $this->_highestColumn = $id;
+    }
+
     public function getStageRow() {
         return $this->_stage_rows;
     }
@@ -42,6 +47,10 @@ class WipoImport extends CApplicationComponent {
 
     public function getImportedTable() {
         return $this->_imported_table;
+    }
+
+    public function getHighestColumn() {
+        return $this->_highestColumn;
     }
 
     public function importRows($import_category, $start_row, $highestRow, $max_row) {
@@ -74,7 +83,8 @@ class WipoImport extends CApplicationComponent {
         $dateFields = $this->importDateFields();
         $timeFields = $this->importTimeFields();
         foreach ($loop_options as $keyset => $fieldsets) {
-            if ($objWorksheet->getCellByColumnAndRow($fieldsets['col'], 2)->getValue() != $fieldsets['start_col']) {
+            similar_text($fieldsets['start_col'], "RIGHTHOLDERS", $percent);
+            if (($objWorksheet->getCellByColumnAndRow($fieldsets['col'], 2)->getValue() != $fieldsets['start_col']) && ($percent < 90)) {
                 Yii::app()->user->setFlash('danger', "Its not in {$import_category} Basic Information format ({$fieldsets['start_col']} column value missing)");
                 Yii::app()->controller->redirect(array('/site/society/import', 'sid' => $this->_import_society));
             }
@@ -287,6 +297,10 @@ class WipoImport extends CApplicationComponent {
             'Pro_Ipi_Base_Number',
             'Work_Creation',
             'Work_Opus_Number',
+            'ipi_base_number',
+            'ipi_name_number',
+            'Work_Right_Broad_Share',
+            'Work_Right_Mech_Share',
         );
     }
 
@@ -330,6 +344,8 @@ class WipoImport extends CApplicationComponent {
             'Rcd_Record_Country_id',
             'Rcd_Product_Country_Id',
             'Rcd_Subtitle_Language_Id',
+            'surname',
+            'firstname',
         );
     }
 
@@ -1243,12 +1259,32 @@ class WipoImport extends CApplicationComponent {
             1 => 'Work_Biogrph_Annotation',
         );
 
-        return array(
+        $return = array(
             'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
             'subtitle_val' => array('col' => 2, 'fieldsets' => $subtitle_fields, 'start_col' => 'SUB TITLES'),
-            'document_val' => array('col' => 7, 'fieldsets' => $document_fields, 'start_col' => 'DOCUMENTATION'),
-            'biograph_val' => array('col' => 8, 'fieldsets' => $biograph_fields, 'start_col' => 'BIOGRAPHY'),
+            'document_val' => array('col' => 3, 'fieldsets' => $document_fields, 'start_col' => 'DOCUMENTATION'),
+            'biograph_val' => array('col' => 4, 'fieldsets' => $biograph_fields, 'start_col' => 'BIOGRAPHY'),
         );
+
+        $rightholder_fields = array(
+            1 => 'surname',
+            2 => 'firstname',
+            3 => 'internal_code',
+            4 => 'memeber_type',
+            5 => 'ipi_name_number',
+            6 => 'ipi_base_number',
+            7 => 'Work_Right_Role',
+            8 => 'Work_Right_Broad_Share',
+            9 => 'Work_Right_Mech_Share',
+        );
+
+        $highestColumn = $this->getHighestColumn();
+        $rightHolders = array();
+        // $i = 7 is the starting column of the rightholders
+        for ($i = 7; $i <= $highestColumn; $i++) {
+            $return["rightholder_val{$i}"] = array('col' => $i, 'fieldsets' => $rightholder_fields, 'start_col' => 'RIGHTHOLDERS');
+        }
+        return $return;
     }
 
     public function importWork() {
@@ -1259,7 +1295,22 @@ class WipoImport extends CApplicationComponent {
                 $this->_stage_rows[$key][$col]['import_status'] = 0;
             }
         }
+
         $related_records = $this->_stage_tables = $this->importWorkStageTables();
+
+//        $related_records = $bef_stage_table = $this->importWorkStageTables();
+//        foreach ($this->_import_rows as $data) {
+//            foreach ($data as $key => $attr) {
+//                if(!in_array($key, array('subtitle_val', 'document_val', 'biograph_val'))){
+//                    $bef_stage_table[$key] = array(
+//                        'title' => 'Rightholder',
+//                        'key' => $key,
+//                    );
+//                }
+//            }
+//        }
+//        $this->_stage_tables = $bef_stage_table;
+
         foreach ($this->_import_rows as $key => $import_row) {
             foreach ($related_records as $relModal => $arrKey) {
                 $this->importValidate('work', $key, $arrKey['key']);
@@ -1299,6 +1350,43 @@ class WipoImport extends CApplicationComponent {
                                 $this->_stage_rows[$key][$arrKey['key']]['import_status'] = 1;
                             }
                         }
+                        //Adding Rightholders
+                        foreach ($import_row as $i_key => $rhData) {
+                            if (!in_array($i_key, array('subtitle_val', 'document_val', 'biograph_val', 'basic_val')) && (!empty($rhData['firstname']) || !empty($rhData['surname'])) && (!empty($rhData['Work_Right_Role']))
+                            ) {
+                                $guid = $role = '';
+                                switch (strtolower($rhData['memeber_type'])) {
+                                    case 'author':
+                                        $guid = Myclass::addAuthor($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_AUTHOR, MasterTypeRights::AUTHOR_DOMAIN, MasterTypeRights::AUTHOR_RANK);
+                                        break;
+                                    case 'performer':
+                                        $guid = Myclass::addPerformer($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PERFORMER, MasterTypeRights::PERFORMER_DOMAIN, MasterTypeRights::PERFORMER_RANK);
+                                        break;
+                                    case 'publisher':
+                                        $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
+                                        $guid = Myclass::addPublisher($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
+                                        break;
+                                    case 'producer':
+                                        $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
+                                        $guid = Myclass::addProducer($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
+                                        break;
+                                }
+                                $rightHolder_model = new WorkRightholder;
+                                $rightHolder_model->Work_Right_Role = $role;
+                                $rightHolder_model->Work_Id = $model->Work_Id;
+                                $rightHolder_model->Work_Member_GUID = $guid;
+                                $rightHolder_model->Work_Right_Broad_Share = $rhData['Work_Right_Broad_Share'];
+                                $rightHolder_model->Work_Right_Mech_Share = $rhData['Work_Right_Mech_Share'];
+                                $rightHolder_model->Work_Right_Broad_Org_id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->Work_Right_Mech_Org_Id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->save(false);
+                            }
+                        }
+                        //End
                     } else {
                         $unsuccess_records++;
                     }
@@ -1555,7 +1643,7 @@ class WipoImport extends CApplicationComponent {
                 foreach ($import_rows['log_list'] as $key => $list) {
                     $valid = true;
                     ## VALIDATION ##
-                    
+
                     /* duration */
                     $time_val = $date_val = "Invalid format";
                     if (is_numeric($list['Log_List_Duration'])) {
@@ -1615,11 +1703,11 @@ class WipoImport extends CApplicationComponent {
                     ## VALIDATION END ##
 
                     if ($valid) {
-                        if(empty($list['Log_List_Factor_Id']))
+                        if (empty($list['Log_List_Factor_Id']))
                             $list['Log_List_Factor_Id'] = DEFAULT_FACTOR_ID;
-                        if(empty($list['Log_List_Coefficient_Id']))
+                        if (empty($list['Log_List_Coefficient_Id']))
                             $list['Log_List_Coefficient_Id'] = 1;
-                        
+
                         $list_model = new DistributionLogsheetList;
                         $list_model->Log_Id = $log_id;
                         $list_model->attributes = $list;

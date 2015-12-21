@@ -1,7 +1,7 @@
 <?php
 
 //error_reporting(E_ALL & ~E_NOTICE  & ~E_DEPRECATED);
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
 // change the following paths if necessary
 $yii = dirname(__FILE__) . '/framework/yii.php';
 $config = dirname(__FILE__) . '/protected/config/main.php';
@@ -26,6 +26,7 @@ if (isset(Yii::app()->user->id)) {
 }
 $society = Society::model()->findByPk(DEFAULT_SOCIETY_ID);
 if ($society) {
+    defined('DEFAULT_ORGANIZATION_ID') || @define('DEFAULT_ORGANIZATION_ID', $society->socOrg->Org_Id);
     defined('DEFAULT_NATIONALITY_ID') || @define('DEFAULT_NATIONALITY_ID', $society->socOrg->Org_Nation_Id);
     defined('DEFAULT_COUNTRY_ID') || @define('DEFAULT_COUNTRY_ID', $society->Society_Country_Id);
     defined('DEFAULT_REGION_ID') || @define('DEFAULT_REGION_ID', $society->Society_Region_Id);
