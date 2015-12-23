@@ -264,7 +264,8 @@ class SocietyController extends Controller {
 
         $return = false;
 
-        if (array_key_exists($input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue()), $screens)) {
+        $input_type = strtolower($objWorksheet->getCellByColumnAndRow(0, 2)->getValue());
+        if (array_key_exists($input_type, $screens)) {
             if ($input_type != $this->_import_category) {
                 Yii::app()->user->setFlash('danger', "Its not a Valid {$this->_import_category} File Format (Seems like {$input_type} File). Recheck your imported file");
                 $this->redirect(array('/site/society/import', 'sid' => $this->_import_society));

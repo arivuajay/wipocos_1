@@ -273,6 +273,12 @@ class WipoImport extends CApplicationComponent {
             'Pro_Suc_Liquidation_Date',
             'Work_Doc_Sign_Date',
             'Rcd_Date',
+            'Work_Pub_Contact_Start',
+            'Work_Pub_Contact_End',
+            'Work_Pub_Sign_Date',
+            'Work_Sub_Contact_Start',
+            'Work_Sub_Contact_End',
+            'Work_Sub_Sign_Date',
         );
     }
 
@@ -301,6 +307,9 @@ class WipoImport extends CApplicationComponent {
             'ipi_name_number',
             'Work_Right_Broad_Share',
             'Work_Right_Mech_Share',
+            'Rcd_Publ_Year',
+            'Rcd_Right_Equal_Share',
+            'Rcd_Right_Blank_Share',
         );
     }
 
@@ -346,6 +355,8 @@ class WipoImport extends CApplicationComponent {
             'Rcd_Subtitle_Language_Id',
             'surname',
             'firstname',
+            'Rcd_Publ_Country_Id',
+            'Rcd_Publ_Prod_Nation_Id',
         );
     }
 
@@ -1259,11 +1270,33 @@ class WipoImport extends CApplicationComponent {
             1 => 'Work_Biogrph_Annotation',
         );
 
+        $publishing_fields = array(
+            1 => 'Work_Pub_Contact_Start',
+            2 => 'Work_Pub_Contact_End',
+            3 => 'Work_Pub_Territories',
+            4 => 'Work_Pub_Sign_Date',
+            5 => 'Work_Pub_File',
+            6 => 'Work_Pub_References',
+        );
+
+        $sub_publishing_fields = array(
+            1 => 'Work_Sub_Contact_Start',
+            2 => 'Work_Sub_Contact_End',
+            3 => 'Work_Sub_Territories',
+            4 => 'Work_Sub_Clause',
+            5 => 'Work_Sub_Sign_Date',
+            6 => 'Work_Sub_File',
+            7 => 'Work_Sub_Catelog_Number',
+            8 => 'Work_Sub_References',
+        );
+
         $return = array(
             'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
             'subtitle_val' => array('col' => 2, 'fieldsets' => $subtitle_fields, 'start_col' => 'SUB TITLES'),
             'document_val' => array('col' => 3, 'fieldsets' => $document_fields, 'start_col' => 'DOCUMENTATION'),
             'biograph_val' => array('col' => 4, 'fieldsets' => $biograph_fields, 'start_col' => 'BIOGRAPHY'),
+            'publishing_val' => array('col' => 5, 'fieldsets' => $publishing_fields, 'start_col' => 'PUBLISHING'),
+            'sub_publishing_val' => array('col' => 6, 'fieldsets' => $sub_publishing_fields, 'start_col' => 'SUB PUBLISHING'),
         );
 
         $rightholder_fields = array(
@@ -1282,7 +1315,7 @@ class WipoImport extends CApplicationComponent {
         $rightHolders = array();
         // $i = 7 is the starting column of the rightholders
         for ($i = 7; $i <= $highestColumn; $i++) {
-            $return["rightholder_val{$i}"] = array('col' => $i, 'fieldsets' => $rightholder_fields, 'start_col' => 'RIGHTHOLDERS');
+            $return["work_rightholder_val{$i}"] = array('col' => $i, 'fieldsets' => $rightholder_fields, 'start_col' => 'RIGHTHOLDERS');
         }
         return $return;
     }
@@ -1296,26 +1329,46 @@ class WipoImport extends CApplicationComponent {
             }
         }
 
-        $related_records = $this->_stage_tables = $this->importWorkStageTables();
+//        $related_records = $this->_stage_tables = $this->importWorkStageTables();
 
-//        $related_records = $bef_stage_table = $this->importWorkStageTables();
-//        foreach ($this->_import_rows as $data) {
-//            foreach ($data as $key => $attr) {
-//                if(!in_array($key, array('subtitle_val', 'document_val', 'biograph_val'))){
-//                    $bef_stage_table[$key] = array(
-//                        'title' => 'Rightholder',
-//                        'key' => $key,
-//                    );
-//                }
-//            }
-//        }
-//        $this->_stage_tables = $bef_stage_table;
+        //Modified
+        $related_records = $bef_stage_table = $this->importWorkStageTables();
+        foreach ($this->_import_rows as $data) {
+            foreach ($data as $key => $attr) {
+                if (!in_array($key, array('subtitle_val', 'document_val', 'biograph_val', 'basic_val', 'publishing_val', 'sub_publishing_val')) && (!empty($attr['firstname']) || !empty($attr['surname'])) && (!empty($attr['Work_Right_Role']))
+                ) {
+                    $bef_stage_table[$key] = array(
+                        'title' => 'Rightholder',
+                        'key' => $key,
+                    );
+                }
+            }
+        }
+        $this->_stage_tables = $bef_stage_table;
+        //End
 
         foreach ($this->_import_rows as $key => $import_row) {
             foreach ($related_records as $relModal => $arrKey) {
                 $this->importValidate('work', $key, $arrKey['key']);
             }
+            //Modified
+            foreach ($bef_stage_table as $relModal => $arrKey) {
+                $this->importValidate('work', $key, $arrKey['key']);
+            }
+            //End
         }
+        
+        //Modified
+        foreach ($this->_stage_rows as $key => $stage) {
+            foreach ($stage as $sKey => $stageData) {
+                if (!in_array($sKey, array('subtitle_val', 'document_val', 'biograph_val', 'basic_val', 'publishing_val', 'sub_publishing_val')) && (empty($stageData['firstname']) && empty($stageData['surname']) && empty($stageData['Work_Right_Role']))
+                ) {
+                    unset($this->_stage_rows[$key][$sKey]);
+                }
+            }
+        }
+        //End
+
         unset($related_records['Work']);
         foreach ($this->_import_rows as $key => $import_row) {
             $int_code = '-';
@@ -1328,6 +1381,10 @@ class WipoImport extends CApplicationComponent {
                 $import_row['subtitle_val']['Work_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Work_Subtitle_Type_Id']);
                 $import_row['document_val']['Work_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['document_val']['Work_Doc_Status_Id']);
                 $import_row['document_val']['Work_Doc_Type_Id'] = Myclass::addMaster('MasterDocument', 'Doc_Name', 'Master_Doc_Id', $import_row['document_val']['Work_Doc_Type_Id']);
+                $import_row['basic_val']['Work_Instrumentation'] = Myclass::addInstruments($import_row['basic_val']['Work_Instrumentation']);
+                $import_row['publishing_val']['Work_Pub_Territories'] = Myclass::addTerritories($import_row['publishing_val']['Work_Pub_Territories'], 'json');
+                $import_row['sub_publishing_val']['Work_Sub_Territories'] = Myclass::addTerritories($import_row['sub_publishing_val']['Work_Sub_Territories'], 'json');
+                
                 /* Save Records */
                 $check_exists = Work::model()->findByAttributes(array('Work_Org_Title' => $import_row['basic_val']['Work_Org_Title']));
                 if (empty($check_exists)) {
@@ -1352,27 +1409,39 @@ class WipoImport extends CApplicationComponent {
                         }
                         //Adding Rightholders
                         foreach ($import_row as $i_key => $rhData) {
-                            if (!in_array($i_key, array('subtitle_val', 'document_val', 'biograph_val', 'basic_val')) && (!empty($rhData['firstname']) || !empty($rhData['surname'])) && (!empty($rhData['Work_Right_Role']))
+                            if (!in_array($i_key, array('subtitle_val', 'document_val', 'biograph_val', 'basic_val', 'publishing_val', 'sub_publishing_val')) && (!empty($rhData['firstname']) || !empty($rhData['surname'])) && (!empty($rhData['Work_Right_Role']))
                             ) {
-                                $guid = $role = '';
+                                $guid = $role = $rel = $relCol = $relCol_1 = '';
                                 switch (strtolower($rhData['memeber_type'])) {
                                     case 'author':
                                         $guid = Myclass::addAuthor($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
                                         $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_AUTHOR, MasterTypeRights::AUTHOR_DOMAIN, MasterTypeRights::AUTHOR_RANK);
+                                        $rel = 'workAuthor';
+                                        $relCol = 'fullname';
+                                        $relCol_1 = 'Auth_Internal_Code';
                                         break;
                                     case 'performer':
                                         $guid = Myclass::addPerformer($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
                                         $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PERFORMER, MasterTypeRights::PERFORMER_DOMAIN, MasterTypeRights::PERFORMER_RANK);
+                                        $rel = 'workPerformer';
+                                        $relCol = 'fullname';
+                                        $relCol_1 = 'Perf_Internal_Code';
                                         break;
                                     case 'publisher':
                                         $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
                                         $guid = Myclass::addPublisher($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
                                         $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
+                                        $rel = 'workPublisher';
+                                        $relCol = 'Pub_Corporate_Name';
+                                        $relCol_1 = 'Pub_Internal_Code';
                                         break;
                                     case 'producer':
                                         $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
                                         $guid = Myclass::addProducer($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
                                         $role = Myclass::addMasterTypeRights($rhData['Work_Right_Role'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
+                                        $rel = 'workProducer';
+                                        $relCol = 'Pro_Corporate_Name';
+                                        $relCol_1 = 'Pro_Internal_Code';
                                         break;
                                 }
                                 $rightHolder_model = new WorkRightholder;
@@ -1383,7 +1452,26 @@ class WipoImport extends CApplicationComponent {
                                 $rightHolder_model->Work_Right_Mech_Share = $rhData['Work_Right_Mech_Share'];
                                 $rightHolder_model->Work_Right_Broad_Org_id = DEFAULT_ORGANIZATION_ID;
                                 $rightHolder_model->Work_Right_Mech_Org_Id = DEFAULT_ORGANIZATION_ID;
-                                $rightHolder_model->save(false);
+                                $rightHolder_model->Created_By = Yii::app()->user->id;
+                                
+                                if ($this->_stage_rows[$key][$i_key]['success'] == 1) {
+                                    if($rightHolder_model->save())
+                                        $this->_stage_rows[$key][$i_key]['import_status'] = 1;
+                                }
+                                unset($this->_stage_rows[$key][$i_key]['firstname']);
+                                unset($this->_stage_rows[$key][$i_key]['surname']);
+                                unset($this->_stage_rows[$key][$i_key]['Work_Right_Broad_Share']);
+                                unset($this->_stage_rows[$key][$i_key]['Work_Right_Mech_Share']);
+
+                                $this->_stage_rows[$key][$i_key]['internal_code'] = $rightHolder_model->$rel->$relCol_1;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                $this->_stage_rows[$key][$i_key]['name'] = $rightHolder_model->$rel->$relCol;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                $this->_stage_rows[$key][$i_key]['Work_Org_Title'] = $rightHolder_model->work->Work_Org_Title;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                
+                                $this->_stage_rows[$key][$i_key]['Broadcasting_Share'] = $rhData['Work_Right_Broad_Share'];
+                                $this->_stage_rows[$key][$i_key]['Mechanical_Share'] = $rhData['Work_Right_Mech_Share'];
                             }
                         }
                         //End
@@ -1427,6 +1515,14 @@ class WipoImport extends CApplicationComponent {
                 'title' => 'Biography',
                 'key' => 'biograph_val',
             ),
+            'WorkPublishing' => array(
+                'title' => 'Publishing',
+                'key' => 'publishing_val',
+            ),
+            'WorkSubPublishing' => array(
+                'title' => 'Sub Publishing',
+                'key' => 'sub_publishing_val',
+            ),
         );
     }
 
@@ -1456,10 +1552,37 @@ class WipoImport extends CApplicationComponent {
             3 => 'Rcd_Subtitle_Language_Id',
         );
 
-        return array(
+        $publication_fields = array(
+            2 => 'Rcd_Publ_Year',
+            3 => 'Rcd_Publ_Country_Id',
+            4 => 'Rcd_Publ_Prod_Nation_Id',
+        );
+
+        $return = array(
             'basic_val' => array('col' => 1, 'fieldsets' => $basic_fields, 'start_col' => 'BASIC DATA FIELDS'),
             'subtitle_val' => array('col' => 2, 'fieldsets' => $subtitle_fields, 'start_col' => 'SUB TITLES'),
+            'publication_val' => array('col' => 3, 'fieldsets' => $publication_fields, 'start_col' => 'PUBLICATION'),
         );
+        
+        $rightholder_fields = array(
+            1 => 'surname',
+            2 => 'firstname',
+            3 => 'internal_code',
+            4 => 'memeber_type',
+            5 => 'ipi_name_number',
+            6 => 'ipi_base_number',
+            7 => 'Rcd_Right_Role',
+            8 => 'Rcd_Right_Equal_Share',
+            9 => 'Rcd_Right_Blank_Share',
+        );
+
+        $highestColumn = $this->getHighestColumn();
+        $rightHolders = array();
+        // $i = 4 is the starting column of the rightholders
+        for ($i = 4; $i <= $highestColumn; $i++) {
+            $return["recording_rightholder_val{$i}"] = array('col' => $i, 'fieldsets' => $rightholder_fields, 'start_col' => 'RIGHTHOLDERS');
+        }
+        return $return;
     }
 
     public function importRecording() {
@@ -1470,12 +1593,46 @@ class WipoImport extends CApplicationComponent {
                 $this->_stage_rows[$key][$col]['import_status'] = 0;
             }
         }
-        $related_records = $this->_stage_tables = $this->importRecordingStageTables();
+//        $related_records = $this->_stage_tables = $this->importRecordingStageTables();
+        
+        //Modified
+        $related_records = $bef_stage_table = $this->importRecordingStageTables();
+        foreach ($this->_import_rows as $data) {
+            foreach ($data as $key => $attr) {
+                if (!in_array($key, array('subtitle_val', 'basic_val', 'publication_val')) && (!empty($attr['firstname']) || !empty($attr['surname'])) && (!empty($attr['Rcd_Right_Role']))
+                ) {
+                    $bef_stage_table[$key] = array(
+                        'title' => 'Rightholder',
+                        'key' => $key,
+                    );
+                }
+            }
+        }
+        $this->_stage_tables = $bef_stage_table;
+        //End
+
         foreach ($this->_import_rows as $key => $import_row) {
             foreach ($related_records as $relModal => $arrKey) {
                 $this->importValidate('recording', $key, $arrKey['key']);
             }
+            //Modified
+            foreach ($bef_stage_table as $relModal => $arrKey) {
+                $this->importValidate('recording', $key, $arrKey['key']);
+            }
+            //End
         }
+        
+        //Modified
+        foreach ($this->_stage_rows as $key => $stage) {
+            foreach ($stage as $sKey => $stageData) {
+                if (!in_array($sKey, array('subtitle_val', 'basic_val', 'publication_val')) && (empty($stageData['firstname']) && empty($stageData['surname']) && empty($stageData['Rcd_Right_Role']))
+                ) {
+                    unset($this->_stage_rows[$key][$sKey]);
+                }
+            }
+        }
+        //End
+        
         unset($related_records['Recording']);
         foreach ($this->_import_rows as $key => $import_row) {
             $int_code = '-';
@@ -1489,6 +1646,8 @@ class WipoImport extends CApplicationComponent {
                 $import_row['basic_val']['Rcd_Doc_Status_Id'] = Myclass::addMaster('MasterDocumentStatus', 'Document_Sts_Name', 'Master_Document_Sts_Id', $import_row['basic_val']['Rcd_Doc_Status_Id']);
                 $import_row['subtitle_val']['Rcd_Subtitle_Language_Id'] = Myclass::addMaster('MasterLanguage', 'Lang_Name', 'Master_Lang_Id', $import_row['subtitle_val']['Rcd_Subtitle_Language_Id']);
                 $import_row['subtitle_val']['Rcd_Subtitle_Type_Id'] = Myclass::addMaster('MasterType', 'Type_Name', 'Master_Type_Id', $import_row['subtitle_val']['Rcd_Subtitle_Type_Id']);
+                $import_row['publication_val']['Rcd_Publ_Country_Id'] = Myclass::addMaster('MasterCountry', 'Country_Name', 'Master_Country_Id', $import_row['publication_val']['Rcd_Publ_Country_Id']);
+                $import_row['publication_val']['Rcd_Publ_Prod_Nation_Id'] = Myclass::addMaster('MasterNationality', 'Nation_Name', 'Master_Nation_Id', $import_row['publication_val']['Rcd_Publ_Prod_Nation_Id']);
                 /* Save Records */
                 $check_exists = Recording::model()->findByAttributes(array('Rcd_Title' => $import_row['basic_val']['Rcd_Title']));
                 if (empty($check_exists)) {
@@ -1511,6 +1670,77 @@ class WipoImport extends CApplicationComponent {
                                 $this->_stage_rows[$key][$arrKey['key']]['import_status'] = 1;
                             }
                         }
+                        
+                        //Adding Rightholders
+                        foreach ($import_row as $i_key => $rhData) {
+                            if (!in_array($i_key, array('subtitle_val', 'basic_val', 'publication_val')) && (!empty($rhData['firstname']) || !empty($rhData['surname'])) && (!empty($rhData['Rcd_Right_Role']))
+                            ) {
+                                $guid = $role = $rel = $relCol = $relCol_1 = '';
+                                switch (strtolower($rhData['memeber_type'])) {
+                                    case 'author':
+                                        $guid = Myclass::addAuthor($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Rcd_Right_Role'], MasterTypeRights::OCCUPATION_AUTHOR, MasterTypeRights::AUTHOR_DOMAIN, MasterTypeRights::AUTHOR_RANK);
+                                        $rel = 'recordingAuthor';
+                                        $relCol = 'fullname';
+                                        $relCol_1 = 'Auth_Internal_Code';
+                                        break;
+                                    case 'performer':
+                                        $guid = Myclass::addPerformer($rhData['firstname'], $rhData['surname'], $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Rcd_Right_Role'], MasterTypeRights::OCCUPATION_PERFORMER, MasterTypeRights::PERFORMER_DOMAIN, MasterTypeRights::PERFORMER_RANK);
+                                        $rel = 'recordingPerformer';
+                                        $relCol = 'fullname';
+                                        $relCol_1 = 'Perf_Internal_Code';
+                                        break;
+                                    case 'publisher':
+                                        $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
+                                        $guid = Myclass::addPublisher($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Rcd_Right_Role'], MasterTypeRights::OCCUPATION_PUBLISHER, MasterTypeRights::PUBLISHER_DOMAIN, MasterTypeRights::PUBLISHER_RANK);
+                                        $rel = 'recordingPublisher';
+                                        $relCol = 'Pub_Corporate_Name';
+                                        $relCol_1 = 'Pub_Internal_Code';
+                                        break;
+                                    case 'producer':
+                                        $name = ($rhData['firstname'] != '') ? $rhData['firstname'] : $rhData['surname'];
+                                        $guid = Myclass::addProducer($name, $rhData['internal_code'], $rhData['ipi_name_number'], $rhData['ipi_base_number']);
+                                        $role = Myclass::addMasterTypeRights($rhData['Rcd_Right_Role'], MasterTypeRights::OCCUPATION_PRODUCER, MasterTypeRights::PRODUCER_DOMAIN, MasterTypeRights::PRODUCER_RANK);
+                                        $rel = 'recordingProducer';
+                                        $relCol = 'Pro_Corporate_Name';
+                                        $relCol_1 = 'Pro_Internal_Code';
+                                        break;
+                                }
+                                $rightHolder_model = new RecordingRightholder;
+                                $rightHolder_model->Rcd_Right_Role = $role;
+                                $rightHolder_model->Rcd_Id = $model->Rcd_Id;
+                                $rightHolder_model->Rcd_Member_GUID = $guid;
+                                $rightHolder_model->Rcd_Right_Equal_Share = $rhData['Rcd_Right_Equal_Share'];
+                                $rightHolder_model->Rcd_Right_Blank_Share = $rhData['Rcd_Right_Blank_Share'];
+                                $rightHolder_model->Rcd_Right_Equal_Org_id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->Rcd_Right_Blank_Org_Id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->Created_By = Yii::app()->user->id;
+                                $rightHolder_model->Created_Date = date('Y-m-d H:i:s');
+                                
+                                
+                                if ($this->_stage_rows[$key][$i_key]['success'] == 1) {
+                                    if($rightHolder_model->save())
+                                        $this->_stage_rows[$key][$i_key]['import_status'] = 1;
+                                }
+                                unset($this->_stage_rows[$key][$i_key]['firstname']);
+                                unset($this->_stage_rows[$key][$i_key]['surname']);
+                                unset($this->_stage_rows[$key][$i_key]['Rcd_Right_Equal_Share']);
+                                unset($this->_stage_rows[$key][$i_key]['Rcd_Right_Blank_Share']);
+
+                                $this->_stage_rows[$key][$i_key]['internal_code'] = $rightHolder_model->$rel->$relCol_1;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                $this->_stage_rows[$key][$i_key]['name'] = $rightHolder_model->$rel->$relCol;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                $this->_stage_rows[$key][$i_key]['Rcd_Title'] = $rightHolder_model->rcd->Rcd_Title;
+                                $this->_stage_rows[$key][$i_key] = Myclass::reArrangeArray($this->_stage_rows[$key][$i_key]);
+                                
+                                $this->_stage_rows[$key][$i_key]['Equitable_Remuneration_Points'] = $rhData['Rcd_Right_Equal_Share'];
+                                $this->_stage_rows[$key][$i_key]['Blank_Levy_Points'] = $rhData['Rcd_Right_Blank_Share'];
+                            }
+                        }
+                        //End
                     } else {
                         $unsuccess_records++;
                     }
@@ -1542,6 +1772,10 @@ class WipoImport extends CApplicationComponent {
             'RecordingSubtitle' => array(
                 'title' => 'Subtitle',
                 'key' => 'subtitle_val',
+            ),
+            'RecordingPublication' => array(
+                'title' => 'Publication',
+                'key' => 'publication_val',
             ),
         );
     }

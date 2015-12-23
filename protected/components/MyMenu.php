@@ -30,7 +30,7 @@ class MyMenu extends CMenu {
                                 $is_visible = UserIdentity::checkAccess($_id, $controller, 'view');
                                 $this->items[$key][$second_key][$third_key]['visible'] = $is_visible;
                                 if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
-                                    $this->items[$key][$second_key][$third_key]['active'] = $_controller == $controller;
+//                                    $this->items[$key][$second_key][$third_key]['active'] = $_controller == $controller;
                                 }
                                 if ($is_visible) {
                                     $parent_active[$key] = 1;
@@ -42,7 +42,7 @@ class MyMenu extends CMenu {
                                     $is_visible = UserIdentity::checkAccess($_id, $controller, 'view');
                                     $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['visible'] = $is_visible;
                                     if (!in_array($_controller, $ignore_list) && !in_array($controller, $ignore_list)) {
-                                        $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['active'] = $_controller == $controller;
+//                                        $this->items[$key][$second_key][$third_key]['items'][$fourth_key]['active'] = $_controller == $controller;
                                     }
                                     if ($is_visible) {
                                         $parent_active[$key] = 1;

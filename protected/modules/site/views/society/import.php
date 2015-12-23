@@ -7,7 +7,6 @@ $this->breadcrumbs = array(
     'Societies' => array('index'),
     $this->title,
 );
-
 ?>
 
 <div class="user-create">
@@ -34,7 +33,7 @@ $this->breadcrumbs = array(
             </button>
             XLS Imported Successfully!!!   <br /><?php echo $import_status; ?>             
         </div>
-        <?php // echo CHtml::link('asd', $staging); ?>
+        <?php // echo CHtml::link('asd', $staging);  ?>
         <div class="row">
             <div class="col-lg-12 col-xs-12">
                 <div class="col-lg-12">
@@ -47,35 +46,64 @@ $this->breadcrumbs = array(
                                     <?php
                                     $tr = "<tr>";
                                     $tr .= "<td>S.No</td>";
-                                    foreach ($staging[1][$cont['key']] as $col => $value) {
-                                        if (!in_array($col, $ignore_list))
-                                            $tr .= "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
+
+                                    similar_text($table, "work_rightholder_val", $is_work_rh);
+                                    similar_text($table, "recording_rightholder_val", $is_recording_rh);
+                                    if ($is_work_rh > 90) {
+                                        $tr .= '<td>Work  Org  Title</td>
+                                            <td>Name</td>
+                                            <td>Internal Code</td>
+                                            <td>Memeber Type</td>
+                                            <td>Ipi Name Number</td>
+                                            <td>Ipi Base Number</td>
+                                            <td>Role</td>
+                                            <td>Broadcasting  Share</td>
+                                            <td>Mechanical  Share</td>
+                                            ';
+                                    }elseif($is_recording_rh > 90){
+                                        $tr .= '<td>Recording  Title</td>
+                                            <td>Name</td>
+                                            <td>Internal Code</td>
+                                            <td>Memeber Type</td>
+                                            <td>Ipi Name Number</td>
+                                            <td>Ipi Base Number</td>
+                                            <td>Role</td>
+                                            <td>Equitable Remuneration Points</td>
+                                            <td>Blank Levy Points</td>
+                                            ';
+                                    } else {
+                                        foreach ($staging[1][$cont['key']] as $col => $value) {
+                                            if (!in_array($col, $ignore_list))
+                                                $tr .= "<td>" . $table::model()->getAttributeLabel($col) . "</td>";
+                                        }
                                     }
                                     $tr .= "<td>Status</td>";
                                     $tr .= "</tr>";
                                     $i = 1;
                                     foreach ($staging as $key => $rows) {
-                                        $bg = $status[$rows[$cont['key']]['import_status']]['bg_color'];
-                                        $txt_clr = $status[$rows[$cont['key']]['import_status']]['text_color'];
-                                        $sts = $status[$rows[$cont['key']]['import_status']]['status'];
-                                        
-                                        $tr .= "<tr style='background-color:$bg'>";
-                                        $tr .= "<td>{$i}</td>";
-                                        foreach ($staging[$key][$cont['key']] as $col => $value) {
-                                            if (!in_array($col, $ignore_list)) {
-                                                $tr .= "<td>";
-                                                if($value == "")
-                                                    $tr .= "<span class='errorMessage'>empty</span>";
-                                                else if(in_array($value, $errorTexts))
-                                                    $tr .= "<span class='errorMessage'>$value</span>";
-                                                else
-                                                    $tr .= $value;
-                                                $tr .= "</td>";
+                                        if (count($staging[$key][$cont['key']]) > 1) {
+                                            $bg = $status[$rows[$cont['key']]['import_status']]['bg_color'];
+                                            $txt_clr = $status[$rows[$cont['key']]['import_status']]['text_color'];
+                                            $sts = $status[$rows[$cont['key']]['import_status']]['status'];
+
+                                            $tr .= "<tr style='background-color:$bg'>";
+                                            $tr .= "<td>{$i}</td>";
+                                            foreach ($staging[$key][$cont['key']] as $col => $value) {
+                                                if (!in_array($col, $ignore_list)) {
+                                                    $tr .= "<td>";
+                                                    if ($value == "")
+                                                        $tr .= "<span class='errorMessage'>empty</span>";
+                                                    else if (in_array($value, $errorTexts))
+                                                        $tr .= "<span class='errorMessage'>$value</span>";
+                                                    else
+                                                        $tr .= $value;
+                                                    $tr .= "</td>";
+                                                }
                                             }
+                                            $tr .= "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
+                                            $tr .= "</tr>";
+                                            $i++;
                                         }
-                                        $tr .= "<td><strong style='color:{$txt_clr}'>{$sts}</strong></td>";
-                                        $tr .= "</tr>";
-                                        $i++;
                                     }
                                     echo $tr;
                                     ?>

@@ -354,6 +354,31 @@ class Work extends RActiveRecord {
                     $column .= '</tr>';
                 }
             }
+            
+            //Performer
+            foreach ($work->workRightholders as $key => $rightholder) {
+                if ($rightholder->workPerformer) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->workPerformer->fullname}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+//                    $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
+                    $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                    $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                    $column .= '</tr>';
+                }
+            }
+            //Producer
+            foreach ($work->workRightholders as $key => $rightholder) {
+                if ($rightholder->workProducer) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->workProducer->Pro_Corporate_Name}</td>";
+                    $column .= "<td>{$rightholder->workRightRole->Type_Rights_Code}</td>";
+//                    $shares = number_format((($rightholder->Work_Right_Broad_Share + $rightholder->Work_Right_Mech_Share) / 2), 2, '.', '');
+                    $column .= "<td>{$rightholder->Work_Right_Broad_Share} %</td>";
+                    $column .= "<td>{$rightholder->Work_Right_Mech_Share} %</td>";
+                    $column .= '</tr>';
+                }
+            }
             $column .= '</tbody></table>';
         }
         return $column;

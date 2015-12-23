@@ -702,6 +702,8 @@ class Myclass extends CController {
     }
 
     public static function addMaster($model, $col_name, $col_id, $value) {
+        $value = trim($value);
+        
         $id = $model::model()->findByAttributes(array($col_name => $value))->$col_id;
         if (empty($id)) {
             $model = new $model;
@@ -713,6 +715,8 @@ class Myclass extends CController {
     }
 
     public static function addMasterTypeRights($value, $occupation, $domain, $rank) {
+        $value = trim($value);
+        
         $id = MasterTypeRights::model()->findByAttributes(array('Type_Rights_Name' => $value))->Master_Type_Rights_Id;
         if (empty($id) && $value != '') {
             $model = new MasterTypeRights;
@@ -732,11 +736,16 @@ class Myclass extends CController {
     }
 
     public static function addAuthor($firstname, $surname, $internal_code = '', $ipi_name = '', $ipi_base = '') {
-        if(!empty($internal_code))
+        $name = trim($name);
+        $internal_code = trim($internal_code);
+        $ipi_name = trim($ipi_name);
+        $ipi_base = trim($ipi_base);
+        
+        if (!empty($internal_code))
             $id = AuthorAccount::model()->findByAttributes(array('Auth_Internal_Code' => $internal_code))->Auth_GUID;
         else
             $id = AuthorAccount::model()->findByAttributes(array('Auth_First_Name' => $firstname, 'Auth_Sur_Name' => $surname))->Auth_GUID;
-        
+
         if (empty($id) && $firstname != '' && $surname != '') {
             $model = new AuthorAccount;
             $attr = array(
@@ -753,11 +762,16 @@ class Myclass extends CController {
     }
 
     public static function addPerformer($firstname, $surname, $internal_code = '', $ipi_name = '', $ipi_base = '') {
-        if(!empty($internal_code))
+        $name = trim($name);
+        $internal_code = trim($internal_code);
+        $ipi_name = trim($ipi_name);
+        $ipi_base = trim($ipi_base);
+        
+        if (!empty($internal_code))
             $id = PerformerAccount::model()->findByAttributes(array('Perf_Internal_Code' => $internal_code))->Perf_GUID;
         else
             $id = PerformerAccount::model()->findByAttributes(array('Perf_First_Name' => $firstname, 'Perf_Sur_Name' => $surname))->Perf_GUID;
-        
+
         if (empty($id) && $firstname != '' && $surname != '') {
             $model = new PerformerAccount;
             $attr = array(
@@ -774,11 +788,16 @@ class Myclass extends CController {
     }
 
     public static function addPublisher($name, $internal_code = '', $ipi_name = '', $ipi_base = '') {
-        if(!empty($internal_code))
+        $name = trim($name);
+        $internal_code = trim($internal_code);
+        $ipi_name = trim($ipi_name);
+        $ipi_base = trim($ipi_base);
+        
+        if (!empty($internal_code))
             $id = PublisherAccount::model()->findByAttributes(array('Pub_Internal_Code' => $internal_code))->Pub_GUID;
         else
             $id = PublisherAccount::model()->findByAttributes(array('Pub_Corporate_Name' => $name))->Pub_GUID;
-        
+
         if (empty($id) && $name != '') {
             $model = new PublisherAccount;
             $attr = array(
@@ -794,11 +813,16 @@ class Myclass extends CController {
     }
 
     public static function addProducer($name, $internal_code = '', $ipi_name = '', $ipi_base = '') {
-        if(!empty($internal_code))
+        $name = trim($name);
+        $internal_code = trim($internal_code);
+        $ipi_name = trim($ipi_name);
+        $ipi_base = trim($ipi_base);
+        
+        if (!empty($internal_code))
             $id = ProducerAccount::model()->findByAttributes(array('Pro_Internal_Code' => $internal_code))->Pro_GUID;
         else
             $id = ProducerAccount::model()->findByAttributes(array('Pro_Corporate_Name' => $name))->Pro_GUID;
-        
+
         if (empty($id) && $name != '') {
             $model = new ProducerAccount;
             $attr = array(
@@ -811,6 +835,55 @@ class Myclass extends CController {
             $id = $model->Pro_GUID;
         }
         return $id;
+    }
+
+    public static function addInstruments($list, $ret = 'array') {
+        $ids = array();
+        $explode = explode(',', $list);
+        foreach ($explode as $instrument) {
+            if (!empty($instrument)) {
+                $instrument = trim($instrument);
+                $id = MasterInstrument::model()->findByAttributes(array('Instrument_Name' => $instrument))->Master_Inst_Id;
+                if (empty($id)) {
+                    $model = new MasterInstrument;
+                    $attr = array(
+                        'Instrument_Name' => $instrument,
+                        'Instrument_Code' => strtoupper(substr($instrument, 0, 2)),
+                    );
+                    $model->attributes = $attr;
+                    $model->save(false);
+                    $id = $model->Master_Inst_Id;
+                }
+                $ids[] = $id;
+            }
+        }
+        if($ret == 'json')
+            $ids = CJSON::encode ($ids);
+        return $ids;
+    }
+
+    public static function addTerritories($list, $ret = 'array') {
+        $ids = array();
+        $explode = explode(',', $list);
+        foreach ($explode as $territory) {
+            if (!empty($territory)) {
+                $territory = trim($territory);
+                $id = MasterTerritories::model()->findByAttributes(array('Territory_Name' => $territory))->Master_Territory_Id;
+                if (empty($id)) {
+                    $model = new MasterTerritories;
+                    $attr = array(
+                        'Territory_Name' => $territory,
+                    );
+                    $model->attributes = $attr;
+                    $model->save(false);
+                    $id = $model->Master_Territory_Id;
+                }
+                $ids[] = $id;
+            }
+        }
+        if($ret == 'json')
+            $ids = CJSON::encode ($ids);
+        return $ids;
     }
 
     public static function importErrorTexts() {
@@ -866,4 +939,5 @@ class Myclass extends CController {
         $str = preg_replace("/\t/", "\\t", $str);
         $str = preg_replace("/\r?\n/", "\\n", $str);
     }
+
 }
