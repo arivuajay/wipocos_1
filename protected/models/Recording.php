@@ -311,6 +311,7 @@ class Recording extends RActiveRecord {
         if ($recording->recordingRightholders) {
             $column .= "<br /><br />";
             $column .= "<table border = '1' class='match_det_table'><thead><th width='50%'>Right Holders</th><th>Role</th><th>Equal Remuneration</th><th>Blank Levy</th></thead><tbody>";
+            //Performer
             foreach ($recording->recordingRightholders as $key => $rightholder) {
                 if ($rightholder->recordingPerformer) {
                     $column .= '<tr>';
@@ -321,10 +322,33 @@ class Recording extends RActiveRecord {
                     $column .= '</tr>';
                 }
             }
+            //Producer
             foreach ($recording->recordingRightholders as $key => $rightholder) {
                 if ($rightholder->recordingProducer) {
                     $column .= '<tr>';
                     $column .= "<td>{$rightholder->recordingProducer->Pro_Corporate_Name}</td>";
+                    $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                    $column .= '</tr>';
+                }
+            }
+            //Author
+            foreach ($recording->recordingRightholders as $key => $rightholder) {
+                if ($rightholder->recordingAuthor) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->recordingAuthor->fullname}</td>";
+                    $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
+                    $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
+                    $column .= '</tr>';
+                }
+            }
+            //Publisher
+            foreach ($recording->recordingRightholders as $key => $rightholder) {
+                if ($rightholder->recordingPublisher) {
+                    $column .= '<tr>';
+                    $column .= "<td>{$rightholder->recordingPublisher->Pub_Corporate_Name}</td>";
                     $column .= "<td>{$rightholder->rcdRightRole->Type_Rights_Code}</td>";
                     $column .= "<td>{$rightholder->Rcd_Right_Equal_Share}</td>";
                     $column .= "<td>{$rightholder->Rcd_Right_Blank_Share}</td>";
