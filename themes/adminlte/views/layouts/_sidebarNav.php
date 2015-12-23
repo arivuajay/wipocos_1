@@ -149,7 +149,7 @@
 //                        array('label' => '<i class="fa fa-bar-chart"></i> <span>Classes & Available Periods</span>', 'url' => array('/site/distributionlogsheet/availperiods'), 'visible' => '1'),
                     ),
                 ),
-                array('label' => '<i class="fa fa-pie-chart"></i> <span>Reports</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
+                array('label' => '<i class="fa fa-file-text"></i> <span>Reports</span><i class="fa pull-right fa-angle-left"></i>', 'url' => '#',
                     'itemOptions' => array('class' => 'treeview'),
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'visible' => '1',

@@ -6,6 +6,7 @@ class WipoImport extends CApplicationComponent {
     private $_import_worksheet;
     private $_import_status = "";
     private $_import_society;
+    private $_import_organization;
     private $_import_category;
     private $_stage_rows;
     private $_stage_tables;
@@ -31,6 +32,10 @@ class WipoImport extends CApplicationComponent {
 
     public function setHighestColumn($id) {
         $this->_highestColumn = $id;
+    }
+
+    public function setImportOrganization($id) {
+        $this->_import_organization = $id;
     }
 
     public function getStageRow() {
@@ -1450,8 +1455,8 @@ class WipoImport extends CApplicationComponent {
                                 $rightHolder_model->Work_Member_GUID = $guid;
                                 $rightHolder_model->Work_Right_Broad_Share = $rhData['Work_Right_Broad_Share'];
                                 $rightHolder_model->Work_Right_Mech_Share = $rhData['Work_Right_Mech_Share'];
-                                $rightHolder_model->Work_Right_Broad_Org_id = DEFAULT_ORGANIZATION_ID;
-                                $rightHolder_model->Work_Right_Mech_Org_Id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->Work_Right_Broad_Org_id = $this->_import_organization;
+                                $rightHolder_model->Work_Right_Mech_Org_Id = $this->_import_organization;
                                 $rightHolder_model->Created_By = Yii::app()->user->id;
                                 
                                 if ($this->_stage_rows[$key][$i_key]['success'] == 1) {
@@ -1714,8 +1719,8 @@ class WipoImport extends CApplicationComponent {
                                 $rightHolder_model->Rcd_Member_GUID = $guid;
                                 $rightHolder_model->Rcd_Right_Equal_Share = $rhData['Rcd_Right_Equal_Share'];
                                 $rightHolder_model->Rcd_Right_Blank_Share = $rhData['Rcd_Right_Blank_Share'];
-                                $rightHolder_model->Rcd_Right_Equal_Org_id = DEFAULT_ORGANIZATION_ID;
-                                $rightHolder_model->Rcd_Right_Blank_Org_Id = DEFAULT_ORGANIZATION_ID;
+                                $rightHolder_model->Rcd_Right_Equal_Org_id = $this->_import_organization;
+                                $rightHolder_model->Rcd_Right_Blank_Org_Id = $this->_import_organization;
                                 $rightHolder_model->Created_By = Yii::app()->user->id;
                                 $rightHolder_model->Created_Date = date('Y-m-d H:i:s');
                                 

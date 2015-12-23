@@ -3,6 +3,7 @@
 class SocietyController extends Controller {
 
     private $_import_society;
+    private $_import_organization;
     private $_import_category;
 
     /**
@@ -180,6 +181,7 @@ class SocietyController extends Controller {
                     $path = UPLOAD_DIR . '/temp/' . $model->import_file;
                     $model->import_file->saveAs($path);
                     $this->_import_society = $model->Society_Id;
+                    $this->_import_organization = $model->Society_Abbr_Id;
                     $this->_import_category = $model->import_category;
                     $success = $this->importExcel($path);
                     if ($success && $model->save()) {
@@ -257,6 +259,7 @@ class SocietyController extends Controller {
         
         Yii::app()->wipoimport->setWorkSheet($objWorksheet);
         Yii::app()->wipoimport->setImportSociety($this->_import_society);
+        Yii::app()->wipoimport->setImportOrganization($this->_import_organization);
         Yii::app()->wipoimport->setImportCategory($this->_import_category);
         Yii::app()->wipoimport->setHighestColumn($highestColumnIndex);
         
